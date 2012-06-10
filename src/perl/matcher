@@ -130,8 +130,7 @@ sub most_recent {
 }
 
 sub my_resource {
-   my $self = shift;
-   $self->x_resource ("$self->{name}.$_[0]");
+   $_[0]->x_resource ("%.$_[1]")
 }
 
 # turn a rendition spec in the resource into a sub that implements it on $_
@@ -152,8 +151,6 @@ sub parse_rend {
 sub on_start {
    my ($self) = @_;
 
-   ($self->{name} = __PACKAGE__) =~ s/.*:://;
-   $self->{name} =~ tr/_/-/;
    $self->{launcher} = $self->my_resource ("launcher") || $self->x_resource("url-launcher") || "sensible-browser";
 
    $self->{urls} = [];
@@ -172,7 +169,7 @@ sub on_start {
          } elsif($mod eq "M") {
             $self->{state} |= $self->ModMetaMask;
          } elsif($mod ne "-" && $mod ne " ") {
-            warn("$mod is invalid in $self->{name}<$self->{argv}[0]>\n");
+            warn("$mod is invalid in $self->{_name}<$self->{argv}[0]>\n");
          }
       }
    }

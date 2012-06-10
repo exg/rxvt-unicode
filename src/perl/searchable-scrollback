@@ -8,7 +8,7 @@ sub on_init {
    my ($self) = @_;
 
    my $hotkey = $self->{argv}[0]
-                || $self->x_resource ("searchable-scrollback")
+                || $self->x_resource ("%")
                 || "M-s";
 
    $self->parse_keysym ($hotkey, "perl:searchable-scrollback:start")

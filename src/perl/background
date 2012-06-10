@@ -858,13 +858,13 @@ sub recalculate {
 sub on_start {
    my ($self) = @_;
 
-   my $expr = $self->x_resource ("background.expr")
+   my $expr = $self->x_resource ("%.expr")
       or return;
 
    $self->set_expr (parse_expr $expr);
-   $self->{border} = $self->x_resource_boolean ("background.border");
+   $self->{border} = $self->x_resource_boolean ("%.border");
 
-   $MIN_INTERVAL = $self->x_resource ("background.interval");
+   $MIN_INTERVAL = $self->x_resource ("%.interval");
 
    ()
 }

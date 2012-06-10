@@ -87,10 +87,10 @@ sub fetch {
 sub on_start {
    my ($self) = @_;
 
-   $self->{store_cmd} = $self->x_resource ("remote-selection.store")
+   $self->{store_cmd} = $self->x_resource ("%.store")
                         || "rsh ruth 'cat >/tmp/distributed-selection'";
 
-   $self->{fetch_cmd} = $self->x_resource ("remote-selection.fetch")
+   $self->{fetch_cmd} = $self->x_resource ("%.fetch")
                         || "rsh ruth 'cat /tmp/distributed-selection'";
 
    push @{ $self->{term}{selection_popup_hook} }, sub {

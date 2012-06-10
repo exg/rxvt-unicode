@@ -1026,6 +1026,8 @@ sub extension_package($) {
 
       verbose 3, "loading extension '$path' into package '$pkg'";
 
+      (${"$pkg\::_NAME"} = $path) =~ s/^.*[\\\/]//; # hackish
+
       open my $fh, "<:raw", $path
          or die "$path: $!";
 
@@ -1152,8 +1154,6 @@ sub rend2mask {
    ($mask, @color{qw(fg bg)}, \@failed)
 }
 
-# urxvt::term::extension
-
 package urxvt::term::extension;
 
 sub enable {
@@ -1215,6 +1215,18 @@ sub urxvt::destroy_hook::DESTROY {
 
 sub urxvt::destroy_hook(&) {
    bless \shift, urxvt::destroy_hook::
+}
+
+sub x_resource {
+   my ($self, $name) = @_;
+   $name =~ s/^%(\.|$)/$_[0]{_name}$1/;
+   $self->{term}->x_resource ($name)
+}
+
+sub x_resource_boolean {
+   my ($self, $name) = @_;
+   $name =~ s/^%(\.|$)/$_[0]{_name}$1/;
+   $self->{term}->x_resource_boolean ($name)
 }
 
 package urxvt::anyevent;
@@ -1321,8 +1333,9 @@ sub register_package {
    @{"$pkg\::ISA"} = urxvt::term::extension::;
 
    my $proxy = bless {
-      _pkg => $pkg,
-      argv => $argv,
+      _pkg  => $pkg,
+      _name => ${"$pkg\::_NAME"}, # hackish
+      argv  => $argv,
    }, $pkg;
    Scalar::Util::weaken ($proxy->{term} = $self);
 
@@ -1503,6 +1516,16 @@ Returns the X-Resource for the given pattern, excluding the program or
 class name, i.e.  C<< $term->x_resource ("boldFont") >> should return the
 same value as used by this instance of rxvt-unicode. Returns C<undef> if no
 resource with that pattern exists.
+
+Extensions that define extra resource or command line arguments also need
+to call this method to access their values.
+
+If the method is called on an extension object (basically, from an
+extension), then the special prefix C<%.> will be replaced by the name of
+the extension and a dot, and the lone string C<%> will be replcaed by the
+extension name itself. This makes it possible to code extensions so you
+can rename them and get a new set of commandline switches and resources
+without having to change the actual code.
 
 This method should only be called during the C<on_start> hook, as there is
 only one resource database per display, and later invocations might return

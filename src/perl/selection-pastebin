@@ -62,10 +62,10 @@ sub upload_paste {
 sub on_start {
    my ($self) = @_;
 
-   $self->{pastebin_cmd} = $self->x_resource ("selection-pastebin.cmd")
+   $self->{pastebin_cmd} = $self->x_resource ("%.cmd")
                            || "rcp -p % ruth:/var/www/www.ta-sa.org/files/txt/";
 
-   $self->{pastebin_url} = $self->x_resource ("selection-pastebin.url")
+   $self->{pastebin_url} = $self->x_resource ("%.url")
                            || "http://www.ta-sa.org/files/txt/%";
 
    push @{ $self->{term}{selection_popup_hook} }, sub {
