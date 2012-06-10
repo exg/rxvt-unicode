@@ -59,7 +59,7 @@ For example, an expression such as C<scale load "$HOME/mybg.png"> scales the
 image to the window size, so it relies on the window size and will
 be reevaluated each time it is changed, but not when it moves for
 example. That ensures that the picture always fills the terminal, even
-after it's size changes.
+after its size changes.
 
 =head2 EXPRESSIONS
 
@@ -117,7 +117,7 @@ width and doubles the image height:
 
    scale 0.5, 2, load "$HOME/mypic.png"
 
-Other effects than scalign are also readily available, for exmaple, you can
+Other effects than scaling are also readily available, for example, you can
 tile the image to fill the whole window, instead of resizing it:
 
    tile load "$HOME/mypic.png"
@@ -153,7 +153,7 @@ image every time, it will always be cached, but when you load a different
 image, it will forget about the first one.
 
 This allows you to either speed things up by keeping multiple images in
-memory, or comserve memory by loading images more often.
+memory, or conserve memory by loading images more often.
 
 For example, you can keep two images in memory and use a random one like
 this:
@@ -193,7 +193,7 @@ replaces the background of the character area.
 
 =item --background-interval seconds
 
-Since some operations in the underlying XRender extension can effetively
+Since some operations in the underlying XRender extension can effectively
 freeze your X-server for prolonged time, this extension enforces a minimum
 time between updates, which is normally about 0.1 seconds.
 
@@ -326,7 +326,7 @@ image over another image or the background colour while leaving all
 background pixels outside the image unchanged.
 
 Example: load an image and display it in the upper left corner. The rest
-of the space is left "empty" (transparent or wahtever your compisotr does
+of the space is left "empty" (transparent or whatever your compositor does
 in alpha mode, else background colour).
 
    pad load "mybg.png"
@@ -334,7 +334,7 @@ in alpha mode, else background colour).
 =item extend $img
 
 Extends the image over the whole plane, using the closest pixel in the
-area outside the image. This mode is mostly useful when you more complex
+area outside the image. This mode is mostly useful when you use more complex
 filtering operations and want the pixels outside the image to have the
 same values as the pixels near the edge.
 
@@ -675,7 +675,7 @@ Values less than 0 reduce brightness, while values larger than 0 increase
 it. Useful range is from -1 to 1 - the former results in a black, the
 latter in a white picture.
 
-Due to idiosynchrasies in the underlying XRender extension, biases less
+Due to idiosyncrasies in the underlying XRender extension, biases less
 than zero can be I<very> slow.
 
 =cut
