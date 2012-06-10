@@ -254,7 +254,7 @@ useful for solid backgrounds or for use in filtering effects.
 
 =cut
 
-   sub solid($$;$) {
+   sub solid($;$$) {
       my $colour = pop;
 
       my $img = $self->new_img (urxvt::PictStandardARGB32, $_[0] || 1, $_[1] || 1);
