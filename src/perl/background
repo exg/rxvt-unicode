@@ -101,9 +101,10 @@ its result becomes the argument to the C<scale> function.
 Many operators also allow some parameters preceding the input image
 that modify its behaviour. For example, C<scale> without any additional
 arguments scales the image to size of the terminal window. If you specify
-an additional argument, it uses it as a percentage:
+an additional argument, it uses it as a scale factor (multiply by 100 to
+get a percentage):
 
-   scale 200, load "$HOME/mypic.png"
+   scale 2, load "$HOME/mypic.png"
 
 This enlarges the image by a factor of 2 (200%). As you can see, C<scale>
 has now two arguments, the C<200> and the C<load> expression, while
@@ -114,7 +115,7 @@ Scale also accepts two arguments, which are then separate factors for both
 horizontal and vertical dimensions. For example, this halves the image
 width and doubles the image height:
 
-   scale 50, 200, load "$HOME/mypic.png"
+   scale 0.5, 2, load "$HOME/mypic.png"
 
 Other effects than scalign are also readily available, for exmaple, you can
 tile the image to fill the whole window, instead of resizing it:
@@ -203,6 +204,8 @@ our $MIN_INTERVAL = 1/100;
 
 {
    package urxvt::bgdsl; # background language
+
+   use List::Util qw(min max sum shuffle);
 
 =head2 PROVIDERS/GENERATORS
 
@@ -481,37 +484,65 @@ memory.
 
 =item scale $img
 
-=item scale $size_percent, $img
+=item scale $size_factor, $img
 
-=item scale $width_percent, $height_percent, $img
+=item scale $width_factor, $height_factor, $img
 
-Scales the image by the given percentages in horizontal
-(C<$width_percent>) and vertical (C<$height_percent>) direction.
+Scales the image by the given factors in horizontal
+(C<$width>) and vertical (C<$height>) direction.
 
-If only one percentage is give, it is used for both directions.
+If only one factor is give, it is used for both directions.
 
-If no percentages are given, scales the image to the window size without
+If no factors are given, scales the image to the window size without
 keeping aspect.
 
 =item resize $width, $height, $img
 
 Resizes the image to exactly C<$width> times C<$height> pixels.
 
-=cut
+=item fit $img
 
-#TODO: maximise, maximise_fill?
+=item fit $width, $height, $img
+
+Fits the image into the given C<$width> and C<$height> without changing
+aspect, or the terminal size. That means it will be shrunk or grown until
+the whole image fits into the given area, possibly leaving borders.
+
+=item cover $img
+
+=item cover $width, $height, $img
+
+Similar to C<fit>, but shrinks or grows until all of the area is covered
+by the image, so instead of potentially leaving borders, it will cut off
+image data that doesn't fit.
+
+=cut
 
    sub scale($;$;$) {
       my $img = pop;
 
-      @_ == 2 ? $img->scale ($_[0] * $img->w * 0.01, $_[1] * $img->h * 0.01)
-      : @_    ? $img->scale ($_[0] * $img->w * 0.01, $_[0] * $img->h * 0.01)
+      @_ == 2 ? $img->scale ($_[0] * $img->w, $_[1] * $img->h)
+      : @_    ? $img->scale ($_[0] * $img->w, $_[0] * $img->h)
               : $img->scale (TW, TH)
    }
 
    sub resize($$$) {
       my $img = pop;
       $img->scale ($_[0], $_[1])
+   }
+
+   sub fit($;$$) {
+      my $img = pop;
+      my $w = ($_[0] || TW) / $img->w;
+      my $h = ($_[1] || TH) / $img->h;
+      scale +(min $w, $h), $img
+   }
+
+   sub cover($;$$) {
+      my $img = pop;
+      my $w = ($_[0] || TW) / $img->w;
+      my $h = ($_[1] || TH) / $img->h;
+      scale +(max $w, $h), $img
    }
 
 =item move $dx, $dy, $img
@@ -617,7 +648,7 @@ low values for radius (<5).
 =item rotate $new_width, $new_height, $center_x, $center_y, $degrees
 
 Rotates the image by C<$degrees> degrees, counter-clockwise, around the
-pointer at C<$center_x> and C<$center_y> (specified as percentage of image
+pointer at C<$center_x> and C<$center_y> (specified as factor of image
 width/height), generating a new image with width C<$new_width> and height
 C<$new_height>.
 
@@ -632,8 +663,8 @@ Example: rotate the image by 90 degrees
       $img->rotate (
          $_[0],
          $_[1],
-         $_[2] * $img->w * .01,
-         $_[3] * $img->h * .01,
+         $_[2] * $img->w,
+         $_[3] * $img->h,
          $_[4] * (3.14159265 / 180),
       )
    }
