@@ -42,9 +42,6 @@
 /* Define if you want extended chinese codesets */
 #undef ENCODING_ZH_EXT
 
-/* Define if you want to use libAfterImage for image processing */
-#undef HAVE_AFTERIMAGE
-
 /* Define to 1 if you have the `clock_gettime' function. */
 #undef HAVE_CLOCK_GETTIME
 
