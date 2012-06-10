@@ -52,6 +52,7 @@ rxvt_img::new_from_root (rxvt_screen *s)
 }
 
 # if HAVE_PIXBUF
+
 rxvt_img *
 rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
 {
@@ -168,6 +169,7 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
 
   return img;
 }
+
 # endif
 
 void
@@ -226,11 +228,14 @@ rxvt_img::unshare ()
 void
 rxvt_img::fill (const rxvt_color &c)
 {
-  XGCValues gcv;
-  gcv.foreground = c;
-  GC gc = XCreateGC (s->display->dpy, pm, GCForeground, &gcv);
-  XFillRectangle (s->display->dpy, pm, gc, 0, 0, w, h);
-  XFreeGC (s->display->dpy, gc);
+  rgba cc;
+  c.get (cc);
+  XRenderColor rc = { cc.r, cc.g, cc.b, cc.a };
+
+  Display *dpy = s->display->dpy;
+  Picture src = src_picture ();
+  XRenderFillRectangle (dpy, PictOpSrc, src, &rc, 0, 0, w, h);
+  XRenderFreePicture (dpy, src);
 }
 
 static void
@@ -310,6 +315,7 @@ rxvt_img::blur (int rh, int rv)
 
   free (kernel);
   free (params);
+
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
   XRenderFreePicture (dpy, tmp);
