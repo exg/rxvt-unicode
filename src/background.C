@@ -109,23 +109,6 @@ make_align_position (int align, int window_size, int image_size)
     return lerp (-image_size, 0, align + 100);
 }
 
-static inline int
-make_clip_rectangle (int pos, int size, int target_size, int &dst_pos, int &dst_size)
-{
-  int src_pos = 0;
-  dst_pos = pos;
-  dst_size = size;
-  if (pos < 0)
-    {
-      src_pos = -pos;
-      dst_pos = 0;
-      dst_size += pos;
-    }
-
-  min_it (dst_size, target_size - dst_pos);
-  return src_pos;
-}
-
 static void
 parse_style (const char *style, int &x, int &y, unsigned int &w, unsigned int &h, uint8_t &flags)
 {
