@@ -219,11 +219,10 @@ struct rxvt_screen
   void clear ();
 };
 
-enum {
+enum
+{
   DISPLAY_HAS_RENDER      = 1 << 0,
-  DISPLAY_HAS_RENDER_10   = 1 << 1,
-  DISPLAY_HAS_RENDER_MUL  = 1 << 2,
-  DISPLAY_HAS_RENDER_CONV = 1 << 3,
+  DISPLAY_HAS_RENDER_CONV = 1 << 1,
 };
 
 struct rxvt_display : refcounted

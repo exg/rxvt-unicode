@@ -2034,6 +2034,13 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
 #############################################################################
 # fancy bg bloatstuff (TODO: should be moved up somewhere)
 
+bool
+rxvt_term::has_render ()
+	CODE:
+        RETVAL = THIS->display->flags & DISPLAY_HAS_RENDER;
+	OUTPUT:
+        RETVAL
+
 # TODO: ugly
 void
 rxvt_term::background_geometry (bool border = false)
@@ -2092,7 +2099,6 @@ void
 rxvt_term::set_background (rxvt_img *img, bool border = false)
 	CODE:
         THIS->bg_destroy ();
-        THIS->bg_img = 0;
         THIS->bg_flags &= ~(rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER | rxvt_term::BG_IS_TRANSPARENT);
 
         if (img) // TODO: cannot be false
@@ -2117,8 +2123,6 @@ rxvt_term::set_background (rxvt_img *img, bool border = false)
 
             if (!border)
               THIS->bg_flags |= rxvt_term::BG_IS_TRANSPARENT;
-
-            delete img;
           }
 
 #endif

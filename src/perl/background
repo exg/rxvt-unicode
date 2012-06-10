@@ -798,7 +798,7 @@ sub recalculate {
 
    my $img = eval { $self->{expr}->() };
    warn $@ if $@;#d#
-   die if !UNIVERSAL::isa $img, "urxvt::img";
+   die "background-expr did not return an image.\n" if !UNIVERSAL::isa $img, "urxvt::img";
 
    $state->{size_sensitive} = 1
       if $img->repeat_mode != urxvt::RepeatNormal;
@@ -860,6 +860,9 @@ sub on_start {
 
    my $expr = $self->x_resource ("%.expr")
       or return;
+
+   $self->has_render
+      or die "background extension needs RENDER extension 0.10 or higher, ignoring background-expr.\n";
 
    $self->set_expr (parse_expr $expr);
    $self->{border} = $self->x_resource_boolean ("%.border");

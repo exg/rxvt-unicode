@@ -32,6 +32,7 @@ rxvt_term::bg_destroy ()
 {
 # if ENABLE_TRANSPARENCY
   delete root_img;
+  root_img = 0;
 # endif
 
 # if BG_IMAGE_FROM_FILE
@@ -39,6 +40,7 @@ rxvt_term::bg_destroy ()
 # endif
 
   delete bg_img;
+  bg_img = 0;
 }
 
 bool

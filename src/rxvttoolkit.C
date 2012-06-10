@@ -492,25 +492,24 @@ bool rxvt_display::ref_init ()
 #if XRENDER
   int major, minor;
   if (XRenderQueryVersion (dpy, &major, &minor))
-    {
-      flags |= DISPLAY_HAS_RENDER;
+    if (major > 0 || (major == 0 && minor >= 10))
+      {
+        flags |= DISPLAY_HAS_RENDER;
 
-      if (major > 0 || (major == 0 && minor >= 10))
-        flags |= DISPLAY_HAS_RENDER_10;
+#if 0
+        if (major > 0 || (major == 0 && minor >= 11))
+          flags |= DISPLAY_HAS_RENDER_MUL;
+#endif
 
-      if (major > 0 || (major == 0 && minor >= 11))
-        flags |= DISPLAY_HAS_RENDER_MUL;
+        if (XFilters *filters = XRenderQueryFilters (dpy, root))
+          {
+            for (int i = 0; i < filters->nfilter; i++)
+              if (!strcmp (filters->filter [i], FilterConvolution))
+                flags |= DISPLAY_HAS_RENDER_CONV;
 
-      XFilters *filters = XRenderQueryFilters (dpy, root);
-      if (filters)
-        {
-          for (int i = 0; i < filters->nfilter; i++)
-            if (!strcmp (filters->filter[i], FilterConvolution))
-              flags |= DISPLAY_HAS_RENDER_CONV;
-
-          XFree (filters);
-        }
-    }
+            XFree (filters);
+          }
+      }
 #endif
 
   int fd = XConnectionNumber (dpy);
