@@ -1,7 +1,8 @@
 #! perl
 
 #:META:X_RESOURCE:%.expr:string:background expression
-#:META:X_RESOURCE:%.border.:boolean:respect the terminal border
+#:META:X_RESOURCE:%.border:boolean:respect the terminal border
+#:META:X_RESOURCE:%.interval:seconds:minimum time between updates
 
 #TODO: once, rootalign
 
@@ -13,6 +14,7 @@
 
    urxvt --background-expr 'background expression'
          --background-border
+         --background-interval seconds
 
 =head1 DESCRIPTION
 
@@ -191,6 +193,15 @@ overwriting borders and any other areas, such as the scrollbar.
 Specifying this flag changes the behaviour, so that the image only
 replaces the background of the character area.
 
+=item --background-interval seconds
+
+Since some operations in the underlying XRender extension can effetively
+freeze your X-server for prolonged time, this extension enforces a minimum
+time between updates, which is normally about 0.1 seconds.
+
+If you want to do updates more often, you can decrease this safety
+interval with this switch.
+
 =back
 
 =cut
@@ -200,7 +211,7 @@ our ($self, $old, $new);
 our ($x, $y, $w, $h);
 
 # enforce at least this interval between updates
-our $MIN_INTERVAL = 1/100;
+our $MIN_INTERVAL = 6/59.951;
 
 {
    package urxvt::bgdsl; # background language
@@ -555,6 +566,17 @@ Example: move the image right by 20 pixels and down by 30.
 
    move 20, 30, ...
 
+=item align $xalign, $yalign, $img
+
+Aligns the image according to a factor - C<0> means the image is moved to
+the left or top edge (for C<$xalign> or C<$yalign>), C<0.5> means it is
+exactly centered and C<1> means it touches the right or bottom edge.
+
+Example: remove any visible border around an image, center it vertically but move
+it to the right hand side.
+
+   align 1, 0.5, pad $img
+
 =item center $img
 
 =item center $width, $height, $img
@@ -562,6 +584,10 @@ Example: move the image right by 20 pixels and down by 30.
 Centers the image, i.e. the center of the image is moved to the center of
 the terminal window (or the box specified by C<$width> and C<$height> if
 given).
+
+Example: load an image and center it.
+
+  center pad load "mybg.png"
 
 =item rootalign $img
 
@@ -577,7 +603,7 @@ Example: load a background image, put it in mirror mode and root align it.
 Example: take the screen background and align it, giving the illusion of
 transparency as long as the window isn't in front of other windows.
 
-  rootalign root
+   rootalign root
 
 =cut
 
@@ -587,10 +613,18 @@ transparency as long as the window isn't in front of other windows.
       $img
    }
 
+   sub align($;$$) {
+      my $img = pop;
+
+      move $_[0] * (TW - $img->w),
+           $_[1] * (TH - $img->h),
+           $img
+   }
+
    sub center($;$$) {
       my $img = pop;
       my $w = $_[0] || TW;
-      my $h = $_[0] || TH;
+      my $h = $_[1] || TH;
 
       move 0.5 * ($w - $img->w), 0.5 * ($h - $img->h), $img
    }
@@ -829,6 +863,8 @@ sub on_start {
 
    $self->set_expr (parse_expr $expr);
    $self->{border} = $self->x_resource_boolean ("background.border");
+
+   $MIN_INTERVAL = $self->x_resource ("background.interval");
 
    ()
 }

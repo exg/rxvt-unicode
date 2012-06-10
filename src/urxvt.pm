@@ -948,12 +948,13 @@ no warnings 'utf8';
 sub parse_resource {
    my ($term, $name, $isarg, $longopt, $flag, $value) = @_;
 
+   $name =~ y/-/./ if $isarg;
+
    $term->scan_meta;
 
    my $r = $term->{meta}{resource};
+   keys %$r; # reste iterator
    while (my ($pattern, $v) = each %$r) {
-      $name =~ y/-/./ if $isarg;
-
       if (
          $pattern =~ /\.$/
          ? $pattern eq substr $name, 0, length $pattern
