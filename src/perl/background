@@ -206,6 +206,7 @@ interval with this switch.
 
 =cut
 
+our %_IMGCACHE;
 our $HOME;
 our ($self, $old, $new);
 our ($x, $y, $w, $h);
@@ -685,8 +686,8 @@ than zero can be I<very> slow.
       my $img = pop;
       my ($r, $g, $b, $a) = @_;
 
-      ($g, $b) = ($r, $r) if @_ < 4;
-      $a       = 1        if @_ < 5;
+      ($g, $b) = ($r, $r) if @_ < 3;
+      $a       = 1        if @_ < 4;
 
       $img = $img->clone;
       $img->contrast ($r, $g, $b, $a);
@@ -697,8 +698,8 @@ than zero can be I<very> slow.
       my $img = pop;
       my ($r, $g, $b, $a) = @_;
 
-      ($g, $b) = ($r, $r) if @_ < 4;
-      $a       = 1        if @_ < 5;
+      ($g, $b) = ($r, $r) if @_ < 3;
+      $a       = 1        if @_ < 4;
 
       $img = $img->clone;
       $img->brightness ($r, $g, $b, $a);
