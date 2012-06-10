@@ -319,14 +319,15 @@ rxvt_img::blur (int rh, int rv)
 }
 
 static Picture
-create_xrender_mask (Display *dpy, Drawable drawable, Bool argb)
+create_xrender_mask (Display *dpy, Drawable drawable, Bool argb, Bool component_alpha)
 {
   Pixmap pixmap = XCreatePixmap (dpy, drawable, 1, 1, argb ? 32 : 8);
 
   XRenderPictFormat *format = XRenderFindStandardFormat (dpy, argb ? PictStandardARGB32 : PictStandardA8);
   XRenderPictureAttributes pa;
   pa.repeat = RepeatNormal;
-  Picture mask = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
+  pa.component_alpha = component_alpha;
+  Picture mask = XRenderCreatePicture (dpy, pixmap, format, CPRepeat | CPComponentAlpha, &pa);
 
   XFreePixmap (dpy, pixmap);
 
@@ -409,11 +410,7 @@ rxvt_img::contrast (int32_t r, int32_t g, int32_t b, int32_t a)
 
   Picture src = src_picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, format, 0, 0);
-  Picture mul = create_xrender_mask (dpy, pm, True);
-
-  XRenderPictureAttributes pa;
-  pa.component_alpha = 1;
-  XRenderChangePicture (dpy, mul, CPComponentAlpha, &pa);
+  Picture mul = create_xrender_mask (dpy, pm, True, True);
 
   //TODO: this operator does not yet implement some useful contrast
   while (r | g | b | a)
@@ -627,13 +624,7 @@ rxvt_img::blend (rxvt_img *img, double factor)
   Display *dpy = s->display->dpy;
   Picture src = img->src_picture ();
   Picture dst = XRenderCreatePicture (dpy, img2->pm, img2->format, 0, 0);
-
-  Pixmap pixmap = XCreatePixmap (dpy, img->pm, 1, 1, 8);
-  XRenderPictFormat *format = XRenderFindStandardFormat (dpy, PictStandardA8);
-  XRenderPictureAttributes pa;
-  pa.repeat = True;
-  Picture mask = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
-  XFreePixmap (dpy, pixmap);
+  Picture mask = create_xrender_mask (dpy, img->pm, False, False);
 
   XRenderColor mask_c;
 
