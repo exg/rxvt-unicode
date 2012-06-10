@@ -245,7 +245,6 @@ struct image_effects
 
 # if BG_IMAGE_FROM_FILE
 enum {
-  IM_IS_SET            = 1 << 0,
   IM_IS_SIZE_SENSITIVE = 1 << 1,
   IM_KEEP_ASPECT       = 1 << 2,
   IM_ROOT_ALIGN        = 1 << 3,
@@ -276,28 +275,16 @@ struct rxvt_image : image_effects
             || (!(flags & IM_ROOT_ALIGN) && (h_align || v_align)));
   }
 
-#  if HAVE_PIXBUF
-  GdkPixbuf *pixbuf;
+  rxvt_img *img;
 
   void destroy ()
   {
-    if (pixbuf)
-      g_object_unref (pixbuf);
+    delete img;
   }
-
-  int width ()
-  {
-    return gdk_pixbuf_get_width (pixbuf);
-  }
-  int height ()
-  {
-    return gdk_pixbuf_get_height (pixbuf);
-  }
-#  endif
 
   rxvt_image ();
-  bool set_file_geometry (const char *file);
-  bool set_file (const char *file);
+  bool set_file_geometry (rxvt_screen *s, const char *file);
+  bool set_file (rxvt_screen *s, const char *file);
   bool set_geometry (const char *geom, bool update = false);
 };
 # endif
@@ -1207,7 +1194,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 # endif
 
 # if ENABLE_TRANSPARENCY
-  Pixmap root_pixmap; /* current root pixmap set */
+  rxvt_img *root_img;
   image_effects root_effects;
 
   void bg_set_transparent ()
@@ -1218,14 +1205,11 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   bool render_root_image ();
 # endif
 
-  bool blur_pixmap (Pixmap pixmap, int width, int height, bool argb, int h_blurRadius, int v_blurRadius);
-  bool tint_pixmap (Pixmap pixmap, int width, int height, bool argb, rxvt_color &tint, bool tint_set, int shade);
-  void tint_ximage (XImage *ximage, rxvt_color &tint, bool tint_set, int shade);
+  void tint_image (rxvt_img *img, rxvt_color &tint, bool tint_set, int shade);
 
   ev_tstamp bg_valid_since;
 
-  Pixmap bg_pixmap;
-  unsigned int bg_pmap_width, bg_pmap_height;
+  rxvt_img *bg_img;
 
   int target_x;
   int target_y;
@@ -1238,11 +1222,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   {
     bg_flags &= ~BG_IS_VALID;
   }
-#endif
-#if HAVE_PIXBUF
-  bool pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
-                         int src_x, int src_y, int dst_x, int dst_y,
-                         unsigned int width, unsigned int height, bool argb);
 #endif
 
 #if ENABLE_OVERLAY

@@ -22,50 +22,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *---------------------------------------------------------------------*/
 
-#include <math.h>
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
 
-#if XRENDER
-# include <X11/extensions/Xrender.h>
-#endif
-
-#ifndef FilterConvolution
-#define FilterConvolution "convolution"
-#endif
-
-#ifndef RepeatPad
-#define RepeatPad True
-#endif
-
 #ifdef HAVE_BG_PIXMAP
-# if XRENDER
-static Picture
-create_xrender_mask (Display *dpy, Drawable drawable, Bool argb, Bool component_alpha)
-{
-  Pixmap pixmap = XCreatePixmap (dpy, drawable, 1, 1, argb ? 32 : 8);
-
-  XRenderPictFormat *format = XRenderFindStandardFormat (dpy, argb ? PictStandardARGB32 : PictStandardA8);
-  XRenderPictureAttributes pa;
-  pa.repeat = True;
-  pa.component_alpha = component_alpha;
-  Picture mask = XRenderCreatePicture (dpy, pixmap, format, CPRepeat | CPComponentAlpha, &pa);
-
-  XFreePixmap (dpy, pixmap);
-
-  return mask;
-}
-# endif
 
 void
 rxvt_term::bg_destroy ()
 {
+# if ENABLE_TRANSPARENCY
+  delete root_img;
+# endif
+
 # if BG_IMAGE_FROM_FILE
   fimage.destroy ();
 # endif
 
-  if (bg_pixmap)
-    XFreePixmap (dpy, bg_pixmap);
+  delete bg_img;
 }
 
 bool
@@ -91,11 +64,11 @@ rxvt_term::bg_window_size_sensitive ()
 # endif
 
 # if BG_IMAGE_FROM_FILE
-  if (fimage.flags & IM_IS_SET)
+  if (fimage.img)
     {
       if ((fimage.flags & IM_IS_SIZE_SENSITIVE)
-          || fimage.width () > szHint.width
-          || fimage.height () > szHint.height)
+          || fimage.img->w > szHint.width
+          || fimage.img->h > szHint.height)
         return true;
     }
 # endif
@@ -112,7 +85,7 @@ rxvt_term::bg_window_position_sensitive ()
 # endif
 
 # if BG_IMAGE_FROM_FILE
-  if (fimage.flags & IM_IS_SET)
+  if (fimage.img)
     {
       if (fimage.flags & IM_ROOT_ALIGN)
         return true;
@@ -315,8 +288,8 @@ rxvt_image::set_geometry (const char *geom, bool update)
 void
 rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y)
 {
-  int image_width = image.width ();
-  int image_height = image.height ();
+  int image_width = image.img->w;
+  int image_height = image.img->h;
   int target_width = szHint.width;
   int target_height = szHint.height;
   int h_scale = min (image.h_scale, 32767 * 100 / target_width);
@@ -348,155 +321,11 @@ rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y
     }
 }
 
-#  if HAVE_PIXBUF
-bool
-rxvt_term::pixbuf_to_pixmap (GdkPixbuf *pixbuf, Pixmap pixmap, GC gc,
-                             int src_x, int src_y, int dst_x, int dst_y,
-                             unsigned int width, unsigned int height, bool argb)
-{
-  XImage *ximage;
-  char *line;
-  int width_r, width_g, width_b, width_a;
-  int sh_r, sh_g, sh_b, sh_a;
-  uint32_t red_mask, green_mask, blue_mask, alpha_mask;
-  int rowstride;
-  int channels;
-  unsigned char *row;
-
-  if (visual->c_class != TrueColor)
-    return false;
-
-  if (argb)
-    {
-      red_mask   = 0xff << 16;
-      green_mask = 0xff << 8;
-      blue_mask  = 0xff;
-      alpha_mask = 0xff << 24;
-    }
-  else
-    {
-      red_mask   = visual->red_mask;
-      green_mask = visual->green_mask;
-      blue_mask  = visual->blue_mask;
-#if XRENDER
-      XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
-      if (format)
-        alpha_mask = (uint32_t)format->direct.alphaMask << format->direct.alpha;
-      else
-#endif
-        alpha_mask = 0;
-    }
-
-  width_r = ecb_popcount32 (red_mask);
-  width_g = ecb_popcount32 (green_mask);
-  width_b = ecb_popcount32 (blue_mask);
-  width_a = ecb_popcount32 (alpha_mask);
-
-  if (width_r > 8 || width_g > 8 || width_b > 8 || width_a > 8)
-    return false;
-
-  sh_r = ecb_ctz32 (red_mask);
-  sh_g = ecb_ctz32 (green_mask);
-  sh_b = ecb_ctz32 (blue_mask);
-  sh_a = ecb_ctz32 (alpha_mask);
-
-  if (width > 32767 || height > 32767)
-    return false;
-
-  ximage = XCreateImage (dpy, visual, argb ? 32 : depth, ZPixmap, 0, 0,
-                         width, height, 32, 0);
-  if (!ximage)
-    return false;
-
-  if (height > INT_MAX / ximage->bytes_per_line
-      || !(ximage->data = (char *)malloc (height * ximage->bytes_per_line)))
-    {
-      XDestroyImage (ximage);
-      return false;
-    }
-
-  ximage->byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
-
-  rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-  channels = gdk_pixbuf_get_n_channels (pixbuf);
-  row = gdk_pixbuf_get_pixels (pixbuf) + src_y * rowstride + src_x * channels;
-  line = ximage->data;
-
-  rgba c (0, 0, 0);
-
-  if (channels == 4 && alpha_mask == 0)
-    {
-      pix_colors[Color_bg].get (c);
-      c.r >>= 8;
-      c.g >>= 8;
-      c.b >>= 8;
-    }
-
-  for (int y = 0; y < height; y++)
-    {
-      for (int x = 0; x < width; x++)
-        {
-          unsigned char *pixel = row + x * channels;
-          uint32_t value;
-          unsigned char r, g, b, a;
-
-          if (channels == 4)
-            {
-              a = pixel[3];
-              r = (pixel[0] * a + c.r * (0xff - a)) / 0xff;
-              g = (pixel[1] * a + c.g * (0xff - a)) / 0xff;
-              b = (pixel[2] * a + c.b * (0xff - a)) / 0xff;
-            }
-          else
-            {
-              a = 0xff;
-              r = pixel[0];
-              g = pixel[1];
-              b = pixel[2];
-            }
-
-          value  = ((r >> (8 - width_r)) << sh_r)
-                 | ((g >> (8 - width_g)) << sh_g)
-                 | ((b >> (8 - width_b)) << sh_b)
-                 | ((a >> (8 - width_a)) << sh_a);
-
-          if (ximage->bits_per_pixel == 32)
-            ((uint32_t *)line)[x] = value;
-          else
-            XPutPixel (ximage, x, y, value);
-        }
-
-      row += rowstride;
-      line += ximage->bytes_per_line;
-    }
-
-  XPutImage (dpy, pixmap, gc, ximage, 0, 0, dst_x, dst_y, width, height);
-  XDestroyImage (ximage);
-  return true;
-}
-
 bool
 rxvt_term::render_image (rxvt_image &image)
 {
-  GdkPixbuf *pixbuf = image.pixbuf;
-  if (!pixbuf)
-    return false;
-
-  bool need_blend = bg_flags & BG_IS_VALID;
-
-  if (need_blend
-      && !(display->flags & DISPLAY_HAS_RENDER))
-    return false;
-
-  GdkPixbuf *result;
-
-  int image_width = gdk_pixbuf_get_width (pixbuf);
-  int image_height = gdk_pixbuf_get_height (pixbuf);
-
   int target_width    = szHint.width;
   int target_height   = szHint.height;
-  int new_pmap_width  = target_width;
-  int new_pmap_height = target_height;
 
   int x = 0;
   int y = 0;
@@ -512,141 +341,28 @@ rxvt_term::render_image (rxvt_image &image)
           || y + h <= 0))
     return false;
 
-  result = pixbuf;
+  rxvt_img *img = image.img->scale (w, h);
 
-  if (w != image_width
-      || h != image_height)
-    {
-      result = gdk_pixbuf_scale_simple (pixbuf,
-                                        w, h,
-                                        GDK_INTERP_BILINEAR);
-    }
-
-  if (!result)
-    return false;
-
-  bool ret = false;
-
-  XGCValues gcv;
-  GC gc;
-  Pixmap tmp_pixmap;
-
-  image_width = gdk_pixbuf_get_width (result);
-  image_height = gdk_pixbuf_get_height (result);
-
-  if (need_blend)
-    tmp_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, 32);
+  if (image.flags & IM_TILE)
+    img->repeat_mode (RepeatNormal);
   else
+    img->repeat_mode (RepeatNone);
+  img->sub_rect (-x, -y, target_width, target_height)->replace (img);
+
+  if (bg_flags & BG_IS_VALID)
     {
-      if (image.flags & IM_TILE)
-        {
-          new_pmap_width = min (image_width, target_width);
-          new_pmap_height = min (image_height, target_height);
-        }
-
-      if (bg_pixmap == None
-          || bg_pmap_width != new_pmap_width
-          || bg_pmap_height != new_pmap_height)
-        {
-          if (bg_pixmap)
-            XFreePixmap (dpy, bg_pixmap);
-          bg_pixmap = XCreatePixmap (dpy, vt, new_pmap_width, new_pmap_height, depth);
-          bg_pmap_width = new_pmap_width;
-          bg_pmap_height = new_pmap_height;
-        }
-
-      tmp_pixmap = bg_pixmap;
+      double factor = image.alpha * 1. / 0xffff;
+      bg_img->blend (img, factor)->replace (img);
     }
 
-  gcv.foreground = pix_colors[Color_bg];
-  gc = XCreateGC (dpy, tmp_pixmap, GCForeground, &gcv);
+  XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
+  img->convert_format (format, pix_colors [Color_bg])->replace (img);
 
-  if (gc)
-    {
-      if (image.flags & IM_TILE)
-        {
-          Pixmap tile = XCreatePixmap (dpy, vt, image_width, image_height, need_blend ? 32 : depth);
-          pixbuf_to_pixmap (result, tile, gc,
-                            0, 0,
-                            0, 0,
-                            image_width, image_height, need_blend);
+  delete bg_img;
+  bg_img = img;
 
-          gcv.tile = tile;
-          gcv.fill_style = FillTiled;
-          gcv.ts_x_origin = x;
-          gcv.ts_y_origin = y;
-          XChangeGC (dpy, gc, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
-
-          XFillRectangle (dpy, tmp_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
-          XFreePixmap (dpy, tile);
-        }
-      else
-        {
-          int src_x, src_y, dst_x, dst_y;
-          int dst_width, dst_height;
-
-          src_x = make_clip_rectangle (x, image_width , new_pmap_width , dst_x, dst_width );
-          src_y = make_clip_rectangle (y, image_height, new_pmap_height, dst_y, dst_height);
-
-          if (dst_x > 0 || dst_y > 0
-              || dst_x + dst_width < new_pmap_width
-              || dst_y + dst_height < new_pmap_height)
-            XFillRectangle (dpy, tmp_pixmap, gc, 0, 0, new_pmap_width, new_pmap_height);
-
-          if (dst_x < new_pmap_width && dst_y < new_pmap_height)
-            pixbuf_to_pixmap (result, tmp_pixmap, gc,
-                              src_x, src_y,
-                              dst_x, dst_y,
-                              dst_width, dst_height, need_blend);
-        }
-
-      if (image.need_blur ())
-        blur_pixmap (tmp_pixmap, new_pmap_width, new_pmap_height, need_blend, image.h_blurRadius, image.v_blurRadius);
-      if (image.need_tint ())
-        tint_pixmap (tmp_pixmap, new_pmap_width, new_pmap_height, need_blend, image.tint, image.tint_set, image.shade);
-
-#if XRENDER
-      if (need_blend)
-        {
-          XRenderPictFormat *argb_format = XRenderFindStandardFormat (dpy, PictStandardARGB32);
-          XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
-
-          Picture src = XRenderCreatePicture (dpy, tmp_pixmap, argb_format, 0, 0);
-
-          Picture dst = XRenderCreatePicture (dpy, bg_pixmap, format, 0, 0);
-
-          Picture mask = create_xrender_mask (dpy, vt, False, False);
-
-          XRenderColor mask_c;
-
-          mask_c.alpha = image.alpha;
-          mask_c.red   =
-          mask_c.green =
-          mask_c.blue  = 0;
-          XRenderFillRectangle (dpy, PictOpSrc, mask, &mask_c, 0, 0, 1, 1);
-
-          XRenderComposite (dpy, PictOpOver, src, mask, dst, 0, 0, 0, 0, 0, 0, target_width, target_height);
-
-          XRenderFreePicture (dpy, src);
-          XRenderFreePicture (dpy, dst);
-          XRenderFreePicture (dpy, mask);
-        }
-#endif
-
-      XFreeGC (dpy, gc);
-
-      ret = true;
-    }
-
-  if (result != pixbuf)
-    g_object_unref (result);
-
-  if (need_blend)
-    XFreePixmap (dpy, tmp_pixmap);
-
-  return ret;
+  return true;
 }
-#  endif /* HAVE_PIXBUF */
 
 rxvt_image::rxvt_image ()
 {
@@ -657,13 +373,11 @@ rxvt_image::rxvt_image ()
   h_align =
   v_align = defaultAlign;
 
-#  if HAVE_PIXBUF
-  pixbuf = 0;
-#  endif
+  img = 0;
 }
 
 bool
-rxvt_image::set_file_geometry (const char *file)
+rxvt_image::set_file_geometry (rxvt_screen *s, const char *file)
 {
   if (!file || !*file)
     return false;
@@ -679,7 +393,7 @@ rxvt_image::set_file_geometry (const char *file)
       file = f;
     }
 
-  bool ret = set_file (file);
+  bool ret = set_file (s, file);
   alpha = 0x8000;
   if (ret)
     set_geometry (p ? p + 1 : "");
@@ -687,25 +401,11 @@ rxvt_image::set_file_geometry (const char *file)
 }
 
 bool
-rxvt_image::set_file (const char *file)
+rxvt_image::set_file (rxvt_screen *s, const char *file)
 {
-  bool ret = false;
-
-#  if HAVE_PIXBUF
-  GdkPixbuf *image = gdk_pixbuf_new_from_file (file, NULL);
-  if (image)
-    {
-      if (pixbuf)
-        g_object_unref (pixbuf);
-      pixbuf = image;
-      ret = true;
-    }
-#  endif
-
-  if (ret)
-    flags |= IM_IS_SET;
-
-  return ret;
+  delete img;
+  img = rxvt_img::new_from_file (s, file);
+  return img != 0;
 }
 
 # endif /* BG_IMAGE_FROM_FILE */
@@ -773,190 +473,6 @@ image_effects::set_shade (const char *shade_str)
   return false;
 }
 
-#if XRENDER
-static void
-get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
-{
-  double sigma = radius / 2.0;
-  double scale = sqrt (2.0 * M_PI) * sigma;
-  double sum = 0.0;
-
-  for (int i = 0; i < width; i++)
-    {
-      double x = i - width / 2;
-      kernel[i] = exp (-(x * x) / (2.0 * sigma * sigma)) / scale;
-      sum += kernel[i];
-    }
-
-  params[0] = XDoubleToFixed (width);
-  params[1] = XDoubleToFixed (1);
-
-  for (int i = 0; i < width; i++)
-    params[i+2] = XDoubleToFixed (kernel[i] / sum);
-}
-#endif
-
-bool
-rxvt_term::blur_pixmap (Pixmap pixmap, int width, int height, bool argb, int h_blurRadius, int v_blurRadius)
-{
-  bool ret = false;
-#if XRENDER
-  if (!(display->flags & DISPLAY_HAS_RENDER_CONV))
-    return false;
-
-  int size = max (h_blurRadius, v_blurRadius) * 2 + 1;
-  double *kernel = (double *)malloc (size * sizeof (double));
-  XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
-
-  XRenderPictureAttributes pa;
-  XRenderPictFormat *format = argb ? XRenderFindStandardFormat (dpy, PictStandardARGB32)
-                                   : XRenderFindVisualFormat (dpy, visual);
-
-  pa.repeat = RepeatPad;
-  Picture src = XRenderCreatePicture (dpy, pixmap, format, CPRepeat, &pa);
-  Pixmap tmp = XCreatePixmap (dpy, pixmap, width, height, depth);
-  Picture dst = XRenderCreatePicture (dpy, tmp, format, CPRepeat, &pa);
-  XFreePixmap (dpy, tmp);
-
-  if (kernel && params)
-    {
-      size = h_blurRadius * 2 + 1;
-      get_gaussian_kernel (h_blurRadius, size, kernel, params);
-
-      XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
-      XRenderComposite (dpy,
-                        PictOpSrc,
-                        src,
-                        None,
-                        dst,
-                        0, 0,
-                        0, 0,
-                        0, 0,
-                        width, height);
-
-      ::swap (src, dst);
-
-      size = v_blurRadius * 2 + 1;
-      get_gaussian_kernel (v_blurRadius, size, kernel, params);
-      ::swap (params[0], params[1]);
-
-      XRenderSetPictureFilter (dpy, src, FilterConvolution, params, size+2);
-      XRenderComposite (dpy,
-                        PictOpSrc,
-                        src,
-                        None,
-                        dst,
-                        0, 0,
-                        0, 0,
-                        0, 0,
-                        width, height);
-
-      ret = true;
-    }
-
-  free (kernel);
-  free (params);
-  XRenderFreePicture (dpy, src);
-  XRenderFreePicture (dpy, dst);
-#endif
-  return ret;
-}
-
-bool
-rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height, bool argb, rxvt_color &tint, bool tint_set, int shade)
-{
-  bool ret = false;
-
-  rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
-
-  if (tint_set)
-    tint.get (c);
-
-  if (shade == 100
-      && (c.r <= 0x00ff || c.r >= 0xff00)
-      && (c.g <= 0x00ff || c.g >= 0xff00)
-      && (c.b <= 0x00ff || c.b >= 0xff00))
-    {
-      XGCValues gcv;
-      GC gc;
-
-      /* In this case we can tint image server-side getting significant
-       * performance improvements, as we eliminate XImage transfer
-       */
-      gcv.foreground = Pixel (tint);
-      gcv.function = GXand;
-      gcv.fill_style = FillSolid;
-      gc = XCreateGC (dpy, pixmap, GCFillStyle | GCForeground | GCFunction, &gcv);
-      if (gc)
-        {
-          XFillRectangle (dpy, pixmap, gc, 0, 0, width, height);
-          ret = true;
-          XFreeGC (dpy, gc);
-        }
-    }
-#  if XRENDER
-  else if (display->flags & DISPLAY_HAS_RENDER)
-    {
-      if (shade <= 100)
-        {
-          c.r = c.r * shade / 100;
-          c.g = c.g * shade / 100;
-          c.b = c.b * shade / 100;
-        }
-      else
-        {
-          c.r = c.r * (200 - shade) / 100;
-          c.g = c.g * (200 - shade) / 100;
-          c.b = c.b * (200 - shade) / 100;
-        }
-
-      XRenderPictFormat *format = argb ? XRenderFindStandardFormat (dpy, PictStandardARGB32)
-                                       : XRenderFindVisualFormat (dpy, visual);
-
-      Picture back_pic = XRenderCreatePicture (dpy, pixmap, format, 0, 0);
-
-      Picture overlay_pic = create_xrender_mask (dpy, pixmap, True, False);
-
-      Picture mask_pic = create_xrender_mask (dpy, pixmap, True, True);
-
-      XRenderColor mask_c;
-
-      mask_c.alpha = 0xffff;
-      mask_c.red   =
-      mask_c.green =
-      mask_c.blue  = 0;
-      XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
-
-      mask_c.alpha = 0;
-      mask_c.red   = 0xffff - c.r;
-      mask_c.green = 0xffff - c.g;
-      mask_c.blue  = 0xffff - c.b;
-      XRenderFillRectangle (dpy, PictOpSrc, mask_pic, &mask_c, 0, 0, 1, 1);
-
-      XRenderComposite (dpy, PictOpOver, overlay_pic, mask_pic, back_pic, 0, 0, 0, 0, 0, 0, width, height);
-
-      if (shade > 100)
-        {
-          mask_c.alpha = 0;
-          mask_c.red   =
-          mask_c.green =
-          mask_c.blue  = 0xffff * (shade - 100) / 100;
-          XRenderFillRectangle (dpy, PictOpSrc, overlay_pic, &mask_c, 0, 0, 1, 1);
-
-          XRenderComposite (dpy, PictOpOver, overlay_pic, None, back_pic, 0, 0, 0, 0, 0, 0, width, height);
-        }
-
-      ret = true;
-
-      XRenderFreePicture (dpy, mask_pic);
-      XRenderFreePicture (dpy, overlay_pic);
-      XRenderFreePicture (dpy, back_pic);
-    }
-#  endif
-
-  return ret;
-}
-
 # if ENABLE_TRANSPARENCY
 /*
  * Builds a pixmap of the same size as the terminal window that contains
@@ -966,143 +482,52 @@ rxvt_term::tint_pixmap (Pixmap pixmap, int width, int height, bool argb, rxvt_co
 bool
 rxvt_term::render_root_image ()
 {
-  bool ret = false;
-
   /* root dimensions may change from call to call - but Display structure should
    * be always up-to-date, so let's use it :
    */
   int screen = display->screen;
-  int root_depth = DefaultDepth (dpy, screen);
   int root_width = DisplayWidth (dpy, screen);
   int root_height = DisplayHeight (dpy, screen);
-  unsigned int root_pmap_width, root_pmap_height;
   int window_width = szHint.width;
   int window_height = szHint.height;
   int sx, sy;
-  XGCValues gcv;
-  GC gc;
 
   sx = target_x;
   sy = target_y;
+
+  if (!root_img)
+    return false;
 
   /* check if we are outside of the visible part of the virtual screen : */
   if (sx + window_width <= 0 || sy + window_height <= 0
       || sx >= root_width || sy >= root_height)
     return 0;
 
-  // validate root pixmap and get its size
-  if (root_pixmap != None)
-    {
-      Window wdummy;
-      int idummy;
-      unsigned int udummy;
+  while (sx < 0) sx += root_img->w;
+  while (sy < 0) sy += root_img->h;
 
-      allowedxerror = -1;
+  rxvt_img *img = root_img->sub_rect (sx, sy, window_width, window_height);
 
-      if (!XGetGeometry (dpy, root_pixmap, &wdummy, &idummy, &idummy, &root_pmap_width, &root_pmap_height, &udummy, &udummy))
-        root_pixmap = None;
+  if (root_effects.need_blur ())
+    img->blur (root_effects.h_blurRadius, root_effects.v_blurRadius)->replace (img);
 
-      allowedxerror = 0;
-    }
+  if (root_effects.need_tint ())
+    tint_image (img, root_effects.tint, root_effects.tint_set, root_effects.shade);
 
-  Pixmap recoded_root_pmap = root_pixmap;
+  XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
+  img->convert_format (format, pix_colors [Color_bg])->replace (img);
 
-  if (root_pixmap != None && root_depth != depth)
-    {
-#if XRENDER
-      if (display->flags & DISPLAY_HAS_RENDER)
-        {
-          recoded_root_pmap = XCreatePixmap (dpy, vt, root_pmap_width, root_pmap_height, depth);
+  delete bg_img;
+  bg_img = img;
 
-          XRenderPictFormat *src_format = XRenderFindVisualFormat (dpy, DefaultVisual (dpy, screen));
-          Picture src = XRenderCreatePicture (dpy, root_pixmap, src_format, 0, 0);
-
-          XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
-          Picture dst = XRenderCreatePicture (dpy, recoded_root_pmap, dst_format, 0, 0);
-
-          XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, root_pmap_width, root_pmap_height);
-
-          XRenderFreePicture (dpy, src);
-          XRenderFreePicture (dpy, dst);
-        }
-      else
-#endif
-      recoded_root_pmap = None;
-    }
-
-  if (recoded_root_pmap == None)
-    return 0;
-
-  if (bg_pixmap == None
-      || bg_pmap_width != window_width
-      || bg_pmap_height != window_height)
-    {
-      if (bg_pixmap)
-        XFreePixmap (dpy, bg_pixmap);
-      bg_pixmap = XCreatePixmap (dpy, vt, window_width, window_height, depth);
-      bg_pmap_width = window_width;
-      bg_pmap_height = window_height;
-    }
-
-  /* straightforward pixmap copy */
-  while (sx < 0) sx += root_pmap_width;
-  while (sy < 0) sy += root_pmap_height;
-
-  gcv.tile = recoded_root_pmap;
-  gcv.fill_style = FillTiled;
-  gcv.ts_x_origin = -sx;
-  gcv.ts_y_origin = -sy;
-  gc = XCreateGC (dpy, vt, GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin, &gcv);
-
-  if (gc)
-    {
-      XFillRectangle (dpy, bg_pixmap, gc, 0, 0, window_width, window_height);
-      ret = true;
-      bool need_blur = root_effects.need_blur ();
-      bool need_tint = root_effects.need_tint ();
-
-      if (need_blur)
-        {
-          if (blur_pixmap (bg_pixmap, window_width, window_height, false,
-                           root_effects.h_blurRadius, root_effects.v_blurRadius))
-            need_blur = false;
-        }
-      if (need_tint)
-        {
-          if (tint_pixmap (bg_pixmap, window_width, window_height, false,
-                           root_effects.tint, root_effects.tint_set, root_effects.shade))
-            need_tint = false;
-        }
-      if (need_tint)
-        {
-          XImage *ximage = XGetImage (dpy, bg_pixmap, 0, 0, bg_pmap_width, bg_pmap_height, AllPlanes, ZPixmap);
-          if (ximage)
-            {
-              /* our own client-side tinting */
-              tint_ximage (ximage, root_effects.tint, root_effects.tint_set, root_effects.shade);
-
-              XPutImage (dpy, bg_pixmap, gc, ximage, 0, 0, 0, 0, ximage->width, ximage->height);
-              XDestroyImage (ximage);
-            }
-        }
-
-      XFreeGC (dpy, gc);
-    }
-
-  if (recoded_root_pmap != root_pixmap)
-    XFreePixmap (dpy, recoded_root_pmap);
-
-  return ret;
+  return true;
 }
 
 void
 rxvt_term::bg_set_root_pixmap ()
 {
-  Pixmap new_root_pixmap = display->get_pixmap_property (xa[XA_XROOTPMAP_ID]);
-  if (new_root_pixmap == None)
-    new_root_pixmap = display->get_pixmap_property (xa[XA_ESETROOT_PMAP_ID]);
-
-  root_pixmap = new_root_pixmap;
+  delete root_img;
+  root_img = rxvt_img::new_from_root (this);
 }
 # endif /* ENABLE_TRANSPARENCY */
 
@@ -1123,7 +548,7 @@ rxvt_term::bg_render ()
 # endif
 
 # if BG_IMAGE_FROM_FILE
-  if (fimage.flags & IM_IS_SET)
+  if (fimage.img)
     {
       if (render_image (fimage))
         bg_flags |= BG_IS_VALID;
@@ -1132,11 +557,8 @@ rxvt_term::bg_render ()
 
   if (!(bg_flags & BG_IS_VALID))
     {
-      if (bg_pixmap != None)
-        {
-          XFreePixmap (dpy, bg_pixmap);
-          bg_pixmap = None;
-        }
+      delete bg_img;
+      bg_img = 0;
     }
 
   scr_recolour (false);
@@ -1151,122 +573,44 @@ rxvt_term::bg_init ()
 #if BG_IMAGE_FROM_FILE
   if (rs[Rs_backgroundPixmap])
     {
-      if (fimage.set_file_geometry (rs[Rs_backgroundPixmap])
+      if (fimage.set_file_geometry (this, rs[Rs_backgroundPixmap])
           && !bg_window_position_sensitive ())
         update_background ();
     }
 #endif
 }
 
-/* based on code from aterm-0.4.2 */
-
-static inline void
-fill_lut (uint32_t *lookup, uint32_t mask, int sh, unsigned short low, unsigned short high)
-{
-  for (int i = 0; i <= mask >> sh; i++)
-    {
-      uint32_t tmp;
-      tmp = i * high;
-      tmp += (mask >> sh) * low;
-      lookup[i] = (tmp / 0xffff) << sh;
-    }
-}
-
 void
-rxvt_term::tint_ximage (XImage *ximage, rxvt_color &tint, bool tint_set, int shade)
+rxvt_term::tint_image (rxvt_img *img, rxvt_color &tint, bool tint_set, int shade)
 {
-  unsigned int size_r, size_g, size_b;
-  int sh_r, sh_g, sh_b;
-  uint32_t mask_r, mask_g, mask_b;
-  uint32_t *lookup, *lookup_r, *lookup_g, *lookup_b;
-  unsigned short low;
-  int host_byte_order = ecb_big_endian () ? MSBFirst : LSBFirst;
-
-  if (visual->c_class != TrueColor || ximage->format != ZPixmap) return;
-
-  /* for convenience */
-  mask_r = visual->red_mask;
-  mask_g = visual->green_mask;
-  mask_b = visual->blue_mask;
-
-  /* boring lookup table pre-initialization */
-  sh_r = ecb_ctz32 (mask_r);
-  sh_g = ecb_ctz32 (mask_g);
-  sh_b = ecb_ctz32 (mask_b);
-
-  size_r = mask_r >> sh_r;
-  size_g = mask_g >> sh_g;
-  size_b = mask_b >> sh_b;
-
-  if (size_r++ > 255 || size_g++ > 255 || size_b++ > 255)
-    return;
-
-  lookup = (uint32_t *)malloc (sizeof (uint32_t) * (size_r + size_g + size_b));
-  lookup_r = lookup;
-  lookup_g = lookup + size_r;
-  lookup_b = lookup + size_r + size_g;
-
   rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
 
   if (tint_set)
     tint.get (c);
 
-  /* prepare limits for color transformation (each channel is handled separately) */
   if (shade > 100)
     {
       c.r = c.r * (200 - shade) / 100;
       c.g = c.g * (200 - shade) / 100;
       c.b = c.b * (200 - shade) / 100;
-
-      low = 0xffff * (shade - 100) / 100;
     }
   else
     {
       c.r = c.r * shade / 100;
       c.g = c.g * shade / 100;
       c.b = c.b * shade / 100;
-
-      low = 0;
     }
 
-  /* fill our lookup tables */
-  fill_lut (lookup_r, mask_r, sh_r, low, c.r);
-  fill_lut (lookup_g, mask_g, sh_g, low, c.g);
-  fill_lut (lookup_b, mask_b, sh_b, low, c.b);
+  img->contrast (c.r, c.g, c.b, c.a);
 
-  /* apply table to input image (replacing colors by newly calculated ones) */
-  if (ximage->bits_per_pixel == 32
-      && ximage->byte_order == host_byte_order)
+  if (shade > 100)
     {
-      char *line = ximage->data;
-
-      for (int y = 0; y < ximage->height; y++)
-        {
-          uint32_t *p = (uint32_t *)line;
-          for (int x = 0; x < ximage->width; x++)
-            {
-              *p = lookup_r[(*p & mask_r) >> sh_r] |
-                   lookup_g[(*p & mask_g) >> sh_g] |
-                   lookup_b[(*p & mask_b) >> sh_b];
-              p++;
-            }
-          line += ximage->bytes_per_line;
-        }
+      c.a = 0xffff;
+      c.r =
+      c.g =
+      c.b = 0xffff * (shade - 100) / 100;
+      img->brightness (c.r, c.g, c.b, c.a);
     }
-  else
-    {
-      for (int y = 0; y < ximage->height; y++)
-        for (int x = 0; x < ximage->width; x++)
-          {
-            unsigned long pixel = XGetPixel (ximage, x, y);
-            pixel = lookup_r[(pixel & mask_r) >> sh_r] |
-                    lookup_g[(pixel & mask_g) >> sh_g] |
-                    lookup_b[(pixel & mask_b) >> sh_b];
-            XPutPixel (ximage, x, y, pixel);
-          }
-    }
-
-  free (lookup);
 }
 
 #endif /* HAVE_BG_PIXMAP */

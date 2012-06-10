@@ -3490,7 +3490,7 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
 
             if (*str != ';')
               {
-                if (fimage.set_file_geometry (str))
+                if (fimage.set_file_geometry (this, str))
                   changed = true;
               }
             else

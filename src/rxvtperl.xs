@@ -2092,7 +2092,7 @@ void
 rxvt_term::set_background (rxvt_img *img, bool border = false)
 	CODE:
         THIS->bg_destroy ();
-        THIS->bg_pixmap = None;
+        THIS->bg_img = 0;
         THIS->bg_flags &= ~(rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER | rxvt_term::BG_IS_TRANSPARENT);
 
         if (img) // TODO: cannot be false
@@ -2112,7 +2112,7 @@ rxvt_term::set_background (rxvt_img *img, bool border = false)
             img->convert_format (XRenderFindVisualFormat (THIS->dpy, THIS->visual), THIS->pix_colors [Color_bg])
                ->replace (img);
 
-            THIS->bg_pixmap = img->steal ();
+            THIS->bg_img = img;
             THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER;
 
             if (!border)

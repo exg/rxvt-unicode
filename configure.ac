@@ -423,34 +423,6 @@ AC_PATH_PROG(TIC, tic, :)
 
 AC_PATH_XTRA
 
-image_lib=none
-
-PIXBUF_CFLAGS=
-PIXBUF_LIBS=
-
-if test x$support_pixbuf = xyes; then
-  support_pixbuf=no
-  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
-  AC_MSG_CHECKING(for gdk-pixbuf)
-  if test $PKG_CONFIG != no && $PKG_CONFIG --exists gdk-pixbuf-2.0; then
-    PIXBUF_CFLAGS="`$PKG_CONFIG gdk-pixbuf-2.0 --cflags`"
-    PIXBUF_LIBS="`$PKG_CONFIG gdk-pixbuf-2.0 --libs`"
-    support_pixbuf=yes
-  fi
-
-  if test x$support_pixbuf = xyes; then
-    AC_MSG_RESULT(ok)
-    image_lib=gdk-pixbuf
-    AC_DEFINE(HAVE_PIXBUF, 1, Define if you want to use gdk-pixbuf for image processing)
-    AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps.)
-  else
-    AC_MSG_RESULT(no)
-  fi
-fi
-
-AC_SUBST(PIXBUF_CFLAGS)
-AC_SUBST(PIXBUF_LIBS)
-
 STARTUP_NOTIFICATION_CFLAGS=
 STARTUP_NOTIFICATION_LIBS=
 
@@ -588,7 +560,11 @@ TTY_GROUP_CHECK
 dnl# --------------------------------------------------------------------------
 dnl# now add and remove other stuff
 dnl# --------------------------------------------------------------------------
-if test x$support_xft = xyes || test x$support_inheritpixmap = xyes; then
+support_image=no
+if test x$support_inheritpixmap = xyes || test x$support_pixbuf = xyes; then
+  support_image=yes
+fi
+if test x$support_xft = xyes || test x$support_image = xyes; then
   rxvt_have_xrender=no
   AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists xrender; then
@@ -634,6 +610,44 @@ if test x$support_xft = xyes && test x$rxvt_have_xrender = xyes; then
     AC_DEFINE(XFT, 1, Define to enable xft support)
   fi
 fi
+
+image_lib=none
+
+PIXBUF_CFLAGS=
+PIXBUF_LIBS=
+
+if test x$support_image = xyes && test x$rxvt_have_xrender = xyes; then
+  LIBS="$LIBS -lm"
+  AC_DEFINE(XRENDER, 1, Define to enable xrender support)
+
+  if test x$support_inheritpixmap = xyes; then
+    AC_DEFINE(ENABLE_TRANSPARENCY, 1, Define if you want your background to use the parent window background)
+  fi
+
+  if test x$support_pixbuf = xyes; then
+    support_pixbuf=no
+    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+    AC_MSG_CHECKING(for gdk-pixbuf)
+    if test $PKG_CONFIG != no && $PKG_CONFIG --exists gdk-pixbuf-2.0; then
+      PIXBUF_CFLAGS="`$PKG_CONFIG gdk-pixbuf-2.0 --cflags`"
+      PIXBUF_LIBS="`$PKG_CONFIG gdk-pixbuf-2.0 --libs`"
+      support_pixbuf=yes
+    fi
+
+    if test x$support_pixbuf = xyes; then
+      AC_MSG_RESULT(ok)
+      image_lib=gdk-pixbuf
+      AC_DEFINE(HAVE_PIXBUF, 1, Define if you want to use gdk-pixbuf for image processing)
+      AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps.)
+    else
+      AC_MSG_RESULT(no)
+    fi
+  fi
+fi
+
+AC_SUBST(PIXBUF_CFLAGS)
+AC_SUBST(PIXBUF_LIBS)
+
 if test x$support_styles = xyes; then
   AC_DEFINE(ENABLE_STYLES, 1, Define if you want bold and italic support)
 fi
@@ -645,13 +659,6 @@ if test x$support_8bitctrls = xyes; then
 fi
 if test x$support_fading = xyes; then
   AC_DEFINE(OFF_FOCUS_FADING, 1, Define if you want faded colors when focus is lost)
-fi
-if test x$support_inheritpixmap = xyes; then
-  if test x$rxvt_have_xrender = xyes; then
-    LIBS="$LIBS -lm"
-    AC_DEFINE(XRENDER, 1, Define to enable xrender support)
-  fi
-  AC_DEFINE(ENABLE_TRANSPARENCY, 1, Define if you want your background to use the parent window background)
 fi
 if test x$support_keepscrolling = xno; then
   AC_DEFINE(NO_SCROLLBAR_BUTTON_CONTINUAL_SCROLLING, 1, Define for continual scrolling when you keep the scrollbar button pressed)
