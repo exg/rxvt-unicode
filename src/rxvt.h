@@ -1211,9 +1211,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   rxvt_img *bg_img;
 
-  int target_x;
-  int target_y;
-  bool bg_set_position (int x, int y);
   bool bg_window_size_sensitive ();
   bool bg_window_position_sensitive ();
 

@@ -1493,10 +1493,10 @@ rxvt_term::x_cb (XEvent &ev)
                     parent_x = x;
                     parent_y = y;
                     HOOK_INVOKE ((this, HOOK_POSITION_CHANGE, DT_INT, x, DT_INT, y, DT_END));
+                    moved = true;
                   }
 
-                if (bg_set_position (x, y)
-                    || !(bg_flags & BG_IS_VALID))
+                if (!(bg_flags & BG_IS_VALID))
                   moved = true;
               }
 
@@ -3506,7 +3506,8 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
                   {
                     int x, y;
                     get_window_origin (x, y);
-                    bg_set_position (x, y);
+                    parent_x = x;
+                    parent_y = y;
                   }
                 update_background ();
               }

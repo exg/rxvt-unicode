@@ -44,20 +44,6 @@ rxvt_term::bg_destroy ()
 }
 
 bool
-rxvt_term::bg_set_position (int x, int y)
-{
-
-  if (target_x != x
-      || target_y != y)
-    {
-      target_x = x;
-      target_y = y;
-      return true;
-    }
-  return false;
-}
-
-bool
 rxvt_term::bg_window_size_sensitive ()
 {
 # if ENABLE_TRANSPARENCY
@@ -296,8 +282,8 @@ rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y
 
   if (image.flags & IM_ROOT_ALIGN)
     {
-      x = -target_x;
-      y = -target_y;
+      x = -parent_x;
+      y = -parent_y;
     }
   else
     {
@@ -477,8 +463,8 @@ rxvt_term::render_root_image ()
   int window_height = szHint.height;
   int sx, sy;
 
-  sx = target_x;
-  sy = target_y;
+  sx = parent_x;
+  sy = parent_y;
 
   if (!root_img)
     return false;
