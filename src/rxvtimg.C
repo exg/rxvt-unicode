@@ -563,7 +563,7 @@ rxvt_img::scale (int new_width, int new_height)
   };
 
   int old_repeat_mode = repeat;
-  repeat = RepeatPad; // not right, but xrender can't proeprly scale it seems
+  repeat = RepeatPad; // not right, but xrender can't properly scale it seems
 
   rxvt_img *img = transform (new_width, new_height, matrix);
 
