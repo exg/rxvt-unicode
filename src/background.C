@@ -347,11 +347,11 @@ rxvt_image::rxvt_image ()
   img = 0;
 }
 
-bool
+void
 rxvt_image::set_file_geometry (rxvt_screen *s, const char *file)
 {
   if (!file || !*file)
-    return false;
+    return;
 
   const char *p = strchr (file, ';');
 
@@ -364,19 +364,17 @@ rxvt_image::set_file_geometry (rxvt_screen *s, const char *file)
       file = f;
     }
 
-  bool ret = set_file (s, file);
+  set_file (s, file);
   alpha = 0x8000;
-  if (ret)
-    set_geometry (p ? p + 1 : "");
-  return ret;
+  set_geometry (p ? p + 1 : "");
 }
 
-bool
+void
 rxvt_image::set_file (rxvt_screen *s, const char *file)
 {
+  rxvt_img *img2 = rxvt_img::new_from_file (s, file);
   delete img;
-  img = rxvt_img::new_from_file (s, file);
-  return img != 0;
+  img = img2;
 }
 
 # endif /* BG_IMAGE_FROM_FILE */
@@ -544,8 +542,8 @@ rxvt_term::bg_init ()
 #if BG_IMAGE_FROM_FILE
   if (rs[Rs_backgroundPixmap])
     {
-      if (fimage.set_file_geometry (this, rs[Rs_backgroundPixmap])
-          && !bg_window_position_sensitive ())
+      fimage.set_file_geometry (this, rs[Rs_backgroundPixmap]);
+      if (!bg_window_position_sensitive ())
         update_background ();
     }
 #endif

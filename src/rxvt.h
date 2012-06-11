@@ -283,8 +283,8 @@ struct rxvt_image : image_effects
   }
 
   rxvt_image ();
-  bool set_file_geometry (rxvt_screen *s, const char *file);
-  bool set_file (rxvt_screen *s, const char *file);
+  void set_file_geometry (rxvt_screen *s, const char *file);
+  void set_file (rxvt_screen *s, const char *file);
   bool set_geometry (const char *geom, bool update = false);
 };
 # endif
