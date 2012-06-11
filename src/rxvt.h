@@ -280,6 +280,7 @@ struct rxvt_image : image_effects
   void destroy ()
   {
     delete img;
+    img = 0;
   }
 
   rxvt_image ();
