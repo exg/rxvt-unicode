@@ -261,13 +261,13 @@ rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y
 {
   int image_width = image.img->w;
   int image_height = image.img->h;
-  int target_width = szHint.width;
-  int target_height = szHint.height;
-  int h_scale = min (image.h_scale, 32767 * 100 / target_width);
-  int v_scale = min (image.v_scale, 32767 * 100 / target_height);
+  int parent_width = szHint.width;
+  int parent_height = szHint.height;
+  int h_scale = min (image.h_scale, 32767 * 100 / parent_width);
+  int v_scale = min (image.v_scale, 32767 * 100 / parent_height);
 
-  w = h_scale * target_width / 100;
-  h = v_scale * target_height / 100;
+  w = h_scale * parent_width / 100;
+  h = v_scale * parent_height / 100;
 
   if (image.flags & IM_KEEP_ASPECT)
     {
@@ -287,16 +287,16 @@ rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y
     }
   else
     {
-      x = make_align_position (image.h_align, target_width, w);
-      y = make_align_position (image.v_align, target_height, h);
+      x = make_align_position (image.h_align, parent_width, w);
+      y = make_align_position (image.v_align, parent_height, h);
     }
 }
 
 bool
 rxvt_term::render_image (rxvt_image &image)
 {
-  int target_width    = szHint.width;
-  int target_height   = szHint.height;
+  int parent_width = szHint.width;
+  int parent_height = szHint.height;
 
   int x = 0;
   int y = 0;
@@ -306,8 +306,8 @@ rxvt_term::render_image (rxvt_image &image)
   get_image_geometry (image, w, h, x, y);
 
   if (!(image.flags & IM_ROOT_ALIGN)
-      && (x >= target_width
-          || y >= target_height
+      && (x >= parent_width
+          || y >= parent_height
           || x + w <= 0
           || y + h <= 0))
     return false;
@@ -318,7 +318,7 @@ rxvt_term::render_image (rxvt_image &image)
     img->repeat_mode (RepeatNormal);
   else
     img->repeat_mode (RepeatNone);
-  img->sub_rect (-x, -y, target_width, target_height)->replace (img);
+  img->sub_rect (-x, -y, parent_width, parent_height)->replace (img);
 
   if (bg_flags & BG_IS_VALID)
     {
@@ -459,8 +459,8 @@ rxvt_term::render_root_image ()
   int screen = display->screen;
   int root_width = DisplayWidth (dpy, screen);
   int root_height = DisplayHeight (dpy, screen);
-  int window_width = szHint.width;
-  int window_height = szHint.height;
+  int parent_width = szHint.width;
+  int parent_height = szHint.height;
   int sx, sy;
 
   sx = parent_x;
@@ -470,14 +470,14 @@ rxvt_term::render_root_image ()
     return false;
 
   /* check if we are outside of the visible part of the virtual screen : */
-  if (sx + window_width <= 0 || sy + window_height <= 0
+  if (sx + parent_width <= 0 || sy + parent_height <= 0
       || sx >= root_width || sy >= root_height)
     return 0;
 
   while (sx < 0) sx += root_img->w;
   while (sy < 0) sy += root_img->h;
 
-  rxvt_img *img = root_img->sub_rect (sx, sy, window_width, window_height);
+  rxvt_img *img = root_img->sub_rect (sx, sy, parent_width, parent_height);
 
   if (root_effects.need_blur ())
     img->blur (root_effects.h_blurRadius, root_effects.v_blurRadius)->replace (img);
