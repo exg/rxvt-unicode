@@ -539,6 +539,26 @@ rxvt_term::bg_render ()
 void
 rxvt_term::bg_init ()
 {
+#if ENABLE_TRANSPARENCY
+  if (option (Opt_transparent))
+    {
+      bg_set_transparent ();
+
+      if (rs [Rs_blurradius])
+        root_effects.set_blur (rs [Rs_blurradius]);
+
+      if (ISSET_PIXCOLOR (Color_tint))
+        root_effects.set_tint (pix_colors_focused [Color_tint]);
+
+      if (rs [Rs_shade])
+        root_effects.set_shade (rs [Rs_shade]);
+
+      bg_set_root_pixmap ();
+      XSelectInput (dpy, display->root, PropertyChangeMask);
+      rootwin_ev.start (display, display->root);
+    }
+#endif
+
 #if BG_IMAGE_FROM_FILE
   if (rs[Rs_backgroundPixmap])
     {
