@@ -560,12 +560,12 @@ rxvt_img::transform (double matrix[3][3])
   int oy = mat_apply (matrix, 1, x, y);
 
   // calculate new pixel bounding box coordinates
-  double rmin[2], rmax[2];
+  double d [2], rmin[2], rmax[2];
 
   for (int i = 0; i < 2; ++i)
     {
       double v;
-      v = mat_apply (matrix, i, 0, 0);         rmin [i] =            rmax [i] = v;
+      v = mat_apply (matrix, i, 0, 0);         rmin [i] =            rmax [i] = v; d [i] = v;
       v = mat_apply (matrix, i, w, 0); min_it (rmin [i], v); max_it (rmax [i],  v);
       v = mat_apply (matrix, i, 0, h); min_it (rmin [i], v); max_it (rmax [i],  v);
       v = mat_apply (matrix, i, w, h); min_it (rmin [i], v); max_it (rmax [i],  v);
@@ -580,7 +580,7 @@ rxvt_img::transform (double matrix[3][3])
   double inv[3][3];
   mat_invert (matrix, inv);
 
-  rxvt_img *img = new rxvt_img (s, format, ox - dx, oy - dy, new_width, new_height, repeat);
+  rxvt_img *img = new rxvt_img (s, format, ox - dx - d [0], oy - dy - d [1], new_width, new_height, repeat);
   img->alloc ();
 
   Display *dpy = s->display->dpy;
@@ -633,18 +633,18 @@ rxvt_img::rotate (int cx, int cy, double phi)
   double c = cos (phi);
 
   double matrix[3][3] = {
-    //{ c, -s, cx - c * cx + s * cy },
-    //{ s,  c, cy - s * cx - c * cy },
-    //{ 0,  0,                     1 }
-    { c, -s, 0 },
-    { s,  c, 0 },
-    { 0,  0, 1 }
+    { c, -s, cx - c * cx + s * cy },
+    { s,  c, cy - s * cx - c * cy },
+    { 0,  0,                     1 }
+    //{ c, -s, 0 },
+    //{ s,  c, 0 },
+    //{ 0,  0, 1 }
   };
 
-  move (-cx, -cy);
+  //move (-cx, -cy);
   rxvt_img *img = transform (matrix);
-  move ( cx,  cy);
-  img->move (cx, cy);
+  //move ( cx,  cy);
+  //img->move (cx, cy);
 
   return img;
 }
