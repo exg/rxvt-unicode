@@ -434,7 +434,7 @@ C<$seconds> seconds.
 Example: load some image and rotate it according to the time of day (as if it were
 the hour pointer of a clock). Update this image every minute.
 
-   again 60; rotate TW, TH, 50, 50, (now % 86400) * -720 / 86400, scale load "myclock.png"
+   again 60; rotate 50, 50, (now % 86400) * -720 / 86400, scale load "myclock.png"
 
 =item counter $seconds
 
@@ -631,12 +631,11 @@ transparency as long as the window isn't in front of other windows.
       move -TX, -TY, $_[0]
    }
 
-=item rotate $center_x, $center_y, $degrees, $new_width, $new_height
+=item rotate $center_x, $center_y, $degrees
 
 Rotates the image by C<$degrees> degrees, counter-clockwise, around the
 pointer at C<$center_x> and C<$center_y> (specified as factor of image
-width/height), generating a new image with width C<$new_width> and height
-C<$new_height>.
+width/height).
 
 #TODO# new width, height, maybe more operators?
 
@@ -644,14 +643,12 @@ Example: rotate the image by 90 degrees
 
 =cut
 
-   sub rotate($$$$$$) {
+   sub rotate($$$$) {
       my $img = pop;
       $img->rotate (
          $_[0] * $img->w,
          $_[1] * $img->h,
          $_[2] * (3.14159265 / 180),
-         $_[3],
-         $_[4],
       )
    }
 

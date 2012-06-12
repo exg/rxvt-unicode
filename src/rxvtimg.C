@@ -521,10 +521,66 @@ rxvt_img::sub_rect (int x, int y, int width, int height)
   return img;
 }
 
-rxvt_img *
-rxvt_img::transform (double matrix[9], int new_width, int new_height)
+static void
+mat_invert (double mat[3][3], double (&inv)[3][3])
 {
-  rxvt_img *img = new rxvt_img (s, format, 0, 0, new_width, new_height, repeat);
+  double s0 = mat [2][2] * mat [1][1] - mat [2][1] * mat [1][2];
+  double s1 = mat [2][1] * mat [0][2] - mat [2][2] * mat [0][1];
+  double s2 = mat [1][2] * mat [0][1] - mat [1][1] * mat [0][2];
+
+  double invdet = 1. / (mat [0][0] * s0 + mat [1][0] * s1 + mat [2][0] * s2);
+
+  inv [0][0] = invdet * s0;
+  inv [0][1] = invdet * s1;
+  inv [0][2] = invdet * s2;
+
+  inv [1][0] = invdet * (mat [2][0] * mat [1][2] - mat [2][2] * mat [1][0]);
+  inv [1][1] = invdet * (mat [2][2] * mat [0][0] - mat [2][0] * mat [0][2]);
+  inv [1][2] = invdet * (mat [1][0] * mat [0][2] - mat [1][2] * mat [0][0]);
+
+  inv [2][0] = invdet * (mat [2][1] * mat [1][0] - mat [2][0] * mat [1][1]);
+  inv [2][1] = invdet * (mat [2][0] * mat [0][1] - mat [2][1] * mat [0][0]);
+  inv [2][2] = invdet * (mat [1][1] * mat [0][0] - mat [1][0] * mat [0][1]);
+}
+
+static double
+mat_apply (double mat[3][3], int i, double x, double y)
+{
+  double v = mat [i][0] * x + mat [i][1] * y + mat [i][2];
+  double w = mat [2][0] * x + mat [2][1] * y + mat [2][2];
+
+  return v * (1. / w);
+}
+
+rxvt_img *
+rxvt_img::transform (double matrix[3][3])
+{
+  // find new offset
+  int ox = mat_apply (matrix, 0, x, y);
+  int oy = mat_apply (matrix, 1, x, y);
+
+  // calculate new pixel bounding box coordinates
+  double rmin[2], rmax[2];
+
+  for (int i = 0; i < 2; ++i)
+    {
+      double v;
+      v = mat_apply (matrix, i, 0, 0);         rmin [i] =            rmax [i] = v;
+      v = mat_apply (matrix, i, w, 0); min_it (rmin [i], v); max_it (rmax [i],  v);
+      v = mat_apply (matrix, i, 0, h); min_it (rmin [i], v); max_it (rmax [i],  v);
+      v = mat_apply (matrix, i, w, h); min_it (rmin [i], v); max_it (rmax [i],  v);
+    }
+
+  int dx = floor (rmin [0]);
+  int dy = floor (rmin [1]);
+
+  int new_width  = ceil (rmax [0] - dx);
+  int new_height = ceil (rmax [1] - dy);
+
+  double inv[3][3];
+  mat_invert (matrix, inv);
+
+  rxvt_img *img = new rxvt_img (s, format, ox - dx, oy - dy, new_width, new_height, repeat);
   img->alloc ();
 
   Display *dpy = s->display->dpy;
@@ -535,14 +591,11 @@ rxvt_img::transform (double matrix[9], int new_width, int new_height)
 
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 3; ++j)
-      xfrm.matrix [i][j] = XDoubleToFixed (matrix [i * 3 + j]);
-
-  xfrm.matrix [0][2] -= XDoubleToFixed (x);//TODO
-  xfrm.matrix [1][2] -= XDoubleToFixed (y);
+      xfrm.matrix [i][j] = XDoubleToFixed (inv [i][j]);
 
   XRenderSetPictureFilter (dpy, src, "good", 0, 0);
   XRenderSetPictureTransform (dpy, src, &xfrm);
-  XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, new_width, new_height);
+  XRenderComposite (dpy, PictOpSrc, src, None, dst, dx, dy, 0, 0, 0, 0, new_width, new_height);
 
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
@@ -556,16 +609,16 @@ rxvt_img::scale (int new_width, int new_height)
   if (w == new_width && h == new_height)
     return clone ();
 
-  double matrix[9] = {
-    w  / (double)new_width, 0, 0,
-    0, h / (double)new_height, 0,
-    0,                      0, 1
+  double matrix[3][3] = {
+    { new_width / (double)w,  0, 0 },
+    { 0, new_height / (double)h, 0 },
+    { 0,                      0, 1 }
   };
 
   int old_repeat_mode = repeat;
   repeat = RepeatPad; // not right, but xrender can't properly scale it seems
 
-  rxvt_img *img = transform (matrix, new_width, new_height);
+  rxvt_img *img = transform (matrix);
 
   repeat = old_repeat_mode;
   img->repeat = repeat;
@@ -574,18 +627,26 @@ rxvt_img::scale (int new_width, int new_height)
 }
 
 rxvt_img *
-rxvt_img::rotate (int x, int y, double phi, int new_width, int new_height)
+rxvt_img::rotate (int cx, int cy, double phi)
 {
   double s = sin (phi);
   double c = cos (phi);
 
-  double matrix[9] = {
-    c, -s, -c * x + s * y + x,
-    s,  c, -s * x - c * y + y,
-    0,  0,                  1
+  double matrix[3][3] = {
+    //{ c, -s, cx - c * cx + s * cy },
+    //{ s,  c, cy - s * cx - c * cy },
+    //{ 0,  0,                     1 }
+    { c, -s, 0 },
+    { s,  c, 0 },
+    { 0,  0, 1 }
   };
 
-  return transform (matrix, new_width, new_height);
+  move (-cx, -cy);
+  rxvt_img *img = transform (matrix);
+  move ( cx,  cy);
+  img->move (cx, cy);
+
+  return img;
 }
 
 rxvt_img *

@@ -2247,20 +2247,20 @@ rxvt_img *
 rxvt_img::blur (int rh, int rv)
 
 rxvt_img *
-rxvt_img::transform (NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33, int new_width = 0, int new_height = 0)
+rxvt_img::transform (NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33)
 	INIT:
-        double matrix[9] = {
-          p11, p12, p13,
-          p21, p22, p23,
-          p31, p32, p33
+        double matrix[3][3] = {
+          { p11, p12, p13 },
+          { p21, p22, p23 },
+          { p31, p32, p33 }
         };
-	C_ARGS: matrix, new_width, new_height
+	C_ARGS: matrix
 
 rxvt_img *
 rxvt_img::scale (int new_width, int new_height)
 
 rxvt_img *
-rxvt_img::rotate (int x, int y, NV phi, int new_width = 0, int new_height = 0)
+rxvt_img::rotate (int x, int y, NV phi)
 
 #endif
 
