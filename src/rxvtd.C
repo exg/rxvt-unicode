@@ -228,6 +228,9 @@ main (int argc, char *argv[])
   ptytty::init ();
 
   static char opt_fork, opt_opendisplay, opt_quiet;
+#if ENABLE_PERL
+  static char *opt_eval;
+#endif
 #if ENABLE_MLOCK
   static char opt_lock;
 #endif
@@ -244,6 +247,10 @@ main (int argc, char *argv[])
       else if (!strcmp (argv [i], "-m") || !strcmp (argv [i], "--mlock"))
         opt_lock = 1;
 #endif
+#if ENABLE_PERL
+      else if (!strcmp (argv [i], "-e") || !strcmp (argv [i], "--eval"))
+        opt_eval = argv [++i];
+#endif
       else
         {
           rxvt_log ("%s: unknown option '%s', aborting.\n", argv [0], argv [i]);
@@ -252,6 +259,14 @@ main (int argc, char *argv[])
     }
 
   rxvt_init ();
+
+#if ENABLE_PERL
+  if (opt_eval)
+    {
+      rxvt_perl.init ();
+      rxvt_perl.eval (opt_eval);
+    }
+#endif
 
   // optionally open display and never release it.
   if (opt_opendisplay)

@@ -204,7 +204,8 @@ interval with this switch.
 
 =cut
 
-our %_IMGCACHE;
+our %_IMG_CACHE;
+our %_ONCE_CACHE;
 our $HOME;
 our ($self, $old, $new);
 our ($x, $y, $w, $h);
@@ -252,7 +253,7 @@ reevaluated when the bg image changes.
 
    sub root() {
       $new->{rootpmap_sensitive} = 1;
-      die "root op not supported, exg, we need you";
+      $self->new_img_from_root
    }
 
 =item solid $colour
@@ -285,8 +286,6 @@ multiple copies of the same image to apply different effects to.
    sub clone($) {
       $_[0]->clone
    }
-
-=back
 
 =head2 TILING MODES
 
@@ -632,6 +631,30 @@ transparency as long as the window isn't in front of other windows.
       move -TX, -TY, $_[0]
    }
 
+=item rotate $center_x, $center_y, $degrees, $new_width, $new_height
+
+Rotates the image by C<$degrees> degrees, counter-clockwise, around the
+pointer at C<$center_x> and C<$center_y> (specified as factor of image
+width/height), generating a new image with width C<$new_width> and height
+C<$new_height>.
+
+#TODO# new width, height, maybe more operators?
+
+Example: rotate the image by 90 degrees
+
+=cut
+
+   sub rotate($$$$$$) {
+      my $img = pop;
+      $img->rotate (
+         $_[0] * $img->w,
+         $_[1] * $img->h,
+         $_[2] * (3.14159265 / 180),
+         $_[3],
+         $_[4],
+      )
+   }
+
 =back
 
 =head2 COLOUR MODIFICATIONS
@@ -723,28 +746,52 @@ low values for radius (<5).
       $img->blur ($_[0], @_ >= 2 ? $_[1] : $_[0])
    }
 
-=item rotate $new_width, $new_height, $center_x, $center_y, $degrees
+=back
 
-Rotates the image by C<$degrees> degrees, counter-clockwise, around the
-pointer at C<$center_x> and C<$center_y> (specified as factor of image
-width/height), generating a new image with width C<$new_width> and height
-C<$new_height>.
+=head2 OTHER STUFF
 
-#TODO# new width, height, maybe more operators?
+Anything that didn't fit any of the other categories, even after appliyng
+force and closing our eyes.
 
-Example: rotate the image by 90 degrees
+=over 4
+
+=item once { ... }
+
+This function takes a code block as argument, that is, one or more
+statements enclosed by braces.
+
+The trick is that this code block is only evaluated once - future calls
+will simply return the original image (yes, it should only be used with
+images).
+
+This can be extremely useful to avoid redoign the same slow operations
+again and again- for example, if your background expression takes the root
+background, blurs it and then root-aligns it it would have to blur the
+root background on every window move or resize.
+
+Putting the blur into a C<once> block will make sure the blur is only done
+once:
+
+   rootlign once { blur 10, root }
+
+This leaves the question of how to force reevaluation of the block, in
+case the root background changes: Right now, all once blocks forget that
+they ahve been executed before each time the root background changes (if
+the expression is sensitive to that) or when C<once_again> is called.
+
+=item once_again
+
+Resets all C<once> block as if they had never been called, i.e. on the
+next call they will be reevaluated again.
 
 =cut
 
-   sub rotate($$$$$$) {
-      my $img = pop;
-      $img->rotate (
-         $_[0],
-         $_[1],
-         $_[2] * $img->w,
-         $_[3] * $img->h,
-         $_[4] * (3.14159265 / 180),
-      )
+   sub once(&) {
+      $_ONCE_CACHE{$_[0]+0} ||= $_[0]()
+   }
+
+   sub once_again() {
+      %_ONCE_CACHE = ();
    }
 
 =back

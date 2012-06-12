@@ -31,7 +31,7 @@ TODO: provide something like % for easy access for parse_keysym
 TODO: description into --help output?
 TODO: xdbe
 TODO: global pixmap cache for load
-TODO: tint, shade
+TODO: tint, shade, once
 TODO: rotate/transform autoresize, likewise blend, also document
 TODO: optimise bg reeval for resize for comon patterns (pixmap bigger than window?)
 9.16

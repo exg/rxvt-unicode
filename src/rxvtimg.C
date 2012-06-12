@@ -522,7 +522,7 @@ rxvt_img::sub_rect (int x, int y, int width, int height)
 }
 
 rxvt_img *
-rxvt_img::transform (int new_width, int new_height, double matrix[9])
+rxvt_img::transform (double matrix[9], int new_width, int new_height)
 {
   rxvt_img *img = new rxvt_img (s, format, 0, 0, new_width, new_height, repeat);
   img->alloc ();
@@ -565,7 +565,7 @@ rxvt_img::scale (int new_width, int new_height)
   int old_repeat_mode = repeat;
   repeat = RepeatPad; // not right, but xrender can't properly scale it seems
 
-  rxvt_img *img = transform (new_width, new_height, matrix);
+  rxvt_img *img = transform (matrix, new_width, new_height);
 
   repeat = old_repeat_mode;
   img->repeat = repeat;
@@ -574,7 +574,7 @@ rxvt_img::scale (int new_width, int new_height)
 }
 
 rxvt_img *
-rxvt_img::rotate (int new_width, int new_height, int x, int y, double phi)
+rxvt_img::rotate (int x, int y, double phi, int new_width, int new_height)
 {
   double s = sin (phi);
   double c = cos (phi);
@@ -585,7 +585,7 @@ rxvt_img::rotate (int new_width, int new_height, int x, int y, double phi)
     0,  0,                  1
   };
 
-  return transform (new_width, new_height, matrix);
+  return transform (matrix, new_width, new_height);
 }
 
 rxvt_img *

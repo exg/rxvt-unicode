@@ -345,7 +345,7 @@ rxvt_perl_interp::~rxvt_perl_interp ()
 }
 
 void
-rxvt_perl_interp::init (rxvt_term *term)
+rxvt_perl_interp::init ()
 {
   if (!perl)
     {
@@ -385,6 +385,12 @@ rxvt_perl_interp::init (rxvt_term *term)
 
       rxvt_pop_locale ();
     }
+}
+
+void
+rxvt_perl_interp::init (rxvt_term *term)
+{
+  init ();
 
   if (perl && !term->perl.self)
     {
@@ -393,6 +399,12 @@ rxvt_perl_interp::init (rxvt_term *term)
       hv_store ((HV *)SvRV ((SV *)term->perl.self), "_overlay", 8, newRV_noinc ((SV *)newAV ()), 0);
       hv_store ((HV *)SvRV ((SV *)term->perl.self), "_selection", 10, newRV_noinc ((SV *)newAV ()), 0);
     }
+}
+
+void
+rxvt_perl_interp::eval (const char *str)
+{
+  eval_pv (str, 1);
 }
 
 void
@@ -2041,7 +2053,6 @@ rxvt_term::has_render ()
 	OUTPUT:
         RETVAL
 
-# TODO: ugly
 void
 rxvt_term::background_geometry (bool border = false)
 	PPCODE:
@@ -2236,20 +2247,20 @@ rxvt_img *
 rxvt_img::blur (int rh, int rv)
 
 rxvt_img *
-rxvt_img::transform (int new_width, int new_height, NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33)
+rxvt_img::transform (NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33, int new_width = 0, int new_height = 0)
 	INIT:
         double matrix[9] = {
           p11, p12, p13,
           p21, p22, p23,
           p31, p32, p33
         };
-	C_ARGS: new_width, new_height, matrix
+	C_ARGS: matrix, new_width, new_height
 
 rxvt_img *
 rxvt_img::scale (int new_width, int new_height)
 
 rxvt_img *
-rxvt_img::rotate (int new_width, int new_height, int x, int y, NV phi)
+rxvt_img::rotate (int x, int y, NV phi, int new_width = 0, int new_height = 0)
 
 #endif
 

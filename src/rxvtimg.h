@@ -95,9 +95,9 @@ public:
   rxvt_img *blur (int rh, int rv);
   rxvt_img *clone ();
   rxvt_img *sub_rect (int x, int y, int width, int height);
-  rxvt_img *transform (int new_width, int new_height, double matrix[9]);
+  rxvt_img *transform (double matrix[9], int new_width = 0, int new_height = 0);
   rxvt_img *scale (int new_width, int new_height);
-  rxvt_img *rotate (int new_width, int new_height, int x, int y, double phi);
+  rxvt_img *rotate (int x, int y, double phi, int new_width = 0, int new_height = 0);
   rxvt_img *convert_format (XRenderPictFormat *format, const rxvt_color &bg);
   rxvt_img *blend (rxvt_img *img, double factor);
 
