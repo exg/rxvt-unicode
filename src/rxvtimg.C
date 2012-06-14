@@ -631,20 +631,16 @@ mat_apply (rxvt_img::nv mat[3][3], int i, rxvt_img::nv x, rxvt_img::nv y)
 rxvt_img *
 rxvt_img::transform (nv matrix[3][3])
 {
-  // find new offset
-  int ox = mat_apply (matrix, 0, x, y);
-  int oy = mat_apply (matrix, 1, x, y);
-
   // calculate new pixel bounding box coordinates
-  nv d [2], rmin[2], rmax[2];
+  nv rmin[2], rmax[2];
 
   for (int i = 0; i < 2; ++i)
     {
       nv v;
-      v = mat_apply (matrix, i, 0, 0);         rmin [i] =            rmax [i] = v; d [i] = v;
-      v = mat_apply (matrix, i, w, 0); min_it (rmin [i], v); max_it (rmax [i],  v);
-      v = mat_apply (matrix, i, 0, h); min_it (rmin [i], v); max_it (rmax [i],  v);
-      v = mat_apply (matrix, i, w, h); min_it (rmin [i], v); max_it (rmax [i],  v);
+      v = mat_apply (matrix, i, 0+x, 0+y);         rmin [i] =            rmax [i] = v;
+      v = mat_apply (matrix, i, w+x, 0+y); min_it (rmin [i], v); max_it (rmax [i],  v);
+      v = mat_apply (matrix, i, 0+x, h+y); min_it (rmin [i], v); max_it (rmax [i],  v);
+      v = mat_apply (matrix, i, w+x, h+y); min_it (rmin [i], v); max_it (rmax [i],  v);
     }
 
   int dx = floor (rmin [0]);
@@ -656,7 +652,7 @@ rxvt_img::transform (nv matrix[3][3])
   nv inv[3][3];
   mat_invert (matrix, inv);
 
-  rxvt_img *img = new rxvt_img (s, format, dx + d [0] - ox, dy + d [1] - oy, new_width, new_height, repeat);
+  rxvt_img *img = new rxvt_img (s, format, dx, dy, new_width, new_height, repeat);
   img->alloc ();
 
   Display *dpy = s->display->dpy;
@@ -709,7 +705,7 @@ rxvt_img::rotate (int cx, int cy, nv phi)
   nv c = cos (phi);
 
   nv matrix[3][3] = {
-    { c, -s, cx - c * cx + s * cy },
+    { c, -s, cx - c * cx + s * cy  + 200 },
     { s,  c, cy - s * cx - c * cy },
     { 0,  0,                     1 }
     //{ c, -s, 0 },
