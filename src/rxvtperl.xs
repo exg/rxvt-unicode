@@ -97,6 +97,8 @@ parse_rgba (SV *sv, rxvt_screen *s = 0)
       rc.set (s, SvPVbyte_nolen (sv));
       rc.get (c);
     }
+  else
+    croak ("unable to parse colour,");
 
   return c;
 }

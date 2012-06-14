@@ -319,14 +319,14 @@ typedef unsigned long Pixel;
 
 struct rgba
 {
-  unsigned short r, g, b, a;
+  uint16_t r, g, b, a;
 
   enum { MIN_CC = 0x0000, MAX_CC  = 0xffff };
 
   rgba ()
   { }
 
-  rgba (unsigned short r, unsigned short g, unsigned short b, unsigned short a = MAX_CC)
+  rgba (uint16_t r, uint16_t g, uint16_t b, uint16_t a = MAX_CC)
   : r(r), g(g), b(b), a(a)
   { }
 };
