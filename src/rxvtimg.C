@@ -637,6 +637,7 @@ rxvt_img::transform (nv matrix[3][3])
   for (int i = 0; i < 2; ++i)
     {
       nv v;
+
       v = mat_apply (matrix, i, 0+x, 0+y);         rmin [i] =            rmax [i] = v;
       v = mat_apply (matrix, i, w+x, 0+y); min_it (rmin [i], v); max_it (rmax [i],  v);
       v = mat_apply (matrix, i, 0+x, h+y); min_it (rmin [i], v); max_it (rmax [i],  v);
