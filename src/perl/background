@@ -205,7 +205,6 @@ interval with this switch.
 =cut
 
 our %_IMG_CACHE;
-our %_ONCE_CACHE;
 our $HOME;
 our ($self, $old, $new);
 our ($x, $y, $w, $h);
@@ -269,7 +268,7 @@ reevaluated when the bg image changes.
 =cut
 
    sub root() {
-      $new->{rootpmap_sensitive} = 1;
+      $new->{again}{rootpmap} = 1;
       $self->new_img_from_root
    }
 
@@ -427,14 +426,14 @@ the window size to conserve memory.
 Example: take the screen background, clip it to the window size, blur it a
 bit, align it to the window position and use it as background.
 
-   clip move -TX, -TY, blur 5, root
+   clip move -TX, -TY, once { blur 5, root }
 
 =cut
 
-   sub TX() { $new->{position_sensitive} = 1; $x }
-   sub TY() { $new->{position_sensitive} = 1; $y }
-   sub TW() { $new->{size_sensitive}     = 1; $w }
-   sub TH() { $new->{size_sensitive}     = 1; $h }
+   sub TX() { $new->{again}{position} = 1; $x }
+   sub TY() { $new->{again}{position} = 1; $y }
+   sub TW() { $new->{again}{size}     = 1; $w }
+   sub TH() { $new->{again}{size}     = 1; $h }
 
 =item now
 
@@ -463,11 +462,11 @@ Like C<again>, but also returns an increasing counter value, starting at
    sub now() { urxvt::NOW }
 
    sub again($) {
-      $new->{again} = $_[0];
+      $new->{again}{time} = $_[0];
    }
 
    sub counter($) {
-      $new->{again} = $_[0];
+      $new->{again}{time} = $_[0];
       $self->{counter} + 0
    }
 
@@ -801,11 +800,26 @@ next call they will be reevaluated again.
 =cut
 
    sub once(&) {
-      $_ONCE_CACHE{$_[0]+0} ||= $_[0]()
+      my $once = $self->{once_cache}{$_[0]+0} ||= do {
+         local $new->{again};
+         my @res = $_[0]();
+         [$new->{again}, \@res]
+      };
+
+      $new->{again} = {
+         %{ $new->{again} },
+         %{ $once->[0] }
+      };
+
+      # in scalar context we always return the first original result, which
+      # is not quite how perl works.
+      wantarray
+         ? @{ $once->[1] }
+         : $once->[1][0]
    }
 
    sub once_again() {
-      %_ONCE_CACHE = ();
+      delete $self->{once_cache};
    }
 
 =back
@@ -860,15 +874,14 @@ sub recalculate {
    warn $@ if $@;#d#
    die "background-expr did not return an image.\n" if !UNIVERSAL::isa $img, "urxvt::img";
 
-   $state->{size_sensitive} = 1
-      if $img->repeat_mode != urxvt::RepeatNormal;
-
    # if the expression is sensitive to external events, prepare reevaluation then
 
-   my $repeat;
+   my $again = delete $state->{again};
 
-   if (my $again = $state->{again}) {
-      $repeat = 1;
+   $again->{size} = 1
+      if $img->repeat_mode != urxvt::RepeatNormal;
+
+   if (my $again = $again->{time}) {
       my $self = $self;
       $state->{timer} = $again == $old->{again}
                         ? $old->{timer}
@@ -878,23 +891,23 @@ sub recalculate {
                           });
    }
 
-   if (delete $state->{position_sensitive}) {
-      $repeat = 1;
+   if ($again->{position}) {
       $self->enable (position_change => sub { $_[0]->recalculate });
    } else {
       $self->disable ("position_change");
    }
 
-   if (delete $state->{size_sensitive}) {
-      $repeat = 1;
+   if ($again->{size}) {
       $self->enable (size_change => sub { $_[0]->recalculate });
    } else {
       $self->disable ("size_change");
    }
 
-   if (delete $state->{rootpmap_sensitive}) {
-      $repeat = 1;
-      $self->enable (rootpmap_change => sub { $_[0]->recalculate });
+   if ($again->{rootpmap}) {
+      $self->enable (rootpmap_change => sub {
+         delete $_[0]{once_cache}; # this will override once-block values from 
+         $_[0]->recalculate;
+      });
    } else {
       $self->disable ("rootpmap_change");
    }
@@ -903,7 +916,7 @@ sub recalculate {
 
    %$old = ();
 
-   unless ($repeat) {
+   unless (%$again) {
       delete $self->{state};
       delete $self->{expr};
    }
