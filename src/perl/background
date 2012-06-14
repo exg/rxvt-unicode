@@ -305,7 +305,8 @@ multiple copies of the same image to apply different effects to.
 
 =item merge $img ...
 
-Takes any number of images and merges them together, creating a single image containing them all.
+Takes any number of images and merges them together, creating a single
+image containing them all.
 
 =cut
 
