@@ -17,6 +17,8 @@ class rxvt_img
   Picture src_picture ();
 
 public:
+  typedef double nv;
+
   // *could* also hold the Pixmap itself
   struct pixref
   {
@@ -75,7 +77,7 @@ public:
   void brightness (int32_t r, int32_t g, int32_t b, int32_t a);
   void contrast (int32_t r, int32_t g, int32_t b, int32_t a);
 
-  void brightness (double r, double g, double b, double a = 1.)
+  void brightness (nv r, nv g, nv b, nv a = 1.)
   {
     brightness (float_to_component (r),
                 float_to_component (g),
@@ -83,7 +85,7 @@ public:
                 float_to_component (a));
   }
 
-  void contrast (double r, double g, double b, double a = 1.)
+  void contrast (nv r, nv g, nv b, nv a = 1.)
   {
     contrast (float_to_component (r),
               float_to_component (g),
@@ -96,11 +98,11 @@ public:
   rxvt_img *blur (int rh, int rv);
   rxvt_img *clone ();
   rxvt_img *sub_rect (int x, int y, int width, int height);
-  rxvt_img *transform (double matrix[3][3]);
+  rxvt_img *transform (nv matrix[3][3]);
   rxvt_img *scale (int new_width, int new_height);
-  rxvt_img *rotate (int cx, int cy, double phi);
+  rxvt_img *rotate (int cx, int cy, nv phi);
   rxvt_img *convert_format (XRenderPictFormat *format, const rgba &bg);
-  rxvt_img *blend (rxvt_img *img, double factor = 1.);
+  rxvt_img *blend (rxvt_img *img, nv factor = 1.);
 
   // egregiuous helper category
   rxvt_img *replace (rxvt_img *&p)

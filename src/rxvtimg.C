@@ -282,15 +282,15 @@ rxvt_img::add_alpha ()
 }
 
 static void
-get_gaussian_kernel (int radius, int width, double *kernel, XFixed *params)
+get_gaussian_kernel (int radius, int width, rxvt_img::nv *kernel, XFixed *params)
 {
-  double sigma = radius / 2.0;
-  double scale = sqrt (2.0 * M_PI) * sigma;
-  double sum = 0.0;
+  rxvt_img::nv sigma = radius / 2.0;
+  rxvt_img::nv scale = sqrt (2.0 * M_PI) * sigma;
+  rxvt_img::nv sum = 0.0;
 
   for (int i = 0; i < width; i++)
     {
-      double x = i - width / 2;
+      rxvt_img::nv x = i - width / 2;
       kernel[i] = exp (-(x * x) / (2.0 * sigma * sigma)) / scale;
       sum += kernel[i];
     }
@@ -310,7 +310,7 @@ rxvt_img::blur (int rh, int rv)
 
   Display *dpy = s->display->dpy;
   int size = max (rh, rv) * 2 + 1;
-  double *kernel = (double *)malloc (size * sizeof (double));
+  nv *kernel = (nv *)malloc (size * sizeof (nv));
   XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
   rxvt_img *img = new rxvt_img (s, format, x, y, w, h, repeat);
   img->alloc ();
@@ -540,13 +540,13 @@ rxvt_img::sub_rect (int x, int y, int width, int height)
 }
 
 static void
-mat_invert (double mat[3][3], double (&inv)[3][3])
+mat_invert (rxvt_img::nv mat[3][3], rxvt_img::nv (&inv)[3][3])
 {
-  double s0 = mat [2][2] * mat [1][1] - mat [2][1] * mat [1][2];
-  double s1 = mat [2][1] * mat [0][2] - mat [2][2] * mat [0][1];
-  double s2 = mat [1][2] * mat [0][1] - mat [1][1] * mat [0][2];
+  rxvt_img::nv s0 = mat [2][2] * mat [1][1] - mat [2][1] * mat [1][2];
+  rxvt_img::nv s1 = mat [2][1] * mat [0][2] - mat [2][2] * mat [0][1];
+  rxvt_img::nv s2 = mat [1][2] * mat [0][1] - mat [1][1] * mat [0][2];
 
-  double invdet = 1. / (mat [0][0] * s0 + mat [1][0] * s1 + mat [2][0] * s2);
+  rxvt_img::nv invdet = 1. / (mat [0][0] * s0 + mat [1][0] * s1 + mat [2][0] * s2);
 
   inv [0][0] = invdet * s0;
   inv [0][1] = invdet * s1;
@@ -561,28 +561,28 @@ mat_invert (double mat[3][3], double (&inv)[3][3])
   inv [2][2] = invdet * (mat [1][1] * mat [0][0] - mat [1][0] * mat [0][1]);
 }
 
-static double
-mat_apply (double mat[3][3], int i, double x, double y)
+static rxvt_img::nv
+mat_apply (rxvt_img::nv mat[3][3], int i, rxvt_img::nv x, rxvt_img::nv y)
 {
-  double v = mat [i][0] * x + mat [i][1] * y + mat [i][2];
-  double w = mat [2][0] * x + mat [2][1] * y + mat [2][2];
+  rxvt_img::nv v = mat [i][0] * x + mat [i][1] * y + mat [i][2];
+  rxvt_img::nv w = mat [2][0] * x + mat [2][1] * y + mat [2][2];
 
   return v * (1. / w);
 }
 
 rxvt_img *
-rxvt_img::transform (double matrix[3][3])
+rxvt_img::transform (nv matrix[3][3])
 {
   // find new offset
   int ox = mat_apply (matrix, 0, x, y);
   int oy = mat_apply (matrix, 1, x, y);
 
   // calculate new pixel bounding box coordinates
-  double d [2], rmin[2], rmax[2];
+  nv d [2], rmin[2], rmax[2];
 
   for (int i = 0; i < 2; ++i)
     {
-      double v;
+      nv v;
       v = mat_apply (matrix, i, 0, 0);         rmin [i] =            rmax [i] = v; d [i] = v;
       v = mat_apply (matrix, i, w, 0); min_it (rmin [i], v); max_it (rmax [i],  v);
       v = mat_apply (matrix, i, 0, h); min_it (rmin [i], v); max_it (rmax [i],  v);
@@ -595,7 +595,7 @@ rxvt_img::transform (double matrix[3][3])
   int new_width  = ceil (rmax [0] - dx);
   int new_height = ceil (rmax [1] - dy);
 
-  double inv[3][3];
+  nv inv[3][3];
   mat_invert (matrix, inv);
 
   rxvt_img *img = new rxvt_img (s, format, ox - dx - d [0], oy - dy - d [1], new_width, new_height, repeat);
@@ -627,10 +627,10 @@ rxvt_img::scale (int new_width, int new_height)
   if (w == new_width && h == new_height)
     return clone ();
 
-  double matrix[3][3] = {
-    { new_width / (double)w,  0, 0 },
-    { 0, new_height / (double)h, 0 },
-    { 0,                      0, 1 }
+  nv matrix[3][3] = {
+    { new_width / (nv)w,  0, 0 },
+    { 0, new_height / (nv)h, 0 },
+    { 0,                  0, 1 }
   };
 
   int old_repeat_mode = repeat;
@@ -645,12 +645,12 @@ rxvt_img::scale (int new_width, int new_height)
 }
 
 rxvt_img *
-rxvt_img::rotate (int cx, int cy, double phi)
+rxvt_img::rotate (int cx, int cy, nv phi)
 {
-  double s = sin (phi);
-  double c = cos (phi);
+  nv s = sin (phi);
+  nv c = cos (phi);
 
-  double matrix[3][3] = {
+  nv matrix[3][3] = {
     { c, -s, cx - c * cx + s * cy },
     { s,  c, cy - s * cx - c * cy },
     { 0,  0,                     1 }
@@ -699,7 +699,7 @@ rxvt_img::convert_format (XRenderPictFormat *new_format, const rgba &bg)
 }
 
 rxvt_img *
-rxvt_img::blend (rxvt_img *img, double factor)
+rxvt_img::blend (rxvt_img *img, nv factor)
 {
   rxvt_img *img2 = clone ();
   Display *dpy = s->display->dpy;

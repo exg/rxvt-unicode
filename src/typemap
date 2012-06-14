@@ -4,6 +4,7 @@ Time			T_UV
 Atom			T_UV
 Window			T_UV
 Pixmap			T_UV
+rxvt_img::nv		T_NV
 
 urxvt::pixbuf           T_PTROBJ
 

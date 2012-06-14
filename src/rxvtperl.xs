@@ -60,6 +60,7 @@ typedef int		render_repeat_mode;
 typedef GdkPixbuf *	urxvt__pixbuf;
 #endif
 typedef rxvt_img *	urxvt__img;
+typedef rxvt_img::nv	rxvt_img__nv;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -2284,10 +2285,10 @@ void
 rxvt_img::move (int dx, int dy)
 
 void
-rxvt_img::brightness (NV r, NV g, NV b, NV a = 1.)
+rxvt_img::brightness (rxvt_img::nv r, rxvt_img::nv g, rxvt_img::nv b, rxvt_img::nv a = 1.)
 
 void
-rxvt_img::contrast (NV r, NV g, NV b, NV a = 1.)
+rxvt_img::contrast (rxvt_img::nv r, rxvt_img::nv g, rxvt_img::nv b, rxvt_img::nv a = 1.)
 
 rxvt_img *
 rxvt_img::clone ()
@@ -2302,9 +2303,9 @@ rxvt_img *
 rxvt_img::blur (int rh, int rv)
 
 rxvt_img *
-rxvt_img::transform (NV p11, NV p12, NV p13, NV p21, NV p22, NV p23, NV p31, NV p32, NV p33)
+rxvt_img::transform (rxvt_img::nv p11, rxvt_img::nv p12, rxvt_img::nv p13, rxvt_img::nv p21, rxvt_img::nv p22, rxvt_img::nv p23, rxvt_img::nv p31, rxvt_img::nv p32, rxvt_img::nv p33)
 	INIT:
-        double matrix[3][3] = {
+        rxvt_img::nv matrix[3][3] = {
           { p11, p12, p13 },
           { p21, p22, p23 },
           { p31, p32, p33 }
@@ -2315,7 +2316,7 @@ rxvt_img *
 rxvt_img::scale (int new_width, int new_height)
 
 rxvt_img *
-rxvt_img::rotate (int x, int y, NV phi)
+rxvt_img::rotate (int x, int y, rxvt_img::nv phi)
 
 #endif
 
