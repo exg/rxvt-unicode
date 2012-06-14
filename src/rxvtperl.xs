@@ -63,11 +63,42 @@ typedef rxvt_img *	urxvt__img;
 
 /////////////////////////////////////////////////////////////////////////////
 
-static void
-parse_color (rxvt_screen *s, rxvt_color &c, SV *sv)
+static rgba
+parse_rgba (SV *sv, rxvt_screen *s = 0)
 {
-  //TODO: support component stuff, 0..1
-  c.set (s, SvPVbyte_nolen (sv));
+  rgba c;
+
+  if (AV *av = (AV *)SvRV (sv))
+    {
+      if (SvTYPE ((SV *)av) != SVt_PVAV)
+        croak ("colour must be either a colour string, or an array,");
+
+      int len = av_len (av) + 1;
+
+      if (len != 1 && len != 3 && len != 4)
+        croak ("component colour array must have 1, 3 or 4 components,");
+
+      c.a = rgba::MAX_CC;
+
+      c.r = c.g = c.b = float_to_component (SvIV (*av_fetch (av, 0, 0)));
+
+      if (len >= 3)
+        {
+          c.g = float_to_component (SvIV (*av_fetch (av, 1, 0)));
+          c.b = float_to_component (SvIV (*av_fetch (av, 2, 0)));
+
+          if (len >= 4)
+            c.a = float_to_component (SvIV (*av_fetch (av, 3, 0)));
+        }
+    }
+  else if (s)
+    {
+      rxvt_color rc;
+      rc.set (s, SvPVbyte_nolen (sv));
+      rc.get (c);
+    }
+
+  return c;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2205,9 +2236,8 @@ rxvt_img::pm ()
 void
 rxvt_img::fill (SV *c)
 	INIT:
-        rxvt_color rc;
-        parse_color (THIS->s, rc, c);
-	C_ARGS: rc
+        rgba cc = parse_rgba (c, THIS->s);
+	C_ARGS: cc
 
 void
 rxvt_img::DESTROY ()

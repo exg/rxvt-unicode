@@ -303,6 +303,16 @@ multiple copies of the same image to apply different effects to.
       $_[0]->clone
    }
 
+=item merge $img ...
+
+Takes any number of images and merges them together, creating a single image containing them all.
+
+=cut
+
+   sub merge(@) {
+      #TODO
+   }
+
 =head2 TILING MODES
 
 The following operators modify the tiling mode of an image, that is, the
@@ -763,7 +773,7 @@ low values for radius (<5).
 
 =head2 OTHER STUFF
 
-Anything that didn't fit any of the other categories, even after appliyng
+Anything that didn't fit any of the other categories, even after applying
 force and closing our eyes.
 
 =over 4

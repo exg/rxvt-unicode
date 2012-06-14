@@ -226,11 +226,9 @@ rxvt_img::unshare ()
 }
 
 void
-rxvt_img::fill (const rxvt_color &c)
+rxvt_img::fill (const rgba &c)
 {
-  rgba cc;
-  c.get (cc);
-  XRenderColor rc = { cc.r, cc.g, cc.b, cc.a };
+  XRenderColor rc = { c.r, c.g, c.b, c.a };
 
   Display *dpy = s->display->dpy;
   Picture src = src_picture ();
@@ -399,12 +397,7 @@ rxvt_img::contrast (int32_t r, int32_t g, int32_t b, int32_t a)
 
   rxvt_img *img = new rxvt_img (s, format, x, y, w, h, repeat);
   img->alloc ();
-
-  {
-    rxvt_color empty;
-    empty.set (s, rgba (0, 0, 0, 0));
-    img->fill (empty);
-  }
+  img->fill (rgba (0, 0, 0, 0));
 
   // premultiply (yeah, these are not exact, sue me or fix it)
   r = (r * (a >> 8)) >> 8;
@@ -650,7 +643,7 @@ rxvt_img::rotate (int cx, int cy, double phi)
 }
 
 rxvt_img *
-rxvt_img::convert_format (XRenderPictFormat *new_format, const rxvt_color &bg)
+rxvt_img::convert_format (XRenderPictFormat *new_format, const rgba &bg)
 {
   if (new_format == format)
     return clone ();
@@ -666,10 +659,7 @@ rxvt_img::convert_format (XRenderPictFormat *new_format, const rxvt_color &bg)
   if (format->direct.alphaMask && !new_format->direct.alphaMask)
     {
       // does it have to be that complicated
-      rgba c;
-      bg.get (c);
-
-      XRenderColor rc = { c.r, c.g, c.b, 0xffff };
+      XRenderColor rc = { bg.r, bg.g, bg.b, bg.a };
       XRenderFillRectangle (dpy, PictOpSrc, dst, &rc, 0, 0, w, h);
 
       op = PictOpOver;

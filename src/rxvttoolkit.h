@@ -356,6 +356,12 @@ struct rxvt_color
   bool alloc (rxvt_screen *screen, const rgba &color);
   void free (rxvt_screen *screen);
 
+  operator rgba () const
+  {
+    rgba c;
+    get (c);
+    return c;
+  }
   void get (rgba &color) const;
   void get (XColor &color) const;
 

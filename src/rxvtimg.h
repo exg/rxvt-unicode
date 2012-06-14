@@ -67,7 +67,7 @@ public:
   }
 
   void unshare (); // prepare for write
-  void fill (const rxvt_color &c);
+  void fill (const rgba &c);
   //void linear_gradient  (const XLinearGradient  *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
   //void radial_gradient  (const XRadialGradient  *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
   //void conical_gradient (const XConicalGradient *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
@@ -98,7 +98,7 @@ public:
   rxvt_img *transform (double matrix[3][3]);
   rxvt_img *scale (int new_width, int new_height);
   rxvt_img *rotate (int cx, int cy, double phi);
-  rxvt_img *convert_format (XRenderPictFormat *format, const rxvt_color &bg);
+  rxvt_img *convert_format (XRenderPictFormat *format, const rgba &bg);
   rxvt_img *blend (rxvt_img *img, double factor);
 
   // egregiuous helper category
