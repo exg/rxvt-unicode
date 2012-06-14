@@ -69,8 +69,10 @@ parse_rgba (SV *sv, rxvt_screen *s = 0)
 {
   rgba c;
 
-  if (AV *av = (AV *)SvRV (sv))
+  if (SvROK (sv))
     {
+      AV *av = (AV *)SvRV (sv);
+
       if (SvTYPE ((SV *)av) != SVt_PVAV)
         croak ("colour must be either a colour string, or an array,");
 
@@ -911,6 +913,62 @@ BOOT:
     const_iv (RepeatNormal),
     const_iv (RepeatPad),
     const_iv (RepeatReflect),
+    // all versions
+    const_iv (PictOpClear),
+    const_iv (PictOpSrc),
+    const_iv (PictOpDst),
+    const_iv (PictOpOver),
+    const_iv (PictOpOverReverse),
+    const_iv (PictOpIn),
+    const_iv (PictOpInReverse),
+    const_iv (PictOpOut),
+    const_iv (PictOpOutReverse),
+    const_iv (PictOpAtop),
+    const_iv (PictOpAtopReverse),
+    const_iv (PictOpXor),
+    const_iv (PictOpAdd),
+    const_iv (PictOpSaturate),
+    // 0.2+
+    const_iv (PictOpDisjointClear),
+    const_iv (PictOpDisjointSrc),
+    const_iv (PictOpDisjointDst),
+    const_iv (PictOpDisjointOver),
+    const_iv (PictOpDisjointOverReverse),
+    const_iv (PictOpDisjointIn),
+    const_iv (PictOpDisjointInReverse),
+    const_iv (PictOpDisjointOut),
+    const_iv (PictOpDisjointOutReverse),
+    const_iv (PictOpDisjointAtop),
+    const_iv (PictOpDisjointAtopReverse),
+    const_iv (PictOpDisjointXor),
+    const_iv (PictOpConjointClear),
+    const_iv (PictOpConjointSrc),
+    const_iv (PictOpConjointDst),
+    const_iv (PictOpConjointOver),
+    const_iv (PictOpConjointOverReverse),
+    const_iv (PictOpConjointIn),
+    const_iv (PictOpConjointInReverse),
+    const_iv (PictOpConjointOut),
+    const_iv (PictOpConjointOutReverse),
+    const_iv (PictOpConjointAtop),
+    const_iv (PictOpConjointAtopReverse),
+    const_iv (PictOpConjointXor),
+    // 0.11+
+    const_iv (PictOpMultiply),
+    const_iv (PictOpScreen),
+    const_iv (PictOpOverlay),
+    const_iv (PictOpDarken),
+    const_iv (PictOpLighten),
+    const_iv (PictOpColorDodge),
+    const_iv (PictOpColorBurn),
+    const_iv (PictOpHardLight),
+    const_iv (PictOpSoftLight),
+    const_iv (PictOpDifference),
+    const_iv (PictOpExclusion),
+    const_iv (PictOpHSLHue),
+    const_iv (PictOpHSLSaturation),
+    const_iv (PictOpHSLColor),
+    const_iv (PictOpHSLLuminosity),
 #endif
 #   if 0
     const_iv (XIMForwardChar),

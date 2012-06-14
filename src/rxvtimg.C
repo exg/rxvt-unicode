@@ -4,6 +4,38 @@
 
 #if HAVE_IMG
 
+#if 0
+struct pict
+{
+  Display *dpy;
+  Picture pic;
+
+  operator Picture () const
+  {
+    return pic;
+  }
+
+  pict ()
+  : pic (0)
+  {
+  }
+
+  pict (rxvt_img *img, XRenderPictFormat *format = 0)
+  : dpy (img->s->display->dpy)
+  {
+    XRenderPictureAttributes pa;
+    pa.repeat = img->repeat;
+    pic = XRenderCreatePicture (dpy, img->pm, format ? format : img->format, CPRepeat, &pa);
+  }
+
+  ~pict ()
+  {
+    if (pic)
+      XRenderFreePicture (dpy, pic);
+  }
+};
+#endif
+
 static XRenderPictFormat *
 find_alpha_format_for (Display *dpy, XRenderPictFormat *format)
 {
@@ -217,7 +249,7 @@ rxvt_img::alloc ()
 }
 
 Picture
-rxvt_img::src_picture ()
+rxvt_img::picture ()
 {
   Display *dpy = s->display->dpy;
 
@@ -251,7 +283,7 @@ rxvt_img::fill (const rgba &c)
   XRenderColor rc = { c.r, c.g, c.b, c.a };
 
   Display *dpy = s->display->dpy;
-  Picture src = src_picture ();
+  Picture src = picture ();
   XRenderFillRectangle (dpy, PictOpSrc, src, &rc, 0, 0, w, h);
   XRenderFreePicture (dpy, src);
 }
@@ -267,7 +299,7 @@ rxvt_img::add_alpha ()
   rxvt_img *img = new rxvt_img (s, find_alpha_format_for (dpy, format), x, y, w, h, repeat);
   img->alloc ();
 
-  Picture src = src_picture ();
+  Picture src = picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
   
   XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
@@ -451,7 +483,7 @@ rxvt_img::contrast (int32_t r, int32_t g, int32_t b, int32_t a)
 
   Display *dpy = s->display->dpy;
 
-  Picture src = src_picture ();
+  Picture src = picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, format, 0, 0);
   Picture mul = create_xrender_mask (dpy, pm, True, True);
 
@@ -478,6 +510,32 @@ rxvt_img::contrast (int32_t r, int32_t g, int32_t b, int32_t a)
   delete img;
 }
 
+void
+rxvt_img::draw (rxvt_img *img, int op, nv mask)
+{
+  unshare ();
+
+  Display *dpy = s->display->dpy;
+  Picture src = img->picture ();
+  Picture dst = picture ();
+  Picture mask_p = 0;
+  
+  if (mask != 1.)
+    {
+      mask_p = create_xrender_mask (dpy, img->pm, False, False);
+      XRenderColor mask_c = { 0, 0, 0, float_to_component (mask) };
+      XRenderFillRectangle (dpy, PictOpSrc, mask, &mask_c, 0, 0, 1, 1);
+    }
+
+  XRenderComposite (dpy, op, src, mask_p, dst, x - img->x, y - img->y, 0, 0, 0, 0, w, h);
+
+  XRenderFreePicture (dpy, src);
+  XRenderFreePicture (dpy, dst);
+
+  if (mask)
+    XRenderFreePicture (dpy, mask_p);
+}
+
 rxvt_img *
 rxvt_img::clone ()
 {
@@ -500,7 +558,7 @@ rxvt_img::reify ()
   rxvt_img *img = new rxvt_img (s, alpha ? find_alpha_format_for (dpy, format) : format, 0, 0, w, h, repeat);
   img->alloc ();
 
-  Picture src = src_picture ();
+  Picture src = picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
   
   if (alpha)
@@ -602,7 +660,7 @@ rxvt_img::transform (nv matrix[3][3])
   img->alloc ();
 
   Display *dpy = s->display->dpy;
-  Picture src = src_picture ();
+  Picture src = picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
 
   XTransform xfrm;
@@ -677,7 +735,7 @@ rxvt_img::convert_format (XRenderPictFormat *new_format, const rgba &bg)
   img->alloc ();
 
   Display *dpy = s->display->dpy;
-  Picture src = src_picture ();
+  Picture src = picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, new_format, 0, 0);
   int op = PictOpSrc;
 
@@ -703,7 +761,7 @@ rxvt_img::blend (rxvt_img *img, nv factor)
 {
   rxvt_img *img2 = clone ();
   Display *dpy = s->display->dpy;
-  Picture src = img->src_picture ();
+  Picture src = img->picture ();
   Picture dst = XRenderCreatePicture (dpy, img2->pm, img2->format, 0, 0);
   Picture mask = create_xrender_mask (dpy, img->pm, False, False);
 

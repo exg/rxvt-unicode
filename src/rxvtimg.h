@@ -14,7 +14,7 @@
 class rxvt_img
 {
   void destroy ();
-  Picture src_picture ();
+  Picture picture ();
 
 public:
   typedef double nv;
@@ -92,6 +92,8 @@ public:
               float_to_component (b),
               float_to_component (a));
   }
+
+  void draw (rxvt_img *img, int op = PictOpSrc, nv mask = 1.);
 
   // copy
   rxvt_img *reify (); // make x, y 0, make real width/height
