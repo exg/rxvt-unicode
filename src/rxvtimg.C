@@ -532,7 +532,7 @@ rxvt_img::draw (rxvt_img *img, int op, nv mask)
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
 
-  if (mask)
+  if (mask_p)
     XRenderFreePicture (dpy, mask_p);
 }
 
@@ -565,10 +565,10 @@ rxvt_img::reify ()
     {
       XRenderColor rc = { 0, 0, 0, 0 };
       XRenderFillRectangle (dpy, PictOpSrc, dst, &rc, 0, 0, w, h);//TODO: split into four fillrectangles
-      XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, -x, -y, ref->w, ref->h);
+      XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, x, y, ref->w, ref->h);
     }
   else
-    XRenderComposite (dpy, PictOpSrc, src, None, dst, x, y, 0, 0, 0, 0, w, h);
+    XRenderComposite (dpy, PictOpSrc, src, None, dst, -x, -y, 0, 0, 0, 0, w, h);
 
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
@@ -581,8 +581,8 @@ rxvt_img::sub_rect (int x, int y, int width, int height)
 {
   rxvt_img *img = clone ();
 
-  img->x += x;
-  img->y += y;
+  img->x -= x;
+  img->y -= y;
 
   if (w != width || h != height)
     {
@@ -632,8 +632,8 @@ rxvt_img *
 rxvt_img::transform (nv matrix[3][3])
 {
   // find new offset
-  int ox = mat_apply (matrix, 0, x, y);
-  int oy = mat_apply (matrix, 1, x, y);
+  int ox = mat_apply (matrix, 0, -x, -y);
+  int oy = mat_apply (matrix, 1, -x, -y);
 
   // calculate new pixel bounding box coordinates
   nv d [2], rmin[2], rmax[2];

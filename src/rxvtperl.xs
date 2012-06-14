@@ -2157,7 +2157,7 @@ rxvt_term::background_geometry (bool border = false)
 #if HAVE_IMG
 
 rxvt_img *
-rxvt_term::new_img (SV *format, int x = 0, int y = 0, int width = 1, int height = 1)
+rxvt_term::new_img (SV *format = &PL_sv_undef, int x = 0, int y = 0, int width = 1, int height = 1)
 	CODE:
         XRenderPictFormat *f = SvOK (format)
                              ? XRenderFindStandardFormat (THIS->dpy, SvIV (format))
@@ -2347,6 +2347,9 @@ rxvt_img::brightness (rxvt_img::nv r, rxvt_img::nv g, rxvt_img::nv b, rxvt_img::
 
 void
 rxvt_img::contrast (rxvt_img::nv r, rxvt_img::nv g, rxvt_img::nv b, rxvt_img::nv a = 1.)
+
+void
+rxvt_img::draw (rxvt_img *img, int op = PictOpOver, rxvt_img::nv mask = 1.);
 
 rxvt_img *
 rxvt_img::clone ()

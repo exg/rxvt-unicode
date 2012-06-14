@@ -1,4 +1,4 @@
-#ifndef IMG_H
+#ifndef IMG_H),
 #define IMG_H
 
 #if HAVE_BG_PIXMAP
@@ -59,8 +59,8 @@ public:
   // inplace
   void move (int dx, int dy)
   {
-    x -= dx;
-    y -= dy;
+    x += dx;
+    y += dy;
   }
 
   void repeat_mode (int repeat)
@@ -93,7 +93,7 @@ public:
               float_to_component (a));
   }
 
-  void draw (rxvt_img *img, int op = PictOpSrc, nv mask = 1.);
+  void draw (rxvt_img *img, int op = PictOpOver, nv mask = 1.);
 
   // copy
   rxvt_img *reify (); // make x, y 0, make real width/height
