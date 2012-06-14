@@ -632,8 +632,8 @@ rxvt_img *
 rxvt_img::transform (nv matrix[3][3])
 {
   // find new offset
-  int ox = mat_apply (matrix, 0, -x, -y);
-  int oy = mat_apply (matrix, 1, -x, -y);
+  int ox = mat_apply (matrix, 0, x, y);
+  int oy = mat_apply (matrix, 1, x, y);
 
   // calculate new pixel bounding box coordinates
   nv d [2], rmin[2], rmax[2];
@@ -656,7 +656,7 @@ rxvt_img::transform (nv matrix[3][3])
   nv inv[3][3];
   mat_invert (matrix, inv);
 
-  rxvt_img *img = new rxvt_img (s, format, ox - dx - d [0], oy - dy - d [1], new_width, new_height, repeat);
+  rxvt_img *img = new rxvt_img (s, format, dx + d [0] - ox, dy + d [1] - oy, new_width, new_height, repeat);
   img->alloc ();
 
   Display *dpy = s->display->dpy;
