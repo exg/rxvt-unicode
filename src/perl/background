@@ -73,7 +73,7 @@ which means you could use multiple lines and statements:
       return scale load "$HOME/sunday.png";
    }
 
-This expression gets evaluated once per hour. It will set F<sunday.png> as
+This expression is evaluated once per hour. It will set F<sunday.png> as
 background on Sundays, and F<weekday.png> on all other days.
 
 Fortunately, we expect that most expressions will be much simpler, with
@@ -231,14 +231,31 @@ points to get an image you can play with.
 Loads the image at the given C<$path>. The image is set to plane tiling
 mode.
 
-Loaded images will be cached for one cycle.
+Loaded images will be cached for one cycle, and shared between temrinals
+running in the same process (e.g. in C<urxvtd>).
+
+=item load_uc $path
+
+Load uncached - same as load, but does not cache the image. This function
+is most useufl if you want to optimise a background expression in some
+way.
 
 =cut
+
+   sub load_uc($) {
+      my ($path) = @_;
+
+      $_IMG_CACHE{$path} || do {
+         my $img = $self->new_img_from_file ($path);
+         Scalar::Util::weaken ($_IMG_CACHE{$path} = $img);
+         $img
+      }
+   }
 
    sub load($) {
       my ($path) = @_;
 
-      $new->{load}{$path} = $old->{load}{$path} || $self->new_img_from_file ($path);
+      $new->{load}{$path} = $old->{load}{$path} || load_uc $path;
    }
 
 =item root
