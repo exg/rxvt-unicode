@@ -311,7 +311,33 @@ image containing them all.
 =cut
 
    sub merge(@) {
-      #TODO
+      # rather annoyingly clumsy, but optimisation is for another time
+
+      my $x0 = 1e9;
+      my $y0 = 1e9;
+      my $x1 = -1e9;
+      my $y1 = -1e9;
+
+      for (@_) {
+         my ($x, $y, $w, $h) = $_->geometry;
+
+         $x0 = $x if $x0 > $x;
+         $y0 = $y if $y0 > $y;
+
+         $x += $w;
+         $y += $h;
+
+         $x1 = $x if $x1 > $x;
+         $y1 = $y if $y1 > $y;
+      }
+
+      my $base = $self->new_img ($x0, $y0, $x1 - $x0, $y1 - $y0);
+      $base->fill ([0, 0, 0, 0]);
+
+      $base->blend (1., $_)
+         for @_;
+
+      $base
    }
 
 =head2 TILING MODES

@@ -100,7 +100,7 @@ public:
   rxvt_img *scale (int new_width, int new_height);
   rxvt_img *rotate (int cx, int cy, double phi);
   rxvt_img *convert_format (XRenderPictFormat *format, const rgba &bg);
-  rxvt_img *blend (rxvt_img *img, double factor);
+  rxvt_img *blend (rxvt_img *img, double factor = 1.);
 
   // egregiuous helper category
   rxvt_img *replace (rxvt_img *&p)

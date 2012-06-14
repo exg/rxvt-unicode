@@ -2098,12 +2098,12 @@ rxvt_term::background_geometry (bool border = false)
 #if HAVE_IMG
 
 rxvt_img *
-rxvt_term::new_img (SV *format, int width = 1, int height = 1)
+rxvt_term::new_img (SV *format, int x = 0, int y = 0, int width = 1, int height = 1)
 	CODE:
         XRenderPictFormat *f = SvOK (format)
                              ? XRenderFindStandardFormat (THIS->dpy, SvIV (format))
                              : XRenderFindVisualFormat   (THIS->dpy, THIS->visual);
-        RETVAL = new rxvt_img (THIS, f, 0, 0, width, height);
+        RETVAL = new rxvt_img (THIS, f, x, y, width, height);
         RETVAL->alloc ();
 	OUTPUT:
         RETVAL
@@ -2213,6 +2213,29 @@ MODULE = urxvt             PACKAGE = urxvt::img
 
 # rxvt_img *new (rxvt_screen *screen, XRenderPictFormat *format, int width, int height)
 # rxvt_img *rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int width, int height, Pixmap pixmap);
+
+void
+rxvt_img::geometry ()
+	PPCODE:
+        EXTEND (SP, 4);
+        PUSHs (sv_2mortal (newSViv (THIS->x)));
+        PUSHs (sv_2mortal (newSViv (THIS->y)));
+        PUSHs (sv_2mortal (newSViv (THIS->w)));
+        PUSHs (sv_2mortal (newSViv (THIS->h)));
+
+int
+rxvt_img::x ()
+	CODE:
+        RETVAL = THIS->x;
+	OUTPUT:
+        RETVAL
+
+int
+rxvt_img::y ()
+	CODE:
+        RETVAL = THIS->y;
+	OUTPUT:
+        RETVAL
 
 int
 rxvt_img::w ()
