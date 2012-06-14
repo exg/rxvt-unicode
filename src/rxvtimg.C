@@ -643,6 +643,7 @@ rxvt_img::transform (nv matrix[3][3])
       v = mat_apply (matrix, i, w+x, h+y); min_it (rmin [i], v); max_it (rmax [i],  v);
     }
 
+  // TODO: adjust matrix for subpixel accuracy
   int dx = floor (rmin [0]);
   int dy = floor (rmin [1]);
 
