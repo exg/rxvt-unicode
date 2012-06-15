@@ -11,12 +11,8 @@
 
 #include <X11/extensions/Xrender.h>
 
-class rxvt_img
+struct rxvt_img
 {
-  void destroy ();
-  Picture picture ();
-
-public:
   typedef double nv;
 
   // *could* also hold the Pixmap itself
@@ -100,7 +96,7 @@ public:
   rxvt_img *blur (int rh, int rv);
   rxvt_img *clone ();
   rxvt_img *sub_rect (int x, int y, int width, int height);
-  rxvt_img *transform (nv matrix[3][3]);
+  rxvt_img *transform (const nv matrix[3][3]);
   rxvt_img *scale (int new_width, int new_height);
   rxvt_img *rotate (int cx, int cy, nv phi);
   rxvt_img *convert_format (XRenderPictFormat *format, const rgba &bg);
@@ -113,6 +109,12 @@ public:
     p = this;
     return this;
   }
+
+private:
+
+  void destroy ();
+  Picture picture ();
+  rxvt_img *transform (const nv *matrix);
 };
 
 #endif

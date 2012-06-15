@@ -18,7 +18,7 @@ namespace
     {
     }
 
-    mat3x3 (nv matrix[3][3])
+    mat3x3 (const nv *matrix)
     {
       memcpy (v, matrix, sizeof (v));
     }
@@ -35,6 +35,9 @@ namespace
           nv *operator [](int i)       { return &v[i][0]; }
     const nv *operator [](int i) const { return &v[i][0]; }
 
+    operator const nv * () const { return &v[0][0]; }
+    operator       nv * ()       { return &v[0][0]; }
+
     // quite inefficient, hopefully gcc pulls the w calc out of any loops
     nv apply1 (int i, nv x, nv y)
     {
@@ -47,6 +50,8 @@ namespace
     }
 
     static mat3x3 translate (nv x, nv y);
+    static mat3x3 scale     (nv s, nv t);
+    static mat3x3 rotate    (nv phi);
   };
 
   mat3x3
@@ -97,6 +102,30 @@ namespace
       1, 0, x,
       0, 1, y,
       0, 0, 1
+    );
+  }
+
+  mat3x3
+  mat3x3::scale (nv s, nv t)
+  {
+    return mat3x3 (
+      s, 0, 0,
+      0, t, 0,
+      0, 0, 1
+    );
+  }
+
+  // clockwise
+  mat3x3
+  mat3x3::rotate (nv phi)
+  {
+    nv s = sin (phi);
+    nv c = cos (phi);
+
+    return mat3x3 (
+      c, -s, 0,
+      s,  c, 0,
+      0,  0, 1
     );
   }
 
@@ -696,12 +725,18 @@ rxvt_img::sub_rect (int x, int y, int width, int height)
 }
 
 rxvt_img *
-rxvt_img::transform (nv matrix[3][3])
+rxvt_img::transform (const nv matrix[3][3])
 {
+  return transform (mat3x3 (&matrix[0][0]));
+}
+
+rxvt_img *
+rxvt_img::transform (const nv *matrix)
+{
+  mat3x3 m (matrix);
+
   // calculate new pixel bounding box coordinates
   nv r[2], rmin[2], rmax[2];
-
-  mat3x3 m (matrix);
 
   for (int i = 0; i < 2; ++i)
     {
@@ -756,16 +791,10 @@ rxvt_img::scale (int new_width, int new_height)
   if (w == new_width && h == new_height)
     return clone ();
 
-  nv matrix[3][3] = {
-    { new_width / (nv)w,  0, 0 },
-    { 0, new_height / (nv)h, 0 },
-    { 0,                  0, 1 }
-  };
-
   int old_repeat_mode = repeat;
   repeat = RepeatPad; // not right, but xrender can't properly scale it seems
 
-  rxvt_img *img = transform (matrix);
+  rxvt_img *img = transform (mat3x3::scale (new_width / (nv)w, new_height / (nv)h));
 
   repeat = old_repeat_mode;
   img->repeat = repeat;
@@ -776,23 +805,14 @@ rxvt_img::scale (int new_width, int new_height)
 rxvt_img *
 rxvt_img::rotate (int cx, int cy, nv phi)
 {
-  nv s = sin (phi);
-  nv c = cos (phi);
-
-  nv matrix[3][3] = {
 #if 0
     { c, -s, cx - c * cx + s * cy },
     { s,  c, cy - s * cx - c * cy },
     { 0,  0,                    1 }
-#else
-    { c, -s, 0 },
-    { s,  c, 0 },
-    { 0,  0, 1 }
 #endif
-  };
 
   move (-cx, -cy);
-  rxvt_img *img = transform (matrix);
+  rxvt_img *img = transform (mat3x3::rotate (phi));
   move ( cx,  cy);
   img->move (cx, cy);
 
