@@ -799,6 +799,7 @@ rxvt_term::extract_resources ()
    */
   for (int entry = 0; entry < ecb_array_length (optList); entry++)
     {
+      int s;
       const char *kw = optList[entry].kw;
 
       if (kw == NULL || rs[optList[entry].doff] != NULL)
@@ -814,7 +815,10 @@ rxvt_term::extract_resources ()
 
           if (optList_isBool (entry))
             {
-              bool s = parse_bool_resource (p);
+              s = strcasecmp (p, "TRUE") == 0
+                  || strcasecmp (p, "YES") == 0
+                  || strcasecmp (p, "ON") == 0
+                  || strcasecmp (p, "1") == 0;
 
               if (optList_isReverse (entry))
                 s = !s;
@@ -829,39 +833,33 @@ rxvt_term::extract_resources ()
 void
 rxvt_term::extract_keysym_resources ()
 {
-#if !defined NO_RESOURCES && defined KEYSYM_RESOURCE
-  find_resources ("keysym", "Keysym", XrmEnumOneLevel, rxvt_define_key);
-#endif
-}
-
-#if !defined NO_RESOURCES && defined KEYSYM_RESOURCE
-void
-rxvt_term::find_resources (const char *n_prefix, const char *c_prefix, int mode,
-                           Bool (*proc)(XrmDatabase *, XrmBindingList, XrmQuarkList, XrmRepresentation *, XrmValue *, XPointer))
-{
+#ifndef NO_RESOURCES
   /*
    * [R5 or later]: enumerate the resource database
    */
+#  ifdef KEYSYM_RESOURCE
   XrmDatabase database = XrmGetDatabase (dpy);
   XrmName name_prefix[3];
   XrmClass class_prefix[3];
 
   name_prefix[0] = XrmStringToName (rs[Rs_name]);
-  name_prefix[1] = XrmStringToName (n_prefix);
+  name_prefix[1] = XrmStringToName ("keysym");
   name_prefix[2] = NULLQUARK;
   class_prefix[0] = XrmStringToName (RESCLASS);
-  class_prefix[1] = XrmStringToName (c_prefix);
+  class_prefix[1] = XrmStringToName ("Keysym");
   class_prefix[2] = NULLQUARK;
   /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
-                        mode, proc, NULL);
+                        XrmEnumOneLevel, rxvt_define_key, NULL);
 #   ifdef RESFALLBACK
   name_prefix[0] = class_prefix[0] = XrmStringToName (RESFALLBACK);
   /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
-                        mode, proc, NULL);
+                        XrmEnumOneLevel, rxvt_define_key, NULL);
 #   endif
+#  endif
+
+#endif /* NO_RESOURCES */
 }
-#endif
 
 /*----------------------- end-of-file (C source) -----------------------*/

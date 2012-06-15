@@ -1566,15 +1566,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   const char *x_resource (const char *name);
   void extract_resources ();
   void extract_keysym_resources ();
-  void find_resources (const char *n_prefix, const char *c_prefix, int mode,
-                       Bool (*proc)(XrmDatabase *, XrmBindingList, XrmQuarkList, XrmRepresentation *, XrmValue *, XPointer));
-  bool parse_bool_resource (const char *str)
-  {
-    return (!strcasecmp (str, "TRUE")
-            || !strcasecmp (str, "YES")
-            || !strcasecmp (str, "ON")
-            || !strcasecmp (str, "1"));
-  }
 };
 
 #endif /* _RXVT_H_ */
