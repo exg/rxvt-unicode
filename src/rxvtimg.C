@@ -1,8 +1,101 @@
+#include <string.h>
 #include <math.h>
 #include "../config.h"
 #include "rxvt.h"
 
 #if HAVE_IMG
+
+typedef rxvt_img::nv nv;
+
+struct mat3x3
+{
+  nv v[3][3];
+
+  mat3x3 ()
+  {
+  }
+
+  mat3x3 (nv matrix[3][3])
+  {
+    memcpy (v, matrix, sizeof (v));
+  }
+
+  mat3x3 (nv v11, nv v12, nv v13, nv v21, nv v22, nv v23, nv v31, nv v32, nv v33)
+  {
+    v[0][0] = v11; v[0][1] = v12; v[0][2] = v13;
+    v[1][0] = v21; v[1][1] = v22; v[1][2] = v23;
+    v[2][0] = v31; v[2][1] = v32; v[2][2] = v33;
+  }
+
+  mat3x3 invert ();
+
+        nv *operator [](int i)       { return &v[i][0]; }
+  const nv *operator [](int i) const { return &v[i][0]; }
+
+  // quite inefficient, hopefully gcc pulls the w calc out of any loops
+  nv apply1 (int i, nv x, nv y)
+  {
+    mat3x3 &m = *this;
+
+    nv v = m[i][0] * x + m[i][1] * y + m[i][2];
+    nv w = m[2][0] * x + m[2][1] * y + m[2][2];
+
+    return v * (1. / w);
+  }
+
+  static mat3x3 translate (nv x, nv y);
+};
+
+mat3x3
+mat3x3::invert ()
+{
+  mat3x3 &m = *this;
+  mat3x3 inv;
+
+  nv s0 = m[2][2] * m[1][1] - m[2][1] * m[1][2];
+  nv s1 = m[2][1] * m[0][2] - m[2][2] * m[0][1];
+  nv s2 = m[1][2] * m[0][1] - m[1][1] * m[0][2];
+
+  nv invdet = 1. / (m[0][0] * s0 + m[1][0] * s1 + m[2][0] * s2);
+
+  inv[0][0] = invdet * s0;
+  inv[0][1] = invdet * s1;
+  inv[0][2] = invdet * s2;
+
+  inv[1][0] = invdet * (m[2][0] * m[1][2] - m[2][2] * m[1][0]);
+  inv[1][1] = invdet * (m[2][2] * m[0][0] - m[2][0] * m[0][2]);
+  inv[1][2] = invdet * (m[1][0] * m[0][2] - m[1][2] * m[0][0]);
+
+  inv[2][0] = invdet * (m[2][1] * m[1][0] - m[2][0] * m[1][1]);
+  inv[2][1] = invdet * (m[2][0] * m[0][1] - m[2][1] * m[0][0]);
+  inv[2][2] = invdet * (m[1][1] * m[0][0] - m[1][0] * m[0][1]);
+
+  return inv;
+}
+
+static mat3x3
+operator *(const mat3x3 &a, const mat3x3 &b)
+{
+  mat3x3 r;
+
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j)
+      r[i][j] = a[i][0] * b[0][j]
+              + a[i][1] * b[1][j]
+              + a[i][2] * b[2][j];
+
+  return r;
+}
+
+mat3x3
+mat3x3::translate (nv x, nv y)
+{
+  return mat3x3 (
+    1, 0, x,
+    0, 1, y,
+    0, 0, 1
+  );
+}
 
 #if 0
 struct pict
@@ -314,15 +407,15 @@ rxvt_img::add_alpha ()
 }
 
 static void
-get_gaussian_kernel (int radius, int width, rxvt_img::nv *kernel, XFixed *params)
+get_gaussian_kernel (int radius, int width, nv *kernel, XFixed *params)
 {
-  rxvt_img::nv sigma = radius / 2.0;
-  rxvt_img::nv scale = sqrt (2.0 * M_PI) * sigma;
-  rxvt_img::nv sum = 0.0;
+  nv sigma = radius / 2.0;
+  nv scale = sqrt (2.0 * M_PI) * sigma;
+  nv sum = 0.0;
 
   for (int i = 0; i < width; i++)
     {
-      rxvt_img::nv x = i - width / 2;
+      nv x = i - width / 2;
       kernel[i] = exp (-(x * x) / (2.0 * sigma * sigma)) / scale;
       sum += kernel[i];
     }
@@ -597,71 +690,22 @@ rxvt_img::sub_rect (int x, int y, int width, int height)
   return img;
 }
 
-typedef rxvt_img::nv matrix[3][3];
-
-static void
-mat_invert (matrix mat, rxvt_img::nv (&inv)[3][3])
-{
-  rxvt_img::nv s0 = mat [2][2] * mat [1][1] - mat [2][1] * mat [1][2];
-  rxvt_img::nv s1 = mat [2][1] * mat [0][2] - mat [2][2] * mat [0][1];
-  rxvt_img::nv s2 = mat [1][2] * mat [0][1] - mat [1][1] * mat [0][2];
-
-  rxvt_img::nv invdet = 1. / (mat [0][0] * s0 + mat [1][0] * s1 + mat [2][0] * s2);
-
-  inv [0][0] = invdet * s0;
-  inv [0][1] = invdet * s1;
-  inv [0][2] = invdet * s2;
-
-  inv [1][0] = invdet * (mat [2][0] * mat [1][2] - mat [2][2] * mat [1][0]);
-  inv [1][1] = invdet * (mat [2][2] * mat [0][0] - mat [2][0] * mat [0][2]);
-  inv [1][2] = invdet * (mat [1][0] * mat [0][2] - mat [1][2] * mat [0][0]);
-
-  inv [2][0] = invdet * (mat [2][1] * mat [1][0] - mat [2][0] * mat [1][1]);
-  inv [2][1] = invdet * (mat [2][0] * mat [0][1] - mat [2][1] * mat [0][0]);
-  inv [2][2] = invdet * (mat [1][1] * mat [0][0] - mat [1][0] * mat [0][1]);
-}
-
-static rxvt_img::nv
-mat_apply (matrix mat, int i, rxvt_img::nv x, rxvt_img::nv y)
-{
-  rxvt_img::nv v = mat [i][0] * x + mat [i][1] * y + mat [i][2];
-  rxvt_img::nv w = mat [2][0] * x + mat [2][1] * y + mat [2][2];
-
-  return v * (1. / w);
-}
-
-static void
-mat_mult (matrix a, matrix b, matrix r)
-{
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j)
-      r [i][j] = a [i][0] * b [0][j]
-               + a [i][1] * b [1][j]
-               + a [i][2] * b [2][j];
-}
-
-static void
-mat_trans (rxvt_img::nv x, rxvt_img::nv y, matrix mat)
-{
-  mat [0][0] = 1; mat [0][1] = 0; mat [0][2] = x;
-  mat [1][0] = 0; mat [1][1] = 1; mat [1][2] = y;
-  mat [2][0] = 0; mat [2][1] = 0; mat [2][2] = 1;
-}
-
 rxvt_img *
 rxvt_img::transform (nv matrix[3][3])
 {
   // calculate new pixel bounding box coordinates
   nv r[2], rmin[2], rmax[2];
 
+  mat3x3 m (matrix);
+
   for (int i = 0; i < 2; ++i)
     {
       nv v;
 
-      v = mat_apply (matrix, i, 0+x, 0+y);         rmin [i] =            rmax [i] = v; r [i] = v;
-      v = mat_apply (matrix, i, w+x, 0+y); min_it (rmin [i], v); max_it (rmax [i],  v);
-      v = mat_apply (matrix, i, 0+x, h+y); min_it (rmin [i], v); max_it (rmax [i],  v);
-      v = mat_apply (matrix, i, w+x, h+y); min_it (rmin [i], v); max_it (rmax [i],  v);
+      v = m.apply1 (i, 0+x, 0+y);         rmin [i] =            rmax [i] = v; r [i] = v;
+      v = m.apply1 (i, w+x, 0+y); min_it (rmin [i], v); max_it (rmax [i],  v);
+      v = m.apply1 (i, 0+x, h+y); min_it (rmin [i], v); max_it (rmax [i],  v);
+      v = m.apply1 (i, w+x, h+y); min_it (rmin [i], v); max_it (rmax [i],  v);
     }
 
   float sx = rmin [0] - x;
@@ -674,14 +718,9 @@ rxvt_img::transform (nv matrix[3][3])
   int new_width  = ceil (rmax [0] - rmin [0]);
   int new_height = ceil (rmax [1] - rmin [1]);
 
-  ::matrix tr, tmp;
-  mat_trans (x, y, tr);
-  mat_mult (matrix, tr, tmp);
-  mat_trans (-x, -y, tr);
-  mat_mult (tr, tmp, matrix);
+  m = mat3x3::translate (-x, -y) * m * mat3x3::translate (x, y);
 
-  ::matrix inv;
-  mat_invert (matrix, inv);
+  mat3x3 inv = m.invert ();
 
   rxvt_img *img = new rxvt_img (s, format, nx, ny, new_width, new_height, repeat);
   img->alloc ();
