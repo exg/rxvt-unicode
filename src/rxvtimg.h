@@ -90,6 +90,10 @@ struct rxvt_img
   }
 
   void draw (rxvt_img *img, int op = PictOpOver, nv mask = 1.);
+#if 0
+  void draw (rxvt_img *img, int op = PictOpOver, nv mask = 1.,
+             nv px, nv py, nv qx, nv qy, nv rx, nv ry, nv sx, nv sy);
+#endif
 
   // copy
   rxvt_img *reify (); // make x, y 0, make real width/height

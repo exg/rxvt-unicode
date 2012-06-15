@@ -308,9 +308,14 @@ multiple copies of the same image to apply different effects to.
 Takes any number of images and merges them together, creating a single
 image containing them all.
 
+This function is called automatically when an expression returns multiple
+images.
+
 =cut
 
    sub merge(@) {
+      return $_[0] unless $#_;
+
       # rather annoyingly clumsy, but optimisation is for another time
 
       my $x0 = +1e9;
@@ -907,8 +912,8 @@ sub recalculate {
 
    # evaluate user expression
 
-   my $img = eval { $self->{expr}->() };
-   warn $@ if $@;#d#
+   my $img = eval { urxvt::bgdsl::merge $self->{expr}->() };
+   die $@ if $@;
    die "background-expr did not return an image.\n" if !UNIVERSAL::isa $img, "urxvt::img";
 
    # if the expression is sensitive to external events, prepare reevaluation then
