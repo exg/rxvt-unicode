@@ -597,8 +597,10 @@ rxvt_img::sub_rect (int x, int y, int width, int height)
   return img;
 }
 
+typedef rxvt_img::nv matrix[3][3];
+
 static void
-mat_invert (rxvt_img::nv mat[3][3], rxvt_img::nv (&inv)[3][3])
+mat_invert (matrix mat, rxvt_img::nv (&inv)[3][3])
 {
   rxvt_img::nv s0 = mat [2][2] * mat [1][1] - mat [2][1] * mat [1][2];
   rxvt_img::nv s1 = mat [2][1] * mat [0][2] - mat [2][2] * mat [0][1];
@@ -620,7 +622,7 @@ mat_invert (rxvt_img::nv mat[3][3], rxvt_img::nv (&inv)[3][3])
 }
 
 static rxvt_img::nv
-mat_apply (rxvt_img::nv mat[3][3], int i, rxvt_img::nv x, rxvt_img::nv y)
+mat_apply (matrix mat, int i, rxvt_img::nv x, rxvt_img::nv y)
 {
   rxvt_img::nv v = mat [i][0] * x + mat [i][1] * y + mat [i][2];
   rxvt_img::nv w = mat [2][0] * x + mat [2][1] * y + mat [2][2];
@@ -628,33 +630,60 @@ mat_apply (rxvt_img::nv mat[3][3], int i, rxvt_img::nv x, rxvt_img::nv y)
   return v * (1. / w);
 }
 
+static void
+mat_mult (matrix a, matrix b, matrix r)
+{
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j)
+      r [i][j] = a [i][0] * b [0][j]
+               + a [i][1] * b [1][j]
+               + a [i][2] * b [2][j];
+}
+
+static void
+mat_trans (rxvt_img::nv x, rxvt_img::nv y, matrix mat)
+{
+  mat [0][0] = 1; mat [0][1] = 0; mat [0][2] = x;
+  mat [1][0] = 0; mat [1][1] = 1; mat [1][2] = y;
+  mat [2][0] = 0; mat [2][1] = 0; mat [2][2] = 1;
+}
+
 rxvt_img *
 rxvt_img::transform (nv matrix[3][3])
 {
   // calculate new pixel bounding box coordinates
-  nv rmin[2], rmax[2];
+  nv r[2], rmin[2], rmax[2];
 
   for (int i = 0; i < 2; ++i)
     {
       nv v;
 
-      v = mat_apply (matrix, i, 0+x, 0+y);         rmin [i] =            rmax [i] = v;
+      v = mat_apply (matrix, i, 0+x, 0+y);         rmin [i] =            rmax [i] = v; r [i] = v;
       v = mat_apply (matrix, i, w+x, 0+y); min_it (rmin [i], v); max_it (rmax [i],  v);
       v = mat_apply (matrix, i, 0+x, h+y); min_it (rmin [i], v); max_it (rmax [i],  v);
       v = mat_apply (matrix, i, w+x, h+y); min_it (rmin [i], v); max_it (rmax [i],  v);
     }
 
+  float sx = rmin [0] - x;
+  float sy = rmin [1] - y;
+
   // TODO: adjust matrix for subpixel accuracy
-  int dx = floor (rmin [0]);
-  int dy = floor (rmin [1]);
+  int nx = floor (rmin [0]);
+  int ny = floor (rmin [1]);
 
-  int new_width  = ceil (rmax [0] - dx);
-  int new_height = ceil (rmax [1] - dy);
+  int new_width  = ceil (rmax [0] - rmin [0]);
+  int new_height = ceil (rmax [1] - rmin [1]);
 
-  nv inv[3][3];
+  ::matrix tr, tmp;
+  mat_trans (x, y, tr);
+  mat_mult (matrix, tr, tmp);
+  mat_trans (-x, -y, tr);
+  mat_mult (tr, tmp, matrix);
+
+  ::matrix inv;
   mat_invert (matrix, inv);
 
-  rxvt_img *img = new rxvt_img (s, format, dx, dy, new_width, new_height, repeat);
+  rxvt_img *img = new rxvt_img (s, format, nx, ny, new_width, new_height, repeat);
   img->alloc ();
 
   Display *dpy = s->display->dpy;
@@ -669,7 +698,17 @@ rxvt_img::transform (nv matrix[3][3])
 
   XRenderSetPictureFilter (dpy, src, "good", 0, 0);
   XRenderSetPictureTransform (dpy, src, &xfrm);
-  XRenderComposite (dpy, PictOpSrc, src, None, dst, dx, dy, 0, 0, 0, 0, new_width, new_height);
+  XRenderComposite (dpy, PictOpSrc, src, None, dst, sx, sy, 0, 0, 0, 0, new_width, new_height);
+#if 1
+    {
+      XRenderColor rc = { 65535,0,0,65535 };
+      XRenderFillRectangle (dpy, PictOpSrc, dst, &rc, 0, 0, new_width, new_height);
+    }{
+      XRenderColor rc = { 0,0,0,65535 };
+      XRenderFillRectangle (dpy, PictOpSrc, dst, &rc, 1, 1, new_width - 2, new_height - 2);
+    }
+  XRenderComposite (dpy, PictOpOver, src, None, dst, sx, sy, 0, 0, 0, 0, new_width, new_height);
+#endif
 
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
@@ -707,18 +746,21 @@ rxvt_img::rotate (int cx, int cy, nv phi)
   nv c = cos (phi);
 
   nv matrix[3][3] = {
-    { c, -s, cx - c * cx + s * cy  + 200 },
+#if 0
+    { c, -s, cx - c * cx + s * cy },
     { s,  c, cy - s * cx - c * cy },
-    { 0,  0,                     1 }
-    //{ c, -s, 0 },
-    //{ s,  c, 0 },
-    //{ 0,  0, 1 }
+    { 0,  0,                    1 }
+#else
+    { c, -s, 0 },
+    { s,  c, 0 },
+    { 0,  0, 1 }
+#endif
   };
 
-  //move (-cx, -cy);
+  move (-cx, -cy);
   rxvt_img *img = transform (matrix);
-  //move ( cx,  cy);
-  //img->move (cx, cy);
+  move ( cx,  cy);
+  img->move (cx, cy);
 
   return img;
 }

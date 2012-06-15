@@ -699,8 +699,8 @@ Example: rotate the image by 90 degrees
    sub rotate($$$$) {
       my $img = pop;
       $img->rotate (
-         $_[0] * $img->w,
-         $_[1] * $img->h,
+         $_[0] * ($img->w + $img->x),
+         $_[1] * ($img->h + $img->y),
          $_[2] * (3.14159265 / 180),
       )
    }
