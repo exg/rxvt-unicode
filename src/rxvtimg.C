@@ -7,94 +7,99 @@
 
 typedef rxvt_img::nv nv;
 
-struct mat3x3
+namespace
 {
-  nv v[3][3];
 
-  mat3x3 ()
+  struct mat3x3
   {
-  }
+    nv v[3][3];
 
-  mat3x3 (nv matrix[3][3])
-  {
-    memcpy (v, matrix, sizeof (v));
-  }
+    mat3x3 ()
+    {
+    }
 
-  mat3x3 (nv v11, nv v12, nv v13, nv v21, nv v22, nv v23, nv v31, nv v32, nv v33)
-  {
-    v[0][0] = v11; v[0][1] = v12; v[0][2] = v13;
-    v[1][0] = v21; v[1][1] = v22; v[1][2] = v23;
-    v[2][0] = v31; v[2][1] = v32; v[2][2] = v33;
-  }
+    mat3x3 (nv matrix[3][3])
+    {
+      memcpy (v, matrix, sizeof (v));
+    }
 
-  mat3x3 invert ();
+    mat3x3 (nv v11, nv v12, nv v13, nv v21, nv v22, nv v23, nv v31, nv v32, nv v33)
+    {
+      v[0][0] = v11; v[0][1] = v12; v[0][2] = v13;
+      v[1][0] = v21; v[1][1] = v22; v[1][2] = v23;
+      v[2][0] = v31; v[2][1] = v32; v[2][2] = v33;
+    }
 
-        nv *operator [](int i)       { return &v[i][0]; }
-  const nv *operator [](int i) const { return &v[i][0]; }
+    mat3x3 invert ();
 
-  // quite inefficient, hopefully gcc pulls the w calc out of any loops
-  nv apply1 (int i, nv x, nv y)
+          nv *operator [](int i)       { return &v[i][0]; }
+    const nv *operator [](int i) const { return &v[i][0]; }
+
+    // quite inefficient, hopefully gcc pulls the w calc out of any loops
+    nv apply1 (int i, nv x, nv y)
+    {
+      mat3x3 &m = *this;
+
+      nv v = m[i][0] * x + m[i][1] * y + m[i][2];
+      nv w = m[2][0] * x + m[2][1] * y + m[2][2];
+
+      return v * (1. / w);
+    }
+
+    static mat3x3 translate (nv x, nv y);
+  };
+
+  mat3x3
+  mat3x3::invert ()
   {
     mat3x3 &m = *this;
+    mat3x3 inv;
 
-    nv v = m[i][0] * x + m[i][1] * y + m[i][2];
-    nv w = m[2][0] * x + m[2][1] * y + m[2][2];
+    nv s0 = m[2][2] * m[1][1] - m[2][1] * m[1][2];
+    nv s1 = m[2][1] * m[0][2] - m[2][2] * m[0][1];
+    nv s2 = m[1][2] * m[0][1] - m[1][1] * m[0][2];
 
-    return v * (1. / w);
+    nv invdet = 1. / (m[0][0] * s0 + m[1][0] * s1 + m[2][0] * s2);
+
+    inv[0][0] = invdet * s0;
+    inv[0][1] = invdet * s1;
+    inv[0][2] = invdet * s2;
+
+    inv[1][0] = invdet * (m[2][0] * m[1][2] - m[2][2] * m[1][0]);
+    inv[1][1] = invdet * (m[2][2] * m[0][0] - m[2][0] * m[0][2]);
+    inv[1][2] = invdet * (m[1][0] * m[0][2] - m[1][2] * m[0][0]);
+
+    inv[2][0] = invdet * (m[2][1] * m[1][0] - m[2][0] * m[1][1]);
+    inv[2][1] = invdet * (m[2][0] * m[0][1] - m[2][1] * m[0][0]);
+    inv[2][2] = invdet * (m[1][1] * m[0][0] - m[1][0] * m[0][1]);
+
+    return inv;
   }
 
-  static mat3x3 translate (nv x, nv y);
-};
+  static mat3x3
+  operator *(const mat3x3 &a, const mat3x3 &b)
+  {
+    mat3x3 r;
 
-mat3x3
-mat3x3::invert ()
-{
-  mat3x3 &m = *this;
-  mat3x3 inv;
+    for (int i = 0; i < 3; ++i)
+      for (int j = 0; j < 3; ++j)
+        r[i][j] = a[i][0] * b[0][j]
+                + a[i][1] * b[1][j]
+                + a[i][2] * b[2][j];
 
-  nv s0 = m[2][2] * m[1][1] - m[2][1] * m[1][2];
-  nv s1 = m[2][1] * m[0][2] - m[2][2] * m[0][1];
-  nv s2 = m[1][2] * m[0][1] - m[1][1] * m[0][2];
+    return r;
+  }
 
-  nv invdet = 1. / (m[0][0] * s0 + m[1][0] * s1 + m[2][0] * s2);
+  mat3x3
+  mat3x3::translate (nv x, nv y)
+  {
+    return mat3x3 (
+      1, 0, x,
+      0, 1, y,
+      0, 0, 1
+    );
+  }
 
-  inv[0][0] = invdet * s0;
-  inv[0][1] = invdet * s1;
-  inv[0][2] = invdet * s2;
-
-  inv[1][0] = invdet * (m[2][0] * m[1][2] - m[2][2] * m[1][0]);
-  inv[1][1] = invdet * (m[2][2] * m[0][0] - m[2][0] * m[0][2]);
-  inv[1][2] = invdet * (m[1][0] * m[0][2] - m[1][2] * m[0][0]);
-
-  inv[2][0] = invdet * (m[2][1] * m[1][0] - m[2][0] * m[1][1]);
-  inv[2][1] = invdet * (m[2][0] * m[0][1] - m[2][1] * m[0][0]);
-  inv[2][2] = invdet * (m[1][1] * m[0][0] - m[1][0] * m[0][1]);
-
-  return inv;
-}
-
-static mat3x3
-operator *(const mat3x3 &a, const mat3x3 &b)
-{
-  mat3x3 r;
-
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j)
-      r[i][j] = a[i][0] * b[0][j]
-              + a[i][1] * b[1][j]
-              + a[i][2] * b[2][j];
-
-  return r;
-}
-
-mat3x3
-mat3x3::translate (nv x, nv y)
-{
-  return mat3x3 (
-    1, 0, x,
-    0, 1, y,
-    0, 0, 1
-  );
 }
 
 #if 0
