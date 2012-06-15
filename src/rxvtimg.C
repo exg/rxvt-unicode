@@ -743,16 +743,6 @@ rxvt_img::transform (nv matrix[3][3])
   XRenderSetPictureFilter (dpy, src, "good", 0, 0);
   XRenderSetPictureTransform (dpy, src, &xfrm);
   XRenderComposite (dpy, PictOpSrc, src, None, dst, sx, sy, 0, 0, 0, 0, new_width, new_height);
-#if 1
-    {
-      XRenderColor rc = { 65535,0,0,65535 };
-      XRenderFillRectangle (dpy, PictOpSrc, dst, &rc, 0, 0, new_width, new_height);
-    }{
-      XRenderColor rc = { 0,0,0,65535 };
-      XRenderFillRectangle (dpy, PictOpSrc, dst, &rc, 1, 1, new_width - 2, new_height - 2);
-    }
-  XRenderComposite (dpy, PictOpOver, src, None, dst, sx, sy, 0, 0, 0, 0, new_width, new_height);
-#endif
 
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
