@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------*
- * File:	background.C - former xpm.C
+ * File:	background.C
  *----------------------------------------------------------------------*
  *
  * All portions of code are copyright by their respective author/s.

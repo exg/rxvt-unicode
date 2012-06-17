@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------*
- * File:	rxvtimg.h
+ * File:	rxvtimg.C
  *----------------------------------------------------------------------*
  *
  * All portions of code are copyright by their respective author/s.
@@ -318,7 +318,7 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
             uint8_t b = *src++;
 
             uint32_t v = (255 << 24) | (r << 16) | (g << 8) | b;
-            
+
             if (ecb_big_endian () ? !byte_order_mismatch : byte_order_mismatch)
               v = ecb_bswap32 (v);
 
@@ -451,7 +451,7 @@ rxvt_img::add_alpha ()
 
   Picture src = picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
-  
+
   XRenderComposite (dpy, PictOpSrc, src, None, dst, 0, 0, 0, 0, 0, 0, w, h);
 
   XRenderFreePicture (dpy, src);
@@ -669,7 +669,7 @@ rxvt_img::draw (rxvt_img *img, int op, nv mask)
   Picture src = img->picture ();
   Picture dst = picture ();
   Picture mask_p = 0;
-  
+
   if (mask != 1.)
     {
       mask_p = create_xrender_mask (dpy, img->pm, False, False);
@@ -710,7 +710,7 @@ rxvt_img::reify ()
 
   Picture src = picture ();
   Picture dst = XRenderCreatePicture (dpy, img->pm, img->format, 0, 0);
-  
+
   if (alpha)
     {
       XRenderColor rc = { 0, 0, 0, 0 };
