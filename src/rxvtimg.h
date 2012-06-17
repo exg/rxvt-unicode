@@ -127,7 +127,8 @@ struct rxvt_img
   rxvt_img *scale (int new_width, int new_height);
   rxvt_img *rotate (int cx, int cy, nv phi);
   rxvt_img *convert_format (XRenderPictFormat *format, const rgba &bg);
-  rxvt_img *blend (rxvt_img *img, nv factor = 1.);
+  rxvt_img *tint (const rgba &c);
+  rxvt_img *filter (const char *name, int nparams = 0, nv *params = 0);
 
   // egregiuous helper category
   rxvt_img *replace (rxvt_img *&p)
@@ -137,9 +138,9 @@ struct rxvt_img
     return this;
   }
 
-private:
-
+  /* these are considered private */
   void destroy ();
+  rxvt_img *new_empty ();
   Picture picture ();
   rxvt_img *transform (const nv *matrix);
 };

@@ -260,7 +260,7 @@ way.
 =item root
 
 Returns the root window pixmap, that is, hopefully, the background image
-of your screen. The image is set to extend mode.
+of your screen.
 
 This function makes your expression root sensitive, that means it will be
 reevaluated when the bg image changes.
@@ -306,7 +306,8 @@ multiple copies of the same image to apply different effects to.
 =item merge $img ...
 
 Takes any number of images and merges them together, creating a single
-image containing them all.
+image containing them all. The tiling mode of the first image is used as
+the tiling mdoe of the resulting image.
 
 This function is called automatically when an expression returns multiple
 images.
@@ -337,6 +338,7 @@ images.
       }
 
       my $base = $self->new_img (urxvt::PictStandardARGB32, $x0, $y0, $x1 - $x0, $y1 - $y0);
+      $base->repeat_mode ($_[0]->repeat_mode);
       $base->fill ([0, 0, 0, 0]);
 
       $base->draw ($_)

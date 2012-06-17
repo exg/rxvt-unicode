@@ -2284,29 +2284,19 @@ rxvt_img::geometry ()
 
 int
 rxvt_img::x ()
+	ALIAS:
+        x = 0
+        y = 1
+        w = 2
+        h = 3
 	CODE:
-        RETVAL = THIS->x;
-	OUTPUT:
-        RETVAL
-
-int
-rxvt_img::y ()
-	CODE:
-        RETVAL = THIS->y;
-	OUTPUT:
-        RETVAL
-
-int
-rxvt_img::w ()
-	CODE:
-        RETVAL = THIS->w;
-	OUTPUT:
-        RETVAL
-
-int
-rxvt_img::h ()
-	CODE:
-        RETVAL = THIS->h;
+        switch (ix)
+          {
+            case 0: RETVAL = THIS->x; break;
+            case 1: RETVAL = THIS->y; break;
+            case 2: RETVAL = THIS->w; break;
+            case 3: RETVAL = THIS->h; break;
+          }
 	OUTPUT:
         RETVAL
 
@@ -2329,11 +2319,14 @@ rxvt_img::DESTROY ()
         delete THIS;
 
 void
+rxvt_img::add_alpha ()
+
+void
 rxvt_img::unshare ()
 
-int
+void
 rxvt_img::repeat_mode (render_repeat_mode repeat = 0)
-	CODE:
+	PPCODE:
         if (items >= 2)
           THIS->repeat_mode (repeat);
         if (GIMME_V != G_VOID)
@@ -2378,6 +2371,37 @@ rxvt_img::scale (int new_width, int new_height)
 
 rxvt_img *
 rxvt_img::rotate (int x, int y, rxvt_img::nv phi)
+
+void
+rxvt_img::tint (SV *c)
+	INIT:
+        rgba cc = parse_rgba (c, THIS->s);
+	C_ARGS: cc
+
+rxvt_img *
+rxvt_img::filter (octet_string name, SV *params = &PL_sv_undef)
+	CODE:
+        rxvt_img::nv *vparams = 0;
+        int nparams = 0;
+
+        if (SvOK (params))
+	  {
+            // we overlay rxvt_temp_buf, what a hack
+            assert (sizeof (rxvt_img::nv) >= sizeof (int));
+
+            if (!SvROK (params) || SvTYPE (SvRV (params)) != SVt_PVAV)
+              croak ("rxvt_img::filter: params must be an array reference with parameter values");
+
+            nparams = av_len ((AV *)SvRV (params)) + 1;
+            vparams = rxvt_temp_buf<rxvt_img::nv> (nparams);
+
+            for (int i = 0; i < nparams; ++i)
+              vparams [i] = SvNV (*av_fetch ((AV *)SvRV (params), i, 1));
+          }
+
+        RETVAL = THIS->filter (name, nparams, vparams);
+	OUTPUT:
+        RETVAL
 
 #endif
 
