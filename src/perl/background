@@ -28,11 +28,11 @@ to be as simple as possible.
 For example, to load an image and scale it to the window size, you would
 use:
 
-   urxvt --background-expr 'scale load "/path/to/mybg.png"'
+   urxvt --background-expr 'scale keep { load "/path/to/mybg.png" }'
 
 Or specified as a X resource:
 
-   URxvt.background-expr: scale load "/path/to/mybg.png"
+   URxvt.background-expr: scale keep { load "/path/to/mybg.png" }
 
 =head1 THEORY OF OPERATION
 
@@ -55,9 +55,9 @@ window is moved or resized, its position or size changes; when the root
 pixmap is replaced by another one the root background changes; or when the
 timer elapses), then the expression will be evaluated again.
 
-For example, an expression such as C<scale load "$HOME/mybg.png"> scales the
-image to the window size, so it relies on the window size and will
-be reevaluated each time it is changed, but not when it moves for
+For example, an expression such as C<scale keep { load "$HOME/mybg.png"
+}> scales the image to the window size, so it relies on the window size
+and will be reevaluated each time it is changed, but not when it moves for
 example. That ensures that the picture always fills the terminal, even
 after its size changes.
 
@@ -66,11 +66,13 @@ after its size changes.
 Expressions are normal Perl expressions, in fact, they are Perl blocks -
 which means you could use multiple lines and statements:
 
-   again 3600;
-   if (localtime now)[6]) {
-      return scale load "$HOME/weekday.png";
-   } else {
-      return scale load "$HOME/sunday.png";
+   scale keep {
+      again 3600;
+      if (localtime now)[6]) {
+         return load "$HOME/weekday.png";
+      } else {
+         return load "$HOME/sunday.png";
+      }
    }
 
 This expression is evaluated once per hour. It will set F<sunday.png> as
@@ -117,80 +119,92 @@ width and doubles the image height:
 
    scale 0.5, 2, load "$HOME/mypic.png"
 
-Other effects than scaling are also readily available, for example, you can
-tile the image to fill the whole window, instead of resizing it:
+IF you try out these expressions, you might suffer from sluggishness,
+because each time the terminal is resized, it again loads the PNG image
+and scales it. Scaling is usually fats, but loading the image can be quite
+time consuming. This is where C<keep> comes in handy:
 
-   tile load "$HOME/mypic.png"
+   scale 0.5, 2, keep { load "$HOME/mypic.png" }
 
-In fact, images returned by C<load> are in C<tile> mode by default, so the C<tile> operator
-is kind of superfluous.
+The C<keep> operator executes all the statements inside the braces only
+once, or when it thinks the outcome might change. In other cases it
+returns the last value computed by the brace block.
 
-Another common effect is to mirror the image, so that the same edges touch:
+This means that the C<load> is only executed once, which makes it much
+faster, but alos means that more memory is being used, because the loaded
+image must be kept in memory at all times. In this expression, the
+trade-off is likely worth it.
 
-   mirror load "$HOME/mypic.png"
+But back to effects: Other effects than scaling are also readily
+available, for example, you can tile the image to fill the whole window,
+instead of resizing it:
 
-This is also a typical background expression:
+   tile keep { load "$HOME/mypic.png" }
+
+In fact, images returned by C<load> are in C<tile> mode by default, so the
+C<tile> operator is kind of superfluous.
+
+Another common effect is to mirror the image, so that the same edges
+touch:
+
+   mirror keep { load "$HOME/mypic.png" }
+
+Another common background expression is:
 
    rootalign root
 
-It first takes a snapshot of the screen background image, and then
-moves it to the upper left corner of the screen - the result is
-pseudo-transparency, as the image seems to be static while the window is
-moved around.
+This one first takes a snapshot of the screen background image, and then
+moves it to the upper left corner of the screen (as opposed to the upepr
+left corner of the terminal window)- the result is pseudo-transparency:
+the image seems to be static while the window is moved around.
 
-=head2 CYCLES AND CACHING
+=head2 CACHING AND SENSITIVITY
 
-=head3 C<load> et al.
+Since some operations (such as C<load> and C<blur>) can take a long time,
+caching results can be very important for a smooth operation. Caching can
+also be useful to reduce memory usage, though, for example, when an image
+is cached by C<load>, it could be shared by multiple terminal windows
+running inside urxvtd.
 
-As has been mentioned before, the expression might be evaluated multiple
-times. Each time the expression is reevaluated, a new cycle is said to
-have begun. Many operators cache their results till the next cycle.
+=head3 C<keep { ... }> caching
 
-For example, the C<load> operator keeps a copy of the image. If it is
-asked to load the same image on the next cycle it will not load it again,
-but return the cached copy.
+The most important way to cache expensive operations is to use C<keep {
+... }>. The C<keep> operator takes a block of multiple statements enclosed
+by C<{}> and keeps the return value in memory.
 
-This only works for one cycle though, so as long as you load the same
-image every time, it will always be cached, but when you load a different
-image, it will forget about the first one.
+An expression can be "sensitive" to various external events, such as
+scaling or moving the window, root backgorund changes and timers. Simply
+using an expression (such as C<scale> without parameters) that depend on
+certain changing values (called "variables"), or using those variables
+directly, will make an expression sensitive to these events - for example,
+using C<scale> or C<TW> will make the expression sensitive to the terminal
+size, and thus to resizing events.
 
-This allows you to either speed things up by keeping multiple images in
-memory, or conserve memory by loading images more often.
+When such an event happens, C<keep> will automatically trigger a
+reevaluation of the whole expression with the new value of the expression.
 
-For example, you can keep two images in memory and use a random one like
-this:
-
-   my $img1 = load "img1.png";
-   my $img2 = load "img2.png";
-   (0.5 > rand) ? $img1 : $img2
-
-Since both images are "loaded" every time the expression is evaluated,
-they are always kept in memory. Contrast this version:
-
-   my $path1 = "img1.png";
-   my $path2 = "img2.png";
-   load ((0.5 > rand) ? $path1 : $path2)
-
-Here, a path is selected randomly, and load is only called for one image,
-so keeps only one image in memory. If, on the next evaluation, luck
-decides to use the other path, then it will have to load that image again.
-
-=head3 C<once { ... }>
-
-Another way to cache expensive operations is to use C<once { ... }>. The
-C<once> operator takes a block of multiple statements enclosed by C<{}>
-and evaluates it only.. once, returning any images the last statement
-returned. Further calls simply produce the values from the cache.
-
-This is most useful for expensive operations, such as C<blur>:
+C<keep> is most useful for expensive operations, such as C<blur>:
 
    rootalign once { blur 20, root }
 
 This makes a blurred copy of the root background once, and on subsequent
 calls, just root-aligns it. Since C<blur> is usually quite slow and
-C<rootalign> is quite fast, this trades extra memory (For the cached
+C<rootalign> is quite fast, this trades extra memory (for the cached
 blurred pixmap) with speed (blur only needs to be redone when root
 changes).
+
+=head3 C<load> caching
+
+The C<load> operator itself does not keep images in memory, but as long as
+the image is still in memory, C<load> will use the in-memory image instead
+of loading it freshly from disk.
+
+That means that this expression:
+
+   keep { load "$HOME/path..." }
+
+Not only caches the image in memory, other terminal instances that try to
+C<load> it can reuse that in-memory copy.
 
 =head1 REFERENCE
 
@@ -254,22 +268,25 @@ points to get an image you can play with.
 Loads the image at the given C<$path>. The image is set to plane tiling
 mode.
 
-Loaded images will be cached for one cycle, and shared between temrinals
-running in the same process (e.g. in C<urxvtd>).
+If the image is already in memory (e.g. because another temrinal instance
+uses it), then the in-memory copy us returned instead.
 
-#=item load_uc $path
-#
-#Load uncached - same as load, but does not cache the image. This function
-#is most useufl if you want to optimise a background expression in some
-#way.
+=item load_uc $path
+
+Load uncached - same as load, but does not cache the image, which means it
+is I<always> loaded from the filesystem again.
 
 =cut
+
+   sub load_uc($) {
+      $self->new_img_from_file ($path)
+   }
 
    sub load($) {
       my ($path) = @_;
 
       $_IMG_CACHE{$path} || do {
-         my $img = $self->new_img_from_file ($path);
+         my $img = load_uc $path;
          Scalar::Util::weaken ($_IMG_CACHE{$path} = $img);
          $img
       }
@@ -470,9 +487,9 @@ Using these functions make your expression sensitive to window moves.
 These functions are mainly useful to align images to the root window.
 
 Example: load an image and align it so it looks as if anchored to the
-background.
+background (that's exactly what C<rootalign> does btw.):
 
-   move -TX, -TY, load "mybg.png"
+   move -TX, -TY, keep { load "mybg.png" }
 
 =item TW
 
@@ -488,7 +505,7 @@ the window size to conserve memory.
 Example: take the screen background, clip it to the window size, blur it a
 bit, align it to the window position and use it as background.
 
-   clip move -TX, -TY, once { blur 5, root }
+   clip move -TX, -TY, keep { blur 5, root }
 
 =cut
 
@@ -512,7 +529,8 @@ C<$seconds> seconds.
 Example: load some image and rotate it according to the time of day (as if it were
 the hour pointer of a clock). Update this image every minute.
 
-   again 60; rotate 50, 50, (now % 86400) * -720 / 86400, scale load "myclock.png"
+   again 60;
+   rotate 50, 50, (now % 86400) * -72 / 8640, scale keep { load "myclock.png" }
 
 =item counter $seconds
 
@@ -559,7 +577,7 @@ assumed.
 Example: load an image, blur it, and clip it to the window size to save
 memory.
 
-   clip blur 10, load "mybg.png"
+   clip keep { blur 10, load "mybg.png" }
 
 =cut
 
@@ -663,7 +681,7 @@ given).
 
 Example: load an image and center it.
 
-  center pad load "mybg.png"
+  center keep { pad load "mybg.png" }
 
 =item rootalign $img
 
@@ -674,7 +692,7 @@ top left of the screen.
 
 Example: load a background image, put it in mirror mode and root align it.
 
-   rootalign mirror load "mybg.png"
+   rootalign keep { mirror load "mybg.png" }
 
 Example: take the screen background and align it, giving the illusion of
 transparency as long as the window isn't in front of other windows.
@@ -709,15 +727,14 @@ transparency as long as the window isn't in front of other windows.
       move -TX, -TY, $_[0]
    }
 
-=item rotate $center_x, $center_y, $degrees
+=item rotate $center_x, $center_y, $degrees, $img
 
-Rotates the image by C<$degrees> degrees, counter-clockwise, around the
-pointer at C<$center_x> and C<$center_y> (specified as factor of image
-width/height).
+Rotates the image clockwise by C<$degrees> degrees, around the point at
+C<$center_x> and C<$center_y> (specified as factor of image width/height).
 
-#TODO# new width, height, maybe more operators?
+Example: rotate the image by 90 degrees around it's center.
 
-Example: rotate the image by 90 degrees
+   rotate 0.5, 0.5, 90, keep { load "$HOME/mybg.png" }
 
 =cut
 
@@ -879,12 +896,6 @@ next call they will be reevaluated again.
             # clear this frame cache, also for all parents
             for (my $frame = $frame; $frame; $frame = $frame->[0]) {
                undef $frame->[FR_CACHE];
-            }
-
-            unless ($self->{term}) {
-               use Data::Dump;
-               ddx $frame;
-               exit;
             }
 
             $self->recalculate;
