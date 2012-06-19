@@ -21,9 +21,6 @@
 /* Define if you want your background to use the parent window background */
 #undef ENABLE_TRANSPARENCY
 
-/* Define if you want to use XDBE */
-#undef ENABLE_XDBE
-
 /* Define if you want european extended codesets */
 #undef ENCODING_EU
 

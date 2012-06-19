@@ -97,7 +97,6 @@ support_8bitctrls=no
 support_iso14755=yes
 support_styles=yes
 support_perl=yes
-support_xdbe=yes
 codesets=all
 
 dnl# --------------------------------------------------------------------------
@@ -110,7 +109,6 @@ AC_ARG_ENABLE(everything,
   [
     if test x$enableval = xno; then
        support_frills=no
-       support_xdbe=no
        support_inheritpixmap=no
        support_fading=no
        support_keepscrolling=no
@@ -135,7 +133,6 @@ AC_ARG_ENABLE(everything,
        support_iso14755=no
        support_styles=no
        support_perl=no
-       support_xdbe=no
        codesets=
     fi
     if test x$enableval = xyes; then
@@ -164,7 +161,6 @@ AC_ARG_ENABLE(everything,
        support_iso14755=yes
        support_styles=yes
        support_perl=yes
-       support_xdbe=yes
        codesets=all
     fi
   ])
@@ -416,12 +412,6 @@ AC_ARG_WITH(terminfo,
     AC_DEFINE_UNQUOTED(RXVT_TERMINFO, "$withval", Set TERMINFO value to the value given by configure) terminfo="$withval"
   fi])
 
-AC_ARG_ENABLE(xdbe,
-              [  --enable-xdbe           enable support for double buffering],
-  [if test x$enableval = xyes -o x$enableval = xno; then
-    support_xdbe=$enableval
-  fi])
-
 dnl# --------------------------------------------------------------------------
 
 LIBEV_M4_AVOID_LIBRT=1
@@ -574,10 +564,6 @@ support_image=no
 if test x$support_inheritpixmap = xyes || test x$support_pixbuf = xyes; then
   support_image=yes
 fi
-if test x$support_xdbe = xyes; then
-  LIBS="$LIBS -lXext"
-fi
-
 if test x$support_xft = xyes || test x$support_image = xyes; then
   rxvt_have_xrender=no
   AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
@@ -662,9 +648,6 @@ fi
 AC_SUBST(PIXBUF_CFLAGS)
 AC_SUBST(PIXBUF_LIBS)
 
-if test x$support_xdbe = xyes; then
-  AC_DEFINE(ENABLE_XDBE, 1, Define if you want to use XDBE)
-fi
 if test x$support_styles = xyes; then
   AC_DEFINE(ENABLE_STYLES, 1, Define if you want bold and italic support)
 fi
