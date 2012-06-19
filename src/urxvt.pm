@@ -114,15 +114,26 @@ It has the following methods and data members:
 Returns the C<urxvt::term> object associated with this instance of the
 extension. This member I<must not> be changed in any way.
 
-=item $self->enable ($hook_name => $cb, [$hook_name => $cb..])
+=item $self->enable ($hook_name => $cb[, $hook_name => $cb..])
 
 Dynamically enable the given hooks (named without the C<on_> prefix) for
 this extension, replacing any previous hook. This is useful when you want
 to overwrite time-critical hooks only temporarily.
 
+To install additional callbacks for the same hook, you cna use the C<on>
+method of the C<urxvt::term> class.
+
 =item $self->disable ($hook_name[, $hook_name..])
 
 Dynamically disable the given hooks.
+
+=item $self->x_resource ($pattern)
+
+=item $self->x_resource_boolean ($pattern)
+
+These methods support an additional C<%> prefix when called on an
+extension object - see the description of these methods in the
+C<urxvt::term> class for details.
 
 =back
 
@@ -737,7 +748,7 @@ sub invoke {
          if $verbosity >= 10;
 
       for my $pkg (keys %$cb) {
-         my $retval_ = eval { $cb->{$pkg}->($TERM->{_pkg}{$pkg}, @_) };
+         my $retval_ = eval { $cb->{$pkg}->($TERM->{_pkg}{$pkg} || $TERM, @_) };
          $retval ||= $retval_;
 
          if ($@) {
@@ -1059,6 +1070,49 @@ sub new {
 Destroy the terminal object (close the window, free resources
 etc.). Please note that @@RXVT_NAME@@ will not exit as long as any event
 watchers (timers, io watchers) are still active.
+
+=item $guard = $self->on ($hook_name => $cb[, $hook_name => $cb..])
+
+Similar to the extension method C<enable>, but installs additional
+callbacks for the givne hook(s) (existing ones are not replaced), and
+returns a guard object. When the guard object is destroyed the callbacks
+are disabled again.
+
+Note that these callbacks receive the normal paramaters, but the first
+argument (normally the extension) is currently undefined.
+
+=cut
+
+sub urxvt::term::on_disable::DESTROY {
+   my $disable = shift;
+
+   my $self = delete $disable->{""};
+
+   while (my ($htype, $id) = each %$disable) {
+      delete $self->{_hook}[$htype]{$id};
+      $self->set_should_invoke ($htype, -1);
+   }
+}
+
+sub on {
+   my ($self, %hook) = @_;
+
+   my %disable = ( "" => $self );
+
+   while (my ($name, $cb) = each %hook) {
+      my $htype = $HOOKTYPE{uc $name};
+      defined $htype
+         or Carp::croak "unsupported hook type '$name'";
+
+      my $id = $cb+0;
+
+      $self->set_should_invoke ($htype, +1);
+      $disable{$htype} = $id;
+      $self->{_hook}[$htype]{$id} = $cb;
+   }
+
+   bless \%disable, "urxvt::term::on_disable"
+}
 
 =item $term->exec_async ($cmd[, @args])
 

@@ -2523,6 +2523,10 @@ and consequently sets C<TERM> to C<rxvt-unicode-256color> by default
 It also results in higher memory usage and can slow down @@RXVT_NAME@@
 dramatically when more than six fonts are in use by a terminal instance.
 
+=item --enable-xdbe (default: on)
+
+Enable support for the X double buffering extension.
+
 =item --with-name=NAME (default: urxvt)
 
 Set the basename for the installed binaries, resulting

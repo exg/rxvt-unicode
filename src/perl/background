@@ -140,6 +140,8 @@ moved around.
 
 =head2 CYCLES AND CACHING
 
+=head3 C<load> et al.
+
 As has been mentioned before, the expression might be evaluated multiple
 times. Each time the expression is reevaluated, a new cycle is said to
 have begun. Many operators cache their results till the next cycle.
@@ -172,6 +174,23 @@ they are always kept in memory. Contrast this version:
 Here, a path is selected randomly, and load is only called for one image,
 so keeps only one image in memory. If, on the next evaluation, luck
 decides to use the other path, then it will have to load that image again.
+
+=head3 C<once { ... }>
+
+Another way to cache expensive operations is to use C<once { ... }>. The
+C<once> operator takes a block of multiple statements enclosed by C<{}>
+and evaluates it only.. once, returning any images the last statement
+returned. Further calls simply produce the values from the cache.
+
+This is most useful for expensive operations, such as C<blur>:
+
+   rootalign once { blur 20, root }
+
+This makes a blurred copy of the root background once, and on subsequent
+calls, just root-aligns it. Since C<blur> is usually quite slow and
+C<rootalign> is quite fast, this trades extra memory (For the cached
+blurred pixmap) with speed (blur only needs to be redone when root
+changes).
 
 =head1 REFERENCE
 
@@ -206,7 +225,7 @@ interval with this switch.
 
 our %_IMG_CACHE;
 our $HOME;
-our ($self, $old, $new);
+our ($self, $frame);
 our ($x, $y, $w, $h);
 
 # enforce at least this interval between updates
@@ -214,6 +233,11 @@ our $MIN_INTERVAL = 6/59.951;
 
 {
    package urxvt::bgdsl; # background language
+
+   sub FR_PARENT() { 0 } # parent frame, if any - must be #0
+   sub FR_CACHE () { 1 } # cached values
+   sub FR_AGAIN () { 2 } # what this expr is sensitive to
+   sub FR_STATE () { 3 } # watchers etc.
 
    use List::Util qw(min max sum shuffle);
 
@@ -233,15 +257,15 @@ mode.
 Loaded images will be cached for one cycle, and shared between temrinals
 running in the same process (e.g. in C<urxvtd>).
 
-=item load_uc $path
-
-Load uncached - same as load, but does not cache the image. This function
-is most useufl if you want to optimise a background expression in some
-way.
+#=item load_uc $path
+#
+#Load uncached - same as load, but does not cache the image. This function
+#is most useufl if you want to optimise a background expression in some
+#way.
 
 =cut
 
-   sub load_uc($) {
+   sub load($) {
       my ($path) = @_;
 
       $_IMG_CACHE{$path} || do {
@@ -249,12 +273,6 @@ way.
          Scalar::Util::weaken ($_IMG_CACHE{$path} = $img);
          $img
       }
-   }
-
-   sub load($) {
-      my ($path) = @_;
-
-      $new->{load}{$path} = $old->{load}{$path} || load_uc $path;
    }
 
 =item root
@@ -268,7 +286,7 @@ reevaluated when the bg image changes.
 =cut
 
    sub root() {
-      $new->{again}{rootpmap} = 1;
+      $frame->[FR_AGAIN]{rootpmap} = 1;
       $self->new_img_from_root
    }
 
@@ -474,10 +492,10 @@ bit, align it to the window position and use it as background.
 
 =cut
 
-   sub TX() { $new->{again}{position} = 1; $x }
-   sub TY() { $new->{again}{position} = 1; $y }
-   sub TW() { $new->{again}{size}     = 1; $w }
-   sub TH() { $new->{again}{size}     = 1; $h }
+   sub TX() { $frame->[FR_AGAIN]{position} = 1; $x }
+   sub TY() { $frame->[FR_AGAIN]{position} = 1; $y }
+   sub TW() { $frame->[FR_AGAIN]{size}     = 1; $w }
+   sub TH() { $frame->[FR_AGAIN]{size}     = 1; $h }
 
 =item now
 
@@ -506,12 +524,12 @@ Like C<again>, but also returns an increasing counter value, starting at
    sub now() { urxvt::NOW }
 
    sub again($) {
-      $new->{again}{time} = $_[0];
+      $frame->[FR_AGAIN]{time} = $_[0];
    }
 
    sub counter($) {
-      $new->{again}{time} = $_[0];
-      $self->{counter} + 0
+      $frame->[FR_AGAIN]{time} = $_[0];
+      $frame->[FR_STATE]{counter} + 0
    }
 
 =back
@@ -821,20 +839,23 @@ The trick is that this code block is only evaluated once - future calls
 will simply return the original image (yes, it should only be used with
 images).
 
-This can be extremely useful to avoid redoign the same slow operations
+This can be extremely useful to avoid redoing the same slow operations
 again and again- for example, if your background expression takes the root
 background, blurs it and then root-aligns it it would have to blur the
 root background on every window move or resize.
+
+In fact, urxvt itself encloses the whole expression in some kind of
+C<once> block so it only is reevaluated as required.
 
 Putting the blur into a C<once> block will make sure the blur is only done
 once:
 
    rootlign once { blur 10, root }
 
-This leaves the question of how to force reevaluation of the block, in
-case the root background changes: Right now, all once blocks forget that
-they ahve been executed before each time the root background changes (if
-the expression is sensitive to that) or when C<once_again> is called.
+This leaves the question of how to force reevaluation of the block,
+in case the root background changes: If expression inside the block
+is sensitive to some event (root background changes, window geometry
+changes), then it will be reevaluated automatically as needed.
 
 =item once_again
 
@@ -844,26 +865,41 @@ next call they will be reevaluated again.
 =cut
 
    sub once(&) {
-      my $once = $self->{once_cache}{$_[0]+0} ||= do {
-         local $new->{again};
-         my @res = $_[0]();
-         [$new->{again}, \@res]
-      };
+      my $id = $_[0]+0;
 
-      $new->{again} = {
-         %{ $new->{again} },
-         %{ $once->[0] }
+      local $frame = $self->{frame_cache}{$id} ||= [$frame];
+
+      unless ($frame->[FR_CACHE]) {
+         $frame->[FR_CACHE] = [ $_[0]() ];
+
+         my $self  = $self;
+         my $frame = $frame;
+         Scalar::Util::weaken $frame;
+         $self->compile_frame ($frame, sub {
+            # clear this frame cache, also for all parents
+            for (my $frame = $frame; $frame; $frame = $frame->[0]) {
+               undef $frame->[FR_CACHE];
+            }
+
+            unless ($self->{term}) {
+               use Data::Dump;
+               ddx $frame;
+               exit;
+            }
+
+            $self->recalculate;
+         });
       };
 
       # in scalar context we always return the first original result, which
       # is not quite how perl works.
       wantarray
-         ? @{ $once->[1] }
-         : $once->[1][0]
+         ? @{ $frame->[FR_CACHE] }
+         : $frame->[FR_CACHE][0]
    }
 
    sub once_again() {
-      delete $self->{once_cache};
+      delete $self->{frame_cache};
    }
 
 =back
@@ -873,7 +909,12 @@ next call they will be reevaluated again.
 }
 
 sub parse_expr {
-   my $expr = eval "sub {\npackage urxvt::bgdsl;\n#line 0 'background expression'\n$_[0]\n}";
+   my $expr = eval
+      "sub {\n"
+    . "package urxvt::bgdsl;\n"
+    . "#line 0 'background expression'\n"
+    . "$_[0]\n"
+    . "}";
    die if $@;
    $expr
 }
@@ -882,8 +923,57 @@ sub parse_expr {
 sub set_expr {
    my ($self, $expr) = @_;
 
+   $self->{root} = [];
    $self->{expr} = $expr;
    $self->recalculate;
+}
+
+# takes a hash of sensitivity indicators and installs watchers
+sub compile_frame {
+   my ($self, $frame, $cb) = @_;
+
+   my $state = $frame->[urxvt::bgdsl::FR_STATE] ||= {};
+   my $again = $frame->[urxvt::bgdsl::FR_AGAIN];
+
+   # don't keep stuff alive
+   Scalar::Util::weaken $state;
+
+   if ($again->{nested}) {
+      $state->{nested} = 1;
+   } else {
+      delete $state->{nested};
+   }
+
+   if (my $interval = $again->{time}) {
+      $state->{time} = [$interval, urxvt::timer->new->after ($interval)->interval ($interval)]
+         if $state->{time}[0] != $interval;
+
+      # callback *might* have changed, although we could just rule that out
+      $state->{time}[1]->cb (sub {
+         ++$state->{counter};
+         $cb->();
+      });
+   } else {
+      delete $state->{time};
+   }
+
+   if ($again->{position}) {
+      $state->{position} = $self->on (position_change => $cb);
+   } else {
+      delete $state->{position};
+   }
+
+   if ($again->{size}) {
+      $state->{size}     = $self->on (size_change     => $cb);
+   } else {
+      delete $state->{size};
+   }
+
+   if ($again->{rootpmap}) {
+      $state->{rootpmap} = $self->on (rootpmap_change => $cb);
+   } else {
+      delete $state->{rootpmap};
+   }
 }
 
 # evaluate the current bg expression
@@ -903,67 +993,34 @@ sub recalculate {
 
    # set environment to evaluate user expression
 
-   local $self = $arg_self;
+   local $self  = $arg_self;
+   local $HOME  = $ENV{HOME};
+   local $frame = [];
 
-   local $HOME = $ENV{HOME};
-   local $old = $self->{state};
-   local $new = my $state = $self->{state} = {};
-
-   ($x, $y, $w, $h) =
-      $self->background_geometry ($self->{border});
+   ($x, $y, $w, $h) = $self->background_geometry ($self->{border});
 
    # evaluate user expression
 
-   my $img = eval { urxvt::bgdsl::merge $self->{expr}->() };
+   my @img = eval { $self->{expr}->() };
    die $@ if $@;
-   die "background-expr did not return an image.\n" if !UNIVERSAL::isa $img, "urxvt::img";
+   die "background-expr did not return anything.\n" unless @img;
+   die "background-expr: expected image(s), got something else.\n"
+      if grep { !UNIVERSAL::isa $_, "urxvt::img" } @img;
 
-   # if the expression is sensitive to external events, prepare reevaluation then
+   my $img = urxvt::bgdsl::merge @img;
 
-   my $again = delete $state->{again};
-
-   $again->{size} = 1
+   $frame->[FR_AGAIN]{size} = 1
       if $img->repeat_mode != urxvt::RepeatNormal;
 
-   if (my $again = $again->{time}) {
-      my $self = $self;
-      $state->{timer} = $again == $old->{again}
-                        ? $old->{timer}
-                        : urxvt::timer->new->after ($again)->interval ($again)->cb (sub {
-                             ++$self->{counter};
-                             $self->recalculate
-                          });
-   }
-
-   if ($again->{position}) {
-      $self->enable (position_change => sub { $_[0]->recalculate });
-   } else {
-      $self->disable ("position_change");
-   }
-
-   if ($again->{size}) {
-      $self->enable (size_change => sub { $_[0]->recalculate });
-   } else {
-      $self->disable ("size_change");
-   }
-
-   if ($again->{rootpmap}) {
-      $self->enable (rootpmap_change => sub {
-         delete $_[0]{once_cache}; # this will override once-block values from 
-         $_[0]->recalculate;
-      });
-   } else {
-      $self->disable ("rootpmap_change");
-   }
+   # if the expression is sensitive to external events, prepare reevaluation then
+   $self->compile_frame ($frame, sub { $arg_self->recalculate });
 
    # clear stuff we no longer need
 
-   %$old = ();
-
-   unless (%$again) {
-      delete $self->{state};
-      delete $self->{expr};
-   }
+#   unless (%{ $frame->[FR_STATE] }) {
+#      delete $self->{state};
+#      delete $self->{expr};
+#   }
 
    # set background pixmap
 

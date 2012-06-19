@@ -20,24 +20,21 @@ TODO: decrqm http://ue.tst.eu/71d7dbd1fcfeaa7d2a4b96eb957d570c.txt
 TODO: perl-shell-window? perl-unix-socket?
 TODO: command line editing when icanon?
 TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
+TODO: catch exceptions when calling perl hooks
+TODO: xdbe
 
 TODO: DEC PM 4h/4l should toggle jumpscroll on or off (PrivMode_smoothScroll)
 TODO: pack rxvt_fatal messages into the exception object
-TODO: catch exceptions when calling perl hooks
-TODO: find out about overhead of NOTHROW
-TODO: xrender, versiobn check for filters, or use query filters instead?
-TODO: something resets the bg pixmap afetr on_start
 TODO: provide something like % for easy access for parse_keysym
 TODO: description into --help output?
-TODO: xdbe
-TODO: global pixmap cache for load
-TODO: tint, shade, once
-TODO: rotate/transform autoresize, likewise blend, also document
+TODO: tint, shade
 TODO: optimise bg reeval for resize for comon patterns (pixmap bigger than window?)
+TODO: load must not cache, but global image cache
+TODO: manpages for perl extensions
+TODO: ->on MUST pass the extension as firstd agrument, somehow
 9.16
 	- the "so much new stuff you eyes will pop out" release.
         - INCOMPATIBLE CHANGE: renamed urlLauncher resource to url-launcher.
-	- remove support for libafterimage.
 	- fix processing of DEC private mode save sequences (patch by Patrick
 	  Hemmer).
 	- fix disabling of cursor blink with the option-popup menu (based on a
@@ -49,20 +46,25 @@ TODO: optimise bg reeval for resize for comon patterns (pixmap bigger than windo
 	  lineSpace is non zero (patch by Stanislav Seletskiy).
         - make it compile with LOCAL_X_IS_UNIX again (reported by
           nickfailure@gmail.com).
-        - update to CVS version of libev, for a whopping 11kb size decrease.
-        - do not ship yet another copy of ecb.h, use the one in libev or
-          libptytty instead.
+        - completely redone background pixmap support - users can now
+          specify arbitrary expressions (And programs) that calculate
+          new terminal backgrounds. see the urxvt-background manpage
+          for details.
+        - perl extensions can now provide commandline switches and resources
+          which show up in -help etc.
+        - iso14755 51 mode window now displays row and column.
+        - implement a -visual switch and move that and -depth to frills, also
+          warn when we can't get the requested visual.
+        - new env variable: RXVT_PERL_LIB.
         - allocate all screen memory in one go and let the virtual memory
           subsystem sort it out. this simplifies code, improves access
           locality, saves a bit of ram and makes things a bit faster, too.
+	- remove support for libafterimage.
+        - update to CVS version of libev, for a whopping 11kb size decrease.
+        - do not ship yet another copy of ecb.h, use the one in libev or
+          libptytty instead.
         - selectively mark some methods as cache-hot/cache cold, which
           might speed up execution but definitely decreases codesize.
-        - new env variable: RXVT_PERL_LIB.
-        - iso14755 51 mode window now displays row and column.
-        - perl extensions can now provide commandline switches and resources
-          which show up in -help etc.
-        - implement a -visual switch and move that and -depth to frills, also
-          warn when we can't get the requested visual.
 
 9.15 Sat Jan 21 13:36:56 CET 2012
 	- remove "using namespace std" because clang erroneously
