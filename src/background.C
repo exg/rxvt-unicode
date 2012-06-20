@@ -321,7 +321,7 @@ rxvt_term::render_image (rxvt_image &image)
   img->sub_rect (-x, -y, parent_width, parent_height)->replace (img);
 
   if (bg_flags & BG_IS_VALID)
-    bg_img->draw (img, PictOpOver, image.alpha * 1. / 0xffff);
+    img->draw (bg_img, PictOpOver, image.alpha * 1. / 0xffff);
 
   XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
   img->convert_format (format, pix_colors [Color_bg])->replace (img);
