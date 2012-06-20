@@ -28,12 +28,12 @@ TODO: pack rxvt_fatal messages into the exception object
 TODO: provide something like % for easy access for parse_keysym
 TODO: description into --help output?
 TODO: tint, shade
-TODO: optimise bg reeval for resize for comon patterns (pixmap bigger than window?)
+TODO: optimise bg reeval for resize for common patterns (pixmap bigger than window?)
 TODO: load must not cache, but global image cache
 TODO: manpages for perl extensions
 TODO: ->on MUST pass the extension as first argument, somehow
 9.16
-	- the "so much new stuff you eyes will pop out" release.
+	- the "so much new stuff your eyes will pop out" release.
         - INCOMPATIBLE CHANGE: renamed urlLauncher resource to url-launcher.
 	- fix processing of DEC private mode save sequences (patch by Patrick
 	  Hemmer).
