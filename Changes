@@ -31,7 +31,7 @@ TODO: tint, shade
 TODO: optimise bg reeval for resize for comon patterns (pixmap bigger than window?)
 TODO: load must not cache, but global image cache
 TODO: manpages for perl extensions
-TODO: ->on MUST pass the extension as firstd agrument, somehow
+TODO: ->on MUST pass the extension as first argument, somehow
 9.16
 	- the "so much new stuff you eyes will pop out" release.
         - INCOMPATIBLE CHANGE: renamed urlLauncher resource to url-launcher.
@@ -50,6 +50,7 @@ TODO: ->on MUST pass the extension as firstd agrument, somehow
           specify arbitrary expressions (And programs) that calculate
           new terminal backgrounds. see the urxvt-background manpage
           for details.
+        - xrender is now required for background pixmap support.
         - perl extensions can now provide commandline switches and resources
           which show up in -help etc.
         - iso14755 51 mode window now displays row and column.
