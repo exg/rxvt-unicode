@@ -120,7 +120,7 @@ Dynamically enable the given hooks (named without the C<on_> prefix) for
 this extension, replacing any previous hook. This is useful when you want
 to overwrite time-critical hooks only temporarily.
 
-To install additional callbacks for the same hook, you cna use the C<on>
+To install additional callbacks for the same hook, you can use the C<on>
 method of the C<urxvt::term> class.
 
 =item $self->disable ($hook_name[, $hook_name..])
@@ -1074,11 +1074,11 @@ watchers (timers, io watchers) are still active.
 =item $guard = $self->on ($hook_name => $cb[, $hook_name => $cb..])
 
 Similar to the extension method C<enable>, but installs additional
-callbacks for the givne hook(s) (existing ones are not replaced), and
+callbacks for the given hook(s) (existing ones are not replaced), and
 returns a guard object. When the guard object is destroyed the callbacks
 are disabled again.
 
-Note that these callbacks receive the normal paramaters, but the first
+Note that these callbacks receive the normal parameters, but the first
 argument (normally the extension) is currently undefined.
 
 =cut
