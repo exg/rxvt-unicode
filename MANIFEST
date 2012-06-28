@@ -84,6 +84,8 @@ src/scrollbar.C
 src/scrollbar.h
 src/version.h
 src/xdefaults.C
+src/emman.h
+src/emman.c
 
 libptytty/Changes
 libptytty/ptytty.m4

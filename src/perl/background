@@ -847,9 +847,11 @@ force and closing our eyes.
 
 =over 4
 
-=item once { ... }
+=item keep { ... }
 
-This function takes a code block as argument, that is, one or more
+   #TODO#
+
+This operator takes a code block as argument, that is, one or more
 statements enclosed by braces.
 
 The trick is that this code block is only evaluated once - future calls
@@ -867,7 +869,7 @@ C<once> block so it only is reevaluated as required.
 Putting the blur into a C<once> block will make sure the blur is only done
 once:
 
-   rootlign once { blur 10, root }
+   rootlign keep { blur 10, root }
 
 This leaves the question of how to force reevaluation of the block,
 in case the root background changes: If expression inside the block

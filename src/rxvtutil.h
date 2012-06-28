@@ -7,6 +7,8 @@
 #include "ecb.h"
 #include "estl.h"
 
+#include "emman.h"
+
 // increases code size unless -fno-enforce-eh-specs
 #if __GNUC__
 # define NOTHROW

@@ -171,7 +171,7 @@ rxvt_term::scr_alloc () NOTHROW
   int all_rows = total_rows + nrow + nrow;
 
   chunk_size = (sizeof (line_t) + rsize + tsize) * all_rows;
-  chunk = rxvt_malloc (chunk_size);
+  chunk = chunk_alloc (chunk_size, 0);
 
   char *base = (char *)chunk + sizeof (line_t) * all_rows;
 
@@ -431,8 +431,12 @@ rxvt_term::scr_reset ()
 void ecb_cold
 rxvt_term::scr_release () NOTHROW
 {
-  free (chunk); chunk = 0; row_buf = 0;
-  free (tabs);  tabs  = 0;
+  chunk_free (chunk, chunk_size);
+  chunk = 0;
+  row_buf = 0;
+
+  free (tabs);
+  tabs = 0;
 }
 
 /* ------------------------------------------------------------------------- */

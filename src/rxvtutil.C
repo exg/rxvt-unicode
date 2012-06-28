@@ -57,4 +57,8 @@ rxvt_temp_buf (int len)
   return temp_buf;
 }
 
+// we include emman.c here to avoid relying on a C compiler, or
+// on the c++ compiler not complaining about .c, which is unlikely,
+// but...
+#include "emman.c"
 
