@@ -126,7 +126,9 @@ void
 chunk_free (void *ptr, size_t size)
 {
   #if USE_MMAP
-    munmap (ptr, size);
+    /* we assume the OS never mmaps at address 0 */
+    if (ptr)
+      munmap (ptr, size);
   #else
     return free (ptr);
   #endif

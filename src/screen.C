@@ -411,6 +411,7 @@ rxvt_term::scr_reset ()
       if (!drawn_buf [row].valid ()) scr_blank_screen_mem (drawn_buf [row], DEFAULT_RSTYLE);
     }
 
+  printf ("pc %p\n", prev_chunk);//D
   chunk_free (prev_chunk, prev_chunk_size);
 
   free (tabs);
