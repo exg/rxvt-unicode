@@ -2262,7 +2262,7 @@ urxvt::pixbuf gdk_pixbuf_new_from_file (SV *klass, octet_string filename)
 void
 DESTROY (urxvt::pixbuf self)
 	CODE:
-        gdk_pixbuf_unref (self);
+        g_object_unref (self);
 
 #endif
 
