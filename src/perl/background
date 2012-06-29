@@ -174,7 +174,7 @@ by C<{}> and keeps the return value in memory.
 
 An expression can be "sensitive" to various external events, such as
 scaling or moving the window, root background changes and timers. Simply
-using an expression (such as C<scale> without parameters) that depend on
+using an expression (such as C<scale> without parameters) that depends on
 certain changing values (called "variables"), or using those variables
 directly, will make an expression sensitive to these events - for example,
 using C<scale> or C<TW> will make the expression sensitive to the terminal
