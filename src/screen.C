@@ -227,6 +227,7 @@ rxvt_term::scr_reset ()
   screen.bscroll = nrow - 1;
 
   void *prev_chunk = chunk;
+  size_t prev_chunk_size = chunk_size;
   line_t *prev_drawn_buf = drawn_buf;
   line_t *prev_swap_buf  = swap_buf;
   line_t *prev_row_buf   = row_buf;
@@ -410,7 +411,7 @@ rxvt_term::scr_reset ()
       if (!drawn_buf [row].valid ()) scr_blank_screen_mem (drawn_buf [row], DEFAULT_RSTYLE);
     }
 
-  free (prev_chunk);
+  chunk_free (prev_chunk, prev_chunk_size);
 
   free (tabs);
   tabs = (char *)rxvt_malloc (ncol);
