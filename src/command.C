@@ -1469,12 +1469,15 @@ rxvt_term::x_cb (XEvent &ev)
 
             bool want_position_change = SHOULD_INVOKE (HOOK_POSITION_CHANGE);
 
+            bool moved = false;
 #ifdef HAVE_BG_PIXMAP
             if (bg_window_position_sensitive ())
-              want_position_change = true;
+              {
+                want_position_change = true;
+                if (!(bg_flags & BG_IS_VALID))
+                  moved = true;
+              }
 #endif
-
-            bool moved = false;
 
             if (want_position_change)
               {
@@ -1495,9 +1498,6 @@ rxvt_term::x_cb (XEvent &ev)
                     HOOK_INVOKE ((this, HOOK_POSITION_CHANGE, DT_INT, x, DT_INT, y, DT_END));
                     moved = true;
                   }
-
-                if (!(bg_flags & BG_IS_VALID))
-                  moved = true;
               }
 
             if (szHint.width != ev.xconfigure.width || szHint.height != ev.xconfigure.height)
