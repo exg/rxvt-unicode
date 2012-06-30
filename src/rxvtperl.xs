@@ -1456,6 +1456,13 @@ rxvt_term::parent_y ()
         OUTPUT:
         RETVAL
 
+Window
+rxvt_term::vt ()
+	CODE:
+        RETVAL = THIS->vt;
+        OUTPUT:
+        RETVAL
+
 void
 rxvt_term::vt_emask_add (U32 emask)
 	CODE:
