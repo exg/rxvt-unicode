@@ -75,8 +75,9 @@ which means you could use multiple lines and statements:
       }
    }
 
-This expression is evaluated once per hour. It will set F<sunday.png> as
-background on Sundays, and F<weekday.png> on all other days.
+This inner expression is evaluated once per hour (and whenever the
+temrinal window is resized). It sets F<sunday.png> as background on
+Sundays, and F<weekday.png> on all other days.
 
 Fortunately, we expect that most expressions will be much simpler, with
 little Perl knowledge needed.
@@ -119,10 +120,10 @@ width and doubles the image height:
 
    scale 0.5, 2, load "$HOME/mypic.png"
 
-IF you try out these expressions, you might suffer from sluggishness,
-because each time the terminal is resized, it again loads the PNG image
-and scales it. Scaling is usually fast, but loading the image can be quite
-time consuming. This is where C<keep> comes in handy:
+IF you try out these expressions, you might suffer from some sluggishness,
+because each time the terminal is resized, it loads the PNG image agin
+and scales it. Scaling is usually fast (and unavoidable), but loading the
+image can be quite time consuming. This is where C<keep> comes in handy:
 
    scale 0.5, 2, keep { load "$HOME/mypic.png" }
 
@@ -185,7 +186,7 @@ reevaluation of the whole expression with the new value of the expression.
 
 C<keep> is most useful for expensive operations, such as C<blur>:
 
-   rootalign once { blur 20, root }
+   rootalign keep { blur 20, root }
 
 This makes a blurred copy of the root background once, and on subsequent
 calls, just root-aligns it. Since C<blur> is usually quite slow and
@@ -849,25 +850,27 @@ force and closing our eyes.
 
 =item keep { ... }
 
-   #TODO#
-
 This operator takes a code block as argument, that is, one or more
 statements enclosed by braces.
 
-The trick is that this code block is only evaluated once - future calls
-will simply return the original image (yes, it should only be used with
-images).
+The trick is that this code block is only evaluated when the outcome
+changes - on other calls the C<keep> simply returns the image it computed
+previously (yes, it should only be used with images). Or in other words,
+C<keep> I<caches> the result of the code block so it doesn't need to be
+computed again.
 
-This can be extremely useful to avoid redoing the same slow operations
-again and again- for example, if your background expression takes the root
-background, blurs it and then root-aligns it it would have to blur the
-root background on every window move or resize.
+This can be extremely useful to avoid redoing slow operations - for
+example, if your background expression takes the root background, blurs it
+and then root-aligns it it would have to blur the root background on every
+window move or resize.
+
+Another example is C<load>, which can be quite slow.
 
 In fact, urxvt itself encloses the whole expression in some kind of
-C<once> block so it only is reevaluated as required.
+C<keep> block so it only is reevaluated as required.
 
-Putting the blur into a C<once> block will make sure the blur is only done
-once:
+Putting the blur into a C<keep> block will make sure the blur is only done
+once, while the C<rootalign> is still done each time the window moves.
 
    rootlign keep { blur 10, root }
 
@@ -876,14 +879,9 @@ in case the root background changes: If expression inside the block
 is sensitive to some event (root background changes, window geometry
 changes), then it will be reevaluated automatically as needed.
 
-=item once_again
-
-Resets all C<once> block as if they had never been called, i.e. on the
-next call they will be reevaluated again.
-
 =cut
 
-   sub once(&) {
+   sub keep(&) {
       my $id = $_[0]+0;
 
       local $frame = $self->{frame_cache}{$id} ||= [$frame];
@@ -911,9 +909,9 @@ next call they will be reevaluated again.
          : $frame->[FR_CACHE][0]
    }
 
-   sub once_again() {
-      delete $self->{frame_cache};
-   }
+#   sub keep_clear() {
+#      delete $self->{frame_cache};
+#   }
 
 =back
 

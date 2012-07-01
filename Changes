@@ -22,13 +22,13 @@ TODO: command line editing when icanon?
 TODO: split ROW into a ROW_fast (0..total*2-1) and ROW macros?
 TODO: catch exceptions when calling perl hooks
 TODO: xdbe
-
+TODO: optimise bg reeval for resize for common patterns (pixmap bigger than window?)
 TODO: DEC PM 4h/4l should toggle jumpscroll on or off (PrivMode_smoothScroll)
 TODO: pack rxvt_fatal messages into the exception object
+
 TODO: provide something like % for easy access for parse_keysym
 TODO: description into --help output?
 TODO: tint, shade
-TODO: optimise bg reeval for resize for common patterns (pixmap bigger than window?)
 TODO: load must not cache, but global image cache
 TODO: manpages for perl extensions
 TODO: ->on MUST pass the extension as first argument, somehow
