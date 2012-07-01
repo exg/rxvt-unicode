@@ -641,15 +641,16 @@ rxvt_define_key (XrmDatabase *database ecb_unused,
                  XrmQuarkList quarks,
                  XrmRepresentation *type ecb_unused,
                  XrmValue *value,
-                 XPointer closure ecb_unused)
+                 XPointer closure)
 {
+  rxvt_term *term = (rxvt_term *)closure;
   int last;
 
   for (last = 0; quarks[last] != NULLQUARK; last++)	/* look for last quark in list */
     ;
 
   last--;
-  GET_R->parse_keysym (XrmQuarkToString (quarks[last]), (char *)value->addr);//D//TODO
+  term->parse_keysym (XrmQuarkToString (quarks[last]), (char *)value->addr);
   return False;
 }
 
@@ -744,6 +745,7 @@ rxvt_term::parse_keysym (const char *str, const char *arg)
   wchar_t *ws = rxvt_mbstowcs (arg);
   if (!HOOK_INVOKE ((this, HOOK_REGISTER_COMMAND, DT_INT, sym, DT_INT, state, DT_WCS_LEN, ws, wcslen (ws), DT_END)))
     keyboard->register_user_translation (sym, state, ws);
+
   free (ws);
   return 1;
 }
@@ -850,12 +852,12 @@ rxvt_term::extract_keysym_resources ()
   class_prefix[2] = NULLQUARK;
   /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
-                        XrmEnumOneLevel, rxvt_define_key, NULL);
+                        XrmEnumOneLevel, rxvt_define_key, (XPointer)this);
 #   ifdef RESFALLBACK
   name_prefix[0] = class_prefix[0] = XrmStringToName (RESFALLBACK);
   /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
-                        XrmEnumOneLevel, rxvt_define_key, NULL);
+                        XrmEnumOneLevel, rxvt_define_key, (XPointer)this);
 #   endif
 #  endif
 
