@@ -2315,10 +2315,11 @@ rxvt_img::pm ()
         RETVAL
 
 void
-rxvt_img::fill (SV *c)
+rxvt_img::fill (SV *c, int x = 0, int y = 0, int w = THIS->w, int h = THIS->h)
+	PROTOTYPE: $;$$$$
 	INIT:
         rgba cc = parse_rgba (c, THIS->s);
-	C_ARGS: cc
+	C_ARGS: cc, x, y, w, h
 
 void
 rxvt_img::DESTROY ()

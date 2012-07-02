@@ -89,6 +89,7 @@ struct rxvt_img
 
   void unshare (); // prepare for write
   void fill (const rgba &c);
+  void fill (const rgba &c, int x, int y, int w, int h);
   void add_alpha ();
   //void linear_gradient  (const XLinearGradient  *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
   //void radial_gradient  (const XRadialGradient  *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);

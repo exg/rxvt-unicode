@@ -291,15 +291,20 @@ uses it), then the in-memory copy us returned instead.
 =item load_uc $path
 
 Load uncached - same as load, but does not cache the image, which means it
-is I<always> loaded from the filesystem again.
+is I<always> loaded from the filesystem again, even if another copy of it
+is in memory at the time.
 
 =cut
+
+   sub load_uc($) {
+      $self->new_img_from_file ($_[0])
+   }
 
    sub load($) {
       my ($path) = @_;
 
       $_IMG_CACHE{$path} || do {
-         my $img = $self->new_img_from_file ($path);
+         my $img = load_uc $path;
          Scalar::Util::weaken ($_IMG_CACHE{$path} = $img);
          $img
       }

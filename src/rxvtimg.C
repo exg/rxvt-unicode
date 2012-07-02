@@ -478,14 +478,20 @@ rxvt_img::unshare ()
 }
 
 void
-rxvt_img::fill (const rgba &c)
+rxvt_img::fill (const rgba &c, int x, int y, int w, int h)
 {
   XRenderColor rc = { c.r, c.g, c.b, c.a };
 
   Display *dpy = s->dpy;
   Picture src = picture ();
-  XRenderFillRectangle (dpy, PictOpSrc, src, &rc, 0, 0, w, h);
+  XRenderFillRectangle (dpy, PictOpSrc, src, &rc, x, y, w, h);
   XRenderFreePicture (dpy, src);
+}
+
+void
+rxvt_img::fill (const rgba &c)
+{
+  fill (c, 0, 0, w, h);
 }
 
 void
