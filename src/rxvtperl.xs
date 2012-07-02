@@ -2379,7 +2379,7 @@ rxvt_img::scale (int new_width, int new_height)
 rxvt_img *
 rxvt_img::rotate (int x, int y, rxvt_img::nv phi)
 
-void
+rxvt_img *
 rxvt_img::tint (SV *c)
 	INIT:
         rgba cc = parse_rgba (c, THIS->s);

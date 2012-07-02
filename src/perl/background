@@ -752,6 +752,24 @@ The following operators change the pixels of the image.
 
 =over 4
 
+=item tint $color, $img
+
+Tints the image in the given colour.
+
+Example: tint the image red.
+
+   tint "red", load "rgb.png"
+
+Example: the same, but specify the colour by component.
+
+   tint [1, 0, 0], load "rgb.png"
+
+=cut
+
+   sub tint($$) {
+      $_[1]->tint ($_[0])
+   }
+
 =item contrast $factor, $img
 
 =item contrast $r, $g, $b, $img
