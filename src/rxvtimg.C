@@ -817,12 +817,6 @@ rxvt_img::scale (int new_width, int new_height)
 rxvt_img *
 rxvt_img::rotate (int cx, int cy, nv phi)
 {
-#if 0
-    { c, -s, cx - c * cx + s * cy },
-    { s,  c, cy - s * cx - c * cy },
-    { 0,  0,                    1 }
-#endif
-
   move (-cx, -cy);
   rxvt_img *img = transform (mat3x3::rotate (phi));
   move ( cx,  cy);
@@ -870,9 +864,7 @@ rxvt_img::tint (const rgba &c)
 rxvt_img *
 rxvt_img::filter (const char *name, int nparams, nv *params)
 {
-  rxvt_img *img = new_empty ();
-
-  composer cc (img);
+  composer cc (this);
 
   XFixed *xparams = rxvt_temp_buf<XFixed> (nparams);
 

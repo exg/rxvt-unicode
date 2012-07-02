@@ -279,15 +279,11 @@ is I<always> loaded from the filesystem again.
 
 =cut
 
-   sub load_uc($) {
-      $self->new_img_from_file ($path)
-   }
-
    sub load($) {
       my ($path) = @_;
 
       $_IMG_CACHE{$path} || do {
-         my $img = load_uc $path;
+         my $img = $self->new_img_from_file ($path);
          Scalar::Util::weaken ($_IMG_CACHE{$path} = $img);
          $img
       }
