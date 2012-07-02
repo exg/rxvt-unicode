@@ -94,6 +94,7 @@ struct rxvt_img
   //void linear_gradient  (const XLinearGradient  *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
   //void radial_gradient  (const XRadialGradient  *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
   //void conical_gradient (const XConicalGradient *gradient, const XFixed *stops, const XRenderColor *colors, int nstops);
+
   void brightness (int32_t r, int32_t g, int32_t b, int32_t a);
   void contrast (int32_t r, int32_t g, int32_t b, int32_t a);
 
@@ -130,6 +131,7 @@ struct rxvt_img
   rxvt_img *convert_format (XRenderPictFormat *format, const rgba &bg);
   rxvt_img *tint (const rgba &c);
   rxvt_img *filter (const char *name, int nparams = 0, nv *params = 0);
+  rxvt_img *muladd (nv mul, nv add); // general multiply and add, implemen ted as the biggets hack ever :/
 
   // egregiuous helper category
   rxvt_img *replace (rxvt_img *&p)

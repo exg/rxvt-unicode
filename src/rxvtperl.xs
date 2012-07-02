@@ -2365,6 +2365,9 @@ rxvt_img *
 rxvt_img::blur (int rh, int rv)
 
 rxvt_img *
+rxvt_img::muladd (rxvt_img::nv mul, rxvt_img::nv add)
+
+rxvt_img *
 rxvt_img::transform (rxvt_img::nv p11, rxvt_img::nv p12, rxvt_img::nv p13, rxvt_img::nv p21, rxvt_img::nv p22, rxvt_img::nv p23, rxvt_img::nv p31, rxvt_img::nv p32, rxvt_img::nv p33)
 	INIT:
         rxvt_img::nv matrix[3][3] = {

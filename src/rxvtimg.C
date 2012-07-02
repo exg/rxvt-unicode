@@ -172,9 +172,9 @@ namespace
     }
 
     ecb_noinline
-    void mask (bool rgb = true, int x = 1, int y = 1)
+    void mask (bool rgb = true, int w = 1, int h = 1)
     {
-      Pixmap pixmap = XCreatePixmap (dpy, srcimg->pm, x, y, rgb ? 32 : 8);
+      Pixmap pixmap = XCreatePixmap (dpy, srcimg->pm, w, h, rgb ? 32 : 8);
 
       XRenderPictFormat *format = XRenderFindStandardFormat (dpy, rgb ? PictStandardARGB32 : PictStandardA8);
       XRenderPictureAttributes pa;
@@ -594,6 +594,64 @@ rxvt_img::blur (int rh, int rv)
   XRenderFreePicture (dpy, tmp);
 
   return img;
+}
+
+rxvt_img *
+rxvt_img::muladd (nv mul, nv add)
+{
+  // STEP 1: double the image width, fill all odd columns with white (==1)
+
+  composer cc (this, new rxvt_img (s, format, 0, 0, w * 2, h, repeat));
+
+  // why the hell does XRenderSetPictureTransform want a writable matrix :(
+  // that keeps us from just static const'ing this matrix.
+  XTransform h_double = {
+    32768, 0,     0,
+    0, 65536,     0,
+    0,     0, 65536
+  };
+
+  XRenderSetPictureFilter (cc.dpy, cc.src, "nearest", 0, 0);
+  XRenderSetPictureTransform (cc.dpy, cc.src, &h_double);
+  XRenderComposite (cc.dpy, PictOpSrc, cc.src, None, cc.dst, 0, 0, 0, 0, 0, 0, w * 2, h);
+
+  cc.mask (false, 2, 1);
+
+  static const XRenderColor c0 = {     0,     0,     0,     0 };
+  XRenderFillRectangle (cc.dpy, PictOpSrc, cc.msk, &c0, 0, 0, 1, 1);
+  static const XRenderColor c1 = { 65535, 65535, 65535, 65535 };
+  XRenderFillRectangle (cc.dpy, PictOpSrc, cc.msk, &c1, 1, 0, 1, 1);
+
+  Picture white = XRenderCreateSolidFill (cc.dpy, &c1);
+
+  XRenderComposite (cc.dpy, PictOpOver, white, cc.msk, cc.dst, 0, 0, 0, 0, 0, 0, w * 2, h);
+
+  XRenderFreePicture (cc.dpy, white);
+
+  // STEP 2: convolve the image with a 3x1 filter
+  // a 2x1 filter would obviously suffice, but given the total lack of specification
+  // for xrender, I expect different xrender implementations to randomly diverge.
+  // we also halve the image, and hope for the best (again, for lack of specs).
+  composer cc2 (cc.dstimg);
+
+  XFixed kernel [] = {
+    XDoubleToFixed (3), XDoubleToFixed (1),
+    XDoubleToFixed (0), XDoubleToFixed (mul), XDoubleToFixed (add)
+  };
+
+  XTransform h_halve = {
+    131072, 0,     0,
+    0,  65536,     0,
+    0,      0, 65536
+  };
+
+  XRenderSetPictureFilter (cc.dpy, cc2.src, "nearest", 0, 0);
+  XRenderSetPictureTransform (cc.dpy, cc2.src, &h_halve);
+  XRenderSetPictureFilter (cc.dpy, cc2.src, FilterConvolution, kernel, ecb_array_length (kernel));
+
+  XRenderComposite (cc.dpy, PictOpSrc, cc2.src, None, cc2.dst, 0, 0, 0, 0, 0, 0, w * 2, h);
+
+  return cc2;
 }
 
 ecb_noinline static void
