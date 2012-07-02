@@ -159,6 +159,22 @@ moves it to the upper left corner of the screen (as opposed to the upper
 left corner of the terminal window)- the result is pseudo-transparency:
 the image seems to be static while the window is moved around.
 
+=head2 COLOUR SPECIFICATIONS
+
+Whenever an oprator expects a "colour", then this can be specified in one
+of two ways: Either as string with an X11 colour specification, such as:
+
+   "red"               # named colour
+   "#f00"              # simple rgb
+   "[50]red"           # red with 50% alpha
+   "TekHVC:300/50/50"  # anything goes
+
+OR as an array reference with one, three or four components:
+
+   [0.5]               # 50% gray, 100% alpha
+   [0.5, 0, 0]         # dark red, no green or blur, 100% alpha
+   [0.5, 0, 0, 0.7]    # same with explicit 70% alpha
+
 =head2 CACHING AND SENSITIVITY
 
 Since some operations (such as C<load> and C<blur>) can take a long time,
