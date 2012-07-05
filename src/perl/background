@@ -76,7 +76,7 @@ which means you could use multiple lines and statements:
    }
 
 This inner expression is evaluated once per hour (and whenever the
-temrinal window is resized). It sets F<sunday.png> as background on
+terminal window is resized). It sets F<sunday.png> as background on
 Sundays, and F<weekday.png> on all other days.
 
 Fortunately, we expect that most expressions will be much simpler, with
@@ -121,7 +121,7 @@ width and doubles the image height:
    scale 0.5, 2, load "$HOME/mypic.png"
 
 IF you try out these expressions, you might suffer from some sluggishness,
-because each time the terminal is resized, it loads the PNG image agin
+because each time the terminal is resized, it loads the PNG image again
 and scales it. Scaling is usually fast (and unavoidable), but loading the
 image can be quite time consuming. This is where C<keep> comes in handy:
 
@@ -161,7 +161,7 @@ the image seems to be static while the window is moved around.
 
 =head2 COLOUR SPECIFICATIONS
 
-Whenever an oprator expects a "colour", then this can be specified in one
+Whenever an operator expects a "colour", then this can be specified in one
 of two ways: Either as string with an X11 colour specification, such as:
 
    "red"               # named colour
@@ -907,7 +907,7 @@ C<keep> block so it only is reevaluated as required.
 Putting the blur into a C<keep> block will make sure the blur is only done
 once, while the C<rootalign> is still done each time the window moves.
 
-   rootlign keep { blur 10, root }
+   rootalign keep { blur 10, root }
 
 This leaves the question of how to force reevaluation of the block,
 in case the root background changes: If expression inside the block
