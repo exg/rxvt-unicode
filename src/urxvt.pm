@@ -105,37 +105,8 @@ internal use.
 Although it isn't a C<urxvt::term> object, you can call all methods of the
 C<urxvt::term> class on this object.
 
-It has the following methods and data members:
-
-=over 4
-
-=item $urxvt_term = $self->{term}
-
-Returns the C<urxvt::term> object associated with this instance of the
-extension. This member I<must not> be changed in any way.
-
-=item $self->enable ($hook_name => $cb[, $hook_name => $cb..])
-
-Dynamically enable the given hooks (named without the C<on_> prefix) for
-this extension, replacing any previous hook. This is useful when you want
-to overwrite time-critical hooks only temporarily.
-
-To install additional callbacks for the same hook, you can use the C<on>
-method of the C<urxvt::term> class.
-
-=item $self->disable ($hook_name[, $hook_name..])
-
-Dynamically disable the given hooks.
-
-=item $self->x_resource ($pattern)
-
-=item $self->x_resource_boolean ($pattern)
-
-These methods support an additional C<%> prefix when called on an
-extension object - see the description of these methods in the
-C<urxvt::term> class for details.
-
-=back
+Additional methods only supported for extension objects are described in
+the C<urxvt::extension> section below.
 
 =head2 Hooks
 
@@ -803,6 +774,73 @@ sub rend2mask {
 
 package urxvt::term::extension;
 
+=head2 The C<urxvt::term::extension> class
+
+Each extension attached to a terminal object is represented by
+a C<urxvt::term::extension> object.
+
+You can use these objects, which are passed to all callbacks to store any
+state related to the terminal and extension instance.
+
+The methods (And data members) documented below can be called on extension
+objects, in addition to call methods documented for the <urxvt::term>
+class.
+
+=over 4
+
+=item $urxvt_term = $self->{term}
+
+Returns the C<urxvt::term> object associated with this instance of the
+extension. This member I<must not> be changed in any way.
+
+=cut
+
+our $AUTOLOAD;
+
+sub AUTOLOAD {
+   $AUTOLOAD =~ /:([^:]+)$/
+      or die "FATAL: \$AUTOLOAD '$AUTOLOAD' unparsable";
+
+   eval qq{
+      sub $AUTOLOAD {
+         my \$proxy = shift;
+         \$proxy->{term}->$1 (\@_)
+      }
+      1
+   } or die "FATAL: unable to compile method forwarder: $@";
+
+   goto &$AUTOLOAD;
+}
+
+sub DESTROY {
+   # nop
+}
+
+# urxvt::destroy_hook (basically a cheap Guard:: implementation)
+
+sub urxvt::destroy_hook::DESTROY {
+   ${$_[0]}->();
+}
+
+sub urxvt::destroy_hook(&) {
+   bless \shift, urxvt::destroy_hook::
+}
+
+=item $self->enable ($hook_name => $cb[, $hook_name => $cb..])
+
+Dynamically enable the given hooks (named without the C<on_> prefix) for
+this extension, replacing any previous hook. This is useful when you want
+to overwrite time-critical hooks only temporarily.
+
+To install additional callbacks for the same hook, you can use the C<on>
+method of the C<urxvt::term> class.
+
+=item $self->disable ($hook_name[, $hook_name..])
+
+Dynamically disable the given hooks.
+
+=cut
+
 sub enable {
    my ($self, %hook) = @_;
    my $pkg = $self->{_pkg};
@@ -833,36 +871,55 @@ sub disable {
    }
 }
 
-our $AUTOLOAD;
+=item $guard = $self->on ($hook_name => $cb[, $hook_name => $cb..])
 
-sub AUTOLOAD {
-   $AUTOLOAD =~ /:([^:]+)$/
-      or die "FATAL: \$AUTOLOAD '$AUTOLOAD' unparsable";
+Similar to the C<enable> enable, but installs additional callbacks for
+the given hook(s) (that is, it doesn't replace existing callbacks), and
+returns a guard object. When the guard object is destroyed the callbacks
+are disabled again.
 
-   eval qq{
-      sub $AUTOLOAD {
-         my \$proxy = shift;
-         \$proxy->{term}->$1 (\@_)
-      }
-      1
-   } or die "FATAL: unable to compile method forwarder: $@";
+=cut
 
-   goto &$AUTOLOAD;
+sub urxvt::extension::on_disable::DESTROY {
+   my $disable = shift;
+
+   my $self = delete $disable->{""};
+
+   while (my ($htype, $id) = each %$disable) {
+      delete $self->{_hook}[$htype]{$id};
+      $self->set_should_invoke ($htype, -1);
+   }
 }
 
-sub DESTROY {
-   # nop
+sub on {
+   my ($self, %hook) = @_;
+
+   my %disable = ( "" => $self );
+
+   while (my ($name, $cb) = each %hook) {
+      my $htype = $HOOKTYPE{uc $name};
+      defined $htype
+         or Carp::croak "unsupported hook type '$name'";
+
+      my $id = $cb+0;
+
+      $self->set_should_invoke ($htype, +1);
+      $disable{$htype} = $id;
+      $self->{_hook}[$htype]{$id} = sub { shift; $cb->($self, @_) }; # very ugly indeed
+   }
+
+   bless \%disable, "urxvt::extension::on_disable"
 }
 
-# urxvt::destroy_hook
+=item $self->x_resource ($pattern)
 
-sub urxvt::destroy_hook::DESTROY {
-   ${$_[0]}->();
-}
+=item $self->x_resource_boolean ($pattern)
 
-sub urxvt::destroy_hook(&) {
-   bless \shift, urxvt::destroy_hook::
-}
+These methods support an additional C<%> prefix when called on an
+extension object - see the description of these methods in the
+C<urxvt::term> class for details.
+
+=cut
 
 sub x_resource {
    my ($self, $name) = @_;
@@ -875,6 +932,10 @@ sub x_resource_boolean {
    $name =~ s/^%(\.|$)/$_[0]{_name}$1/;
    $self->{term}->x_resource_boolean ($name)
 }
+
+=back
+
+=cut
 
 package urxvt::anyevent;
 
@@ -1070,49 +1131,6 @@ sub new {
 Destroy the terminal object (close the window, free resources
 etc.). Please note that @@RXVT_NAME@@ will not exit as long as any event
 watchers (timers, io watchers) are still active.
-
-=item $guard = $self->on ($hook_name => $cb[, $hook_name => $cb..])
-
-Similar to the extension method C<enable>, but installs additional
-callbacks for the given hook(s) (existing ones are not replaced), and
-returns a guard object. When the guard object is destroyed the callbacks
-are disabled again.
-
-Note that these callbacks receive the normal parameters, but the first
-argument (normally the extension) is currently undefined.
-
-=cut
-
-sub urxvt::term::on_disable::DESTROY {
-   my $disable = shift;
-
-   my $self = delete $disable->{""};
-
-   while (my ($htype, $id) = each %$disable) {
-      delete $self->{_hook}[$htype]{$id};
-      $self->set_should_invoke ($htype, -1);
-   }
-}
-
-sub on {
-   my ($self, %hook) = @_;
-
-   my %disable = ( "" => $self );
-
-   while (my ($name, $cb) = each %hook) {
-      my $htype = $HOOKTYPE{uc $name};
-      defined $htype
-         or Carp::croak "unsupported hook type '$name'";
-
-      my $id = $cb+0;
-
-      $self->set_should_invoke ($htype, +1);
-      $disable{$htype} = $id;
-      $self->{_hook}[$htype]{$id} = $cb;
-   }
-
-   bless \%disable, "urxvt::term::on_disable"
-}
 
 =item $term->exec_async ($cmd[, @args])
 

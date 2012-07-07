@@ -767,8 +767,6 @@ rxvt_img::reify ()
   if (x == 0 && y == 0 && w == ref->w && h == ref->h)
     return clone ();
 
-  Display *dpy = s->dpy;
-
   // add an alpha channel if...
   bool alpha = !format->direct.alphaMask // pixmap has none yet
                && (x || y)               // we need one because of non-zero offset
@@ -777,7 +775,7 @@ rxvt_img::reify ()
   composer cc (this, new rxvt_img (s, alpha ? find_alpha_format_for (s->dpy, format) : format,
                                    0, 0, w, h, repeat));
 
-  if (alpha)
+  if (repeat == RepeatNone)
     {
       XRenderColor rc = { 0, 0, 0, 0 };
       XRenderFillRectangle (cc.dpy, PictOpSrc, cc.dst, &rc, 0, 0, w, h);//TODO: split into four fillrectangles
