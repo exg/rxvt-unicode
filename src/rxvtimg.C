@@ -599,9 +599,9 @@ rxvt_img::muladd (nv mul, nv add)
   // why the hell does XRenderSetPictureTransform want a writable matrix :(
   // that keeps us from just static const'ing this matrix.
   XTransform h_double = {
-    0x8000, 0,     0,
-    0, 0x1000,     0,
-    0,     0, 0x1000
+    0x08000, 0,     0,
+    0, 0x10000,     0,
+    0,     0, 0x10000
   };
 
   XRenderSetPictureFilter (cc.dpy, cc.src, "nearest", 0, 0);
@@ -633,9 +633,9 @@ rxvt_img::muladd (nv mul, nv add)
   };
 
   XTransform h_halve = {
-    0x2000, 0,      0,
-    0, 0x1000,      0,
-    0,      0, 0x1000
+    0x20000, 0,      0,
+    0, 0x10000,      0,
+    0,      0, 0x10000
   };
 
   XRenderSetPictureFilter (cc.dpy, cc2.src, "nearest", 0, 0);
