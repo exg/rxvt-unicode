@@ -351,35 +351,28 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
       unsigned char *src = row;
       uint32_t      *dst = (uint32_t *)line;
 
-      if (!pb_has_alpha)
-        for (int x = 0; x < width; x++)
-          {
-            uint8_t r = *src++;
-            uint8_t g = *src++;
-            uint8_t b = *src++;
+      for (int x = 0; x < width; x++)
+        {
+          uint8_t r = *src++;
+          uint8_t g = *src++;
+          uint8_t b = *src++;
+          uint8_t a = *src;
 
-            uint32_t v = (255 << 24) | (r << 16) | (g << 8) | b;
+          // this is done so it can be jump-free, but newer gcc's clone inner the loop
+          a = pb_has_alpha ? a : 255;
+          src += pb_has_alpha;
 
-            if (ecb_big_endian () ? !byte_order_mismatch : byte_order_mismatch)
-              v = ecb_bswap32 (v);
+          r = (r * a + 127) / 255;
+          g = (g * a + 127) / 255;
+          b = (b * a + 127) / 255;
 
-            *dst++ = v;
-          }
-      else
-        for (int x = 0; x < width; x++)
-          {
-            uint32_t v = *(uint32_t *)src; src += 4;
+          uint32_t v = (a << 24) | (r << 16) | (g << 8) | b;
 
-            if (ecb_big_endian ())
-              v = ecb_bswap32 (v);
+          if (ecb_big_endian () ? !byte_order_mismatch : byte_order_mismatch)
+            v = ecb_bswap32 (v);
 
-            v = ecb_rotl32 (v, 8); // abgr to bgra
-
-            if (!byte_order_mismatch)
-              v = ecb_bswap32 (v);
-
-            *dst++ = v;
-          }
+          *dst++ = v;
+        }
 
       row += rowstride;
       line += xi.bytes_per_line;
@@ -606,9 +599,9 @@ rxvt_img::muladd (nv mul, nv add)
   // why the hell does XRenderSetPictureTransform want a writable matrix :(
   // that keeps us from just static const'ing this matrix.
   XTransform h_double = {
-    32768, 0,     0,
-    0, 65536,     0,
-    0,     0, 65536
+    0x8000, 0,     0,
+    0, 0x1000,     0,
+    0,     0, 0x1000
   };
 
   XRenderSetPictureFilter (cc.dpy, cc.src, "nearest", 0, 0);
@@ -640,9 +633,9 @@ rxvt_img::muladd (nv mul, nv add)
   };
 
   XTransform h_halve = {
-    131072, 0,     0,
-    0,  65536,     0,
-    0,      0, 65536
+    0x2000, 0,      0,
+    0, 0x1000,      0,
+    0,      0, 0x1000
   };
 
   XRenderSetPictureFilter (cc.dpy, cc2.src, "nearest", 0, 0);
