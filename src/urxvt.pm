@@ -883,29 +883,30 @@ are disabled again.
 sub urxvt::extension::on_disable::DESTROY {
    my $disable = shift;
 
-   my $self = delete $disable->{""};
+   my $term = delete $disable->{""};
 
    while (my ($htype, $id) = each %$disable) {
-      delete $self->{_hook}[$htype]{$id};
-      $self->set_should_invoke ($htype, -1);
+      warn "disable hook $htype,$id\n";#d#
+      delete $term->{_hook}[$htype]{$id};
+      $term->set_should_invoke ($htype, -1);
    }
 }
 
 sub on {
    my ($self, %hook) = @_;
 
-   my %disable = ( "" => $self );
+   my $term = $self->{term};
+
+   my %disable = ( "" => $term );
 
    while (my ($name, $cb) = each %hook) {
       my $htype = $HOOKTYPE{uc $name};
       defined $htype
          or Carp::croak "unsupported hook type '$name'";
 
-      my $id = $cb+0;
-
-      $self->set_should_invoke ($htype, +1);
-      $disable{$htype} = $id;
-      $self->{_hook}[$htype]{$id} = sub { shift; $cb->($self, @_) }; # very ugly indeed
+      $term->set_should_invoke ($htype, +1);
+      $term->{_hook}[$htype]{ $disable{$htype} = $cb+0 }
+         = sub { shift; $cb->($self, @_) }; # very ugly indeed
    }
 
    bless \%disable, "urxvt::extension::on_disable"
