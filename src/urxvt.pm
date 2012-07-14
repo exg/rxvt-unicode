@@ -886,7 +886,6 @@ sub urxvt::extension::on_disable::DESTROY {
    my $term = delete $disable->{""};
 
    while (my ($htype, $id) = each %$disable) {
-      warn "disable hook $htype,$id\n";#d#
       delete $term->{_hook}[$htype]{$id};
       $term->set_should_invoke ($htype, -1);
    }
