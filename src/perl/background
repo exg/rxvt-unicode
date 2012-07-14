@@ -969,7 +969,7 @@ sub parse_expr {
 sub set_expr {
    my ($self, $expr) = @_;
 
-   $self->{root} = [];
+   $self->{root} = []; # the outermost frame
    $self->{expr} = $expr;
    $self->recalculate;
 }
@@ -1041,7 +1041,7 @@ sub recalculate {
 
    local $self  = $arg_self;
    local $HOME  = $ENV{HOME};
-   local $frame = [];
+   local $frame = $self->{root};
 
    ($x, $y, $w, $h) = $self->background_geometry ($self->{border});
 
