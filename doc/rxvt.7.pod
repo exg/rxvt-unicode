@@ -131,12 +131,12 @@ snippets:
    [ ${TERM:-foo} = foo ] && TERM=xterm # assume an xterm if we don't know
    if [ ${TERM:-foo} = xterm ]; then
       stty -icanon -echo min 0 time 15 # see if enhanced rxvt or not
-      echo -n '^[Z'
+      printf "\eZ"
       read term_id
       stty icanon echo
       if [ ""${term_id} = '^[[?1;2C' -a ${DISPLAY:-foo} = foo ]; then
-         echo -n '^[[7n'        # query the rxvt we are in for the DISPLAY string
-         read DISPLAY           # set it in our local shell
+         printf '\e[7n'        # query the rxvt we are in for the DISPLAY string
+         read DISPLAY          # set it in our local shell
       fi
    fi
 
@@ -601,11 +601,11 @@ private mode:
 
    # use Backspace = ^H
    $ stty erase ^H
-   $ echo -n "^[[?67h"
+   $ printf "\e[?67h"
 
    # use Backspace = ^?
    $ stty erase ^?
-   $ echo -n "^[[?67l"
+   $ printf "\e[?67l"
 
 This helps satisfy some of the Backspace discrepancies that occur, but
 if you use Backspace = C<^H>, make sure that the termcap/terminfo value
