@@ -14,6 +14,30 @@
          --background-border
          --background-interval seconds
 
+=head1 QUICK AND DIRTY CHEAT SHEET
+
+Just load a random jpeg image and tile the background with it without
+scaling or anything else:
+
+   load "/path/to/img.jpg"
+
+The same, but use mirroring/reflection instead of tiling:
+
+   mirror load "/path/to/img.jpg"
+
+Load an image and scale it to exactly fill the terminal window:
+
+   scale keep { load "/path/to/img.jpg" }
+
+Implement pseudo-transparency by using a suitably-aligned root pixmap
+as window background:
+
+   rootalign root
+
+Likewise, but keep a blurred copy:
+
+   rootalign keep { blur 10, root }
+
 =head1 DESCRIPTION
 
 This extension manages the terminal background by creating a picture that
@@ -829,6 +853,8 @@ latter in a white picture.
 Due to idiosyncrasies in the underlying XRender extension, biases less
 than zero can be I<very> slow.
 
+You can also try the experimental(!) C<muladd> operator.
+
 =cut
 
    sub contrast($$;$$;$) {
@@ -853,6 +879,26 @@ than zero can be I<very> slow.
       $img = $img->clone;
       $img->brightness ($r, $g, $b, $a);
       $img
+   }
+
+=item muladd $mul, $add, $img # EXPERIMENTAL
+
+First multipliesthe pixels by C<$mul>, then adds C<$add>. This cna be used
+to implement brightness and contrast at the same time, with a wider value
+range than contrast and brightness operators.
+
+Due to numerous bugs in XRender implementations, it can also introduce a
+number of visual artifacts.
+
+Example: increase contrast by a factor of C<$c> without changing image
+brightness too much.
+
+   muladd $c, (1 - $c) * 0.5, $img
+
+=cut
+
+   sub muladd($$$) {
+      $_[2]->muladd ($_[0], $_[1])
    }
 
 =item blur $radius, $img

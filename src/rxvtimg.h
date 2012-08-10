@@ -131,7 +131,7 @@ struct rxvt_img
   rxvt_img *convert_format (XRenderPictFormat *format, const rgba &bg);
   rxvt_img *tint (const rgba &c);
   rxvt_img *filter (const char *name, int nparams = 0, nv *params = 0);
-  rxvt_img *muladd (nv mul, nv add); // general multiply and add, implemen ted as the biggets hack ever :/
+  rxvt_img *muladd (nv mul, nv add); // general multiply and add, implemented as the biggest hack ever :/
 
   // egregiuous helper category
   rxvt_img *replace (rxvt_img *&p)
