@@ -1079,8 +1079,7 @@ sub scan_meta {
       opendir my $fh, $dir
          or next;
       for my $ext (readdir $fh) {
-         $ext ne "."
-            and $ext ne ".."
+         $ext !~ /^\./
             and open my $fh, "<", "$dir/$ext"
             or next;
 
