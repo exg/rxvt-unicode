@@ -424,6 +424,8 @@ images.
       $base
    }
 
+=back
+
 =head2 TILING MODES
 
 The following operators modify the tiling mode of an image, that is, the

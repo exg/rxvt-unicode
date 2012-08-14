@@ -13,8 +13,8 @@ text into various other formats/action (such as uri unescaping, perl
 evaluation, web-browser starting etc.), depending on content.
 
 Other extensions can extend this popup menu by pushing a code reference
-onto C<@{ $term->{selection_popup_hook} }>, which gets called whenever the
-popup is being displayed.
+onto C<< @{ $term->{selection_popup_hook} } >>, which gets called whenever
+the popup is being displayed.
 
 Its sole argument is the popup menu, which can be modified. The selection
 is in C<$_>, which can be used to decide whether to add something or not.

@@ -10,8 +10,8 @@ Binds a popup menu to Ctrl-Button2 that lets you toggle (some) options at
 runtime.
 
 Other extensions can extend this popup menu by pushing a code reference
-onto C<@{ $term->{option_popup_hook} }>, which gets called whenever the
-popup is being displayed.
+onto C<< @{ $term->{option_popup_hook} } >>, which gets called whenever
+the popup is being displayed.
 
 Its sole argument is the popup menu, which can be modified.  It should
 either return nothing or a string, the initial boolean value and a code
