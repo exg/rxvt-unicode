@@ -2389,6 +2389,8 @@ rxvt_term::next_char () NOTHROW
       if (len == (size_t)-1)
         {
           mbstate.reset (); // reset now undefined conversion state
+          // a -1 might indicate that a previous incomplet char is invalid (previous return -2)
+          // in which case we "errornously" return the next byte which might be valid.
           return (unsigned char)*cmdbuf_ptr++; // the _occasional_ latin1 character is allowed to slip through
         }
 
