@@ -18,7 +18,9 @@ button per tab.
 
 Clicking a button will activate that tab. Pressing B<Shift-Left> and
 B<Shift-Right> will switch to the tab left or right of the current one,
-while B<Shift-Down> creates a new tab.
+while B<Shift-Down> creates a new tab. Pressing B<Ctrl-Left> and
+B<Ctrl-Right> will renumber the current tab by moving it to the left or
+to the right.
 
 The tabbar itself can be configured similarly to a normal terminal, but
 with a resource class of C<URxvt.tabbed>. In addition, it supports the
