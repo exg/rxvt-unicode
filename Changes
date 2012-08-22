@@ -25,12 +25,14 @@ TODO: xdbe
 TODO: optimise bg reeval for resize for common patterns (pixmap bigger than window?)
 TODO: DEC PM 4h/4l should toggle jumpscroll on or off (PrivMode_smoothScroll)
 TODO: pack rxvt_fatal messages into the exception object
-
+TODO: load must not cache, but global image cache must be cleaned
 TODO: provide something like % for easy access for parse_keysym
+
 TODO: description into --help output?
 TODO: shade
-TODO: load must not cache, but global image cache must be cleaned
 TODO: manpages for perl extensions
+TODO: rxvt -help => (see rxvt-XXX(1))?
+TODO: perl -MPod::Man -e 'Pod::Man->new()->parse_from_file (shift)' perl/background 
 9.16
 	- the "so much new stuff your eyes will pop out" release.
         - INCOMPATIBLE CHANGE: renamed urlLauncher resource to url-launcher.
@@ -141,7 +143,7 @@ TODO: manpages for perl extensions
 	  support the UTF8_STRING target.
 	- fix rendering of double width chars in certain circumstances, more
 	  likely to happen if urxvt is compiled with 256 colors support as
-	  urxvt runs out of fonts much earlier then.  Fixes gentoo bug #358151
+	  urxvt runs out of fonts much earlier then. Fixes gentoo bug #358151
 	  (Emanuele Giaquinta).
 	- restore support for 'list' syntax in keysym resources (requested by Sung Pae).
 	- always premultiply colour values - while this increases differences between
