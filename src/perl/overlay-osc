@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-   overlay-osc - implement OSC to manage overlays
+overlay-osc - implement OSC to manage overlays
 
 =head1 DESCRIPTION
 

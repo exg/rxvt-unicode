@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-   confirm-paste - ask for confirmation before pasting multiline text
+confirm-paste - ask for confirmation before pasting multiline text
 
 =head1 DESCRIPTION
 

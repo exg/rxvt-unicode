@@ -11,7 +11,7 @@
 
 =head1 NAME
 
-  matcher - match strings in terminal output and change their rendition
+matcher - match strings in terminal output and change their rendition
 
 =head1 DESCRIPTION
 

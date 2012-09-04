@@ -20,7 +20,7 @@
 
 =head1 NAME
 
-   bell-command - execute a command when the bell rings
+bell-command - execute a command when the bell rings
 
 =head1 DESCRIPTION
 

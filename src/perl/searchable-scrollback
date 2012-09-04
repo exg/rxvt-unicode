@@ -6,7 +6,7 @@
 
 =head1 NAME
 
-   searchable-scrollback<hotkey> - incremental scrollback search (enabled by default)
+searchable-scrollback<hotkey> - incremental scrollback search (enabled by default)
 
 =head1 DESCRIPTION
 
