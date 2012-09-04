@@ -615,7 +615,7 @@ image area (e.g. when C<$x> or C<$y> are negative) or the rectangle is
 larger than the image, then the tiling mode defines how the extra pixels
 will be filled.
 
-If C<$x> an C<$y> are missing, then C<0> is assumed for both.
+If C<$x> and C<$y> are missing, then C<0> is assumed for both.
 
 If C<$width> and C<$height> are missing, then the window size will be
 assumed.
