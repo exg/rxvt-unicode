@@ -537,6 +537,8 @@ background (that's exactly what C<rootalign> does btw.):
 
 =item TW
 
+=item TH
+
 Return the width (C<TW>) and height (C<TH>) of the terminal window (the
 terminal window is the full window by default, and the character area only
 when in border-respect mode).
