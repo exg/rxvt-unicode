@@ -1,21 +1,21 @@
 diff --git a/src/Makefile.in b/src/Makefile.in
-index 2136e69..3d7ddea 100644
+index defe61d..cbbacd1 100644
 --- a/src/Makefile.in
 +++ b/src/Makefile.in
-@@ -38,7 +38,7 @@ COMMON = \
-	screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
-	scrollbar-xterm.o scrollbar-plain.o xdefaults.o encoding.o \
-	rxvttoolkit.o rxvtutil.o keyboard.o \
+@@ -35,7 +35,7 @@ COMMON = \
+ 	screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
+ 	scrollbar-xterm.o scrollbar-plain.o xdefaults.o encoding.o \
+ 	rxvttoolkit.o rxvtutil.o keyboard.o rxvtimg.o \
 -	ev_cpp.o fdpass_wrapper.o ptytty_wrapper.o @PERL_O@
 +	ev_cpp.o fdpass_wrapper.o ptytty_wrapper.o wcwidth.o @PERL_O@
  
  COMMON_DAEMON = rxvtdaemon.o
  
 diff --git a/src/rxvt.h b/src/rxvt.h
-index 64b7fc0..1897040 100644
+index 5be4391..152bf64 100644
 --- a/src/rxvt.h
 +++ b/src/rxvt.h
-@@ -635,6 +635,12 @@ typedef struct _mwmhints {
+@@ -706,6 +706,12 @@ typedef struct _mwmhints
  // speed hack, copy some member variable into a local variable of the same name
  #define dLocal(type,name)       type const name = this->name
  
