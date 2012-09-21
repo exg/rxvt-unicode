@@ -37,7 +37,7 @@ TODO: rxvt -help => (see rxvt-XXX(1))?
 	- fix processing of DEC private mode save sequences (patch by Patrick
 	  Hemmer).
         - perl extensions now have their own manpages, installed as urxvt-NAME(1),
-          e.g. urxvt-background(1).
+          e.g. urxvt-background(1) - see urxvt-extensions(1) for a list.
 	- fix disabling of cursor blink with the option-popup menu (based on a
 	  patch by Jan Larres).
 	- the font height is not augmented anymore when lineSpace is non zero.

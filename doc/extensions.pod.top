@@ -9,12 +9,13 @@ urxvt-extensions - briefly list urxvt perl extensions
 =head1 DESCRIPTION
 
 This manpage briefly lists the rxvt-unicode extensions available in this
-version of rxvt-unicode.
+version of rxvt-unicode. For information on how to write urxvt extensions,
+see the L<urxvt-extensions> manpage.
 
 Extensions that use resources or command line switches for configuration
 are loaded automatically when their resources or switches are used. Any
-extension cna be laoded explicitly with the C<-pe> switch.
+extension can be loaded explicitly with the C<-pe> switch.
 
-=head1 EXTENSIONS
+=head1 EXTENSION LIST
 
 

@@ -10,7 +10,7 @@ man1dir = @mandir@/man1
 man1ext = 1
 man3dir = @mandir@/man3
 man3ext = 3
-PODOPTS = quotes => q<"> , center => q<RXVT-UNICODE>, release => q<$(RXVTNAME)-$(VERSION)>
+PODOPTS = quotes => q<"> , center => q<RXVT-UNICODE>, release => q<$(VERSION)>
 CXX = @CXX@
 PERL = @PERL@
 INSTALL = @INSTALL@
