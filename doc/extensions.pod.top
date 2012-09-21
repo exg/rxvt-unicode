@@ -1,0 +1,20 @@
+=head1 NAME
+
+urxvt-extensions - briefly list urxvt perl extensions
+
+=head1 SYNOPSIS
+
+   urxvt -pe extension-name
+
+=head1 DESCRIPTION
+
+This manpage briefly lists the rxvt-unicode extensions available in this
+version of rxvt-unicode.
+
+Extensions that use resources or command line switches for configuration
+are loaded automatically when their resources or switches are used. Any
+extension cna be laoded explicitly with the C<-pe> switch.
+
+=head1 EXTENSIONS
+
+

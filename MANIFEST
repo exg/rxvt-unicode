@@ -37,7 +37,8 @@ doc/rxvt.1.man.in
 doc/rxvt.7.man.in
 doc/rxvtc.1.man.in
 doc/rxvtd.1.man.in
-doc/rxvtperl.3.man.in
+doc/extensions.pod.top
+doc/extensions.pod.bot
 
 src/.cvsignore
 src/Makefile.in
