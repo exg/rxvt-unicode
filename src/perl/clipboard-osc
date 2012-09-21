@@ -1,5 +1,20 @@
 #! perl
 
+=head1 NAME
+
+clipboard-osc - implement the clipboard operating system command sequence
+
+=head1 SYNOPSIS
+
+   urxvt -pe clipboard-osc
+
+=head1 DESCRIPTION
+
+This extension implements the clipboard;copy Perl OSC.
+
+=cut
+
+
 sub on_osc_seq_perl {
    my ($self, $osc, $resp) = @_;
 

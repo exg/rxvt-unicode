@@ -1,11 +1,13 @@
-DATE=@DATE@
-VERSION=@VERSION@
-RXVTNAME=@RXVTNAME@
+DATE = @DATE@
+VERSION = @VERSION@
+RXVTNAME = @RXVTNAME@
 SHELL = /bin/sh
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
 libdir = @libdir@
+man1dir = @mandir@/man1
+man1ext = 1
 CXX = @CXX@
 PERL = @PERL@
 INSTALL = @INSTALL@
@@ -82,7 +84,7 @@ allbin: rxvt rxvtd rxvtc
 alldoc:
 
 clean:
-	rm -f rxvt rxvtc rxvtd perlxsi.c rxvtperl.C
+	rm -f rxvt rxvtc rxvtd perlxsi.c rxvtperl.C mantmp
 	rm -f *.o
 
 distclean: clean
@@ -98,7 +100,14 @@ install-perl:
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)/urxvt
 @IF_PERL@	$(INSTALL) -d $(DESTDIR)$(libdir)/urxvt/perl
 @IF_PERL@	$(INSTALL_DATA) $(srcdir)/urxvt.pm $(DESTDIR)$(libdir)/urxvt/urxvt.pm
-@IF_PERL@	for ext in $(srcdir)/perl/*; do test -f "$$ext" && $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/perl/; done
+@IF_PERL@	cd $(srcdir)/perl; for ext in *; do \
+@IF_PERL@	   test -f "$$ext" || continue; \
+@IF_PERL@	   $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/perl/; \
+@IF_PERL@	   < "$$ext" \
+@IF_PERL@	   $(PERL) -MPod::Man -e '(new Pod::Man name => "abc", quotes => q<"> , center => q<RXVT-UNICODE>)->parse_from_file' \
+@IF_PERL@	   > ../mantmp; \
+@IF_PERL@	   test -s ../mantmp && $(INSTALL_DATA) ../mantmp $(DESTDIR)$(man1dir)/$(RXVTNAME)-$$ext.$(man1ext); \
+@IF_PERL@	done
 
 install-bin: allbin
 	$(INSTALL) -d $(DESTDIR)$(bindir)

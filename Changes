@@ -30,14 +30,14 @@ TODO: provide something like % for easy access for parse_keysym
 
 TODO: description into --help output?
 TODO: shade
-TODO: manpages for perl extensions
 TODO: rxvt -help => (see rxvt-XXX(1))?
-TODO: perl -MPod::Man -e 'Pod::Man->new()->parse_from_file (shift)' perl/background 
 9.16
 	- the "so much new stuff your eyes will pop out" release.
         - INCOMPATIBLE CHANGE: renamed urlLauncher resource to url-launcher.
 	- fix processing of DEC private mode save sequences (patch by Patrick
 	  Hemmer).
+        - perl extensions now have their own manpages, installed as urxvt-NAME(1),
+          e.g. urxvt-background(1).
 	- fix disabling of cursor blink with the option-popup menu (based on a
 	  patch by Jan Larres).
 	- the font height is not augmented anymore when lineSpace is non zero.

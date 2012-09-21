@@ -1,5 +1,24 @@
 #! perl -w
 
+=head1 NAME
+
+macosx-clipboard-native - apple is evil
+
+=head1 SYNOPSIS
+
+   urxvt -pe macosx-clipboard-native
+
+=head1 DESCRIPTION
+
+This extension does something with the clipboard on some Apple OS X
+systems. Apple is a vile company that actively fights free software,
+do not support them by using it! This extension is only included in
+rxvt-unicode because the maintainer was too weak! Do not give in to
+similar feelings! It hasn't even been changed to automatically load when
+resources are used! Plus, it's totally undocumented!
+
+=cut
+
 # ----------------------------------------------------------------------
 #  File: macosx-clipboard-native
 # ----------------------------------------------------------------------
