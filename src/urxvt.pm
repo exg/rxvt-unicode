@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-@@RXVT_NAME@@perl - rxvt-unicode's embedded perl interpreter
+urxvtperl - rxvt-unicode's embedded perl interpreter
 
 =head1 SYNOPSIS
 
@@ -13,9 +13,9 @@
       ()
    }
 
-   # start a @@RXVT_NAME@@ using it:
+   # start a urxvt using it:
 
-   @@RXVT_NAME@@ --perl-lib $HOME -pe grab_test
+   urxvt --perl-lib $HOME -pe grab_test
 
 =head1 DESCRIPTION
 
@@ -25,7 +25,7 @@ the C<perl> resource are loaded and associated with it.
 Scripts are compiled in a 'use strict "vars"' and 'use utf8' environment, and
 thus must be encoded as UTF-8.
 
-Each script will only ever be loaded once, even in @@RXVT_NAME@@d, where
+Each script will only ever be loaded once, even in urxvtd, where
 scripts will be shared (but not enabled) for all terminals.
 
 You can disable the embedded perl interpreter by setting both "perl-ext"
@@ -34,12 +34,12 @@ and "perl-ext-common" resources to the empty string.
 =head1 PREPACKAGED EXTENSIONS
 
 A number of extensions are delivered with this release. You can find them
-in F<@@RXVT_LIBDIR@@/urxvt/perl/>, and the documentation can be viewed
-using F<< man urxvt-<EXTENSIONNAME> >>.
+in F<< <libdir>/urxvt/perl/ >>, and the documentation can be viewed using
+F<< man urxvt-<EXTENSIONNAME> >>.
 
 You can activate them like this:
 
-  @@RXVT_NAME@@ -pe <extensionname>
+  urxvt -pe <extensionname>
 
 Or by adding them to the resource for extensions loaded by default:
 
@@ -287,7 +287,7 @@ Called just after the screen gets redrawn. See C<on_refresh_begin>.
 
 Called whenever a user-configured event is being activated (e.g. via
 a C<perl:string> action bound to a key, see description of the B<keysym>
-resource in the @@RXVT_NAME@@(1) manpage).
+resource in the urxvt(1) manpage).
 
 The event is simply the action string. This interface is assumed to change
 slightly in the future.
@@ -1128,7 +1128,7 @@ sub new {
 =item $term->destroy
 
 Destroy the terminal object (close the window, free resources
-etc.). Please note that @@RXVT_NAME@@ will not exit as long as any event
+etc.). Please note that urxvt will not exit as long as any event
 watchers (timers, io watchers) are still active.
 
 =item $term->exec_async ($cmd[, @args])
@@ -1257,7 +1257,7 @@ sub x_resource_boolean {
 =item $success = $term->parse_keysym ($key, $octets)
 
 Adds a key binding exactly as specified via a resource. See the
-C<keysym> resource in the @@RXVT_NAME@@(1) manpage.
+C<keysym> resource in the urxvt(1) manpage.
 
 =item $term->register_command ($keysym, $modifiermask, $string)
 
