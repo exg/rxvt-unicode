@@ -110,7 +110,7 @@ install-perl:
 @IF_PERL@	   test -f "$$ext" || continue; \
 @IF_PERL@	   $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/perl/; \
 @IF_PERL@	   < "$$ext" \
-@IF_PERL@	   $(PERL) -MPod::Man -e '(new Pod::Man name => "'rxvt-$$ext'", $(PODOPTS))->parse_from_file' \
+@IF_PERL@	   $(PERL) -MPod::Man -e '(new Pod::Man name => "'urxvt-$$ext'", $(PODOPTS))->parse_from_file' \
 @IF_PERL@	   > ../mantmp; \
 @IF_PERL@	   test -s ../mantmp && $(INSTALL_DATA) ../mantmp $(DESTDIR)$(man1dir)/$(RXVTNAME)-$$ext.$(man1ext); \
 @IF_PERL@	   < "$$ext" $(PERL) -ne '<>, (print <> . "\n"), exit if /^=head1/' >&3; \
