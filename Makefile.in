@@ -1,8 +1,8 @@
 # ./Makefile.in			-*- Makefile -*-
 
-DATE=@DATE@
-VERSION=@VERSION@
-RXVTNAME=@RXVTNAME@
+DATE = @DATE@
+VERSION = @VERSION@
+RXVTNAME = @RXVTNAME@
 SHELL = /bin/sh
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -21,8 +21,8 @@ INSTALL_DATA = @INSTALL@ -m 644
 
 VERNAME = rxvt-unicode-$(VERSION)
 
-srcdir =	@srcdir@
-VPATH =		@srcdir@
+srcdir = @srcdir@
+VPATH = @srcdir@
 
 first_rule: all
 dummy:
