@@ -25,21 +25,20 @@
 
 =head1 NAME
 
-macosx-clipboard and macosx-clipboard-native
+macosx-clipboard - Mac OS X clipboard support
+
+=head1 SYNOPSIS
+
+   urxvt -pe macosx-clipboard
 
 =head1 DESCRIPTION
 
-These two modules implement an extended clipboard for Mac OS X. They are
-used like this:
+This extension implements commands to interact with the Mac OS X
+clipboard and requires the C<Mac::Pasteboard> module. It is used like
+this:
 
-   URxvt.perl-ext-common: default,macosx-clipboard
    URxvt.keysym.M-c: perl:macosx-clipboard:copy
    URxvt.keysym.M-v: perl:macosx-clipboard:paste
-
-The difference between them is that the native variant requires a
-perl from apple's devkit or so, and C<macosx-clipboard> requires the
-C<Mac::Pasteboard> module, works with other perls, has fewer bugs, is
-simpler etc. etc.
 
 =cut
 
