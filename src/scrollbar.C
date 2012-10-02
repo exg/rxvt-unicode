@@ -73,7 +73,7 @@ scrollBar_t::resize ()
                                  term->szHint.height,
                                  0,
                                  term->pix_colors[Color_fg],
-                                 term->pix_colors[Color_border]);
+                                 term->pix_colors[color ()]);
       XDefineCursor (term->dpy, win, leftptr_cursor);
 
       XSelectInput (term->dpy, win,
@@ -231,6 +231,15 @@ scrollBar_t::destroy ()
   if (botShadowGC)  XFreeGC (term->dpy, botShadowGC);
   if (scrollbarGC)  XFreeGC (term->dpy, scrollbarGC);
 #endif
+}
+
+int
+scrollBar_t::color ()
+{
+  if (style == SB_STYLE_RXVT && shadow)
+    return Color_trough;
+  else
+    return Color_border;
 }
 
 void

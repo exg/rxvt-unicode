@@ -76,6 +76,7 @@ struct scrollBar_t
   void map (int);
   int show (int);
   void destroy ();
+  int color ();
 
   bool upButton (int y)
   {

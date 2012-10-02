@@ -2566,7 +2566,7 @@ rxvt_term::scr_recolour (bool refresh) NOTHROW
       if (transparent)
         XSetWindowBackgroundPixmap (dpy, scrollBar.win, ParentRelative);
       else
-        XSetWindowBackground (dpy, scrollBar.win, pix_colors[Color_border]);
+        XSetWindowBackground (dpy, scrollBar.win, pix_colors[scrollBar.color ()]);
       scrollBar.state = SB_STATE_IDLE;
       scrollBar.show (0);
     }
