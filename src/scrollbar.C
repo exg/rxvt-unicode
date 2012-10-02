@@ -273,7 +273,7 @@ scrollBar_t::update_data ()
   if (style == SB_STYLE_RXVT)
     {
       beg = (width + 1) + shadow;
-      end = term->szHint.height - beg - (2 * shadow);
+      end = term->szHint.height - beg;
       update = &scrollBar_t::show_rxvt;
     }
 #endif
