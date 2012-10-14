@@ -236,9 +236,11 @@ scrollBar_t::destroy ()
 int
 scrollBar_t::color ()
 {
+#ifdef RXVT_SCROLLBAR
   if (style == SB_STYLE_RXVT && shadow)
     return Color_trough;
   else
+#endif
     return Color_border;
 }
 
