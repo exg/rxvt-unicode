@@ -887,7 +887,7 @@ You can also try the experimental(!) C<muladd> operator.
 
 =item muladd $mul, $add, $img # EXPERIMENTAL
 
-First multipliesthe pixels by C<$mul>, then adds C<$add>. This cna be used
+First multiplies the pixels by C<$mul>, then adds C<$add>. This can be used
 to implement brightness and contrast at the same time, with a wider value
 range than contrast and brightness operators.
 
