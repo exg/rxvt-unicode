@@ -643,7 +643,7 @@ memory.
 Scales the image by the given factors in horizontal
 (C<$width>) and vertical (C<$height>) direction.
 
-If only one factor is give, it is used for both directions.
+If only one factor is given, it is used for both directions.
 
 If no factors are given, scales the image to the window size without
 keeping aspect.
@@ -778,7 +778,7 @@ transparency as long as the window isn't in front of other windows.
 Rotates the image clockwise by C<$degrees> degrees, around the point at
 C<$center_x> and C<$center_y> (specified as factor of image width/height).
 
-Example: rotate the image by 90 degrees around it's center.
+Example: rotate the image by 90 degrees around its center.
 
    rotate 0.5, 0.5, 90, keep { load "$HOME/mybg.png" }
 
