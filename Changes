@@ -67,6 +67,9 @@ TODO: rxvt -help => (see rxvt-XXX(1))?
           libptytty instead.
         - selectively mark some methods as cache-hot/cache cold, which
           might speed up execution but definitely decreases codesize.
+        - Fix regression that prevented the scrollbar trough color
+          from being applied (reported by Derek B. Noonburg).
+        - Fix the scrollbar size for rxvt style (patch by Mark Robinson).
 
 9.15 Sat Jan 21 13:36:56 CET 2012
 	- remove "using namespace std" because clang erroneously
