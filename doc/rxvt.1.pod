@@ -1185,7 +1185,7 @@ for details.
 Sets the hotkey that starts the incremental scrollback buffer search
 (default: C<M-s>).
 
-=item B<urlLauncher>: I<string>
+=item B<url-launcher>: I<string>
 
 Specifies the program to be started with a URL argument. Used by the
 C<selection-popup> and C<matcher> perl extensions.
