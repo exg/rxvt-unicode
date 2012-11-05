@@ -2373,9 +2373,8 @@ to display some kind of progress indicator during startup.
 =item --enable-transparency (default: on)
 
 Add support for using the root pixmap as background to simulate transparency.
-Note that blur and blend effects depend on
-libXrender and on the availability of the RENDER extension in the X
-server.
+Note that this feature depends on libXrender and on the availability
+of the RENDER extension in the X server.
 
 =item --enable-fading (default: on)
 
