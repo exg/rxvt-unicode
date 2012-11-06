@@ -31,6 +31,7 @@ TODO: provide something like % for easy access for parse_keysym
 TODO: description into --help output?
 TODO: shade
 TODO: rxvt -help => (see rxvt-XXX(1))?
+
 9.16
 	- the "so much new stuff your eyes will pop out" release.
         - INCOMPATIBLE CHANGE: renamed urlLauncher resource to url-launcher.

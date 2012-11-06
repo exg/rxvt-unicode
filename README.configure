@@ -118,8 +118,8 @@ CONFIGURE OPTIONS
 
     --enable-transparency (default: on)
         Add support for using the root pixmap as background to simulate
-        transparency. Note that blur and blend effects depend on libXrender
-        and on the availability of the RENDER extension in the X server.
+        transparency. Note that this feature depends on libXrender and on
+        the availability of the RENDER extension in the X server.
 
     --enable-fading (default: on)
         Add support for fading the text when focus is lost.

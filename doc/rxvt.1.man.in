@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2012-09-22" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2012-11-06" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -243,12 +243,6 @@ Turn on/off jump scrolling (allow multiple lines per refresh); resource \fBjumpS
 .IP "\fB\-ss\fR|\fB+ss\fR" 4
 .IX Item "-ss|+ss"
 Turn on/off skip scrolling (allow multiple screens per refresh); resource \fBskipScroll\fR.
-.IP "\fB\-tr\fR|\fB+tr\fR" 4
-.IX Item "-tr|+tr"
-Turn on/off pseudo-transparency by using the root pixmap as background; resource \fBtransparent\fR.
-.Sp
-\&\fB\-ip\fR is still accepted as an obsolete alias but will be removed in
-future versions.
 .IP "\fB\-fade\fR \fInumber\fR" 4
 .IX Item "-fade number"
 Fade the text by the given percentage when focus is lost. Small values
@@ -258,23 +252,6 @@ colour; resource \fBfading\fR.
 .IX Item "-fadecolor colour"
 Fade to this colour when fading is used (see \fB\-fade\fR). The default colour
 is opaque black. resource \fBfadeColor\fR.
-.IP "\fB\-tint\fR \fIcolour\fR" 4
-.IX Item "-tint colour"
-Tint the transparent background with the given colour;
-resource \fItintColor\fR.
-.IP "\fB\-sh\fR \fInumber\fR" 4
-.IX Item "-sh number"
-Darken (0 .. 99) or lighten (101 .. 200) the transparent background.
-A value of 100 means no shading; resource \fIshading\fR.
-.IP "\fB\-blr\fR \fIHxV\fR" 4
-.IX Item "-blr HxV"
-Apply Gaussian Blur with the specified radii to the transparent
-background. If a single number is specified, the vertical and
-horizontal radii are considered to be the same. Setting one of the
-radii to 1 and the other to a large number creates interesting effects
-on some backgrounds. The maximum radius value is 128. An horizontal or
-vertical radius of 0 disables blurring;
-resource \fIblurRadius\fR.
 .IP "\fB\-icon\fR \fIfile\fR" 4
 .IX Item "-icon file"
 Compile \fIpixbuf\fR: Use the specified image as application icon. This
@@ -286,12 +263,6 @@ Window background colour; resource \fBbackground\fR.
 .IP "\fB\-fg\fR \fIcolour\fR" 4
 .IX Item "-fg colour"
 Window foreground colour; resource \fBforeground\fR.
-.IP "\fB\-pixmap\fR \fIfile[;oplist]\fR" 4
-.IX Item "-pixmap file[;oplist]"
-Compile \fIpixbuf\fR: Specify image file for the background and also
-optionally specify a list of operations to modify it. Note you may need to
-add quotes to avoid special shell interpretation of the \f(CW\*(C`;\*(C'\fR in the
-command-line; for more details see resource \fBbackgroundPixmap\fR.
 .IP "\fB\-cr\fR \fIcolour\fR" 4
 .IX Item "-cr colour"
 The cursor colour; resource \fBcursorColor\fR.
@@ -728,12 +699,6 @@ option \fB\-ss\fR.
 \&\fBFalse\fR: specify that everything is to be displayed, even
 if the refresh is too fast for the human eye to read anything (or the
 monitor to display anything); option \fB+ss\fR.
-.IP "\fBtransparent:\fR \fIboolean\fR" 4
-.IX Item "transparent: boolean"
-Turn on/off pseudo-transparency by using the root pixmap as background.
-.Sp
-\&\fBinheritPixmap\fR is still accepted as an obsolete alias but will be removed in
-future versions.
 .IP "\fBfading:\fR \fInumber\fR" 4
 .IX Item "fading: number"
 Fade the text by the given percentage when focus is lost; option \fB\-fade\fR.
@@ -741,21 +706,6 @@ Fade the text by the given percentage when focus is lost; option \fB\-fade\fR.
 .IX Item "fadeColor: colour"
 Fade to this colour, when fading is used (see \fBfading:\fR). The default
 colour is black; option \fB\-fadecolor\fR.
-.IP "\fBtintColor:\fR \fIcolour\fR" 4
-.IX Item "tintColor: colour"
-Tint the transparent background with the given colour. If the \s-1RENDER\s0
-extension is not available only black, red, green, yellow, blue,
-magenta, cyan and white tints can be performed server-side. Note that
-a black tint yields a completely black image while a white tint yields
-the image unchanged; option \fB\-tint\fR.
-.IP "\fBshading:\fR \fInumber\fR" 4
-.IX Item "shading: number"
-Darken (0 .. 99) or lighten (101 .. 200) the transparent background.
-A value of 100 means no shading; option \fB\-sh\fR.
-.IP "\fBblurRadius:\fR \fInumber\fR" 4
-.IX Item "blurRadius: number"
-Apply gaussian blur with the specified radius to the transparent
-background; option \fB\-blr\fR.
 .IP "\fBiconFile:\fR \fIfile\fR" 4
 .IX Item "iconFile: file"
 Set the application icon pixmap; option \fB\-icon\fR.
@@ -770,62 +720,6 @@ Use the specified colour for the scrollbar's trough area [default
 .IX Item "borderColor: colour"
 The colour of the border around the text area and between the scrollbar
 and the text.
-.IP "\fBbackgroundPixmap:\fR \fIfile[;oplist]\fR" 4
-.IX Item "backgroundPixmap: file[;oplist]"
-Use the specified image file for the background and also
-optionally specify a colon separated list of operations to modify it.
-Supported operations are:
-.RS 4
-.IP "\fBWxH+X+Y\fR" 4
-.IX Item "WxH+X+Y"
-sets scale and position. \fB\*(L"W\*(R" / \*(L"H\*(R"\fR specify the horizontal/vertical
-scale (percent), and \fB\*(L"X\*(R" / \*(L"Y\*(R"\fR locate the image centre (percent). A
-scale of 0 disables scaling.
-.IP "\fBop=tile\fR" 4
-.IX Item "op=tile"
-enables tiling
-.IP "\fBop=keep\-aspect\fR" 4
-.IX Item "op=keep-aspect"
-maintain the image aspect ratio when scaling
-.IP "\fBop=root\-align\fR" 4
-.IX Item "op=root-align"
-use the position of the terminal window relative to the root window as
-the image offset, simulating a root window background
-.RE
-.RS 4
-.Sp
-The default scale and position setting is \f(CW\*(C`100x100+50+50\*(C'\fR.
-Alternatively, a predefined set of templates can be used to achieve
-the most common setups:
-.IP "\fBstyle=tiled\fR" 4
-.IX Item "style=tiled"
-the image is tiled with no scaling. Equivalent to 0x0+0+0:op=tile
-.IP "\fBstyle=aspect\-stretched\fR" 4
-.IX Item "style=aspect-stretched"
-the image is scaled to fill the whole window maintaining the aspect
-ratio and centered. Equivalent to 100x100+50+50:op=keep\-aspect
-.IP "\fBstyle=stretched\fR" 4
-.IX Item "style=stretched"
-the image is scaled to fill the whole window. Equivalent to 100x100
-.IP "\fBstyle=centered\fR" 4
-.IX Item "style=centered"
-the image is centered with no scaling. Equivalent to 0x0+50+50
-.IP "\fBstyle=root\-tiled\fR" 4
-.IX Item "style=root-tiled"
-the image is tiled with no scaling and using 'root' positioning.
-Equivalent to 0x0:op=tile:op=root\-align
-.RE
-.RS 4
-.Sp
-If multiple templates are specified the last one wins. Note that a
-template overrides all the scale, position and operations settings.
-.Sp
-If used in conjunction with \fB\-tr\fR option, the specified pixmap will be
-blended over the transparent background using alpha-blending.
-.RE
-.IP "\fBpath:\fR \fIpath\fR" 4
-.IX Item "path: path"
-Specify the colon-delimited search path for finding background image files.
 .IP "\fBfont:\fR \fIfontlist\fR" 4
 .IX Item "font: fontlist"
 Select the fonts to be used. This is a comma separated list of font names
@@ -1297,8 +1191,8 @@ for details.
 .IX Item "searchable-scrollback: keysym"
 Sets the hotkey that starts the incremental scrollback buffer search
 (default: \f(CW\*(C`M\-s\*(C'\fR).
-.IP "\fBurlLauncher\fR: \fIstring\fR" 4
-.IX Item "urlLauncher: string"
+.IP "\fBurl-launcher\fR: \fIstring\fR" 4
+.IX Item "url-launcher: string"
 Specifies the program to be started with a \s-1URL\s0 argument. Used by the
 \&\f(CW\*(C`selection\-popup\*(C'\fR and \f(CW\*(C`matcher\*(C'\fR perl extensions.
 .IP "\fBtransient-for\fR: \fIwindowid\fR" 4
@@ -1314,6 +1208,109 @@ Turn on/off \s-1ISO\s0 14755 (default enabled).
 .IP "\fBiso14755_52:\fR \fIboolean\fR" 4
 .IX Item "iso14755_52: boolean"
 Turn on/off \s-1ISO\s0 14755 5.2 mode (default enabled).
+.SH "BACKGROUND IMAGE OPTIONS AND RESOURCES"
+.IX Header "BACKGROUND IMAGE OPTIONS AND RESOURCES"
+.IP "\fB\-pixmap\fR \fIfile[;oplist]\fR" 4
+.IX Item "-pixmap file[;oplist]"
+.PD 0
+.IP "\fBbackgroundPixmap:\fR \fIfile[;oplist]\fR" 4
+.IX Item "backgroundPixmap: file[;oplist]"
+.PD
+Compile \fIpixbuf\fR: Use the specified image file as the window's
+background and also optionally specify a colon separated list of
+operations to modify it. Note that you may need to quote the \f(CW\*(C`;\*(C'\fR
+character when using the command line option, as \f(CW\*(C`;\*(C'\fR is usually a
+metacharacter in shells. Supported operations are:
+.RS 4
+.IP "\fBWxH+X+Y\fR" 4
+.IX Item "WxH+X+Y"
+sets scale and position. \fB\*(L"W\*(R" / \*(L"H\*(R"\fR specify the horizontal/vertical
+scale (percent), and \fB\*(L"X\*(R" / \*(L"Y\*(R"\fR locate the image centre (percent). A
+scale of 0 disables scaling.
+.IP "\fBop=tile\fR" 4
+.IX Item "op=tile"
+enables tiling
+.IP "\fBop=keep\-aspect\fR" 4
+.IX Item "op=keep-aspect"
+maintain the image aspect ratio when scaling
+.IP "\fBop=root\-align\fR" 4
+.IX Item "op=root-align"
+use the position of the terminal window relative to the root window as
+the image offset, simulating a root window background
+.RE
+.RS 4
+.Sp
+The default scale and position setting is \f(CW\*(C`100x100+50+50\*(C'\fR.
+Alternatively, a predefined set of templates can be used to achieve
+the most common setups:
+.IP "\fBstyle=tiled\fR" 4
+.IX Item "style=tiled"
+the image is tiled with no scaling. Equivalent to 0x0+0+0:op=tile
+.IP "\fBstyle=aspect\-stretched\fR" 4
+.IX Item "style=aspect-stretched"
+the image is scaled to fill the whole window maintaining the aspect
+ratio and centered. Equivalent to 100x100+50+50:op=keep\-aspect
+.IP "\fBstyle=stretched\fR" 4
+.IX Item "style=stretched"
+the image is scaled to fill the whole window. Equivalent to 100x100
+.IP "\fBstyle=centered\fR" 4
+.IX Item "style=centered"
+the image is centered with no scaling. Equivalent to 0x0+50+50
+.IP "\fBstyle=root\-tiled\fR" 4
+.IX Item "style=root-tiled"
+the image is tiled with no scaling and using 'root' positioning.
+Equivalent to 0x0:op=tile:op=root\-align
+.RE
+.RS 4
+.Sp
+If multiple templates are specified the last one wins. Note that a
+template overrides all the scale, position and operations settings.
+.Sp
+If used in conjunction with pseudo-transparency, the specified pixmap
+will be blended over the transparent background using alpha-blending.
+.RE
+.IP "\fB\-tr\fR|\fB+tr\fR" 4
+.IX Item "-tr|+tr"
+.PD 0
+.IP "\fBtransparent:\fR \fIboolean\fR" 4
+.IX Item "transparent: boolean"
+.PD
+Turn on/off pseudo-transparency by using the root pixmap as background.
+.Sp
+\&\fB\-ip\fR (\fBinheritPixmap\fR) is still accepted as an obsolete alias but
+will be removed in future versions.
+.IP "\fB\-tint\fR \fIcolour\fR" 4
+.IX Item "-tint colour"
+.PD 0
+.IP "\fBtintColor:\fR \fIcolour\fR" 4
+.IX Item "tintColor: colour"
+.PD
+Tint the transparent background with the given colour. Note that a
+black tint yields a completely black image while a white tint yields
+the image unchanged.
+.IP "\fB\-sh\fR \fInumber\fR" 4
+.IX Item "-sh number"
+.PD 0
+.IP "\fBshading:\fR \fInumber\fR" 4
+.IX Item "shading: number"
+.PD
+Darken (0 .. 99) or lighten (101 .. 200) the transparent background.
+A value of 100 means no shading.
+.IP "\fB\-blr\fR \fIHxV\fR" 4
+.IX Item "-blr HxV"
+.PD 0
+.IP "\fBblurRadius:\fR \fIHxV\fR" 4
+.IX Item "blurRadius: HxV"
+.PD
+Apply gaussian blur with the specified radius to the transparent
+background. If a single number is specified, the vertical and
+horizontal radii are considered to be the same. Setting one of the
+radii to 1 and the other to a large number creates interesting effects
+on some backgrounds. The maximum radius value is 128. An horizontal or
+vertical radius of 0 disables blurring.
+.IP "\fBpath:\fR \fIpath\fR" 4
+.IX Item "path: path"
+Specify the colon-delimited search path for finding background image files.
 .SH "THE SCROLLBAR"
 .IX Header "THE SCROLLBAR"
 Lines of text that scroll off the top of the \fB@@RXVT_NAME@@\fR window
@@ -1676,3 +1673,12 @@ Project Coordinator (Changes 1.0 \-)
 .IP "Emanuele Giaquinta <e.giaquinta@glauco.it>" 4
 .IX Item "Emanuele Giaquinta <e.giaquinta@glauco.it>"
 pty/utmp code rewrite, image code improvements, many random hacks and bugfixes.
+.SH "POD ERRORS"
+.IX Header "POD ERRORS"
+Hey! \fBThe above document had some coding errors, which are explained below:\fR
+.IP "Around line 1210:" 4
+.IX Item "Around line 1210:"
+You forgot a '=back' before '=head1'
+.IP "Around line 1212:" 4
+.IX Item "Around line 1212:"
+\&'=item' outside of any '=over'
