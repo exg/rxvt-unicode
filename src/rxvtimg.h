@@ -133,7 +133,7 @@ struct rxvt_img
   rxvt_img *filter (const char *name, int nparams = 0, nv *params = 0);
   rxvt_img *muladd (nv mul, nv add); // general multiply and add, implemented as the biggest hack ever :/
 
-  // egregiuous helper category
+  // egregious helper category
   rxvt_img *replace (rxvt_img *&p)
   {
     delete p;
