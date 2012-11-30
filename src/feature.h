@@ -284,7 +284,7 @@
  * performance by working around the linux kernel tty ratelimit bug.
  * Unfortunately, it seems screen is negatively affected by this on some
  * machines, so it is disabled by default. Use freebsd or any other kernel
- * that doesn't suffer form this bug and it will be fast either way.
+ * that doesn't suffer from this bug and it will be fast either way.
  *
  * See command.C for details.
  */

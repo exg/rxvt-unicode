@@ -1445,6 +1445,13 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   // screen.C
 
+  bool option (uint8_t opt) const NOTHROW
+  {
+    return options[opt >> 3] & (1 << (opt & 7));
+  }
+
+  void set_option (uint8_t opt, bool set = true) NOTHROW;
+
   int fgcolor_of (rend_t r) const NOTHROW
   {
     int base = GET_BASEFG (r);
@@ -1472,13 +1479,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 #endif
     return base;
   }
-
-  bool option (uint8_t opt) const NOTHROW
-  {
-    return options[opt >> 3] & (1 << (opt & 7));
-  }
-
-  void set_option (uint8_t opt, bool set = true) NOTHROW;
 
   // modifies first argument(!)
   void tt_paste (char *data, unsigned int len) NOTHROW;
