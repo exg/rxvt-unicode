@@ -6,7 +6,7 @@
  * Copyright (c) 1992      John Bovey, University of Kent at Canterbury <jdb@ukc.ac.uk>
  *				- original version
  * Copyright (c) 1994      Robert Nation <nation@rocket.sanders.lockheed.com>
- * 				- extensive modifications
+ *				- extensive modifications
  * Copyright (c) 1995      Garrett D'Amore <garrett@netcom.com>
  *				- vt100 printing
  * Copyright (c) 1995      Steven Hirsch <hirsch@emba.uvm.edu>
@@ -22,7 +22,7 @@
  *				  and Linux 1.2.x
  * Copyright (c) 1997,1998 Oezguer Kesim <kesim@math.fu-berlin.de>
  * Copyright (c) 1998-2001 Geoff Wing <gcw@pobox.com>
- * 				- extensive modifications
+ *				- extensive modifications
  * Copyright (c) 1998      Alfredo K. Kojima <kojima@windowmaker.org>
  * Copyright (c) 2001      Marius Gedminas
  *				- Ctrl/Mod4+Tab works like Meta+Tab (options)
