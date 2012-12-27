@@ -27,12 +27,11 @@ TODO: DEC PM 4h/4l should toggle jumpscroll on or off (PrivMode_smoothScroll)
 TODO: pack rxvt_fatal messages into the exception object
 TODO: load must not cache, but global image cache must be cleaned
 TODO: provide something like % for easy access for parse_keysym
-
 TODO: description into --help output?
 TODO: shade
 TODO: rxvt -help => (see rxvt-XXX(1))?
 
-9.16
+9.16 Thu Dec 27 11:56:43 CET 2012
 	- the "so much new stuff your eyes will pop out" release.
         - INCOMPATIBLE CHANGE: renamed urlLauncher resource to url-launcher.
 	- fix processing of DEC private mode save sequences (patch by Patrick
