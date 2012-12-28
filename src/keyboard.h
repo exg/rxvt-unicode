@@ -31,8 +31,8 @@
 #include "rxvtutil.h"
 
 #define KEYSYM_HASH_BITS        4       /* lowest #bits of keysym is used as hash key */
-#define KEYSYM_HASH_BUCKETS     (1<<KEYSYM_HASH_BITS)
-#define KEYSYM_HASH_MASK        (KEYSYM_HASH_BUCKETS-1)
+#define KEYSYM_HASH_BUCKETS     (1 << KEYSYM_HASH_BITS)
+#define KEYSYM_HASH_MASK        (KEYSYM_HASH_BUCKETS - 1)
 
 #define MetaMask                0x0100
 #define NumLockMask             0x0200
