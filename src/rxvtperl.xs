@@ -59,6 +59,7 @@ typedef int		render_repeat_mode;
 #if HAVE_PIXBUF
 typedef GdkPixbuf *	urxvt__pixbuf;
 #endif
+#if HAVE_IMG
 typedef rxvt_img *	urxvt__img;
 typedef rxvt_img::nv	rxvt_img__nv;
 
@@ -107,6 +108,7 @@ parse_rgba (SV *sv, rxvt_screen *s = 0)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#endif
 
 static wchar_t *
 sv2wcs (SV *sv)
