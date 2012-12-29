@@ -197,9 +197,9 @@ optList[] = {
 #if BG_IMAGE_FROM_FILE
               RSTRG (Rs_path, "path", "search path"),
               STRG (Rs_backgroundPixmap, "backgroundPixmap", "pixmap", "file[;geom]", "background pixmap"),
-# if ENABLE_EWMH
+#endif
+#if ENABLE_EWMH
               STRG (Rs_iconfile, "iconFile", "icon", "file", "path to application icon image"),
-# endif
 #endif
               /* fonts: command-line option = resource name */
               STRG (Rs_font, "font", "fn", "fontname", "normal text font"),
