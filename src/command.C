@@ -1840,7 +1840,7 @@ rxvt_term::update_fade_color (unsigned int idx)
 #endif
 }
 
-#if ENABLE_TRANSPARENCY || ENABLE_PERL
+#if BG_IMAGE_FROM_ROOT || ENABLE_PERL
 void ecb_hot
 rxvt_term::rootwin_cb (XEvent &ev)
 {
@@ -1860,7 +1860,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
         if (ev.xproperty.atom == xa[XA_XROOTPMAP_ID]
             || ev.xproperty.atom == xa[XA_ESETROOT_PMAP_ID])
           {
-# if ENABLE_TRANSPARENCY
+#if BG_IMAGE_FROM_ROOT
             bg_set_root_pixmap ();
             update_background ();
 #endif
@@ -3455,7 +3455,8 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
       case URxvt_Color_border:
         process_color_seq (op, Color_border, str, resp);
         break;
-#if ENABLE_TRANSPARENCY
+
+#if BG_IMAGE_FROM_ROOT
       case URxvt_Color_tint:
         process_color_seq (op, Color_tint, str, resp);
         {

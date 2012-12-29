@@ -30,7 +30,7 @@
 void
 rxvt_term::bg_destroy ()
 {
-# if ENABLE_TRANSPARENCY
+# if BG_IMAGE_FROM_ROOT
   delete root_img;
   root_img = 0;
 # endif
@@ -46,7 +46,7 @@ rxvt_term::bg_destroy ()
 bool
 rxvt_term::bg_window_size_sensitive ()
 {
-# if ENABLE_TRANSPARENCY
+# if BG_IMAGE_FROM_ROOT
   if (bg_flags & BG_IS_TRANSPARENT)
     return true;
 # endif
@@ -67,7 +67,7 @@ rxvt_term::bg_window_size_sensitive ()
 bool
 rxvt_term::bg_window_position_sensitive ()
 {
-# if ENABLE_TRANSPARENCY
+# if BG_IMAGE_FROM_ROOT
   if (bg_flags & BG_IS_TRANSPARENT)
     return true;
 # endif
@@ -439,7 +439,7 @@ image_effects::set_shade (const char *shade_str)
   return false;
 }
 
-# if ENABLE_TRANSPARENCY
+# if BG_IMAGE_FROM_ROOT
 /*
  * Builds a pixmap of the same size as the terminal window that contains
  * the tiled portion of the root pixmap that is supposed to be covered by
@@ -495,7 +495,7 @@ rxvt_term::bg_set_root_pixmap ()
   delete root_img;
   root_img = rxvt_img::new_from_root (this);
 }
-# endif /* ENABLE_TRANSPARENCY */
+# endif /* BG_IMAGE_FROM_ROOT */
 
 void
 rxvt_term::bg_render ()
@@ -504,7 +504,7 @@ rxvt_term::bg_render ()
     return;
 
   bg_invalidate ();
-# if ENABLE_TRANSPARENCY
+# if BG_IMAGE_FROM_ROOT
   if (bg_flags & BG_IS_TRANSPARENT)
     {
       /*  we need to re-generate transparency pixmap in that case ! */
@@ -536,7 +536,7 @@ rxvt_term::bg_render ()
 void
 rxvt_term::bg_init ()
 {
-#if ENABLE_TRANSPARENCY
+#if BG_IMAGE_FROM_ROOT
   if (option (Opt_transparent))
     {
       bg_set_transparent ();

@@ -58,7 +58,7 @@
   def (preeditType)
   def (inputMethod)
 #endif
-#if ENABLE_TRANSPARENCY
+#if BG_IMAGE_FROM_ROOT
   def (transparent)
   def (shade)
   def (blurradius)

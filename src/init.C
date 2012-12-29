@@ -521,7 +521,7 @@ static const char *const def_colorName[] =
 #ifdef RXVT_SCROLLBAR
     COLOR_SCROLLTROUGH,
 #endif
-#if ENABLE_TRANSPARENCY
+#if BG_IMAGE_FROM_ROOT
     NULL,
 #endif
 #if OFF_FOCUS_FADING

@@ -170,7 +170,7 @@ rxvt_term::rxvt_term ()
 #if defined(MOUSE_WHEEL) && defined(MOUSE_SLIP_WHEELING)
   slip_wheel_ev.set       <rxvt_term, &rxvt_term::slip_wheel_cb>   (this);
 #endif
-#if ENABLE_TRANSPARENCY || ENABLE_PERL
+#if BG_IMAGE_FROM_ROOT || ENABLE_PERL
   rootwin_ev.set          <rxvt_term, &rxvt_term::rootwin_cb> (this),
 #endif
   scrollbar_ev.set        <rxvt_term, &rxvt_term::x_cb>       (this),
@@ -313,7 +313,7 @@ rxvt_term::destroy ()
       im_ev.stop (display);
 #endif
       scrollbar_ev.stop (display);
-#if ENABLE_TRANSPARENCY || ENABLE_PERL
+#if BG_IMAGE_FROM_ROOT || ENABLE_PERL
       rootwin_ev.stop (display);
 #endif
       termwin_ev.stop (display);

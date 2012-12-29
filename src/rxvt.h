@@ -77,8 +77,17 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 # include <gdk-pixbuf/gdk-pixbuf.h>
 #endif
 
-#if defined(BG_IMAGE_FROM_FILE) || defined(ENABLE_TRANSPARENCY)
+#if XRENDER && (HAVE_PIXBUF || ENABLE_TRANSPARENCY)
 # define HAVE_BG_PIXMAP 1
+#endif
+
+#if HAVE_BG_PIXMAP
+# if HAVE_PIXBUF
+#  define BG_IMAGE_FROM_FILE 1
+# endif
+# if ENABLE_TRANSPARENCY
+#  define BG_IMAGE_FROM_ROOT 1
+# endif
 #endif
 
 #include <ecb.h>
@@ -582,7 +591,7 @@ enum colour_list {
 #ifdef RXVT_SCROLLBAR
   Color_trough,
 #endif
-#if ENABLE_TRANSPARENCY
+#if BG_IMAGE_FROM_ROOT
   Color_tint,
 #endif
 #if OFF_FOCUS_FADING
@@ -1194,7 +1203,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   bool render_image (rxvt_image &image);
 # endif
 
-# if ENABLE_TRANSPARENCY
+# if BG_IMAGE_FROM_ROOT
   rxvt_img *root_img;
   image_effects root_effects;
 
@@ -1283,7 +1292,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     XSelectInput (dpy, vt, vt_emask | vt_emask_perl | vt_emask_xim | vt_emask_mouse);
   }
 
-#if ENABLE_TRANSPARENCY || ENABLE_PERL
+#if BG_IMAGE_FROM_ROOT || ENABLE_PERL
   void rootwin_cb (XEvent &xev);
   xevent_watcher rootwin_ev;
 #endif

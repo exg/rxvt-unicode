@@ -645,10 +645,6 @@ if test x$support_image = xyes && test x$rxvt_have_xrender = xyes; then
   if test x$support_inheritpixmap = xyes; then
     AC_DEFINE(ENABLE_TRANSPARENCY, 1, Define if you want your background to use the parent window background)
   fi
-
-  if test x$support_pixbuf = xyes; then
-    AC_DEFINE(BG_IMAGE_FROM_FILE, 1, Define if you want to have sexy-looking background pixmaps.)
-  fi
 fi
 
 if test x$support_styles = xyes; then

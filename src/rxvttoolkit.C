@@ -68,7 +68,7 @@ static const char *const xa_names[] =
   "WM_LOCALE_NAME",
   "XIM_SERVERS",
 #endif
-#if ENABLE_TRANSPARENCY || ENABLE_PERL
+#if BG_IMAGE_FROM_ROOT || ENABLE_PERL
   "_XROOTPMAP_ID",
   "ESETROOT_PMAP_ID",
 #endif
