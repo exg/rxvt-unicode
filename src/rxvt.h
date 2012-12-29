@@ -1183,19 +1183,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   XComposeStatus  compose;
   static struct termios def_tio;
   row_col_t       oldcursor;
+
 #ifdef HAVE_BG_PIXMAP
   void bg_init ();
   void bg_destroy ();
-
-  enum {
-    BG_IS_VALID          = 1 << 0,
-
-    BG_IS_TRANSPARENT    = 1 << 1,
-    BG_NEEDS_REFRESH     = 1 << 2,
-    BG_INHIBIT_RENDER    = 1 << 3,
-  };
-
-  uint8_t bg_flags;
 
 # if BG_IMAGE_FROM_FILE
   rxvt_image fimage;
@@ -1219,8 +1210,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   ev_tstamp bg_valid_since;
 
-  rxvt_img *bg_img;
-
   bool bg_window_size_sensitive ();
   bool bg_window_position_sensitive ();
 
@@ -1229,6 +1218,20 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   {
     bg_flags &= ~BG_IS_VALID;
   }
+#endif
+
+#ifdef HAVE_IMG
+  enum {
+    BG_IS_VALID          = 1 << 0,
+
+    BG_IS_TRANSPARENT    = 1 << 1,
+    BG_NEEDS_REFRESH     = 1 << 2,
+    BG_INHIBIT_RENDER    = 1 << 3,
+  };
+
+  uint8_t bg_flags;
+
+  rxvt_img *bg_img;
 #endif
 
 #if ENABLE_OVERLAY

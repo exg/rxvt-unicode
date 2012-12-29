@@ -1708,7 +1708,7 @@ rxvt_term::scr_rvideo_mode (bool on) NOTHROW
       rvideo_state = on;
 
       ::swap (pix_colors[Color_fg], pix_colors[Color_bg]);
-#ifdef HAVE_BG_PIXMAP
+#ifdef HAVE_IMG
       if (bg_img == 0)
 #endif
           XSetWindowBackground (dpy, vt, pix_colors[Color_bg]);
@@ -2053,7 +2053,7 @@ rxvt_term::scr_refresh () NOTHROW
 
   unsigned int old_screen_flags = screen.flags;
   bool have_bg = 0;
-#ifdef HAVE_BG_PIXMAP
+#ifdef HAVE_IMG
   have_bg = bg_img != 0;
 #endif
   ocrow = oldcursor.row; /* is there an old outline cursor on screen? */
@@ -2534,7 +2534,7 @@ rxvt_term::scr_recolour (bool refresh) NOTHROW
 {
   bool transparent = false;
 
-#ifdef HAVE_BG_PIXMAP
+#ifdef HAVE_IMG
   if (bg_img != 0)
     {
 # if ENABLE_TRANSPARENCY

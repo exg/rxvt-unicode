@@ -943,7 +943,7 @@ rxvt_term::flush ()
 {
   flush_ev.stop ();
 
-#ifdef HAVE_BG_PIXMAP
+#ifdef HAVE_IMG
   if (bg_flags & BG_NEEDS_REFRESH)
     {
       bg_flags &= ~BG_NEEDS_REFRESH;
