@@ -47,7 +47,7 @@ bool
 rxvt_term::bg_window_size_sensitive ()
 {
 # if BG_IMAGE_FROM_ROOT
-  if (bg_flags & BG_IS_TRANSPARENT)
+  if (option (Opt_transparent))
     return true;
 # endif
 
@@ -68,7 +68,7 @@ bool
 rxvt_term::bg_window_position_sensitive ()
 {
 # if BG_IMAGE_FROM_ROOT
-  if (bg_flags & BG_IS_TRANSPARENT)
+  if (option (Opt_transparent))
     return true;
 # endif
 
@@ -505,11 +505,11 @@ rxvt_term::bg_render ()
 
   bg_invalidate ();
 # if BG_IMAGE_FROM_ROOT
-  if (bg_flags & BG_IS_TRANSPARENT)
+  if (option (Opt_transparent))
     {
       /*  we need to re-generate transparency pixmap in that case ! */
       if (render_root_image ())
-        bg_flags |= BG_IS_VALID;
+        bg_flags |= BG_IS_VALID | BG_IS_TRANSPARENT;
     }
 # endif
 
@@ -539,8 +539,6 @@ rxvt_term::bg_init ()
 #if BG_IMAGE_FROM_ROOT
   if (option (Opt_transparent))
     {
-      bg_set_transparent ();
-
       if (rs [Rs_blurradius])
         root_effects.set_blur (rs [Rs_blurradius]);
 

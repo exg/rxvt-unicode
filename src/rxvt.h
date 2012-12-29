@@ -1198,10 +1198,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   rxvt_img *root_img;
   image_effects root_effects;
 
-  void bg_set_transparent ()
-  {
-    bg_flags |= BG_IS_TRANSPARENT;
-  }
   void bg_set_root_pixmap ();
   bool render_root_image ();
 # endif
@@ -1216,7 +1212,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void bg_render ();
   void bg_invalidate ()
   {
-    bg_flags &= ~BG_IS_VALID;
+    bg_flags &= ~(BG_IS_VALID | BG_IS_TRANSPARENT);
   }
 #endif
 
