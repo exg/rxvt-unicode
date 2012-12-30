@@ -1474,7 +1474,7 @@ rxvt_term::x_cb (XEvent &ev)
             if (bg_window_position_sensitive ())
               {
                 want_position_change = true;
-                if (!(bg_flags & BG_IS_VALID))
+                if (bg_img == 0)
                   moved = true;
               }
 #endif
@@ -1538,7 +1538,7 @@ rxvt_term::x_cb (XEvent &ev)
         // events at startup when the window manager reparents the
         // window, so as to perform the computation after we have
         // received all of them.
-        if (!(bg_flags & BG_IS_VALID))
+        if (bg_img == 0)
           update_background_ev.start (0.025);
 #endif
         mapped = 1;

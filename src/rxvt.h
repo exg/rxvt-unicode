@@ -1214,8 +1214,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
 #ifdef HAVE_IMG
   enum {
-    BG_IS_VALID          = 1 << 0,
-
     BG_IS_TRANSPARENT    = 1 << 1,
     BG_NEEDS_REFRESH     = 1 << 2,
     BG_INHIBIT_RENDER    = 1 << 3,

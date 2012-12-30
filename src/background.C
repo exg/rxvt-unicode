@@ -509,19 +509,13 @@ rxvt_term::bg_render ()
 
 # if BG_IMAGE_FROM_ROOT
   if (option (Opt_transparent))
-    {
-      /*  we need to re-generate transparency pixmap in that case ! */
-      if (render_root_image ())
-        bg_flags |= BG_IS_VALID | BG_IS_TRANSPARENT;
-    }
+    if (render_root_image ())
+      bg_flags |= BG_IS_TRANSPARENT;
 # endif
 
 # if BG_IMAGE_FROM_FILE
   if (fimage.img)
-    {
-      if (render_image (fimage))
-        bg_flags |= BG_IS_VALID;
-    }
+    render_image (fimage);
 # endif
 
   scr_recolour (false);
