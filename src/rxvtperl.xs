@@ -2208,9 +2208,8 @@ rxvt_term::new_img_from_file (octet_string filename)
 void
 rxvt_term::set_background (rxvt_img *img, bool border = false)
 	CODE:
-#if HAVE_BG_PIXMAP
-        THIS->bg_destroy ();
-#endif
+        delete bg_img;
+        bg_img = 0;
         THIS->bg_flags &= ~(rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER | rxvt_term::BG_IS_TRANSPARENT);
 
         if (img) // TODO: cannot be false
