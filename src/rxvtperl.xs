@@ -2210,7 +2210,7 @@ rxvt_term::set_background (rxvt_img *img, bool border = false)
 	CODE:
         delete THIS->bg_img;
         THIS->bg_img = 0;
-        THIS->bg_flags &= ~(rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER | rxvt_term::BG_IS_TRANSPARENT);
+        THIS->bg_flags = 0;
 
         if (img) // TODO: cannot be false
           {

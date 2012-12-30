@@ -500,7 +500,8 @@ rxvt_term::bg_render ()
   if (bg_flags & BG_INHIBIT_RENDER)
     return;
 
-  bg_invalidate ();
+  bg_flags &= BG_INHIBIT_RENDER;
+
 # if BG_IMAGE_FROM_ROOT
   if (option (Opt_transparent))
     {

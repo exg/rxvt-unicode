@@ -1210,10 +1210,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   bool bg_window_position_sensitive ();
 
   void bg_render ();
-  void bg_invalidate ()
-  {
-    bg_flags &= ~(BG_IS_VALID | BG_IS_TRANSPARENT);
-  }
 #endif
 
 #ifdef HAVE_IMG

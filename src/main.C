@@ -1689,7 +1689,7 @@ rxvt_term::update_background ()
   if (update_background_ev.is_active ())
     return;
 
-  bg_invalidate ();
+  bg_flags &= BG_INHIBIT_RENDER;
 
   if (!mapped)
     return;
