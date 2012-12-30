@@ -504,6 +504,9 @@ rxvt_term::bg_render ()
   bg_img = 0;
   bg_flags = 0;
 
+  if (!mapped)
+    return;
+
 # if BG_IMAGE_FROM_ROOT
   if (option (Opt_transparent))
     {

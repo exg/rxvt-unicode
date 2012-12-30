@@ -1689,11 +1689,6 @@ rxvt_term::update_background ()
   if (update_background_ev.is_active ())
     return;
 
-  bg_flags &= BG_INHIBIT_RENDER;
-
-  if (!mapped)
-    return;
-
   ev_tstamp to_wait = 0.5 - (ev::now () - bg_valid_since);
 
   if (to_wait <= 0.)
