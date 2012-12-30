@@ -1531,18 +1531,13 @@ rxvt_term::x_cb (XEvent &ev)
 
       case MapNotify:
 #ifdef HAVE_BG_PIXMAP
-        /* This is needed specifically to fix the case of no window manager or a
-         * non-reparenting window manager. In those cases we never get first
-         * ConfigureNotify. Also that speeds startup under normal WM, by taking
-         * care of multiplicity of ConfigureNotify events arriving while WM does
-         * reparenting.
-         * We should not render background immediately, as there could be several
-         * ConfigureNotify's to follow. Lets take care of all of them in one scoop
-         * by scheduling background redraw as soon as we can, but giving a short
-         * bit of time for ConfigureNotifies to arrive.
-         * We should render background PRIOR to drawing any text, but AFTER all
-         * of ConfigureNotifys for the best results.
-         */
+        // This is needed at startup for the case of no window manager
+        // or a non-reparenting window manager and also because we
+        // defer bg image updates if the window is not mapped. The
+        // short delay is to optimize for multiple ConfigureNotify
+        // events at startup when the window manager reparents the
+        // window, so as to perform the computation after we have
+        // received all of them.
         if (!(bg_flags & BG_IS_VALID))
           update_background_ev.start (0.025);
 #endif
