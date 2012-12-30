@@ -44,7 +44,7 @@ bool
 rxvt_term::bg_window_size_sensitive ()
 {
 # if BG_IMAGE_FROM_ROOT
-  if (option (Opt_transparent))
+  if (root_img)
     return true;
 # endif
 
@@ -65,7 +65,7 @@ bool
 rxvt_term::bg_window_position_sensitive ()
 {
 # if BG_IMAGE_FROM_ROOT
-  if (option (Opt_transparent))
+  if (root_img)
     return true;
 # endif
 
@@ -458,9 +458,6 @@ rxvt_term::render_root_image ()
   sx = parent_x;
   sy = parent_y;
 
-  if (!root_img)
-    return false;
-
   /* check if we are outside of the visible part of the virtual screen : */
   if (sx + parent_width <= 0 || sy + parent_height <= 0
       || sx >= root_width || sy >= root_height)
@@ -508,7 +505,7 @@ rxvt_term::bg_render ()
     return;
 
 # if BG_IMAGE_FROM_ROOT
-  if (option (Opt_transparent))
+  if (root_img)
     if (render_root_image ())
       bg_flags |= BG_IS_TRANSPARENT;
 # endif

@@ -1856,8 +1856,11 @@ rxvt_term::rootwin_cb (XEvent &ev)
             || ev.xproperty.atom == xa[XA_ESETROOT_PMAP_ID])
           {
 #if BG_IMAGE_FROM_ROOT
-            bg_set_root_pixmap ();
-            update_background ();
+            if (option (Opt_transparent))
+              {
+                bg_set_root_pixmap ();
+                update_background ();
+              }
 #endif
 #if ENABLE_PERL
             HOOK_INVOKE ((this, HOOK_ROOTPMAP_CHANGE, DT_END));
