@@ -317,7 +317,7 @@ rxvt_term::render_image (rxvt_image &image)
     img->repeat_mode (RepeatNone);
   img->sub_rect (-x, -y, parent_width, parent_height)->replace (img);
 
-  if (bg_flags & BG_IS_VALID)
+  if (bg_img)
     img->draw (bg_img, PictOpOver, image.alpha * 1. / 0xffff);
 
   XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
@@ -500,6 +500,8 @@ rxvt_term::bg_render ()
   if (bg_flags & BG_INHIBIT_RENDER)
     return;
 
+  delete bg_img;
+  bg_img = 0;
   bg_flags &= BG_INHIBIT_RENDER;
 
 # if BG_IMAGE_FROM_ROOT
@@ -518,12 +520,6 @@ rxvt_term::bg_render ()
         bg_flags |= BG_IS_VALID;
     }
 # endif
-
-  if (!(bg_flags & BG_IS_VALID))
-    {
-      delete bg_img;
-      bg_img = 0;
-    }
 
   scr_recolour (false);
   bg_flags |= BG_NEEDS_REFRESH;
