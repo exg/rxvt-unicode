@@ -502,7 +502,7 @@ rxvt_term::bg_render ()
 
   delete bg_img;
   bg_img = 0;
-  bg_flags &= BG_INHIBIT_RENDER;
+  bg_flags = 0;
 
 # if BG_IMAGE_FROM_ROOT
   if (option (Opt_transparent))
