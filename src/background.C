@@ -38,9 +38,6 @@ rxvt_term::bg_destroy ()
 # if BG_IMAGE_FROM_FILE
   fimage.destroy ();
 # endif
-
-  delete bg_img;
-  bg_img = 0;
 }
 
 bool

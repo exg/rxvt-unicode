@@ -228,6 +228,10 @@ rxvt_term::~rxvt_term ()
   bg_destroy ();
 #endif
 
+#if HAVE_IMG
+  delete bg_img;
+#endif
+
   if (display)
     {
       selection_clear ();
