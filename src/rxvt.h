@@ -1190,14 +1190,14 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
 # if BG_IMAGE_FROM_FILE
   rxvt_image fimage;
-  bool render_image (rxvt_image &image);
+  void render_image (rxvt_image &image);
 # endif
 
 # if BG_IMAGE_FROM_ROOT
   rxvt_img *root_img;
   image_effects root_effects;
 
-  bool render_root_image ();
+  void render_root_image ();
 # endif
 
   void tint_image (rxvt_img *img, rxvt_color &tint, bool tint_set, int shade);

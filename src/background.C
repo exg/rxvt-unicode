@@ -253,7 +253,7 @@ rxvt_image::set_geometry (const char *geom, bool update)
   return changed;
 }
 
-bool
+void
 rxvt_term::render_image (rxvt_image &image)
 {
   int image_width = image.img->w;
@@ -298,7 +298,7 @@ rxvt_term::render_image (rxvt_image &image)
           || y >= parent_height
           || x + w <= 0
           || y + h <= 0))
-    return false;
+    return;
 
   rxvt_img *img = image.img->scale (w, h);
 
@@ -316,8 +316,6 @@ rxvt_term::render_image (rxvt_image &image)
 
   delete bg_img;
   bg_img = img;
-
-  return true;
 }
 
 rxvt_image::rxvt_image ()
@@ -433,7 +431,7 @@ image_effects::set_shade (const char *shade_str)
  * the tiled portion of the root pixmap that is supposed to be covered by
  * our window.
  */
-bool
+void
 rxvt_term::render_root_image ()
 {
   /* root dimensions may change from call to call - but Display structure should
@@ -452,7 +450,7 @@ rxvt_term::render_root_image ()
   /* check if we are outside of the visible part of the virtual screen : */
   if (sx + parent_width <= 0 || sy + parent_height <= 0
       || sx >= root_width || sy >= root_height)
-    return 0;
+    return;
 
   while (sx < 0) sx += root_img->w;
   while (sy < 0) sy += root_img->h;
@@ -470,8 +468,6 @@ rxvt_term::render_root_image ()
 
   delete bg_img;
   bg_img = img;
-
-  return true;
 }
 # endif /* BG_IMAGE_FROM_ROOT */
 
@@ -490,8 +486,10 @@ rxvt_term::bg_render ()
 
 # if BG_IMAGE_FROM_ROOT
   if (root_img)
-    if (render_root_image ())
+    {
+      render_root_image ();
       bg_flags |= BG_IS_TRANSPARENT;
+    }
 # endif
 
 # if BG_IMAGE_FROM_FILE
