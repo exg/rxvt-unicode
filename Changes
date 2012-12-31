@@ -31,6 +31,9 @@ TODO: description into --help output?
 TODO: shade
 TODO: rxvt -help => (see rxvt-XXX(1))?
 
+	- fix build when perl is enabled and pixbuf and transparency
+	  are disabled.
+
 9.16 Thu Dec 27 11:56:43 CET 2012
 	- the "so much new stuff your eyes will pop out" release.
         - INCOMPATIBLE CHANGE: renamed urlLauncher resource to url-launcher.
