@@ -253,8 +253,8 @@ rxvt_image::set_geometry (const char *geom, bool update)
   return changed;
 }
 
-void
-rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y)
+bool
+rxvt_term::render_image (rxvt_image &image)
 {
   int image_width = image.img->w;
   int image_height = image.img->h;
@@ -262,6 +262,11 @@ rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y
   int parent_height = szHint.height;
   int h_scale = min (image.h_scale, 32767 * 100 / parent_width);
   int v_scale = min (image.v_scale, 32767 * 100 / parent_height);
+
+  int w;
+  int h;
+  int x;
+  int y;
 
   w = h_scale * parent_width / 100;
   h = v_scale * parent_height / 100;
@@ -287,20 +292,6 @@ rxvt_term::get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y
       x = make_align_position (image.h_align, parent_width, w);
       y = make_align_position (image.v_align, parent_height, h);
     }
-}
-
-bool
-rxvt_term::render_image (rxvt_image &image)
-{
-  int parent_width = szHint.width;
-  int parent_height = szHint.height;
-
-  int x = 0;
-  int y = 0;
-  int w = 0;
-  int h = 0;
-
-  get_image_geometry (image, w, h, x, y);
 
   if (!(image.flags & IM_ROOT_ALIGN)
       && (x >= parent_width
@@ -482,13 +473,6 @@ rxvt_term::render_root_image ()
 
   return true;
 }
-
-void
-rxvt_term::bg_set_root_pixmap ()
-{
-  delete root_img;
-  root_img = rxvt_img::new_from_root (this);
-}
 # endif /* BG_IMAGE_FROM_ROOT */
 
 void
@@ -536,7 +520,7 @@ rxvt_term::bg_init ()
       if (rs [Rs_shade])
         root_effects.set_shade (rs [Rs_shade]);
 
-      bg_set_root_pixmap ();
+      rxvt_img::new_from_root (this)->replace (root_img);
       XSelectInput (dpy, display->root, PropertyChangeMask);
       rootwin_ev.start (display, display->root);
     }

@@ -1858,7 +1858,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
 #if BG_IMAGE_FROM_ROOT
             if (option (Opt_transparent))
               {
-                bg_set_root_pixmap ();
+                rxvt_img::new_from_root (this)->replace (root_img);
                 update_background ();
               }
 #endif

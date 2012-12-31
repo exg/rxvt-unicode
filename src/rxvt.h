@@ -1190,7 +1190,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
 # if BG_IMAGE_FROM_FILE
   rxvt_image fimage;
-  void get_image_geometry (rxvt_image &image, int &w, int &h, int &x, int &y);
   bool render_image (rxvt_image &image);
 # endif
 
@@ -1198,7 +1197,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   rxvt_img *root_img;
   image_effects root_effects;
 
-  void bg_set_root_pixmap ();
   bool render_root_image ();
 # endif
 
