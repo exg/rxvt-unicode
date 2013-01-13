@@ -392,6 +392,7 @@ rxvt_term::scr_reset ()
 
               memcpy (dst.t, src.t, sizeof (text_t) * common_col);
               memcpy (dst.r, src.r, sizeof (rend_t) * common_col);
+              dst.l = common_col;
             }
 
           for (int row = prev_nrow; row < nrow; row++)

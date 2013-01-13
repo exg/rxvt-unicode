@@ -31,6 +31,9 @@ TODO: description into --help output?
 TODO: shade
 TODO: rxvt -help => (see rxvt-XXX(1))?
 
+	- fix regression that causes artifacts on scrolling if
+	  saveLines is 0 and the window is resized (reported by Bert
+	  Münnich).
 	- fix build when perl is enabled and pixbuf and transparency
 	  are disabled.
 
