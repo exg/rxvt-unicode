@@ -285,7 +285,8 @@ rxvt_term::scr_reset ()
 
           memcpy (swap_buf  [row].t, prev_swap_buf  [row].t, sizeof (text_t) * common_col);
           memcpy (swap_buf  [row].r, prev_swap_buf  [row].r, sizeof (rend_t) * common_col);
-          swap_buf [row].l = prev_swap_buf [row].l;
+          swap_buf [row].l = min (prev_swap_buf [row].l, ncol);
+          swap_buf [row].f = prev_swap_buf [row].f;
         }
 
       int p    = MOD (term_start + prev_nrow, prev_total_rows);  // previous row
