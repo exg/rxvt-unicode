@@ -1488,6 +1488,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void scr_blank_screen_mem (line_t &l, rend_t efs) const NOTHROW;
   void scr_kill_char (line_t &l, int col) const NOTHROW;
   int scr_scroll_text (int row1, int row2, int count) NOTHROW;
+  void copy_line (line_t &dst, line_t &src);
   void scr_reset ();
   void scr_release () NOTHROW;
   void scr_clear (bool really = false) NOTHROW;

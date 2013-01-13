@@ -190,6 +190,16 @@ rxvt_term::scr_alloc () NOTHROW
   row_buf   = swap_buf  + nrow;
 }
 
+void
+rxvt_term::copy_line (line_t &dst, line_t &src)
+{
+  scr_blank_screen_mem (dst, DEFAULT_RSTYLE);
+  dst.l = min (src.l, ncol);
+  memcpy (dst.t, src.t, sizeof (text_t) * dst.l);
+  memcpy (dst.r, src.r, sizeof (rend_t) * dst.l);
+  dst.f = src.f;
+}
+
 void ecb_cold
 rxvt_term::scr_reset ()
 {
@@ -231,8 +241,6 @@ rxvt_term::scr_reset ()
   line_t *prev_drawn_buf = drawn_buf;
   line_t *prev_swap_buf  = swap_buf;
   line_t *prev_row_buf   = row_buf;
-
-  int common_col = min (prev_ncol, ncol);
 
   scr_alloc ();
 
@@ -277,16 +285,8 @@ rxvt_term::scr_reset ()
 
       for (int row = min (nrow, prev_nrow); row--; )
         {
-          scr_blank_screen_mem (drawn_buf [row], DEFAULT_RSTYLE);
-          scr_blank_screen_mem (swap_buf  [row], DEFAULT_RSTYLE);
-
-          memcpy (drawn_buf [row].t, prev_drawn_buf [row].t, sizeof (text_t) * common_col);
-          memcpy (drawn_buf [row].r, prev_drawn_buf [row].r, sizeof (rend_t) * common_col);
-
-          memcpy (swap_buf  [row].t, prev_swap_buf  [row].t, sizeof (text_t) * common_col);
-          memcpy (swap_buf  [row].r, prev_swap_buf  [row].r, sizeof (rend_t) * common_col);
-          swap_buf [row].l = min (prev_swap_buf [row].l, ncol);
-          swap_buf [row].f = prev_swap_buf [row].f;
+          copy_line (drawn_buf [row], prev_drawn_buf [row]);
+          copy_line (swap_buf [row], prev_swap_buf [row]);
         }
 
       int p    = MOD (term_start + prev_nrow, prev_total_rows);  // previous row
@@ -391,12 +391,7 @@ rxvt_term::scr_reset ()
               line_t &src = prev_row_buf [MOD (term_start + row, prev_total_rows)];
               line_t &dst = row_buf [row];
 
-              scr_blank_screen_mem (dst, DEFAULT_RSTYLE);
-
-              memcpy (dst.t, src.t, sizeof (text_t) * common_col);
-              memcpy (dst.r, src.r, sizeof (rend_t) * common_col);
-              dst.l = min (src.l, ncol);
-              dst.f = src.f;
+              copy_line (dst, src);
             }
 
           for (int row = prev_nrow; row < nrow; row++)
