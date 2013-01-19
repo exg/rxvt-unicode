@@ -819,6 +819,16 @@ Example: the same, but specify the colour by component.
       $_[1]->tint ($_[0])
    }
 
+=item shade $factor, $img
+
+Shade the image by the given factor.
+
+=cut
+
+   sub shade($$) {
+      $_[1]->shade ($_[0])
+   }
+
 =item contrast $factor, $img
 
 =item contrast $r, $g, $b, $img

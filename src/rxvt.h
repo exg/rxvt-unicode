@@ -1200,8 +1200,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void render_root_image ();
 # endif
 
-  void tint_image (rxvt_img *img, rxvt_color &tint, bool tint_set, int shade);
-
   ev_tstamp bg_valid_since;
 
   bool bg_window_size_sensitive ();

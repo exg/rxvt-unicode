@@ -461,7 +461,14 @@ rxvt_term::render_root_image ()
     img->blur (root_effects.h_blurRadius, root_effects.v_blurRadius)->replace (img);
 
   if (root_effects.need_tint ())
-    tint_image (img, root_effects.tint, root_effects.tint_set, root_effects.shade);
+    {
+      rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
+
+      if (root_effects.tint_set)
+        root_effects.tint.get (c);
+      rxvt_img::nv factor = root_effects.shade / 100. - 1.;
+      img->shade (factor, c)->replace (img);
+    }
 
   XRenderPictFormat *format = XRenderFindVisualFormat (dpy, visual);
   img->convert_format (format, pix_colors [Color_bg])->replace (img);
@@ -532,39 +539,6 @@ rxvt_term::bg_init ()
         update_background ();
     }
 #endif
-}
-
-void
-rxvt_term::tint_image (rxvt_img *img, rxvt_color &tint, bool tint_set, int shade)
-{
-  rgba c (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC);
-
-  if (tint_set)
-    tint.get (c);
-
-  if (shade > 100)
-    {
-      c.r = c.r * (200 - shade) / 100;
-      c.g = c.g * (200 - shade) / 100;
-      c.b = c.b * (200 - shade) / 100;
-    }
-  else
-    {
-      c.r = c.r * shade / 100;
-      c.g = c.g * shade / 100;
-      c.b = c.b * shade / 100;
-    }
-
-  img->contrast (c.r, c.g, c.b, c.a);
-
-  if (shade > 100)
-    {
-      c.a = 0xffff;
-      c.r =
-      c.g =
-      c.b = 0xffff * (shade - 100) / 100;
-      img->brightness (c.r, c.g, c.b, c.a);
-    }
 }
 
 #endif /* HAVE_BG_PIXMAP */

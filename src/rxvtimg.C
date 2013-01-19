@@ -917,6 +917,40 @@ rxvt_img::tint (const rgba &c)
 }
 
 rxvt_img *
+rxvt_img::shade (nv factor, rgba c)
+{
+  clamp_it (factor, -1., 1.);
+  factor++;
+
+  if (factor > 1)
+    {
+      c.r = c.r * (2 - factor);
+      c.g = c.g * (2 - factor);
+      c.b = c.b * (2 - factor);
+    }
+  else
+    {
+      c.r = c.r * factor;
+      c.g = c.g * factor;
+      c.b = c.b * factor;
+    }
+
+  rxvt_img *img = this->tint (c);
+
+  if (factor > 1)
+    {
+      c.a = 0xffff;
+      c.r =
+      c.g =
+      c.b = 0xffff * (factor - 1);
+
+      img->brightness (c.r, c.g, c.b, c.a);
+    }
+
+  return img;
+}
+
+rxvt_img *
 rxvt_img::filter (const char *name, int nparams, nv *params)
 {
   composer cc (this);

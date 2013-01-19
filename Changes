@@ -28,9 +28,9 @@ TODO: pack rxvt_fatal messages into the exception object
 TODO: load must not cache, but global image cache must be cleaned
 TODO: provide something like % for easy access for parse_keysym
 TODO: description into --help output?
-TODO: shade
 TODO: rxvt -help => (see rxvt-XXX(1))?
 
+	- add shade operator in background perl extension
 	- fix regression that causes artifacts on scrolling if
 	  saveLines is 0 and the window is resized (reported by Bert
 	  Münnich).

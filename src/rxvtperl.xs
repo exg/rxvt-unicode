@@ -2389,6 +2389,9 @@ rxvt_img::tint (SV *c)
 	C_ARGS: cc
 
 rxvt_img *
+rxvt_img::shade (rxvt_img::nv factor)
+
+rxvt_img *
 rxvt_img::filter (octet_string name, SV *params = &PL_sv_undef)
 	CODE:
         rxvt_img::nv *vparams = 0;

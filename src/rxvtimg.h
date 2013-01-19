@@ -130,6 +130,7 @@ struct rxvt_img
   rxvt_img *rotate (int cx, int cy, nv phi);
   rxvt_img *convert_format (XRenderPictFormat *format, const rgba &bg);
   rxvt_img *tint (const rgba &c);
+  rxvt_img *shade (nv factor, rgba c = rgba (rgba::MAX_CC, rgba::MAX_CC, rgba::MAX_CC));
   rxvt_img *filter (const char *name, int nparams = 0, nv *params = 0);
   rxvt_img *muladd (nv mul, nv add); // general multiply and add, implemented as the biggest hack ever :/
 
