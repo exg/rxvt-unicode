@@ -152,6 +152,16 @@ rxvt_term::scr_kill_char (line_t &l, int col) const NOTHROW
   } while (col < ncol && l.t[col] == NOCHAR);
 }
 
+// set the rendition of a single wide character beginning at the given column
+void
+rxvt_term::scr_set_char_rend (line_t &l, int col, rend_t rend)
+{
+  do {
+    l.r[col] = rend;
+    col++;
+  } while (col < ncol && l.t[col] == NOCHAR);
+}
+
 /* ------------------------------------------------------------------------- *
  *                          SCREEN INITIALISATION                            *
  * ------------------------------------------------------------------------- */
@@ -2034,12 +2044,10 @@ rxvt_term::scr_refresh () NOTHROW
   int16_t col, row,   /* column/row we're processing               */
           ocrow;      /* old cursor row                            */
   int i;              /* tmp                                       */
-#ifndef NO_CURSORCOLOR
-  rend_t cc1;         /* store colours at cursor position (s)      */
-#endif
-  rend_t *crp;        // cursor rendition pointer
   rend_t ccol1,  /* Cursor colour       */
          ccol2;  /* Cursor colour2      */
+  rend_t cur_rend;
+  int cur_col;
 
   want_refresh = 0;        /* screen is current */
 
@@ -2088,10 +2096,10 @@ rxvt_term::scr_refresh () NOTHROW
         while (col && ROW(screen.cur.row).t[col] == NOCHAR)
           col--;
 
-        crp = &ROW(screen.cur.row).r[col];
+        cur_rend = ROW(screen.cur.row).r[col];
+        cur_col = col;
 
 #ifndef NO_CURSORCOLOR
-        cc1 = *crp & (RS_fgMask | RS_bgMask);
         if (ISSET_PIXCOLOR (Color_cursor))
           ccol1 = Color_cursor;
         else
@@ -2115,14 +2123,18 @@ rxvt_term::scr_refresh () NOTHROW
 
         if (focus)
           {
+            rend_t rend = cur_rend;
+
             if (option (Opt_cursorUnderline))
-              *crp ^= RS_Uline;
+              rend ^= RS_Uline;
             else
               {
-                *crp ^= RS_RVid;
-                *crp = SET_FGCOLOR (*crp, ccol1);
-                *crp = SET_BGCOLOR (*crp, ccol2);
+                rend ^= RS_RVid;
+                rend = SET_FGCOLOR (rend, ccol1);
+                rend = SET_BGCOLOR (rend, ccol2);
               }
+
+            scr_set_char_rend (ROW(screen.cur.row), cur_col, rend);
           }
       }
 
@@ -2451,17 +2463,7 @@ rxvt_term::scr_refresh () NOTHROW
   if (showcursor)
     {
       if (focus)
-        {
-          if (option (Opt_cursorUnderline))
-            *crp ^= RS_Uline;
-          else
-            {
-              *crp ^= RS_RVid;
-#ifndef NO_CURSORCOLOR
-              *crp = (*crp & ~ (RS_fgMask | RS_bgMask)) | cc1;
-#endif
-            }
-        }
+        scr_set_char_rend (ROW(screen.cur.row), cur_col, cur_rend);
       else if (oldcursor.row >= 0)
         {
           int cursorwidth = 1;
