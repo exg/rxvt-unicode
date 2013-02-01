@@ -1862,9 +1862,7 @@ rxvt_term::rootwin_cb (XEvent &ev)
                 update_background ();
               }
 #endif
-#if ENABLE_PERL
             HOOK_INVOKE ((this, HOOK_ROOTPMAP_CHANGE, DT_END));
-#endif
           }
 
         break;
