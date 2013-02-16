@@ -35,7 +35,6 @@ TODO: rxvt -help => (see rxvt-XXX(1))?
           characters to avoid artifacts (reproted by Tiago Resende).
 	- fix redraw bug that may occur if the character in the cursor cell has
 	  width > 1 (reported by Tiago Resende).
-	- add shade operator in background perl extension
 	- fix regression that causes artifacts on scrolling if
 	  saveLines is 0 and the window is resized (reported by Bert
 	  Münnich).
