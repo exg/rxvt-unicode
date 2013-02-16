@@ -1546,6 +1546,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void scr_dump (int fd) NOTHROW;
 
   void selection_check (int check_more) NOTHROW;
+  void selection_changed () NOTHROW; /* sets want_refresh, corrects coordinates */
   void selection_request (Time tm, int selnum = Sel_Primary) NOTHROW;
   void selection_clear (bool clipboard = false) NOTHROW;
   void selection_make (Time tm);

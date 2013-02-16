@@ -2697,6 +2697,20 @@ rxvt_term::selection_check (int check_more) NOTHROW
     CLEAR_ALL_SELECTION ();
 }
 
+void
+rxvt_term::selection_changed () NOTHROW
+{
+  line_t &r1 = ROW (selection.beg.row);
+  while (selection.beg.col >    0 && r1.t [selection.beg.col] == NOCHAR)
+    --selection.beg.col;
+
+  line_t &r2 = ROW (selection.end.row);
+  while (selection.end.col < r2.l && r2.t [selection.end.col] == NOCHAR)
+    ++selection.end.col;
+
+  want_refresh = 1;
+}
+
 /* ------------------------------------------------------------------------- */
 /*
  * Paste a selection direct to the command fd
@@ -3007,7 +3021,7 @@ rxvt_term::selection_start_colrow (int col, int row) NOTHROW
  */
 
 /* what do we want: spaces/tabs are delimiters or cutchars or non-cutchars */
-#define DELIMIT_TEXT(x) 		\
+#define DELIMIT_TEXT(x)		\
     (unicode::is_space (x) ? 2 : (x) <= 0xff && !!strchr (rs[Rs_cutchars], (x)))
 #define DELIMIT_REND(x)        1
 
@@ -3138,8 +3152,6 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
   enum {
     LEFT, RIGHT
   } closeto = RIGHT;
-
-  want_refresh = 1;
 
   switch (selection.op)
     {
@@ -3329,6 +3341,8 @@ rxvt_term::selection_extend_colrow (int32_t col, int32_t row, int button3, int b
   if (selection.rect && selection.beg.col > selection.end.col)
     ::swap (selection.beg.col, selection.end.col);
 #endif
+
+  selection_changed ();
 }
 
 #if !ENABLE_MINIMAL

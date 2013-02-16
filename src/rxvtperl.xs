@@ -1881,7 +1881,7 @@ rxvt_term::screen_cur (...)
               {
                 THIS->selection.screen = THIS->current_screen;
 
-                THIS->want_refresh = 1;
+                THIS->selection_changed ();
                 THIS->refresh_check ();
               }
           }
