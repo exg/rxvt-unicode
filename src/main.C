@@ -1374,7 +1374,7 @@ rxvt_term::im_get_ic (const char *modifiers)
 
   set_environ (envv);
 
-  if (! ((p = XSetLocaleModifiers (modifiers)) && *p))
+  if (!((p = XSetLocaleModifiers (modifiers)) && *p))
     return false;
 
   input_method = display->get_xim (locale, modifiers);
