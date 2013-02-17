@@ -241,9 +241,12 @@ rxvt_term::~rxvt_term ()
       im_destroy ();
 #endif
       scrollBar.destroy ();
-      if (gc)   XFreeGC (dpy, gc);
+
+      if (gc)
+        XFreeGC (dpy, gc);
 
       delete drawable;
+
       // destroy all windows
       if (parent)
         XDestroyWindow (dpy, parent);
