@@ -2399,20 +2399,18 @@ rxvt_img::filter (octet_string name, SV *params = &PL_sv_undef)
 
         if (SvOK (params))
 	  {
-            // we overlay rxvt_temp_buf, what a hack
-            assert (sizeof (rxvt_img::nv) >= sizeof (int));
-
             if (!SvROK (params) || SvTYPE (SvRV (params)) != SVt_PVAV)
               croak ("rxvt_img::filter: params must be an array reference with parameter values");
 
             nparams = av_len ((AV *)SvRV (params)) + 1;
-            vparams = rxvt_temp_buf<rxvt_img::nv> (nparams);
+            vparams = (rxvt_img::nv *)malloc (nparams * sizeof (rxvt_img::nv));
 
             for (int i = 0; i < nparams; ++i)
               vparams [i] = SvNV (*av_fetch ((AV *)SvRV (params), i, 1));
           }
 
         RETVAL = THIS->filter (name, nparams, vparams);
+        free (vparams);
 	OUTPUT:
         RETVAL
 
