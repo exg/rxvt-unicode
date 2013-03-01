@@ -535,7 +535,7 @@ rxvt_img::blur (int rh, int rv)
   Display *dpy = s->dpy;
   int size = max (rh, rv) * 2 + 1;
   nv *kernel = (nv *)malloc (size * sizeof (nv));
-  XFixed *params = (XFixed *)malloc ((size + 2) * sizeof (XFixed));
+  XFixed *params = rxvt_temp_buf<XFixed> (size + 2);
   rxvt_img *img = new_empty ();
 
   XRenderPictureAttributes pa;
@@ -580,7 +580,6 @@ rxvt_img::blur (int rh, int rv)
     }
 
   free (kernel);
-  free (params);
 
   XRenderFreePicture (dpy, src);
   XRenderFreePicture (dpy, dst);
