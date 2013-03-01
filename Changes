@@ -33,8 +33,8 @@ TODO: rxvt -help => (see rxvt-XXX(1))?
 	- add shade operator in background perl extension.
         - avoid starting or ending the selection in the middle of wide
           characters to avoid artifacts (reproted by Tiago Resende).
-	- fix redraw bug that may occur if the character in the cursor cell has
-	  width > 1 (reported by Tiago Resende).
+	- fix artifacts that may occur if the character in the cursor
+	  cell has width > 1 (reported by Tiago Resende).
 	- fix regression that causes artifacts on scrolling if
 	  saveLines is 0 and the window is resized (reported by Bert
 	  Münnich).
