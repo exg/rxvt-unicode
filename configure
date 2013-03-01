@@ -7760,12 +7760,6 @@ $as_echo "#define XRENDER 1" >>confdefs.h
 $as_echo "#define ENABLE_TRANSPARENCY 1" >>confdefs.h
 
   fi
-
-  if test x$support_pixbuf = xyes; then
-
-$as_echo "#define BG_IMAGE_FROM_FILE 1" >>confdefs.h
-
-  fi
 fi
 
 if test x$support_styles = xyes; then
