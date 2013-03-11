@@ -627,10 +627,8 @@ if test x$support_xft = xyes && test x$rxvt_have_xrender = xyes; then
 
   save_LIBS="$LIBS"
   LIBS="$LIBS $X_LIBS"
-  AC_CHECK_HEADERS(X11/Xft/Xft.h,,[support_xft=no])
-  AC_CHECK_LIB(Xft,XftDrawString32,:,[support_xft=no])
-  AC_CHECK_HEADERS(fontconfig/fontconfig.h,,[support_xft=no])
-  AC_CHECK_LIB(fontconfig,FcPatternGet,:,[support_xft=no])
+  AC_CHECK_HEADERS(X11/Xft/Xft.h fontconfig/fontconfig.h,,[support_xft=no])
+  AC_CHECK_FUNCS(XftDrawString32 FcPatternGet,,[support_xft=no])
   LIBS="$save_LIBS"
 
   if test x$support_xft = xyes; then
