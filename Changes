@@ -30,6 +30,8 @@ TODO: provide something like % for easy access for parse_keysym
 TODO: description into --help output?
 TODO: rxvt -help => (see rxvt-XXX(1))?
 
+	- fix regression that caused artifacts on resize.
+
 9.17 Fri Mar  1 13:46:08 CET 2013
 	- add shade operator in background perl extension.
         - avoid starting or ending the selection in the middle of wide
