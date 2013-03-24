@@ -256,9 +256,6 @@ rxvt_term::scr_reset ()
 
   if (!prev_row_buf)
     {
-      /*
-       * first time called (or after scr_release) so just malloc everything: don't rely on realloc
-       */
       top_row    = 0;
       term_start = 0;
 
