@@ -2050,6 +2050,7 @@ rxvt_term::scr_refresh () NOTHROW
          ccol2;  /* Cursor colour2      */
   rend_t cur_rend;
   int cur_col;
+  int cursorwidth;
 
   want_refresh = 0;        /* screen is current */
 
@@ -2097,6 +2098,11 @@ rxvt_term::scr_refresh () NOTHROW
 
         while (col && ROW(screen.cur.row).t[col] == NOCHAR)
           col--;
+
+        cursorwidth = 1;
+        while (col + cursorwidth < ncol
+               && ROW(screen.cur.row).t[col + cursorwidth] == NOCHAR)
+          cursorwidth++;
 
         cur_rend = ROW(screen.cur.row).r[col];
         cur_col = col;
@@ -2445,6 +2451,10 @@ rxvt_term::scr_refresh () NOTHROW
 
           if (ecb_unlikely (rend & RS_Uline && font->descent > 1 && fore != back))
             {
+              if (showcursor && focus && row == screen.cur.row
+                  && IN_RANGE_EXC (col, cur_col, cur_col + cursorwidth))
+                XSetForeground (dpy, gc, pix_colors[ccol1]);
+              else
 #if ENABLE_FRILLS
               if (ISSET_PIXCOLOR (Color_underline))
                 XSetForeground (dpy, gc, pix_colors[Color_underline]);
@@ -2468,20 +2478,10 @@ rxvt_term::scr_refresh () NOTHROW
         scr_set_char_rend (ROW(screen.cur.row), cur_col, cur_rend);
       else if (oldcursor.row >= 0)
         {
-          int cursorwidth = 1;
-          int col = oldcursor.col;
-
-          while (col && ROW(screen.cur.row).t[col] == NOCHAR)
-            col--;
-
-          while (col + cursorwidth < ncol
-                 && drawn_buf[oldcursor.row].t[col + cursorwidth] == NOCHAR)
-            cursorwidth++;
-
           XSetForeground (dpy, gc, pix_colors[ccol1]);
 
           XDrawRectangle (dpy, vt, gc,
-                          Col2Pixel (col),
+                          Col2Pixel (cur_col),
                           Row2Pixel (oldcursor.row),
                           (unsigned int) (Width2Pixel (cursorwidth) - 1),
                           (unsigned int) (Height2Pixel (1) - 1));
