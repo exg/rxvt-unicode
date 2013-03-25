@@ -2478,12 +2478,7 @@ rxvt_term::scr_refresh () NOTHROW
                  && drawn_buf[oldcursor.row].t[col + cursorwidth] == NOCHAR)
             cursorwidth++;
 
-#ifndef NO_CURSORCOLOR
-          if (ISSET_PIXCOLOR (Color_cursor))
-            XSetForeground (dpy, gc, pix_colors[Color_cursor]);
-          else
-#endif
-            XSetForeground (dpy, gc, pix_colors[ccol1]);
+          XSetForeground (dpy, gc, pix_colors[ccol1]);
 
           XDrawRectangle (dpy, vt, gc,
                           Col2Pixel (col),
