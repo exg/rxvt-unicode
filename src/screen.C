@@ -2085,8 +2085,6 @@ rxvt_term::scr_refresh () NOTHROW
    * C: set the cursor character (s)
    */
   {
-    bool setoldcursor;
-
 #ifdef CURSOR_BLINK
     if (hidden_cursor)
       showcursor = 0;
@@ -2147,7 +2145,6 @@ rxvt_term::scr_refresh () NOTHROW
       }
 
     /* make sure no outline cursor is left around */
-    setoldcursor = 0;
     if (ocrow != -1)
       {
         if (screen.cur.row - view_start != ocrow
@@ -2156,26 +2153,19 @@ rxvt_term::scr_refresh () NOTHROW
             if (ocrow < nrow
                 && oldcursor.col < ncol)
               drawn_buf[ocrow].r[oldcursor.col] ^= (RS_RVid | RS_Uline);
-
-            if (focus || !showcursor)
-              oldcursor.row = -1;
-            else
-              setoldcursor = 1;
           }
       }
-    else if (!focus)
-      setoldcursor = 1;
 
-    if (setoldcursor)
+    // save the current cursor coordinates if the cursor is visible
+    // and the window is unfocused, so as to clear the outline cursor
+    // in the next refresh if the cursor moves
+    if (showcursor && !focus && screen.cur.row - view_start < nrow)
       {
-        if (screen.cur.row - view_start >= nrow)
-          oldcursor.row = -1;
-        else
-          {
-            oldcursor.row = screen.cur.row - view_start;
-            oldcursor.col = screen.cur.col;
-          }
+        oldcursor.row = screen.cur.row - view_start;
+        oldcursor.col = screen.cur.col;
       }
+    else
+      oldcursor.row = -1;
   }
 
 #ifndef NO_SLOW_LINK_SUPPORT
