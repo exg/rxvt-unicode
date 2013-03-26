@@ -2801,7 +2801,7 @@ static const unsigned char csi_defaults[] =
 void ecb_hot
 rxvt_term::process_csi_seq ()
 {
-  unicode_t ch, priv, i;
+  unicode_t ch, priv, prev_ch, i;
   unsigned int nargs, p;
   int n, ndef;
   int arg[ESC_ARGS] = { };
@@ -2817,6 +2817,7 @@ rxvt_term::process_csi_seq ()
       ch = cmd_getc ();
     }
 
+  prev_ch = 0;
   /* read any numerical arguments */
   for (n = -1; ch < CSI_ICH; )
     {
@@ -2836,6 +2837,7 @@ rxvt_term::process_csi_seq ()
       else if (IS_CONTROL (ch))
         process_nonprinting (ch);
 
+      prev_ch = ch;
       ch = cmd_getc ();
     }
 
@@ -3077,6 +3079,11 @@ rxvt_term::process_csi_seq ()
           scr_insert_mode (1);
         else if (arg[0] == 20)
           priv_modes |= PrivMode_LFNL;
+        break;
+
+      case CSI_71:		// DESCUSR: set cursor style
+        if (prev_ch == ' ')
+          set_cursor_style (arg[0]);
         break;
 
         /*
@@ -3992,6 +3999,22 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
 #endif
         }
     }
+}
+
+void
+rxvt_term::set_cursor_style (int style)
+{
+  if (!IN_RANGE_INC (style, 0, 4))
+    return;
+
+  set_option (Opt_cursorUnderline, style >= 3);
+
+#ifdef CURSOR_BLINK
+  set_option (Opt_cursorBlink, !style || (style & 1));
+  cursor_blink_reset ();
+#endif
+
+  want_refresh = 1;
 }
 /*}}} */
 

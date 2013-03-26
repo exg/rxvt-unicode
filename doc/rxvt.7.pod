@@ -1282,7 +1282,7 @@ Switch to Alternate Character Set
 Shift In (Ctrl-O), invokes the G0 character set (the default).
 Switch to Standard Character Set
 
-=item B<< C<SPC> >>
+=item B<< C<SP> >>
 
 Space Character
 
@@ -1629,6 +1629,20 @@ Device Status Report (DSR)
 	B<< C<Ps = 6> >>	Report Cursor Position (CPR) [row;column] as B<< C<ESC [ r ; c R> >>
 	B<< C<Ps = 7> >>	Request Display Name
 	B<< C<Ps = 8> >>	Request Version Number (place in window title)
+
+=end table
+
+=item B<< C<ESC [ Ps SP q> >>
+
+Set Cursor Style (DESCUSR)
+
+=begin table
+
+	B<< C<Ps = 0> >>	Blink Block
+	B<< C<Ps = 1> >>	Blink Block
+	B<< C<Ps = 2> >>	Steady Block
+	B<< C<Ps = 3> >>	Blink Underline
+	B<< C<Ps = 4> >>	Steady Underline
 
 =end table
 

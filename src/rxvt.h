@@ -1402,6 +1402,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   int privcases (int mode, unsigned long bit);
   void process_terminal_mode (int mode, int priv, unsigned int nargs, const int *arg);
   void process_sgr_mode (unsigned int nargs, const int *arg);
+  void set_cursor_style (int style);
   // init.C
   void init (stringvec *argv, stringvec *envv);
   void init (int argc, const char *const *argv, const char *const *envv);
