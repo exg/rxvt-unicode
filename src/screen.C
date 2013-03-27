@@ -717,7 +717,7 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) NOTHROW
       if (option (Opt_scrollWithBuffer)
           && view_start != 0
           && view_start != -saveLines)
-        scr_page (UP, count);
+        scr_page (count);
 
       if (SHOULD_INVOKE (HOOK_SCROLL_BACK))
         HOOK_INVOKE ((this, HOOK_SCROLL_BACK, DT_INT, count, DT_INT, top_row, DT_END));
@@ -1912,13 +1912,9 @@ rxvt_term::scr_move_to (int y, int len) NOTHROW
  * direction should be UP or DN
  */
 bool
-rxvt_term::scr_page (enum page_dirn direction, int nlines) NOTHROW
+rxvt_term::scr_page (int nlines) NOTHROW
 {
-  int new_view_start =
-    direction == UP ? view_start - nlines
-                    : view_start + nlines;
-
-  return scr_changeview (new_view_start);
+  return scr_changeview (view_start - nlines);
 }
 
 bool

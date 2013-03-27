@@ -512,12 +512,12 @@ rxvt_term::key_press (XKeyEvent &ev)
 
               if (keysym == XK_Prior)
                 {
-                  scr_page (UP, lnsppg);
+                  scr_page (lnsppg);
                   return;
                 }
               else if (keysym == XK_Next)
                 {
-                  scr_page (DN, lnsppg);
+                  scr_page (-lnsppg);
                   return;
                 }
             }
@@ -526,12 +526,12 @@ rxvt_term::key_press (XKeyEvent &ev)
             {
               if (keysym == XK_Up)
                 {
-                  scr_page (UP, 1);
+                  scr_page (1);
                   return;
                 }
               else if (keysym == XK_Down)
                 {
-                  scr_page (DN, 1);
+                  scr_page (-1);
                   return;
                 }
             }

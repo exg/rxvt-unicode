@@ -402,9 +402,9 @@ enum {
 
 /* modes for rxvt_term::scr_page () - scroll page. used by scrollbar window */
 enum page_dirn {
-  UP,
-  DN,
-  NO_DIR,
+  DN     = -1,
+  NO_DIR =  0,
+  UP     =  1,
 };
 
 /* arguments for rxvt_term::scr_change_screen () */
@@ -1537,7 +1537,11 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void scr_charset_choose (int set) NOTHROW;
   void scr_charset_set (int set, unsigned int ch) NOTHROW;
   void scr_move_to (int y, int len) NOTHROW;
-  bool scr_page (enum page_dirn direction, int nlines) NOTHROW;
+  bool scr_page (int nlines) NOTHROW;
+  bool scr_page (enum page_dirn direction, int nlines) NOTHROW
+  {
+    scr_page (direction * nlines);
+  }
   bool scr_changeview (int new_view_start) NOTHROW;
   void scr_bell () NOTHROW;
   void scr_printscreen (int fullhist) NOTHROW;
