@@ -1242,20 +1242,16 @@ rxvt_term::scr_gotorc (int row, int col, int relative) NOTHROW
 void
 rxvt_term::scr_index (enum page_dirn direction) NOTHROW
 {
-  int dirn;
-
   want_refresh = 1;
   ZERO_SCROLLBACK ();
-
-  dirn = ((direction == UP) ? 1 : -1);
 
   screen.flags &= ~Screen_WrapNext;
 
   if ((screen.cur.row == screen.bscroll && direction == UP)
       || (screen.cur.row == screen.tscroll && direction == DN))
-    scr_scroll_text (screen.tscroll, screen.bscroll, dirn);
+    scr_scroll_text (screen.tscroll, screen.bscroll, direction);
   else
-    screen.cur.row += dirn;
+    screen.cur.row += direction;
 
   clamp_it (screen.cur.row, 0, nrow - 1);
   selection_check (0);
