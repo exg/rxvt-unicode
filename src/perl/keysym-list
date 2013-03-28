@@ -10,7 +10,7 @@ keysym-list - implement the "list" keysym expansion.
 
 =head1 DESCRIPTION
 
-The "list" keysym expansion was formerly part od the rxvt-unicode core,
+The "list" keysym expansion was formerly part of the rxvt-unicode core,
 and has been moved into this extension for backwards compatibility. You
 shouldn't use this extension except for compatibility with old
 configurations.
