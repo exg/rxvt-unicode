@@ -2212,7 +2212,7 @@ rxvt_term::button_release (XButtonEvent &ev)
 # ifdef MOUSE_SLIP_WHEELING
               if (ev.state & ControlMask)
                 {
-                  mouse_slip_wheel_speed += v ? -1 : 1;
+                  mouse_slip_wheel_speed += v;
                   if (mouse_slip_wheel_speed < -nrow) mouse_slip_wheel_speed = -nrow;
                   if (mouse_slip_wheel_speed > +nrow) mouse_slip_wheel_speed = +nrow;
 
