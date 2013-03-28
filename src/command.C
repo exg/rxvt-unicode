@@ -2197,22 +2197,22 @@ rxvt_term::button_release (XButtonEvent &ev)
           case Button4:
           case Button5:
             {
-              int i;
-              page_dirn v;
+              int lines;
+              page_dirn dirn;
 
-              v = ev.button == Button4 ? UP : DN;
+              dirn = ev.button == Button4 ? UP : DN;
 
               if (ev.state & ShiftMask)
-                i = 1;
+                lines = 1;
               else if (option (Opt_mouseWheelScrollPage))
-                i = nrow - 1;
+                lines = nrow - 1;
               else
-                i = 5;
+                lines = 5;
 
 # ifdef MOUSE_SLIP_WHEELING
               if (ev.state & ControlMask)
                 {
-                  mouse_slip_wheel_speed += v;
+                  mouse_slip_wheel_speed += dirn;
                   if (mouse_slip_wheel_speed < -nrow) mouse_slip_wheel_speed = -nrow;
                   if (mouse_slip_wheel_speed > +nrow) mouse_slip_wheel_speed = +nrow;
 
@@ -2222,7 +2222,7 @@ rxvt_term::button_release (XButtonEvent &ev)
               else
 # endif
                 {
-                  scr_page (v, i);
+                  scr_page (dirn, lines);
                   scrollBar.show (1);
                 }
             }
