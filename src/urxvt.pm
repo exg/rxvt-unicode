@@ -1697,11 +1697,10 @@ sub line {
 sub urxvt::line::t {
    my ($self) = @_;
 
-   if (@_ > 1)
-     {
-       $self->{term}->ROW_t ($_, $_[1], 0, ($_ - $self->{beg}) * $self->{ncol}, $self->{ncol})
-          for $self->{beg} .. $self->{end};
-     }
+   if (@_ > 1) {
+      $self->{term}->ROW_t ($_, $_[1], 0, ($_ - $self->{beg}) * $self->{ncol}, $self->{ncol})
+         for $self->{beg} .. $self->{end};
+   }
 
    defined wantarray &&
       substr +(join "", map $self->{term}->ROW_t ($_), $self->{beg} .. $self->{end}),
@@ -1711,11 +1710,10 @@ sub urxvt::line::t {
 sub urxvt::line::r {
    my ($self) = @_;
 
-   if (@_ > 1)
-     {
-       $self->{term}->ROW_r ($_, $_[1], 0, ($_ - $self->{beg}) * $self->{ncol}, $self->{ncol})
-          for $self->{beg} .. $self->{end};
-     }
+   if (@_ > 1) {
+      $self->{term}->ROW_r ($_, $_[1], 0, ($_ - $self->{beg}) * $self->{ncol}, $self->{ncol})
+         for $self->{beg} .. $self->{end};
+   }
 
    if (defined wantarray) {
       my $rend = [
