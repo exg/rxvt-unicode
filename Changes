@@ -30,9 +30,6 @@ TODO: provide something like % for easy access for parse_keysym
 TODO: description into --help output?
 TODO: rxvt -help => (see rxvt-XXX(1))?
 
-	- fix regression that caused the core double-click word
-	  selection to erroneously include a tab on the left of the
-	  selected word.
 	- add support for the set cursor style (DECSCUSR) control
 	  function.
 	- honour cursorColor also when the cursor style is underline.

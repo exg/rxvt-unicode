@@ -3074,14 +3074,6 @@ rxvt_term::selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, r
 
   if (dirn == DN)
     col++;                  /* put us on one past the end */
-  else
-    {
-      // if the delimiter on the left has width > 1 col points to the
-      // first NOCHAR in the delimiter cell and so we must move it to the
-      // beginning of the next cell.
-      while (ROW(row).t[col] == NOCHAR)
-        col++;
-    }
 
   /* Poke the values back in */
   ret->row = row;
