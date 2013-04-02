@@ -2680,8 +2680,8 @@ void
 rxvt_term::selection_changed () NOTHROW
 {
   line_t &r1 = ROW (selection.beg.row);
-  while (selection.beg.col >    0 && r1.t [selection.beg.col] == NOCHAR)
-    --selection.beg.col;
+  while (selection.beg.col < r1.l && r1.t [selection.beg.col] == NOCHAR)
+    ++selection.beg.col;
 
   line_t &r2 = ROW (selection.end.row);
   while (selection.end.col < r2.l && r2.t [selection.end.col] == NOCHAR)
