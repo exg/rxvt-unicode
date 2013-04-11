@@ -541,12 +541,12 @@ rxvt_term::key_press (XKeyEvent &ev)
             {
               if (keysym == XK_Home)
                 {
-                  scr_move_to (0, 1);
+                  scr_changeview (top_row);
                   return;
                 }
               else if (keysym == XK_End)
                 {
-                  scr_move_to (1, 1);
+                  scr_changeview (0);
                   return;
                 }
             }
