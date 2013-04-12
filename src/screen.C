@@ -1899,7 +1899,8 @@ rxvt_term::scr_touch (bool refresh) NOTHROW
 void
 rxvt_term::scr_move_to (int y, int len) NOTHROW
 {
-  scr_changeview ((top_row - nrow) * (len - y) / len + (nrow - 1));
+  // lerp (y, 0, len, top_row, nrow - 1)
+  scr_changeview (top_row + (nrow - 1 - top_row) * y / len);
 }
 
 /* ------------------------------------------------------------------------- */
