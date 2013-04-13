@@ -1897,6 +1897,9 @@ rxvt_term::selection_screen (int screen = -1)
         RETVAL
 
 void
+rxvt_term::selection_request (Time tm, int selnum)
+
+void
 rxvt_term::selection_clear (bool clipboard = false)
 
 void
