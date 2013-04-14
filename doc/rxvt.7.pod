@@ -1727,7 +1727,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Pm = 2> >> (ANSI/VT52 mode)
+=item B<< C<Pm = 2> >> (DECANM)
 
 =begin table
 
@@ -1736,57 +1736,57 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Pm = 3> >>
+=item B<< C<Pm = 3> >> (DECCOLM)
 
 =begin table
 
-	B<< C<h> >>	132 Column Mode (DECCOLM)
-	B<< C<l> >>	80 Column Mode (DECCOLM)
+	B<< C<h> >>	132 Column Mode
+	B<< C<l> >>	80 Column Mode
 
 =end table
 
-=item B<< C<Pm = 4> >>
+=item B<< C<Pm = 4> >> (DECSCLM)
 
 =begin table
 
-	B<< C<h> >>	Smooth (Slow) Scroll (DECSCLM)
-	B<< C<l> >>	Jump (Fast) Scroll (DECSCLM)
+	B<< C<h> >>	Smooth (Slow) Scroll
+	B<< C<l> >>	Jump (Fast) Scroll
 
 =end table
 
-=item B<< C<Pm = 5> >>
+=item B<< C<Pm = 5> >> (DECSCNM)
 
 =begin table
 
-	B<< C<h> >>	Reverse Video (DECSCNM)
-	B<< C<l> >>	Normal Video (DECSCNM)
+	B<< C<h> >>	Reverse Video
+	B<< C<l> >>	Normal Video
 
 =end table
 
-=item B<< C<Pm = 6> >>
+=item B<< C<Pm = 6> >> (DECOM)
 
 =begin table
 
-	B<< C<h> >>	Origin Mode (DECOM)
-	B<< C<l> >>	Normal Cursor Mode (DECOM)
+	B<< C<h> >>	Origin Mode
+	B<< C<l> >>	Normal Cursor Mode
 
 =end table
 
-=item B<< C<Pm = 7> >>
+=item B<< C<Pm = 7> >> (DECAWM)
 
 =begin table
 
-	B<< C<h> >>	Wraparound Mode (DECAWM)
-	B<< C<l> >>	No Wraparound Mode (DECAWM)
+	B<< C<h> >>	Wraparound Mode
+	B<< C<l> >>	No Wraparound Mode
 
 =end table
 
-=item B<< C<Pm = 8> >> I<unimplemented>
+=item B<< C<Pm = 8> >> (DECARM) I<unimplemented>
 
 =begin table
 
-	B<< C<h> >>	Auto-repeat Keys (DECARM)
-	B<< C<l> >>	No Auto-repeat Keys (DECARM)
+	B<< C<h> >>	Auto-repeat Keys
+	B<< C<l> >>	No Auto-repeat Keys
 
 =end table
 
@@ -1799,7 +1799,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Pm = 25> >>
+=item B<< C<Pm = 25> >> (DECTCEM)
 
 =begin table
 
@@ -1870,7 +1870,7 @@ Enter Tektronix Mode (DECTEK)
 
 X<Priv66>
 
-=item B<< C<Pm = 66> >>
+=item B<< C<Pm = 66> >> (DECNKM)
 
 =begin table
 
@@ -1879,11 +1879,11 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Pm = 67> >>
+=item B<< C<Pm = 67> >> (DECBKM)
 
 =begin table
 
-	B<< C<h> >>	Backspace key sends B<< C<BS> (DECBKM) >>
+	B<< C<h> >>	Backspace key sends B<< C<BS> >>
 	B<< C<l> >>	Backspace key sends B<< C<DEL> >>
 
 =end table
