@@ -1094,7 +1094,7 @@ rxvt_term::sel_scroll_cb (ev::timer &w, int revents)
 void
 rxvt_term::slip_wheel_cb (ev::timer &w, int revents)
 {
-  if (scr_changeview (view_start - mouse_slip_wheel_speed))
+  if (scr_page (mouse_slip_wheel_speed))
     {
       want_refresh = 1;
       refresh_check ();
@@ -2213,8 +2213,7 @@ rxvt_term::button_release (XButtonEvent &ev)
               if (ev.state & ControlMask)
                 {
                   mouse_slip_wheel_speed += dirn;
-                  if (mouse_slip_wheel_speed < -nrow) mouse_slip_wheel_speed = -nrow;
-                  if (mouse_slip_wheel_speed > +nrow) mouse_slip_wheel_speed = +nrow;
+                  clamp_it (mouse_slip_wheel_speed, -nrow, nrow);
 
                   if (!slip_wheel_ev.is_active ())
                     slip_wheel_ev.start (SCROLLBAR_CONTINUOUS_DELAY, SCROLLBAR_CONTINUOUS_DELAY);
