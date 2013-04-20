@@ -1145,7 +1145,6 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 /* ---------- */
 #ifdef SELECTION_SCROLLING
   int             scroll_selection_lines;
-  enum page_dirn  scroll_selection_dir;
   int             selection_save_x,
                   selection_save_y,
                   selection_save_state;

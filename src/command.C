@@ -1079,7 +1079,7 @@ rxvt_term::cont_scroll_cb (ev::timer &w, int revents)
 void
 rxvt_term::sel_scroll_cb (ev::timer &w, int revents)
 {
-  if (scr_page (scroll_selection_dir, scroll_selection_lines))
+  if (scr_page (scroll_selection_lines))
     {
       selection_extend (selection_save_x, selection_save_y, selection_save_state);
       want_refresh = 1;
@@ -1640,6 +1640,7 @@ rxvt_term::x_cb (XEvent &ev)
                     if (ev.xbutton.y < int_bwidth
                         || Pixel2Row (ev.xbutton.y) > (nrow-1))
                       {
+                        page_dirn scroll_selection_dir;
                         int dist;
 
                         /* don't clobber the current delay if we are
@@ -1672,6 +1673,7 @@ rxvt_term::x_cb (XEvent &ev)
                                                  + 1;
                         min_it (scroll_selection_lines,
                                 SELECTION_SCROLL_MAX_LINES);
+                        scroll_selection_lines *= scroll_selection_dir;
                       }
                     else
                       {
