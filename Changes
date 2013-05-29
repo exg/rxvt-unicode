@@ -34,6 +34,9 @@ TODO IMPL: sensitive focussed? function for perl bg expr
 TODO IMPL: colour-change event with index
 TODO IMPL: recalc bg always on bg colour change
 TODO IMPL: recalc bg only when not fully covering (no alpha, repeat|extend etc..)
+TODO: http://patch-tracker.debian.org/patch/series/view/rxvt-unicode/9.18-2/13_section_mismatch.diff
+TODO: podlint or so...:
+TODO: http://patch-tracker.debian.org/patch/series/view/rxvt-unicode/9.18-2/14_pod_errors.diff
    	- work around perl 5.18.0 breakage in tabbed extension
           (reported by Karol Blazewicz).
 	- fix regression that caused the double-click word selection to
