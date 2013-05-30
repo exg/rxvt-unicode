@@ -1059,8 +1059,6 @@ method servers are running with this command:
 
    xprop -root XIM_SERVERS
 
-=item
-
 =back
 
 =head3 My input method wants <some encoding> but I want UTF-8, what can I do?

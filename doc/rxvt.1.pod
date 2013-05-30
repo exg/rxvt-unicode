@@ -1207,7 +1207,11 @@ Turn on/off ISO 14755 (default enabled).
 
 Turn on/off ISO 14755 5.2 mode (default enabled).
 
+=back
+
 =head1 BACKGROUND IMAGE OPTIONS AND RESOURCES
+
+=over 4
 
 =item B<-pixmap> I<file[;oplist]>
 
