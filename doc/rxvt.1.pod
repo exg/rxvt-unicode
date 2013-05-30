@@ -1685,7 +1685,7 @@ Colour names.
 
 =item Project Coordinator
 
-Marc A. Lehmann L<< <rxvt-unicode@schmorp.de> >>
+Marc A. Lehmann <rxvt-unicode@schmorp.de>.
 
 L<http://software.schmorp.de/pkg/rxvt-unicode.html>
 
@@ -1699,38 +1699,38 @@ L<http://software.schmorp.de/pkg/rxvt-unicode.html>
 
 University of Kent, 1992, wrote the original Xvt.
 
-=item Rob Nation L<< <nation@rocket.sanders.lockheed.com> >>
+=item Rob Nation <nation@rocket.sanders.lockheed.com>
 
 very heavily modified Xvt and came up with Rxvt
 
-=item Angelo Haritsis L<< <ah@doc.ic.ac.uk> >>
+=item Angelo Haritsis <ah@doc.ic.ac.uk>
 
 wrote the Greek Keyboard Input (no longer in code)
 
-=item mj olesen L<< <olesen@me.QueensU.CA> >>
+=item mj olesen <olesen@me.QueensU.CA>
 
 Wrote the menu system.
 
 Project Coordinator (changes.txt 2.11 to 2.21)
 
-=item Oezguer Kesim L<< <kesim@math.fu-berlin.de> >>
+=item Oezguer Kesim <kesim@math.fu-berlin.de>
 
 Project Coordinator (changes.txt 2.21a to 2.4.5)
 
-=item Geoff Wing L<< <gcw@pobox.com> >>
+=item Geoff Wing <gcw@pobox.com>
 
 Rewrote screen display and text selection routines.
 
 Project Coordinator (changes.txt 2.4.6 - rxvt-unicode)
 
-=item Marc Alexander Lehmann L<< <rxvt-unicode@schmorp.de> >>
+=item Marc Alexander Lehmann <rxvt-unicode@schmorp.de>
 
 Forked rxvt-unicode, unicode support, rewrote almost all the code, perl
 extension, random hacks, numerous bugfixes and extensions.
 
 Project Coordinator (Changes 1.0 -)
 
-=item Emanuele Giaquinta L<< <e.giaquinta@glauco.it> >>
+=item Emanuele Giaquinta <e.giaquinta@glauco.it>
 
 pty/utmp code rewrite, image code improvements, many random hacks and bugfixes.
 
