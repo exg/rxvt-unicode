@@ -310,7 +310,7 @@ Loads the image at the given C<$path>. The image is set to plane tiling
 mode.
 
 If the image is already in memory (e.g. because another terminal instance
-uses it), then the in-memory copy us returned instead.
+uses it), then the in-memory copy is returned instead.
 
 =item load_uc $path
 
