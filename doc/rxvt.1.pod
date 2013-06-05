@@ -1730,7 +1730,7 @@ extension, random hacks, numerous bugfixes and extensions.
 
 Project Coordinator (Changes 1.0 -)
 
-=item Emanuele Giaquinta <e.giaquinta@glauco.it>
+=item Emanuele Giaquinta <emanuele.giaquinta@gmail.com>
 
 pty/utmp code rewrite, image code improvements, many random hacks and bugfixes.
 
