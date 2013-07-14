@@ -118,7 +118,7 @@ chunk_realloc (void *ptr, size_t old_size, size_t new_size)
       return ptr2;
     #endif
   #else
-    return realloc (ptr, size);
+    return realloc (ptr, new_size);
   #endif
 }
 
