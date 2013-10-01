@@ -79,6 +79,7 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 
 #if XRENDER && (HAVE_PIXBUF || ENABLE_TRANSPARENCY)
 # define HAVE_BG_PIXMAP 1
+# define HAVE_IMG 1
 #endif
 
 #if HAVE_BG_PIXMAP

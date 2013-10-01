@@ -24,10 +24,6 @@
 #ifndef IMG_H
 #define IMG_H
 
-#if HAVE_BG_PIXMAP
-  #define HAVE_IMG 1
-#endif
-
 #if HAVE_IMG
 
 #define float_to_component(d) (int32_t)((d) * 65535.99)
