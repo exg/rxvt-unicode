@@ -281,7 +281,7 @@ interval with this switch.
 our %_IMG_CACHE;
 our $HOME;
 our ($self, $frame);
-our ($x, $y, $w, $h);
+our ($x, $y, $w, $h, $focus);
 
 # enforce at least this interval between updates
 our $MIN_INTERVAL = 6/59.951;
@@ -526,7 +526,7 @@ Return the X and Y coordinates of the terminal window (the terminal
 window is the full window by default, and the character area only when in
 border-respect mode).
 
-Using these functions make your expression sensitive to window moves.
+Using these functions makes your expression sensitive to window moves.
 
 These functions are mainly useful to align images to the root window.
 
@@ -543,7 +543,7 @@ Return the width (C<TW>) and height (C<TH>) of the terminal window (the
 terminal window is the full window by default, and the character area only
 when in border-respect mode).
 
-Using these functions make your expression sensitive to window resizes.
+Using these functions makes your expression sensitive to window resizes.
 
 These functions are mainly useful to scale images, or to clip images to
 the window size to conserve memory.
@@ -553,12 +553,29 @@ bit, align it to the window position and use it as background.
 
    clip move -TX, -TY, keep { blur 5, root }
 
+=item FOCUS
+
+Returns a boolean indicating whether the terminal window has keyboard
+focus, in which case it returns true.
+
+Using this function makes your expression sensitive to focus changes.
+
+A common use case is to fade the background image when the terminal loses
+focus, often together with the C<-fade> command line option. In fact,
+there is a special function for just that use case: C<focus_fade>.
+
+Example: use two entirely different bacckground images, depending on
+whether the window has focus.
+
+   FOCUS ? keep { load "has_focus.jpg" } : keep { load "no_focus.jpg" }
+
 =cut
 
-   sub TX() { $frame->[FR_AGAIN]{position} = 1; $x }
-   sub TY() { $frame->[FR_AGAIN]{position} = 1; $y }
-   sub TW() { $frame->[FR_AGAIN]{size}     = 1; $w }
-   sub TH() { $frame->[FR_AGAIN]{size}     = 1; $h }
+   sub TX   () { $frame->[FR_AGAIN]{position} = 1; $x     }
+   sub TY   () { $frame->[FR_AGAIN]{position} = 1; $y     }
+   sub TW   () { $frame->[FR_AGAIN]{size}     = 1; $w     }
+   sub TH   () { $frame->[FR_AGAIN]{size}     = 1; $h     }
+   sub FOCUS() { $frame->[FR_AGAIN]{focus}    = 1; $focus }
 
 =item now
 
@@ -934,6 +951,39 @@ low values for radius (<5).
       $img->blur ($_[0], @_ >= 2 ? $_[1] : $_[0])
    }
 
+=item focus_fade $img
+
+=item focus_fade $factor, $img
+
+=item focus_fade $factor, $color, $img
+
+Fades the image by the given factor (and colour) when focus is lost (the
+same as the C<-fade>/C<-fadecolo> command line options, which also supply
+the default values for C<factor> and C<$color>. Unlike with C<-fade>, the
+C<$factor> is the real value, not a percentage value (that is, 0..1, not
+0..100).
+
+Example: do the right thing when focus fading is requested.
+
+   focus_fade load "mybg.jpg";
+
+=cut
+
+   sub focus_fade($;$$) {
+      my $img = pop;
+
+      return $img
+         if FOCUS;
+
+      my $fade   = @_ >= 1 ? $_[0] : defined $self->resource ("fade") ? $self->resource ("fade") * 0.01 : 0;
+      my $color  = @_ >= 2 ? $_[1] : $self->resource ("color+" . urxvt::Color_fade);
+
+      $img = $img->tint ($color)         if $color ne "rgb:00/00/00";
+      $img = $img->muladd (1 - $fade, 0) if $fade;
+
+      $img
+   }
+
 =back
 
 =head2 OTHER STUFF
@@ -1080,6 +1130,12 @@ sub compile_frame {
    } else {
       delete $state->{rootpmap};
    }
+
+   if ($again->{focus}) {
+      $state->{focus} = $self->on (focus_in => $cb, focus_out => $cb);
+   } else {
+      delete $state->{focus};
+   }
 }
 
 # evaluate the current bg expression
@@ -1104,6 +1160,7 @@ sub recalculate {
    local $frame = $self->{root};
 
    ($x, $y, $w, $h) = $self->background_geometry ($self->{border});
+   $focus           = $self->focus;
 
    # evaluate user expression
 

@@ -815,6 +815,16 @@ BOOT:
     const_iv (RS_RVid),
     const_iv (RS_Uline),
 
+    // TODO: should support all colour constants, create colorinc.h &c
+    const_iv (Color_fg),
+    const_iv (Color_bg),
+    const_iv (Color_fade),
+    const_iv (Color_pointer_fg),
+    const_iv (Color_pointer_bg),
+    const_iv (Color_border),
+    const_iv (NRS_COLORS),
+    const_iv (TOTAL_COLORS),
+
     const_iv (CurrentTime),
     const_iv (ShiftMask),
     const_iv (LockMask),
