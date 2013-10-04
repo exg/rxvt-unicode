@@ -564,7 +564,7 @@ A common use case is to fade the background image when the terminal loses
 focus, often together with the C<-fade> command line option. In fact,
 there is a special function for just that use case: C<focus_fade>.
 
-Example: use two entirely different bacckground images, depending on
+Example: use two entirely different background images, depending on
 whether the window has focus.
 
    FOCUS ? keep { load "has_focus.jpg" } : keep { load "no_focus.jpg" }
