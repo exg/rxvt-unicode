@@ -960,7 +960,7 @@ low values for radius (<5).
 Fades the image by the given factor (and colour) when focus is lost (the
 same as the C<-fade>/C<-fadecolor> command line options, which also supply
 the default values for C<factor> and C<$color>. Unlike with C<-fade>, the
-C<$factor> is the real value, not a percentage value (that is, 0..1, not
+C<$factor> is a real value, not a percentage value (that is, 0..1, not
 0..100).
 
 Example: do the right thing when focus fading is requested.
