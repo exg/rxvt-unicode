@@ -120,7 +120,7 @@ install-perl:
 @IF_PERL@	> mantmp
 @IF_PERL@	$(INSTALL_DATA) mantmp $(DESTDIR)$(man1dir)/$(RXVTNAME)-extensions.$(man1ext)
 @IF_PERL@	< $(srcdir)/urxvt.pm \
-@IF_PERL@	$(PERL) -MPod::Man -e '(new Pod::Man name => "$(RXVTNAME)perl", $(PODOPTS))->parse_from_file' \
+@IF_PERL@	$(PERL) -MPod::Man -e '(new Pod::Man name => "$(RXVTNAME)perl", section => 3, $(PODOPTS))->parse_from_file' \
 @IF_PERL@	> mantmp
 @IF_PERL@	$(INSTALL_DATA) mantmp $(DESTDIR)$(man3dir)/$(RXVTNAME)perl.$(man3ext)
 
