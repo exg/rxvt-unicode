@@ -175,7 +175,7 @@ encoding.o: table/viscii.h table/jis0201_1976_0.h table/jis0208_1990_0.h
 encoding.o: table/jis0212_1990_0.h table/jis0213_1.h table/jis0213_2.h
 encoding.o: table/compose.h table/category.h
 ev_cpp.o: ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h ../libev/ev.c
-ev_cpp.o: ../libev/ev_vars.h ../libev/ev_epoll.c ../libev/ev_select.c
+ev_cpp.o: ../libev/ev_vars.h ../libev/ev_epoll.c
 fdpass_wrapper.o: ../libptytty/src/fdpass.C ../config.h
 fdpass_wrapper.o: ../libptytty/src/libptytty.h
 init.o: ../config.h rxvt.h feature.h ../libptytty/src/ecb.h encoding.h

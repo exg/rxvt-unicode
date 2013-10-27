@@ -968,8 +968,6 @@ xterm? I need this to decide about setting colours etc.
 
            xprop -root XIM_SERVERS
 
-
-
    My input method wants <some encoding> but I want UTF-8, what can I do?
     You can specify separate locales for the input method and the rest of
     the terminal, using the resource "imlocale":

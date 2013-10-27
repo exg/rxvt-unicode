@@ -28,20 +28,22 @@ TODO: provide something like % for easy access for parse_keysym
 TODO: description into --help output?
 TODO: rxvt -help => (see rxvt-XXX(1))?
 TODO: xor_rect should shift right
+TODO IMPL: recalc bg only when not fully covering (no alpha, repeat|extend etc..)
 
-TODO: fading should make bg expressions potentially dependent on focus
-TODO IMPL: sensitive focussed? function for perl bg expr
 TODO IMPL: colour-change event with index
 TODO IMPL: recalc bg always on bg colour change
-TODO IMPL: recalc bg only when not fully covering (no alpha, repeat|extend etc..)
-TODO: one_event => _poll for ae::impl
+
+9.19 Sun Oct 27 17:16:07 CET 2013
 	- work around perl 5.18.0 breakage in tabbed extension
           (reported by Karol Blazewicz) and in pod (Dominic Hargreaves).
 	- fix regression that caused the double-click word selection to
 	  erroneously include a tab on the left of the selected word.
+        - implement FOCUS variable and focus_fade function in background
+          expression, to allow focus-sensitive background images.
 	- add support for the set cursor style (DECSCUSR) control
 	  function.
 	- honour cursorColor also when the cursor style is underline.
+        - export some Color_xxx constants to Perl.
 
 9.18 Sun Mar 24 15:33:35 CET 2013
 	- fix regression that caused artifacts on resize.

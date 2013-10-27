@@ -7628,12 +7628,13 @@ fi
 
   save_LIBS="$LIBS"
   LIBS="$LIBS $X_LIBS"
-  for ac_header in X11/Xft/Xft.h
+  for ac_header in X11/Xft/Xft.h fontconfig/fontconfig.h
 do :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "X11/Xft/Xft.h" "ac_cv_header_X11_Xft_Xft_h" "$ac_includes_default"
-if test "x$ac_cv_header_X11_Xft_Xft_h" = xyes; then :
+  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_cxx_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
   cat >>confdefs.h <<_ACEOF
-#define HAVE_X11_XFT_XFT_H 1
+#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
 _ACEOF
 
 else
@@ -7642,103 +7643,19 @@ fi
 
 done
 
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for XftDrawString32 in -lXft" >&5
-$as_echo_n "checking for XftDrawString32 in -lXft... " >&6; }
-if ${ac_cv_lib_Xft_XftDrawString32+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lXft  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char XftDrawString32 ();
-int
-main ()
-{
-return XftDrawString32 ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_Xft_XftDrawString32=yes
-else
-  ac_cv_lib_Xft_XftDrawString32=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_Xft_XftDrawString32" >&5
-$as_echo "$ac_cv_lib_Xft_XftDrawString32" >&6; }
-if test "x$ac_cv_lib_Xft_XftDrawString32" = xyes; then :
-  :
-else
-  support_xft=no
-fi
-
-  for ac_header in fontconfig/fontconfig.h
+  for ac_func in XftDrawString32 FcPatternGet
 do :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "fontconfig/fontconfig.h" "ac_cv_header_fontconfig_fontconfig_h" "$ac_includes_default"
-if test "x$ac_cv_header_fontconfig_fontconfig_h" = xyes; then :
+  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+ac_fn_cxx_check_func "$LINENO" "$ac_func" "$as_ac_var"
+if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
   cat >>confdefs.h <<_ACEOF
-#define HAVE_FONTCONFIG_FONTCONFIG_H 1
+#define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
 _ACEOF
 
 else
   support_xft=no
 fi
-
 done
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for FcPatternGet in -lfontconfig" >&5
-$as_echo_n "checking for FcPatternGet in -lfontconfig... " >&6; }
-if ${ac_cv_lib_fontconfig_FcPatternGet+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lfontconfig  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char FcPatternGet ();
-int
-main ()
-{
-return FcPatternGet ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_fontconfig_FcPatternGet=yes
-else
-  ac_cv_lib_fontconfig_FcPatternGet=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_fontconfig_FcPatternGet" >&5
-$as_echo "$ac_cv_lib_fontconfig_FcPatternGet" >&6; }
-if test "x$ac_cv_lib_fontconfig_FcPatternGet" = xyes; then :
-  :
-else
-  support_xft=no
-fi
 
   LIBS="$save_LIBS"
 

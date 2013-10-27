@@ -51,6 +51,9 @@
 /* Define to 1 if you have the `eventfd' function. */
 #undef HAVE_EVENTFD
 
+/* Define to 1 if you have the `FcPatternGet' function. */
+#undef HAVE_FCPATTERNGET
+
 /* Define to 1 if the floor function is available */
 #undef HAVE_FLOOR
 
@@ -243,6 +246,9 @@
 
 /* Define to 1 if you have the <X11/Xft/Xft.h> header file. */
 #undef HAVE_X11_XFT_XFT_H
+
+/* Define to 1 if you have the `XftDrawString32' function. */
+#undef HAVE_XFTDRAWSTRING32
 
 /* Define if setlocale (defined to Xsetlocale) works */
 #undef HAVE_XSETLOCALE
