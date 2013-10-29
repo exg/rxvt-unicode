@@ -571,7 +571,7 @@ sub parse_resource {
    $term->scan_meta;
 
    my $r = $term->{meta}{resource};
-   keys %$r; # reste iterator
+   keys %$r; # reset iterator
    while (my ($pattern, $v) = each %$r) {
       if (
          $pattern =~ /\.$/
