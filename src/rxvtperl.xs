@@ -818,7 +818,9 @@ BOOT:
     // TODO: should support all colour constants, create colorinc.h &c
     const_iv (Color_fg),
     const_iv (Color_bg),
+#if OFF_FOCUS_FADING
     const_iv (Color_fade),
+#endif
     const_iv (Color_pointer_fg),
     const_iv (Color_pointer_bg),
     const_iv (Color_border),
