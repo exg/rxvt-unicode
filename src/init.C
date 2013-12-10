@@ -1410,9 +1410,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
    */
 
   if (rs [Rs_iconfile])
-    {
-      set_icon (rs [Rs_iconfile]);
-    }
+    set_icon (rs [Rs_iconfile]);
 #endif
 
 #if ENABLE_FRILLS
