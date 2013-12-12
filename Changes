@@ -33,6 +33,9 @@ TODO IMPL: recalc bg only when not fully covering (no alpha, repeat|extend etc..
 TODO IMPL: colour-change event with index
 TODO IMPL: recalc bg always on bg colour change
 
+	- fix regression that broke continuous scrolling when pressing
+	  and holding the scrollbar up or down button, gentoo bug #493992.
+
 9.19 Sun Oct 27 17:16:07 CET 2013
 	- work around perl 5.18.0 breakage in tabbed extension
           (reported by Karol Blazewicz) and in pod (Dominic Hargreaves).

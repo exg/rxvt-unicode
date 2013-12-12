@@ -1540,7 +1540,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   bool scr_page (int nlines) NOTHROW;
   bool scr_page (enum page_dirn direction, int nlines) NOTHROW
   {
-    scr_page (direction * nlines);
+    return scr_page (direction * nlines);
   }
   bool scr_changeview (int new_view_start) NOTHROW;
   void scr_bell () NOTHROW;
