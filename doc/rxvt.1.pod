@@ -1511,8 +1511,8 @@ values for the 256 colour mode in parentheses).
 
 The RGB cube uses indices 16..79 (16..231) using the following formulas:
 
-   index_88  = (r *  4 + g) *  4 + b + 16   # r, g, b = 0..3
-   index_256 = (r * 16 + g) * 16 + b + 16   # r, g, b = 0..15
+   index_88  = (r * 4 + g) * 4 + b + 16   # r, g, b = 0..3
+   index_256 = (r * 6 + g) * 6 + b + 16   # r, g, b = 0..5
 
 The grayscale ramp uses indices 80..87 (232..239), from 10% to 90% in 10%
 steps (1/26 to 25/26 in 1/26 steps) - black and white are already part of
