@@ -60,24 +60,12 @@ sub copy {
 }
 
 sub paste {
-   my ($self) = @_;
+   my ($self, $escape) = @_;
 
    my $str = `$self->{paste_cmd}`;
    if ($? == 0) {
-      $self->tt_paste($str);
-   } else {
-      print STDERR "error running '$self->{paste_cmd}': $!\n";
-   }
-
-   ()
-}
-
-sub paste_escaped {
-   my ($self) = @_;
-
-   my $str = `$self->{paste_cmd}`;
-   if ($? == 0) {
-      $str =~ s/([!#\$%&\*\(\) ='"\\\|\[\]`~,<>\?])/\\\1/g;
+      $str =~ s/([!#\$%&\*\(\) ='"\\\|\[\]`~,<>\?])/\\\1/g
+	if ($escape);
       $self->tt_paste($str);
    } else {
       print STDERR "error running '$self->{paste_cmd}': $!\n";
@@ -92,9 +80,9 @@ sub on_user_command {
    if ($cmd eq "clipboard:copy") {
       $self->copy;
    } elsif ($cmd eq "clipboard:paste") {
-      $self->paste;
+      $self->paste (0);
    } elsif ($cmd eq "clipboard:paste_escaped") {
-      $self->paste_escaped;
+      $self->paste (1);
    }
 
    ()
