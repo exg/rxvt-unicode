@@ -49,7 +49,7 @@ sub copy {
 
    if (open(CLIPBOARD, "| $self->{copy_cmd}")) {
       my $sel = $self->selection();
-      utf8::encode($sel);
+      $sel = $self->locale_encode ($sel);
       print CLIPBOARD $sel;
       close(CLIPBOARD);
    } else {
