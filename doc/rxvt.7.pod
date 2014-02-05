@@ -556,13 +556,13 @@ helped.
 =head3 My Compose (Multi_key) key is no longer working.
 
 The most common causes for this are that either your locale is not set
-correctly, or you specified a B<preeditStyle> that is not supported by
+correctly, or you specified a B<preeditType> that is not supported by
 your input method. For example, if you specified B<OverTheSpot> and
 your input method (e.g. the default input method handling Compose keys)
 does not support this (for instance because it is not visual), then
 rxvt-unicode will continue without an input method.
 
-In this case either do not specify a B<preeditStyle> or specify more than
+In this case either do not specify a B<preeditType> or specify more than
 one pre-edit style, such as B<OverTheSpot,Root,None>.
 
 If it still doesn't work, then maybe your input method doesn't support
