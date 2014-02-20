@@ -3229,7 +3229,7 @@ rxvt_term::get_to_st (unicode_t &ends_how)
   unicode_t ch;
   bool seen_esc = false;
   unsigned int n = 0;
-  wchar_t string[STRING_MAX];
+  wchar_t string[CBUFSIZ];
 
   while ((ch = cmd_getc ()) != NOCHAR)
     {
@@ -3254,7 +3254,7 @@ rxvt_term::get_to_st (unicode_t &ends_how)
 
       seen_esc = false;
 
-      if (n >= STRING_MAX - 1)
+      if (n >= sizeof (string) - 1)
         // stop at some sane length
         return NULL;
 
