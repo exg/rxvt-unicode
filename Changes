@@ -39,6 +39,8 @@ TODO IMPL: recalc bg always on bg colour change
 	- fix build when perl is enabled and fading is disabled.
 	- fix regression that broke continuous scrolling when pressing
 	  and holding the scrollbar up or down button, gentoo bug #493992.
+	- increase the maximum length of a command sequence to 32k bytes,
+          to allow longer OSC sequences (previous limit was 2k).
 
 9.19 Sun Oct 27 17:16:07 CET 2013
 	- work around perl 5.18.0 breakage in tabbed extension
