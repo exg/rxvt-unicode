@@ -155,7 +155,6 @@ src/rxvtperl.xs
 src/perl/background
 src/perl/bell-command
 src/perl/block-graphics-to-ascii
-src/perl/clipboard
 src/perl/clipboard-osc
 src/perl/confirm-paste
 src/perl/digital-clock
