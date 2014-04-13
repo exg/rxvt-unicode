@@ -33,12 +33,12 @@ TODO IMPL: recalc bg only when not fully covering (no alpha, repeat|extend etc..
 TODO IMPL: colour-change event with index
 TODO IMPL: recalc bg always on bg colour change
 
-        - add clipboard perl extension by Bert Münnich.
         - (libptytty) fix bug that prevented urxvtd from writing utmp
           entries when using --fork (reported by Ryan Kavanagh).
 	- fix build when perl is enabled and fading is disabled.
 	- fix regression that broke continuous scrolling when pressing
 	  and holding the scrollbar up or down button, gentoo bug #493992.
+        - add clipboard perl extension by Bert Münnich.
 	- increase the maximum length of a command sequence to 32k bytes,
           to allow longer OSC sequences (previous limit was 2k).
 
