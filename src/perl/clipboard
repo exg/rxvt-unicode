@@ -1,4 +1,10 @@
 #! perl -w
+
+#:META:X_RESOURCE:%.copycmd:string:command expecting clip data on stdin
+#:META:X_RESOURCE:%.pastecmd:string:command that writes clip data to stdout
+#undocumented/deprecated #:META:X_RESOURCE:%.paste_escaped:boolean:
+#:META:X_RESOURCE:%.autcopy:boolean:automatically copy on selection grab
+
 # Author:   Bert Muennich
 # Website:  http://www.github.com/muennich/urxvt-perls
 # License:  GPLv2
@@ -34,11 +40,11 @@ use strict;
 sub on_start {
    my ($self) = @_;
 
-   $self->{copy_cmd} = $self->x_resource('clipboard.copycmd') || 'xsel -ib';
-   $self->{paste_cmd} = $self->x_resource('clipboard.pastecmd') || 'xsel -ob';
+   $self->{copy_cmd}  = $self->x_resource ('%.copycmd' ) || 'xsel -ib';
+   $self->{paste_cmd} = $self->x_resource ('%.pastecmd') || 'xsel -ob';
 
-   if ($self->x_resource('clipboard.autocopy') eq 'true') {
-      $self->enable(sel_grab => \&sel_grab);
+   if ($self->x_resource_boolean ('%.autocopy')) {
+      $self->enable (sel_grab => \&sel_grab);
    }
 
    ()
@@ -47,11 +53,10 @@ sub on_start {
 sub copy {
    my ($self) = @_;
 
-   if (open(CLIPBOARD, "| $self->{copy_cmd}")) {
-      my $sel = $self->selection();
+   if (open my $fh, "| $self->{copy_cmd}") {
+      my $sel = $self->selection;
       $sel = $self->locale_encode ($sel);
-      print CLIPBOARD $sel;
-      close(CLIPBOARD);
+      syswrite $fh, $sel;
    } else {
       print STDERR "error running '$self->{copy_cmd}': $!\n";
    }
@@ -62,11 +67,13 @@ sub copy {
 sub paste {
    my ($self, $escape) = @_;
 
-   my $str = `$self->{paste_cmd}`;
+   my $str = qx<$self->{paste_cmd}>;
+
    if ($? == 0) {
       $str =~ s/([!#\$%&\*\(\) ='"\\\|\[\]`~,<>\?])/\\\1/g
-	if ($escape);
-      $self->tt_paste($str);
+	if $escape;
+
+      $self->tt_paste ($str);
    } else {
       print STDERR "error running '$self->{paste_cmd}': $!\n";
    }
@@ -95,3 +102,4 @@ sub sel_grab {
 
    ()
 }
+
