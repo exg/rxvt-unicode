@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-selection-to-clipboard - copy the selection to the clipboard each time a seletion is made
+selection-to-clipboard - copy the selection to the clipboard each time a selection is made
 
 =head1 SYNOPSIS
 
@@ -11,7 +11,7 @@ selection-to-clipboard - copy the selection to the clipboard each time a seletio
 =head1 DESCRIPTION
 
 This very simple extension copies the selection to the clipboard every
-time a selection is made. This, in effetc, synchronises the clipboard with
+time a selection is made. This, in effect, synchronises the clipboard with
 the selection for selections done by rxvt-unicode.
 
 =cut
