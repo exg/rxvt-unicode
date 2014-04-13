@@ -1,0 +1,27 @@
+#! perl -w
+
+=head1 NAME
+
+selection-to-clipboard - copy the selection to the clipboard each time a seletion is made
+
+=head1 SYNOPSIS
+
+   urxvt -pe selection-to-clipboard
+
+=head1 DESCRIPTION
+
+This very simple extension copies the selection to the clipboard every
+time a selection is made. This, in effetc, synchronises the clipboard with
+the selection for selections done by rxvt-unicode.
+
+=cut
+
+sub on_sel_grab {
+   my ($self, $time) = @_;
+
+   $self->selection ($self->selection, 1);
+   $self->selection_grab ($time, 1);
+
+   ()
+}
+

@@ -41,6 +41,7 @@ TODO IMPL: recalc bg always on bg colour change
         - add clipboard perl extension by Bert Münnich.
 	- increase the maximum length of a command sequence to 32k bytes,
           to allow longer OSC sequences (previous limit was 2k).
+        - new extension: selection-to-clipboard.
 
 9.19 Sun Oct 27 17:16:07 CET 2013
 	- work around perl 5.18.0 breakage in tabbed extension
