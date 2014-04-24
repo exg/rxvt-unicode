@@ -27,7 +27,7 @@
  * Copyright (c) 2001      Marius Gedminas
  *				- Ctrl/Mod4+Tab works like Meta+Tab (options)
  * Copyright (c) 2003      Rob McMullen <robm@flipturn.org>
- * Copyright (c) 2003-2011 Marc Lehmann <schmorp@schmorp.de>
+ * Copyright (c) 2003-2014 Marc Lehmann <schmorp@schmorp.de>
  * Copyright (c) 2007      Emanuele Giaquinta <e.giaquinta@glauco.it>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -3381,7 +3381,7 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
                 && actual_format == 8)
               str = (const char *)(value);
 
-            tt_printf ("\033]%d;%s%c", op, str, resp);
+            tt_printf ("\033]%d;%s%c", op, option (Opt_insecure) ? str : "", resp);
 
             XFree (value);
           }

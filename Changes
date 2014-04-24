@@ -35,6 +35,8 @@ TODO IMPL: recalc bg always on bg colour change
 
         - (libptytty) fix bug that prevented urxvtd from writing utmp
           entries when using --fork (reported by Ryan Kavanagh).
+        - security bugfix: window property values could be queried even
+          in secure mode (reported by Phillip Hallam-Baker).
 	- fix build when perl is enabled and fading is disabled.
 	- fix regression that broke continuous scrolling when pressing
 	  and holding the scrollbar up or down button, gentoo bug #493992.
