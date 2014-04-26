@@ -417,7 +417,8 @@ rxvt_term::key_press (XKeyEvent &ev)
   int ctrl, meta, shft, len;
   KeySym keysym;
   int valid_keysym;
-  char kbuf[KBUFSZ];
+  char rkbuf[KBUFSZ];
+  char *kbuf = rkbuf + 1;
 
 #if ISO_14755
   if (iso14755buf & ISO_14755_52)
@@ -858,6 +859,17 @@ rxvt_term::key_press (XKeyEvent &ev)
         }
     }
 
+  /* escape prefix */
+  if (len && meta
+#ifdef META8_OPTION
+      && meta_char == C0_ESC
+#endif
+     )
+    {
+      *--kbuf = C0_ESC;
+      len++;
+    }
+
   if (HOOK_INVOKE ((this, HOOK_KEY_PRESS, DT_XEVENT, &ev, DT_INT, keysym, DT_STR_LEN, kbuf, len, DT_END)))
     return;
 
@@ -870,17 +882,6 @@ rxvt_term::key_press (XKeyEvent &ev)
         view_start = 0;
         want_refresh = 1;
       }
-
-  /* escape prefix */
-  if (meta
-#ifdef META8_OPTION
-      && meta_char == C0_ESC
-#endif
-     )
-    {
-      const char ch = C0_ESC;
-      tt_write (&ch, 1);
-    }
 
   tt_write (kbuf, (unsigned int)len);
 }
