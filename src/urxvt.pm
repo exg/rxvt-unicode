@@ -669,7 +669,7 @@ sub invoke {
    local $TERM = shift;
    my $htype = shift;
 
-   if ($htype == 0) { # INIT
+   if ($htype == HOOK_INIT) {
       my @dirs = $TERM->perl_libdirs;
 
       my %ext_arg;
@@ -718,7 +718,13 @@ sub invoke {
       verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $TERM, @_) . ")"
          if $verbosity >= 10;
 
-      for my $pkg (keys %$cb) {
+      for my $pkg (
+         # this hook is only sent to the extension with the name
+         # matching the first arg
+         $htype == HOOK_KEYBOARD_DISPATCH
+         ? exists $cb->{"urxvt::ext::$_[0]"} ? "urxvt::ext::" . shift : return undef
+         : keys %$cb
+      ) {
          my $retval_ = eval { $cb->{$pkg}->($TERM->{_pkg}{$pkg} || $TERM, @_) };
          $retval ||= $retval_;
 
@@ -732,7 +738,7 @@ sub invoke {
          if $verbosity >= 11;
    }
 
-   if ($htype == 1) { # DESTROY
+   if ($htype == HOOK_DESTROY) {
       # clear package objects
       %$_ = () for values %{ $TERM->{_pkg} };
 

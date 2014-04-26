@@ -64,6 +64,10 @@ sub on_user_command {
    ()
 }
 
+sub on_keyboard_dispatch {
+   &on_user_command;
+}
+
 sub on_init {
    my ($self) = @_;
 
