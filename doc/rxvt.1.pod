@@ -1378,6 +1378,12 @@ B<Meta> modifier) to be inserted as if it had been typed on the keyboard.
 Pressing B<Shift-Insert> causes the value of the PRIMARY selection to be
 inserted too.
 
+rxvt-unicode also provides the bindings B<Ctrl-Meta-c> and
+<Ctrl-Meta-v> to interact with the CLIPBOARD selection. The first
+binding causes the value of the internal selection to be copied to the
+CLIPBOARD selection, while the second binding causes the value of the
+CLIPBOARD selection to be inserted.
+
 =back
 
 =head1 CHANGING FONTS

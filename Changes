@@ -42,6 +42,8 @@ TODO IMPL: recalc bg always on bg colour change
 	  and holding the scrollbar up or down button, gentoo bug #493992.
 	- increase the maximum length of a command sequence to 32k bytes,
           to allow longer OSC sequences (previous limit was 2k).
+        - new Ctrl-Meta-c and Ctrl-Meta-v bindings to interact with
+          the CLIPBOARD selection.
         - new extension: selection-to-clipboard.
 
 9.19 Sun Oct 27 17:16:07 CET 2013

@@ -402,6 +402,15 @@ map_function_key (KeySym keysym)
   return param;
 }
 
+static inline wchar_t *
+rxvt_wcsdup (const wchar_t *str, int len)
+{
+  wchar_t *r = (wchar_t *)rxvt_malloc ((len + 1) * sizeof (wchar_t));
+  memcpy (r, str, len * sizeof (wchar_t));
+  r[len] = 0;
+  return r;
+}
+
 void ecb_cold
 rxvt_term::key_press (XKeyEvent &ev)
 {
@@ -578,6 +587,21 @@ rxvt_term::key_press (XKeyEvent &ev)
 #endif
                 }
             }
+        }
+
+      if (ctrl && meta && (keysym == XK_c || keysym == XK_v))
+        {
+          if (keysym == XK_v)
+            selection_request (ev.time, Sel_Clipboard);
+          else if (selection.len > 0)
+            {
+              free (selection.clip_text);
+              selection.clip_text = rxvt_wcsdup (selection.text, selection.len);
+              selection.clip_len = selection.len;
+              selection_grab (CurrentTime, true);
+            }
+
+          return;
         }
 
 #if ENABLE_FRILLS || ISO_14755
