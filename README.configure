@@ -192,7 +192,7 @@ CONFIGURE OPTIONS
           verbose X error handling
 
     --enable-iso14755 (default: on)
-        Enable extended ISO 14755 support (see rxvt(1)). Basic support
+        Enable extended ISO 14755 support (see urxvt(1)). Basic support
         (section 5.1) is enabled by "--enable-frills", while support for
         5.2, 5.3 and 5.4 is enabled with this switch.
 
@@ -224,8 +224,8 @@ CONFIGURE OPTIONS
         Add support to have the pointer disappear when typing or inactive.
 
     --enable-perl (default: on)
-        Enable an embedded perl interpreter. See the rxvtperl(3) manpage for
-        more info on this feature, or the files in src/perl/ for the
+        Enable an embedded perl interpreter. See the urxvtperl(3) manpage
+        for more info on this feature, or the files in src/perl/ for the
         extensions that are installed by default. The perl interpreter that
         is used can be specified via the "PERL" environment variable when
         running configure. Even when compiled in, perl will *not* be
@@ -247,7 +247,7 @@ CONFIGURE OPTIONS
         "rxvt-unicode-256color" by default (doc/etc/ contains
         termcap/terminfo definitions for both).
 
-        It also results in higher memory usage and can slow down rxvt
+        It also results in higher memory usage and can slow down urxvt
         dramatically when more than six fonts are in use by a terminal
         instance.
 
