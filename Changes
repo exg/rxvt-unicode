@@ -45,6 +45,11 @@ TODO IMPL: recalc bg always on bg colour change
         - new Ctrl-Meta-c and Ctrl-Meta-v bindings to interact with
           the CLIPBOARD selection.
         - new extension: selection-to-clipboard.
+        - the extensions macosx-clipboard and macosx-clipboard-native
+          are deprecated and will be removed in the next release.
+          Support for the clipboard on OS X can be more generally
+          enabled by setting the XQuartz preference to sync the OS X
+          pasteboard and the X11 clipboard.
 
 9.19 Sun Oct 27 17:16:07 CET 2013
 	- work around perl 5.18.0 breakage in tabbed extension
