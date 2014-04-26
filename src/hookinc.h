@@ -24,8 +24,9 @@
   def (REFRESH_BEGIN)
   def (REFRESH_END)
 
-  def (USER_COMMAND)
   def (REGISTER_COMMAND)
+  def (KEYBOARD_DISPATCH)
+  def (USER_COMMAND)
 
   def (ROOT_EVENT)
   def (X_EVENT)

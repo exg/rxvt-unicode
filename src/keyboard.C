@@ -63,17 +63,6 @@
  *       Ni(the size of group i) = hash_bucket_size[Ii].
  */
 
-static void
-output_string (rxvt_term *term, const char *str)
-{
-  if (strncmp (str, "command:", 8) == 0)
-    term->cmdbuf_append (str + 8, strlen (str) - 8);
-  else if (strncmp (str, "perl:", 5) == 0)
-    HOOK_INVOKE((term, HOOK_USER_COMMAND, DT_STR, str + 5, DT_END));
-  else
-    term->tt_write (str, strlen (str));
-}
-
 // return: priority_of_a - priority_of_b
 static int
 compare_priority (keysym_t *a, keysym_t *b)
@@ -150,7 +139,17 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state, 
           // TODO: do (some) translations, unescaping etc, here (allow \u escape etc.)
           free (ws);
 
-          output_string (term, str);
+          if (char *colon = strchr (str, ':'))
+            {
+              if (strncmp (str, "command:", 8) == 0)
+                term->cmdbuf_append (str + 8, strlen (str) - 8);
+              else if (strncmp (str, "perl:", 8) == 0)
+                HOOK_INVOKE ((term, HOOK_USER_COMMAND, DT_STR, colon + 1, DT_END));
+              else if (HOOK_INVOKE ((term, HOOK_KEYBOARD_DISPATCH, DT_STR_LEN, str, colon - str, DT_STR, colon + 1, DT_END)))
+                /* done */;
+              else
+                term->tt_write (str, strlen (str));
+            }
 
           free (str);
 

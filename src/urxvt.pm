@@ -283,27 +283,27 @@ code is run after this hook, and takes precedence.
 
 Called just after the screen gets redrawn. See C<on_refresh_begin>.
 
-=item on_user_command $term, $string
+=item on_user_command $term, $string *DEPRECATED*
 
 Called whenever a user-configured event is being activated (e.g. via
 a C<perl:string> action bound to a key, see description of the B<keysym>
 resource in the urxvt(1) manpage).
 
-The event is simply the action string. This interface is assumed to change
-slightly in the future.
+The event is simply the action string. This interface is going away in
+preference to the C<< ->register_keysym_action >> method.
 
 =item on_register_command $term, $keysym, $modifiermask, $string
 
 Called after parsing a keysym resource but before registering the
-associated binding. If this hook returns TRUE the binding is not
-registered. It can be used to modify a binding by calling
+associated binding. If this hook returns a true value the binding
+is not registered. It can be used to modify a binding by calling
 C<register_command>.
 
 =item on_resize_all_windows $term, $new_width, $new_height
 
 Called just after the new window size has been calculated, but before
 windows are actually being resized or hints are being set. If this hook
-returns TRUE, setting of the window hints is being skipped.
+returns a true value, setting of the window hints is being skipped.
 
 =item on_x_event $term, $event
 
@@ -829,8 +829,11 @@ sub urxvt::destroy_hook(&) {
 =item $self->enable ($hook_name => $cb[, $hook_name => $cb..])
 
 Dynamically enable the given hooks (named without the C<on_> prefix) for
-this extension, replacing any previous hook. This is useful when you want
-to overwrite time-critical hooks only temporarily.
+this extension, replacing any hook previously installed via C<enable> in
+this extension.
+
+This is useful when you want to overwrite time-critical hooks only
+temporarily.
 
 To install additional callbacks for the same hook, you can use the C<on>
 method of the C<urxvt::term> class.
