@@ -498,176 +498,6 @@ rxvt_term::key_press (XKeyEvent &ev)
 
   if (valid_keysym)
     {
-#ifdef KEYSYM_RESOURCE
-      if (keyboard->dispatch (this, keysym, ev.state))
-        return;
-#endif
-
-      if (saveLines)
-        {
-#ifdef UNSHIFTED_SCROLLKEYS
-          if (!ctrl && !meta)
-#else
-          if (IS_SCROLL_MOD)
-#endif
-            {
-              int lnsppg;
-
-#ifdef PAGING_CONTEXT_LINES
-              lnsppg = nrow - PAGING_CONTEXT_LINES;
-#else
-              lnsppg = nrow * 4 / 5;
-#endif
-              max_it (lnsppg, 1);
-
-              if (keysym == XK_Prior)
-                {
-                  scr_page (lnsppg);
-                  return;
-                }
-              else if (keysym == XK_Next)
-                {
-                  scr_page (-lnsppg);
-                  return;
-                }
-            }
-#ifdef SCROLL_ON_UPDOWN_KEYS
-          if (IS_SCROLL_MOD)
-            {
-              if (keysym == XK_Up)
-                {
-                  scr_page (1);
-                  return;
-                }
-              else if (keysym == XK_Down)
-                {
-                  scr_page (-1);
-                  return;
-                }
-            }
-#endif
-#ifdef SCROLL_ON_HOMEEND_KEYS
-          if (IS_SCROLL_MOD)
-            {
-              if (keysym == XK_Home)
-                {
-                  scr_changeview (top_row);
-                  return;
-                }
-              else if (keysym == XK_End)
-                {
-                  scr_changeview (0);
-                  return;
-                }
-            }
-#endif
-        }
-
-      if (shft)
-        {
-          /* Shift + F1 - F10 generates F11 - F20 */
-          if (keysym >= XK_F1 && keysym <= XK_F10)
-            {
-              keysym += (XK_F11 - XK_F1);
-              shft = 0;	/* turn off Shift */
-            }
-          else if (!ctrl && !meta && (priv_modes & PrivMode_ShiftKeys))
-            {
-              switch (keysym)
-                {
-                    /* normal XTerm key bindings */
-                  case XK_Insert:	/* Shift+Insert = paste mouse selection */
-                    selection_request (ev.time);
-                    return;
-#if TODO
-                    /* rxvt extras */
-                  case XK_KP_Add:	/* Shift+KP_Add = bigger font */
-                    return;
-                  case XK_KP_Subtract:	/* Shift+KP_Subtract = smaller font */
-                    return;
-#endif
-                }
-            }
-        }
-
-      if (ctrl && meta && (keysym == XK_c || keysym == XK_v))
-        {
-          if (keysym == XK_v)
-            selection_request (ev.time, Sel_Clipboard);
-          else if (selection.len > 0)
-            {
-              free (selection.clip_text);
-              selection.clip_text = rxvt_wcsdup (selection.text, selection.len);
-              selection.clip_len = selection.len;
-              selection_grab (CurrentTime, true);
-            }
-
-          return;
-        }
-
-#if ENABLE_FRILLS || ISO_14755
-      // ISO 14755 support
-      if (iso14755buf & (ISO_14755_STARTED | ISO_14755_51))
-        {
-          int hv;
-
-          if (iso14755buf & ISO_14755_51
-              && (keysym == XK_space || keysym == XK_KP_Space
-                  || keysym == XK_Return || keysym == XK_KP_Enter))
-            {
-              commit_iso14755 ();
-              iso14755buf = ISO_14755_51;
-# if ISO_14755
-              iso14755_51 (0);
-# endif
-              return;
-            }
-          else if (keysym == XK_BackSpace)
-            {
-              iso14755buf = ((iso14755buf & ISO_14755_MASK) >> 4) | ISO_14755_51;
-# if ISO_14755
-              iso14755_51 (iso14755buf & ISO_14755_MASK);
-# endif
-              return;
-            }
-          else if ((hv = hex_keyval (ev)) >= 0)
-            {
-              iso14755buf = ((iso14755buf << 4) & ISO_14755_MASK)
-                          | hv | ISO_14755_51;
-# if ISO_14755
-              iso14755_51 (iso14755buf & ISO_14755_MASK);
-# endif
-              return;
-            }
-          else
-            {
-# if ISO_14755
-              scr_overlay_off ();
-# endif
-              iso14755buf = 0;
-            }
-        }
-      else if (option (Opt_iso14755) &&
-               ((ctrl && (keysym == XK_Shift_L || keysym == XK_Shift_R))
-                || (shft && (keysym == XK_Control_L || keysym == XK_Control_R))))
-        if (!(iso14755buf & ISO_14755_STARTED))
-          {
-            iso14755buf |= ISO_14755_STARTED;
-# if ISO_14755
-            scr_overlay_new (0, -1, sizeof ("ISO 14755 mode") - 1, 1);
-            scr_overlay_set (0, 0, "ISO 14755 mode");
-# endif
-          }
-#endif
-
-#ifdef PRINTPIPE
-      if (keysym == XK_Print)
-        {
-          scr_printscreen (ctrl | shft);
-          return;
-        }
-#endif
-
       if (keysym >= 0xFF00 && keysym <= 0xFFFF)
         {
           bool kp = priv_modes & PrivMode_aplKP ? !shft : shft;
@@ -868,6 +698,179 @@ rxvt_term::key_press (XKeyEvent &ev)
     {
       *--kbuf = C0_ESC;
       len++;
+    }
+
+  if (valid_keysym)
+    {
+#ifdef KEYSYM_RESOURCE
+      if (keyboard->dispatch (this, keysym, ev.state, kbuf, len))
+        return;
+#endif
+
+      if (saveLines)
+        {
+#ifdef UNSHIFTED_SCROLLKEYS
+          if (!ctrl && !meta)
+#else
+          if (IS_SCROLL_MOD)
+#endif
+            {
+              int lnsppg;
+
+#ifdef PAGING_CONTEXT_LINES
+              lnsppg = nrow - PAGING_CONTEXT_LINES;
+#else
+              lnsppg = nrow * 4 / 5;
+#endif
+              max_it (lnsppg, 1);
+
+              if (keysym == XK_Prior)
+                {
+                  scr_page (lnsppg);
+                  return;
+                }
+              else if (keysym == XK_Next)
+                {
+                  scr_page (-lnsppg);
+                  return;
+                }
+            }
+#ifdef SCROLL_ON_UPDOWN_KEYS
+          if (IS_SCROLL_MOD)
+            {
+              if (keysym == XK_Up)
+                {
+                  scr_page (1);
+                  return;
+                }
+              else if (keysym == XK_Down)
+                {
+                  scr_page (-1);
+                  return;
+                }
+            }
+#endif
+#ifdef SCROLL_ON_HOMEEND_KEYS
+          if (IS_SCROLL_MOD)
+            {
+              if (keysym == XK_Home)
+                {
+                  scr_changeview (top_row);
+                  return;
+                }
+              else if (keysym == XK_End)
+                {
+                  scr_changeview (0);
+                  return;
+                }
+            }
+#endif
+        }
+
+      if (shft)
+        {
+          /* Shift + F1 - F10 generates F11 - F20 */
+          if (keysym >= XK_F1 && keysym <= XK_F10)
+            {
+              keysym += (XK_F11 - XK_F1);
+              shft = 0;	/* turn off Shift */
+            }
+          else if (!ctrl && !meta && (priv_modes & PrivMode_ShiftKeys))
+            {
+              switch (keysym)
+                {
+                    /* normal XTerm key bindings */
+                  case XK_Insert:	/* Shift+Insert = paste mouse selection */
+                    selection_request (ev.time);
+                    return;
+#if TODO
+                    /* rxvt extras */
+                  case XK_KP_Add:	/* Shift+KP_Add = bigger font */
+                    return;
+                  case XK_KP_Subtract:	/* Shift+KP_Subtract = smaller font */
+                    return;
+#endif
+                }
+            }
+        }
+
+      if (ctrl && meta && (keysym == XK_c || keysym == XK_v))
+        {
+          if (keysym == XK_v)
+            selection_request (ev.time, Sel_Clipboard);
+          else if (selection.len > 0)
+            {
+              free (selection.clip_text);
+              selection.clip_text = rxvt_wcsdup (selection.text, selection.len);
+              selection.clip_len = selection.len;
+              selection_grab (CurrentTime, true);
+            }
+
+          return;
+        }
+
+#if ENABLE_FRILLS || ISO_14755
+      // ISO 14755 support
+      if (iso14755buf & (ISO_14755_STARTED | ISO_14755_51))
+        {
+          int hv;
+
+          if (iso14755buf & ISO_14755_51
+              && (keysym == XK_space || keysym == XK_KP_Space
+                  || keysym == XK_Return || keysym == XK_KP_Enter))
+            {
+              commit_iso14755 ();
+              iso14755buf = ISO_14755_51;
+# if ISO_14755
+              iso14755_51 (0);
+# endif
+              return;
+            }
+          else if (keysym == XK_BackSpace)
+            {
+              iso14755buf = ((iso14755buf & ISO_14755_MASK) >> 4) | ISO_14755_51;
+# if ISO_14755
+              iso14755_51 (iso14755buf & ISO_14755_MASK);
+# endif
+              return;
+            }
+          else if ((hv = hex_keyval (ev)) >= 0)
+            {
+              iso14755buf = ((iso14755buf << 4) & ISO_14755_MASK)
+                          | hv | ISO_14755_51;
+# if ISO_14755
+              iso14755_51 (iso14755buf & ISO_14755_MASK);
+# endif
+              return;
+            }
+          else
+            {
+# if ISO_14755
+              scr_overlay_off ();
+# endif
+              iso14755buf = 0;
+            }
+        }
+      else if (option (Opt_iso14755) &&
+               ((ctrl && (keysym == XK_Shift_L || keysym == XK_Shift_R))
+                || (shft && (keysym == XK_Control_L || keysym == XK_Control_R))))
+        if (!(iso14755buf & ISO_14755_STARTED))
+          {
+            iso14755buf |= ISO_14755_STARTED;
+# if ISO_14755
+            scr_overlay_new (0, -1, sizeof ("ISO 14755 mode") - 1, 1);
+            scr_overlay_set (0, 0, "ISO 14755 mode");
+# endif
+          }
+#endif
+
+#ifdef PRINTPIPE
+      if (keysym == XK_Print)
+        {
+          scr_printscreen (ctrl | shft);
+          return;
+        }
+#endif
     }
 
   if (HOOK_INVOKE ((this, HOOK_KEY_PRESS, DT_XEVENT, &ev, DT_INT, keysym, DT_STR_LEN, kbuf, len, DT_END)))

@@ -124,7 +124,7 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
 }
 
 bool
-keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state)
+keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state, const char *kbuf, int len)
 {
   assert (("register_done() need to be called", hash[0] == 0));
 
