@@ -353,8 +353,6 @@ manpage), with the additional members C<row> and C<col>, which are the
 C<on_key_press> additionally receives the string rxvt-unicode would
 output, if any, in locale-specific encoding.
 
-subwindow.
-
 =item on_client_message $term, $event
 
 =item on_wm_protocols $term, $event

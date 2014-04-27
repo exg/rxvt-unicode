@@ -1151,6 +1151,33 @@ The first line defines a mapping for C<Insert> and I<any> combination
 of modifiers. The second line re-establishes the default mapping for
 C<Shift-Insert>.
 
+=item builtin-string:
+
+This action is mainly useful to restore string mappings for keys that
+have predefined actions in @@RXVT_NAME@@. The exact semantics are a bit
+difficult to explain - basically, this action will send the string to the
+application that would be sent if @@RXVT_NAME@@ wouldn't have a built-in
+action for it.
+
+An example might make it clearer: @@RXVT_NAME@@ normally pastes the
+selection when you press C<Shift-Insert>. With the following bindings, it
+would instead emit the (undocumented, but what applications running in the
+terminal might expect) sequence C<ESC [ 2 $> instead:
+
+   URxvt.keysym.S-Insert: builtin-string:
+   URxvt.keysym.C-S-Insert: builtin:
+
+The first line disables the paste functionality for that key
+combination, and the second reinstates the default behaviour for
+C<Control-Shift-Insert>, which would otherwise be overridden.
+
+Similarly, to let applications gain access to the C<C-M-c> (copy to
+clipboard) and C<C-M-v> (paste clipboard) key combination, you cna do
+this:
+
+   URxvt.keysym.C-S-c: builtin-string:
+   URxvt.keysym.C-S-v: builtin-string:
+
 =item EXTENSION:STRING
 
 An action of this form passes the B<STRING> to the @@RXVT_NAME@@perl(3)
