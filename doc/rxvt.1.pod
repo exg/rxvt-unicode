@@ -1043,78 +1043,82 @@ B<-e>). The I<path> must be an absolute path and it must exist for
 @@RXVT_NAME@@ to start. If it isn't specified then the current working
 directory will be used; option B<-cd>.
 
-=item B<keysym.>I<sym>: I<string>
+=item B<keysym.>I<sym>: I<action>
 
-Compile I<frills>: Associate I<string> with keysym I<sym>. The
-intervening resource name B<keysym.> cannot be omitted.
+Compile I<frills>: Associate I<action> with keysym I<sym>. The intervening
+resource name B<keysym.> cannot be omitted.
 
-The format of I<sym> is "I<(modifiers-)key>", where I<modifiers> can be
-any combination of B<ISOLevel3>, B<AppKeypad>, B<Control>, B<NumLock>,
-B<Shift>, B<Meta>, B<Lock>, B<Mod1>, B<Mod2>, B<Mod3>, B<Mod4>, B<Mod5>,
-and the abbreviated B<I>, B<K>, B<C>, B<N>, B<S>, B<M>, B<A>, B<L>, B<1>,
-B<2>, B<3>, B<4>, B<5>.
+Using this resource, you can map key combinations such as
+C<Ctrl-Shift-BackSpace> to various actions, such as outputting a different
+string than would normally result from that combination, making the
+terminal scroll up or down the way you want it, or any other thing an
+extension might provide.
+
+The key combination that triggers the action, I<sym>, has the following format:
+
+   (modifiers-)key
+   
+Where I<modifiers> can be any combination of B<ISOLevel3>, B<AppKeypad>,
+B<Control>, B<NumLock>, B<Shift>, B<Meta>, B<Lock>, B<Mod1>, B<Mod2>,
+B<Mod3>, B<Mod4>, B<Mod5>, and the abbreviated B<I>, B<K>, B<C>, B<N>,
+B<S>, B<M>, B<A>, B<L>, B<1>, B<2>, B<3>, B<4>, B<5>.
 
 The B<NumLock>, B<Meta> and B<ISOLevel3> modifiers are usually aliased to
 whatever modifier the NumLock key, Meta/Alt keys or ISO Level3 Shift/AltGr
 keys are being mapped. B<AppKeypad> is a synthetic modifier mapped to the
 current application keymap mode state.
 
-The spellings of I<key> can be obtained by using B<xev>(1) command or
-searching keysym macros from B</usr/X11R6/include/X11/keysymdef.h> and
-omitting the prefix B<XK_>. Alternatively you can specify I<key> by its hex
-keysym value (B<0x0000 - 0xFFFF>). Note that the lookup of I<sym>s is not
-performed in an exact manner; however, the closest match is assured.
+Due the the large number of modifier combinations, a key mapping will
+match if I<at least> the specified identifiers are being set, and no other
+key mappings with those and more bits are being defined. That means that
+defining a mapping for C<a> will automatically provide definitions for
+C<Meta-a>, C<Shift-a> and so on, unless some of those are defined mappings
+themselves. See the C<builtin:> action, below, for a way to work around
+this when this is a problem.
 
-I<string> may contain escape values (C<\n>: newline, C<\000>: octal
+The spelling of I<key> depends on your implementation of X. An easy way to
+find a key name is to use the B<xev>(1) command. You can find a list by
+looking for the C<XK_> macros in the B<X11/keysymdef.h> include file (omit
+the C<XK_> prefix). Alternatively you can specify I<key> by its hex keysym
+value (B<0x0000 - 0xFFFF>).
+
+As with any resource value, the I<action> string may contain backslash
+escape sequences (C<\n>: newline, C<\\>: backslash, C<\000>: octal
 number), see RESOURCES in C<man 7 X> for further details.
 
-You can define a range of keysyms in one shot by
-loading the C<keysym-list> perl extension and providing a I<string>
-with pattern B<list/PREFIX/MIDDLE/SUFFIX>, where the delimiter `/'
-should be a character not used by the strings.
+An action starts with an action prefix that selects a certain type
+of action, followed by a colon. An action strings without colons is
+interpreted as a literal string to pass to the tty (as if they were
+prefixed with C<string:>).
 
-Its usage can be demonstrated by an example:
+The following action prefixes are known - extensions can provide
+additional prefixes:
 
-  URxvt.keysym.M-C-0x61:    list|\033<|abc|>
+=over 4
 
-The above line is equivalent to the following three lines:
+=item string:STRING
 
-  URxvt.keysym.Meta-Control-0x61:    \033<a>
-  URxvt.keysym.Meta-Control-0x62:    \033<b>
-  URxvt.keysym.Meta-Control-0x63:    \033<c>
+If the I<action> starts with C<string:> (or otherwise contains no colons),
+then the remaining C<STRING> will be passed to the program running in the
+terminal. For example, you could replace whatever Shift-Tab outputs by the
+string C<echo rm -rf /> followed by a newline:
 
-If I<string> takes the form of C<command:STRING>, the specified B<STRING>
-is interpreted and executed as @@RXVT_NAME@@'s control sequence. For
-example the following means "change the current locale to C<zh_CN.GBK>
+   URxvt.keysym.Shift-Tab: string:echo rm -rf /\n
+
+This could in theory be used to completely redefine your keymap.
+
+=item command:STRING
+
+If I<action> takes the form of C<command:STRING>, the specified B<STRING>
+is interpreted and executed as @@RXVT_NAME@@'s control sequence (basically
+the opposite of C<string:> - instead of sending it to the program running
+in the terminal, it will be treated as if it were program output). This is
+most useful to feed command sequences into @@RXVT_NAME@@.
+
+For example the following means "change the current locale to C<zh_CN.GBK>
 when Control-Meta-c is being pressed":
 
   URxvt.keysym.M-C-c: command:\033]701;zh_CN.GBK\007
-
-If I<string> takes the form C<perl:STRING>, then the specified B<STRING>
-is passed to the C<on_user_command> perl handler. See the @@RXVT_NAME@@perl(3)
-manpage. For example, the F<selection> extension (activated via
-C<@@RXVT_NAME@@ -pe selection>) listens for C<selection:rot13> events:
-
-  URxvt.keysym.M-C-c: perl:selection:rot13
-
-Due the the large number of modifier combinations, a defined key mapping
-will match if I<at least> the specified identifiers are being set, and
-no other key mappings with those and more bits are being defined. That
-means that defining a key map for C<a> will automatically provide
-definitions for C<Meta-a>, C<Shift-a> and so on, unless some of those are defined
-mappings themselves.
-
-Unfortunately, this will override built-in key mappings. For example
-if you overwrite the C<Insert> key you will disable @@RXVT_NAME@@'s
-C<Shift-Insert> mapping. To re-enable that, you can poke "holes" into the
-user-defined keymap using the C<builtin:> replacement:
-
-  URxvt.keysym.Insert: <my insert key sequence>
-  URxvt.keysym.S-Insert: builtin:
-
-The first line defines a mapping for C<Insert> and I<any> combination
-of modifiers. The second line re-establishes the default mapping for
-C<Shift-Insert>.
 
 The following example will map Control-Meta-1 and Control-Meta-2 to
 the fonts C<suxuseuro> and C<9x15bold>, so you can have some limited
@@ -1128,6 +1132,63 @@ info):
 
   URxvt.keysym.M-C-3: command:\033[8;25;80t
   URxvt.keysym.M-C-4: command:\033[8;48;110t
+
+=item builtin:
+
+The builtin action is the action that @@RXVT_NAME@@ would execute if no
+key binding existed for the key combination. The obvious use is to undo
+the effect of existing bindings. The not so obvious use is to reinstate
+bindings when another binding overrides too many modifiers.
+
+For example if you overwrite the C<Insert> key you will disable
+@@RXVT_NAME@@'s C<Shift-Insert> mapping. To re-enable that, you can poke
+"holes" into the user-defined keymap using the C<builtin:> replacement:
+
+  URxvt.keysym.Insert: <my insert key sequence>
+  URxvt.keysym.S-Insert: builtin:
+
+The first line defines a mapping for C<Insert> and I<any> combination
+of modifiers. The second line re-establishes the default mapping for
+C<Shift-Insert>.
+
+=item EXTENSION:STRING
+
+An action of this form passes the B<STRING> to the @@RXVT_NAME@@perl(3)
+extension of the same name. The extension will be loaded automatically if
+neccessary.
+
+Not all extensions define key actions, but popular extensions that do
+include the I<selection> and I<matcher> extensions (documented in their
+own manpages, @@RXVT_NAME@@-selection(1) and @@RXVT_NAME@@-matcher(1),
+respectively).
+
+From the silly examples department, this will rot13-"encrypt"
+@@RXVT_NAME@@'s selection when Alt-Control-c is pressed on typical PC
+keyboards:
+
+  URxvt.keysym.M-C-c: selection:rot13
+
+=item perl:STRING
+
+This is a deprecated way of passing key mappings to perl extensions. It is
+still supported, but should not be used anymore.
+
+=back
+
+In addition, you can define a range of keysyms in one shot by loading
+the C<keysym-list> perl extension and providing a I<string> with pattern
+B<list/PREFIX/MIDDLE/SUFFIX>, where the delimiter `/' should be a
+character not used by the strings.
+
+Its usage can be demonstrated by an example:
+
+  URxvt.keysym.M-C-0x61:    list|\033<|abc|>
+
+The above line is equivalent to the following three lines:
+
+  URxvt.keysym.Meta-Control-0x61:    \033<a>
+  URxvt.keysym.Meta-Control-0x62:    \033<b>
+  URxvt.keysym.Meta-Control-0x63:    \033<c>
 
 =item B<perl-ext-common>: I<string>
 
