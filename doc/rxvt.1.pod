@@ -1057,7 +1057,7 @@ extension might provide.
 The key combination that triggers the action, I<sym>, has the following format:
 
    (modifiers-)key
-   
+
 Where I<modifiers> can be any combination of B<ISOLevel3>, B<AppKeypad>,
 B<Control>, B<NumLock>, B<Shift>, B<Meta>, B<Lock>, B<Mod1>, B<Mod2>,
 B<Mod3>, B<Mod4>, B<Mod5>, and the abbreviated B<I>, B<K>, B<C>, B<N>,
@@ -1172,7 +1172,7 @@ combination, and the second reinstates the default behaviour for
 C<Control-Shift-Insert>, which would otherwise be overridden.
 
 Similarly, to let applications gain access to the C<C-M-c> (copy to
-clipboard) and C<C-M-v> (paste clipboard) key combination, you cna do
+clipboard) and C<C-M-v> (paste clipboard) key combination, you can do
 this:
 
    URxvt.keysym.C-S-c: builtin-string:
