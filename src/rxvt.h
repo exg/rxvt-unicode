@@ -1334,6 +1334,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void pointer_unblank ();
 
   void tt_printf (const char *fmt,...);
+  void tt_write_user_input (const char *data, unsigned int len);
   void tt_write (const char *data, unsigned int len);
   void pty_write ();
 

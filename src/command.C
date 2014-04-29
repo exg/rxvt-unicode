@@ -879,14 +879,7 @@ rxvt_term::key_press (XKeyEvent &ev)
   if (len <= 0)
     return;			/* not mapped */
 
-  if (option (Opt_scrollTtyKeypress))
-    if (view_start)
-      {
-        view_start = 0;
-        want_refresh = 1;
-      }
-
-  tt_write (kbuf, (unsigned int)len);
+  tt_write_user_input (kbuf, (unsigned int)len);
 }
 
 void ecb_cold
@@ -4063,6 +4056,20 @@ rxvt_term::tt_printf (const char *fmt,...)
   vsnprintf ((char *)buf, 256, fmt, arg_ptr);
   va_end (arg_ptr);
   tt_write (buf, strlen (buf));
+}
+
+/* Write data to the pty as typed by the user. */
+void
+rxvt_term::tt_write_user_input (const char *data, unsigned int len)
+{
+  if (option (Opt_scrollTtyKeypress))
+    if (view_start)
+      {
+        view_start = 0;
+        want_refresh = 1;
+      }
+
+  tt_write (data, len);
 }
 
 /* ---------------------------------------------------------------------- */
