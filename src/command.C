@@ -417,7 +417,7 @@ rxvt_term::key_press (XKeyEvent &ev)
   int ctrl, meta, shft, len;
   KeySym keysym;
   int valid_keysym;
-  char rkbuf[KBUFSZ];
+  char rkbuf[KBUFSZ + 1];
   char *kbuf = rkbuf + 1;
 
 #if ISO_14755
