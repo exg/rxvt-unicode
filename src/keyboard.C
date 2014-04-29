@@ -104,6 +104,8 @@ keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, 
 
   if (strncmp (translation, "builtin:", 8) == 0)
     key->type = keysym_t::BUILTIN;
+  else if (strncmp (translation, "builtin-string:", 15) == 0)
+    key->type = keysym_t::BUILTIN_STRING;
 
   if (keymap.size () == keymap.capacity ())
     keymap.reserve (keymap.size () * 2);
@@ -132,7 +134,12 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state, 
     {
       keysym_t *key = keymap [index];
 
-      if (key->type != keysym_t::BUILTIN)
+      if (key->type == keysym_t::BUILTIN_STRING)
+        {
+          term->tt_write_user_input (kbuf, len);
+          return true;
+        }
+      else if (key->type != keysym_t::BUILTIN)
         {
           wchar_t *ws = rxvt_utf8towcs (key->str);
           char *str = rxvt_wcstombs (ws);

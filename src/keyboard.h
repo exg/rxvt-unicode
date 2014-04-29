@@ -50,7 +50,7 @@ struct rxvt_term;
 struct keysym_t
 {
   enum keysym_type {
-    STRING, BUILTIN,
+    STRING, BUILTIN, BUILTIN_STRING,
   };
 
   KeySym      keysym;
