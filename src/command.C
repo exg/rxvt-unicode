@@ -700,6 +700,9 @@ rxvt_term::key_press (XKeyEvent &ev)
       len++;
     }
 
+  if (HOOK_INVOKE ((this, HOOK_KEY_PRESS, DT_XEVENT, &ev, DT_INT, keysym, DT_STR_LEN, kbuf, len, DT_END)))
+    return;
+
   if (valid_keysym)
     {
 #ifdef KEYSYM_RESOURCE
@@ -872,9 +875,6 @@ rxvt_term::key_press (XKeyEvent &ev)
         }
 #endif
     }
-
-  if (HOOK_INVOKE ((this, HOOK_KEY_PRESS, DT_XEVENT, &ev, DT_INT, keysym, DT_STR_LEN, kbuf, len, DT_END)))
-    return;
 
   if (len <= 0)
     return;			/* not mapped */
