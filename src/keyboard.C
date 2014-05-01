@@ -152,7 +152,7 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state, 
                 term->cmdbuf_append (str + 8, strlen (str) - 8);
               else if (strncmp (str, "string:", 7) == 0)
                 term->tt_write_user_input (colon + 1, strlen (colon + 1));
-              else if (strncmp (str, "perl:", 8) == 0)
+              else if (strncmp (str, "perl:", 5) == 0)
                 HOOK_INVOKE ((term, HOOK_USER_COMMAND, DT_STR, colon + 1, DT_END));
               else
                 HOOK_INVOKE ((term, HOOK_KEYBOARD_DISPATCH, DT_STR_LEN, str, colon - str, DT_STR, colon + 1, DT_END));
