@@ -650,7 +650,7 @@ rxvt_define_key (XrmDatabase *database ecb_unused,
     ;
 
   last--;
-  term->parse_keysym (XrmQuarkToString (quarks[last]), (char *)value->addr);
+  term->bind_action (XrmQuarkToString (quarks[last]), (char *)value->addr);
   return False;
 }
 
@@ -695,7 +695,7 @@ static const keysym_vocabulary_t keysym_vocabulary[] =
 };
 
 int
-rxvt_term::parse_keysym (const char *str, const char *arg)
+rxvt_term::bind_action (const char *str, const char *arg)
 {
   int sym;
   unsigned int state = 0;

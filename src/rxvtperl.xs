@@ -1833,9 +1833,11 @@ rxvt_term::option (U8 optval, int set = -1)
         RETVAL
 
 bool
-rxvt_term::parse_keysym (char *keysym, char *str)
+rxvt_term::bind_action (char *keysym, char *str)
+        ALIAS:
+           parse_keysym = 1
 	CODE:
-        RETVAL = 0 < THIS->parse_keysym (keysym, str);
+        RETVAL = 0 < THIS->bind_action (keysym, str);
         THIS->keyboard->register_done ();
 	OUTPUT:
         RETVAL

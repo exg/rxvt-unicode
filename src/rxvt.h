@@ -1569,7 +1569,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   // xdefaults.C
   void rxvt_usage (int type);
   const char **get_options (int argc, const char *const *argv);
-  int parse_keysym (const char *str, const char *arg);
+  int bind_action (const char *str, const char *arg);
   const char *x_resource (const char *name);
   void extract_resources ();
   void extract_keysym_resources ();

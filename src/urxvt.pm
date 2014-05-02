@@ -1254,7 +1254,7 @@ sub x_resource_boolean {
    $res =~ /^\s*(?:true|yes|on|1)\s*$/i ? 1 : defined $res && 0
 }
 
-=item $success = $term->parse_keysym ($key, $octets)
+=item $success = $term->bind_action ($key, $octets)
 
 Adds a key binding exactly as specified via a resource. See the
 C<keysym> resource in the urxvt(1) manpage.
