@@ -1846,7 +1846,7 @@ void
 rxvt_term::register_command (int keysym, unsigned int state, SV *str)
         CODE:
         wchar_t *wstr = sv2wcs (str);
-        THIS->keyboard->register_user_translation (keysym, state, wstr);
+        THIS->keyboard->register_action (keysym, state, wstr);
         free (wstr);
 
 void

@@ -91,7 +91,7 @@ keyboard_manager::~keyboard_manager ()
 }
 
 void
-keyboard_manager::register_user_translation (KeySym keysym, unsigned int state, const wchar_t *ws)
+keyboard_manager::register_action (KeySym keysym, unsigned int state, const wchar_t *ws)
 {
   char *translation = rxvt_wcstoutf8 (ws);
 
