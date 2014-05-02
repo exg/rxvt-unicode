@@ -1,8 +1,16 @@
 #! perl
 
+#:META:X_RESOURCE:%.hotkey:string:activation hotkey keysym
+
 =head1 NAME
 
-kuake<hotkey> - kuake-like hotkey terminal
+kuake - kuake-like hotkey terminal
+
+=head1 EXAMPLES
+
+  @@RXVT_NAME@@ -kuake-hotkey F10
+
+  URxvt.kuake.hotkey: F10
 
 =head1 DESCRIPTION
 
@@ -28,7 +36,7 @@ If you want a quake-like animation, tell your window manager to do so
 sub on_start {
    my ($self) = @_;
 
-   $self->{key} = $self->{argv}[0] || "F10";
+   $self->{key} = $self->{argv}[0] || $self->x_resource ("%.hotkey") || "F10";
 
    $self->{keysym} = $self->XStringToKeysym ($self->{key})
       or urxvt::fatal "cannot convert requested kuake wake-up key '$self->{key}' to keysym, unable to continue.\n";
