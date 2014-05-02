@@ -1983,6 +1983,14 @@ rxvt_term::scr_add_lines (SV *string)
 }
 
 void
+rxvt_term::tt_write_user_input (SV *octets)
+        INIT:
+          STRLEN len;
+          char *str = SvPVbyte (octets, len);
+	C_ARGS:
+          str, len
+
+void
 rxvt_term::tt_write (SV *octets)
         INIT:
           STRLEN len;
