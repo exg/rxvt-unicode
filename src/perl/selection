@@ -55,17 +55,13 @@ Rot-13 the selection when activated. Used via keyboard trigger:
 
 =cut
 
-sub on_user_command {
-   my ($self, $cmd) = @_;
+sub on_action {
+   my ($self, $action) = @_;
 
-   $cmd eq "selection:rot13"
+   $action eq "rot13"
       and $self->selection (map { y/A-Za-z/N-ZA-Mn-za-m/; $_ } $self->selection);
 
    ()
-}
-
-sub on_keyboard_dispatch {
-   &on_user_command;
 }
 
 sub on_init {

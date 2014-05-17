@@ -115,12 +115,11 @@ sub on_start {
    ()
 }
 
-sub on_user_command {
-   my ($self, $cmd) = @_;
+sub on_action {
+   my ($self, $action) = @_;
 
-   if ($cmd eq "selection-pastebin:remote-pastebin") {
-      $self->upload_paste;
-   }
+   $action eq "remote-pastebin"
+      and $self->upload_paste;
 
    ()
 }
