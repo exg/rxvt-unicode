@@ -290,7 +290,7 @@ a C<perl:string> action bound to a key, see description of the B<keysym>
 resource in the urxvt(1) manpage).
 
 The event is simply the action string. This interface is going away in
-preference to the C<< ->register_keysym_action >> method.
+preference to the C<on_action> hook.
 
 =item on_resize_all_windows $term, $new_width, $new_height
 
