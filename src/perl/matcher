@@ -1,7 +1,7 @@
 #! perl
 
 # Author: Tim Pope <rxvt-unicodeNOSPAM@tpope.org>
-#          Bob Farrell <robertanthonyfarrell@gmail.com>
+#         Bob Farrell <robertanthonyfarrell@gmail.com>
 
 #:META:X_RESOURCE:%.launcher:string:default launcher command
 #:META:X_RESOURCE:%.button:string:the button, yeah
@@ -33,9 +33,12 @@ It is possible to activate the most recently seen match or a list of matches
 from the keyboard.  Simply bind a keysym to "perl:matcher:last" or
 "perl:matcher:list" as seen in the example below.
 
-Example configuration:
+Example: load and use the matcher extension with defaults.
 
     URxvt.perl-ext:           default,matcher
+
+Example: use a custom configuration.
+
     URxvt.url-launcher:       sensible-browser
     URxvt.keysym.C-Delete:    perl:matcher:last
     URxvt.keysym.M-Delete:    perl:matcher:list
@@ -75,29 +78,28 @@ sub on_key_press {
    $self->exec_async( $self->{launcher}, @args );
 }
 
+# backwards compat
 sub on_user_command {
    my ($self, $cmd) = @_;
 
-   if($cmd =~ s/^matcher:list\b//) {
-      $self->matchlist();
+   if ($cmd =~ s/^matcher:list\b//) {
+      $self->matchlist;
    } else {
-      if($cmd =~ s/^matcher:last\b//) {
+      if ($cmd =~ s/^matcher:last\b//) {
          $self->most_recent;
-      }
-   # For backward compatibility
-    else {
-      if($cmd =~ s/^matcher\b//) {
+      } elsif ($cmd =~ s/^matcher\b//) {
+         # for backward compatibility
          $self->most_recent;
       }
    }
-  }
+
    ()
 }
 
 sub matchlist {
    my ($self) = @_;
    if ( $self->{showing} ) {
-     $self->{url_overlay}->hide();
+     $self->{url_overlay}->hide;
      $self->{showing} = 0;
      return;
    }
