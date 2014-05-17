@@ -559,7 +559,7 @@ sub parse_resource {
 
    $name =~ y/-/./ if $isarg;
 
-   $term->scan_meta;
+   $term->scan_extensions;
 
    my $r = $term->{meta}{resource};
    keys %$r; # reset iterator
@@ -589,7 +589,7 @@ sub parse_resource {
 sub usage {
    my ($term, $usage_type) = @_;
 
-   $term->scan_meta;
+   $term->scan_extensions;
 
    my $r = $term->{meta}{resource};
 
@@ -663,6 +663,8 @@ sub invoke {
    if ($htype == HOOK_INIT) {
       my @dirs = $TERM->perl_libdirs;
 
+      $TERM->scan_extensions;
+
       my %ext_arg;
 
       {
@@ -709,13 +711,20 @@ sub invoke {
       verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $TERM, @_) . ")"
          if $verbosity >= 10;
 
-      for my $pkg (
+      if ($htype == HOOK_ACTION) {
          # this hook is only sent to the extension with the name
          # matching the first arg
-         $htype == HOOK_KEYBOARD_DISPATCH
-         ? exists $cb->{"urxvt::ext::$_[0]"} ? "urxvt::ext::" . shift : return undef
-         : keys %$cb
-      ) {
+         my $pkg = shift;
+         $pkg =~ y/-/_/;
+         $pkg = "urxvt::ext::$pkg";
+
+         $cb = $cb->{$pkg}
+            or return undef; #TODO: maybe warn user?
+
+         $cb = { $pkg => $cb };
+      }
+
+      for my $pkg (keys %$cb) {
          my $retval_ = eval { $cb->{$pkg}->($TERM->{_pkg}{$pkg} || $TERM, @_) };
          $retval ||= $retval_;
 
@@ -1064,8 +1073,12 @@ sub perl_libdirs {
       "$LIBDIR/perl"
 }
 
-sub scan_meta {
+# scan for available extensions and collect their metadata
+sub scan_extensions {
    my ($self) = @_;
+
+   return if exists $self->{meta};
+
    my @libdirs = perl_libdirs $self;
 
    return if $self->{meta_libdirs} eq join "\x00", @libdirs;
@@ -1075,6 +1088,9 @@ sub scan_meta {
    $self->{meta_libdirs} = join "\x00", @libdirs;
    $self->{meta}         = \%meta;
 
+   my %ext;
+
+   # first gather extensions
    for my $dir (reverse @libdirs) {
       opendir my $fh, $dir
          or next;
@@ -1083,22 +1099,36 @@ sub scan_meta {
             and open my $fh, "<", "$dir/$ext"
             or next;
 
+         my %ext = (dir => $dir);
+
          while (<$fh>) {
-            if (/^#:META:X_RESOURCE:(.*)/) {
+            if (/^#:META:(?:X_)?RESOURCE:(.*)/) {
                my ($pattern, $type, $desc) = split /:/, $1;
                $pattern =~ s/^%(\.|$)/$ext$1/g; # % in pattern == extension name
                if ($pattern =~ /[^a-zA-Z0-9\-\.]/) {
                   warn "$dir/$ext: meta resource '$pattern' contains illegal characters (not alphanumeric nor . nor *)\n";
                } else {
-                  $meta{resource}{$pattern} = [$ext, $type, $desc];
+                  $ext{resource}{$pattern} = [$ext, $type, $desc];
                }
+            } elsif (/^#:META:BINDING:(.*)/) {
+               my ($keysym, $action) = split /:/, $1;
+               $ext{binding}{$keysym} = $action;
             } elsif (/^\s*(?:#|$)/) {
                # skip other comments and empty lines
             } else {
                last; # stop parsing on first non-empty non-comment line
             }
          }
+
+         $meta{$ext} = \%ext;
       }
+   }
+
+   # and now merge resources and bindings
+   while (my ($k, $v) = each %ext) {
+      #TODO: should check for extensions overriding each other
+      %{ $meta{resource} } = (%{ $meta{resource} }, %{ $v->{resource} });
+      %{ $meta{binding}  } = (%{ $meta{binding}  }, %{ $v->{binding}  });
    }
 }
 
@@ -1256,7 +1286,7 @@ sub x_resource_boolean {
 
 =item $success = $term->bind_action ($key, $octets)
 
-Adds a key binding exactly as specified via a resource. See the
+Adds a key binding exactly as specified via a C<keysym> resource. See the
 C<keysym> resource in the urxvt(1) manpage.
 
 =item $rend = $term->rstyle ([$new_rstyle])
@@ -1447,6 +1477,14 @@ locale-specific encoding of the terminal and can contain command sequences
 Write the octets given in C<$octets> to the tty (i.e. as program input). To
 pass characters instead of octets, you should convert your strings first
 to the locale-specific encoding using C<< $term->locale_encode >>.
+
+=item $term->tt_write_user_input ($octets)
+
+Like C<tt_write>, but should be used when writing strings in response to
+the user pressing a key, to invokes the additional actions requested by
+the user for that case (C<tt_write> doesn't do that).
+
+The typical use case would be inside C<on_action> hooks.
 
 =item $term->tt_paste ($octets)
 

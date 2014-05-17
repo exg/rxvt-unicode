@@ -3,7 +3,7 @@
 # this extension implements scrollback buffer search
 
 #:META:RESOURCE:%:string:activation hotkey keysym
-#:META:KEYSYM:M-s:searchable-scrollback:start
+#:META:BINDING:M-s:start
 
 =head1 NAME
 
@@ -35,20 +35,21 @@ See L<perlre> for more info about perl regular expression syntax.
 sub on_init {
    my ($self) = @_;
 
+   # only for backwards compatibility
    my $hotkey = $self->{argv}[0]
                 || $self->x_resource ("%")
                 || "M-s";
 
-   $self->parse_keysym ($hotkey, "perl:searchable-scrollback:start")
+   $self->bind_action ($hotkey, "searchable-scrollback:start") # ugh
       or warn "unable to register '$hotkey' as scrollback search start hotkey\n";
 
    ()
 }
 
-sub on_user_command {
-   my ($self, $cmd) = @_;
+sub on_action {
+   my ($self, $action) = @_;
 
-   $cmd eq "searchable-scrollback:start"
+   $action eq "start"
       and $self->enter;
 
    ()

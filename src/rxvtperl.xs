@@ -797,7 +797,7 @@ BOOT:
 #   define const_iv(name) { # name, (IV)name }
     const_iv (HOOK_INIT),
     const_iv (HOOK_DESTROY),
-    const_iv (HOOK_KEYBOARD_DISPATCH),
+    const_iv (HOOK_ACTION),
 
     const_iv (NUM_RESOURCES),
     const_iv (DEFAULT_RSTYLE),
