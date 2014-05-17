@@ -38,7 +38,7 @@ sub on_init {
    # only for backwards compatibility
    my $hotkey = $self->{argv}[0]
                 || $self->x_resource ("%")
-                || "M-s";
+                || return;
 
    $self->bind_action ($hotkey, "searchable-scrollback:start") # ugh
       or warn "unable to register '$hotkey' as scrollback search start hotkey\n";

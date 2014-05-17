@@ -1195,27 +1195,12 @@ keyboards:
 
   URxvt.keysym.M-C-c: selection:rot13
 
-=item perl:STRING
+=item perl:STRING *DEPRECATED*
 
 This is a deprecated way of passing key mappings to perl extensions. It is
 still supported, but should not be used anymore.
 
 =back
-
-In addition, you can define a range of keysyms in one shot by loading
-the C<keysym-list> perl extension and providing a I<string> with pattern
-B<list/PREFIX/MIDDLE/SUFFIX>, where the delimiter `/' should be a
-character not used by the strings.
-
-Its usage can be demonstrated by an example:
-
-  URxvt.keysym.M-C-0x61:    list|\033<|abc|>
-
-The above line is equivalent to the following three lines:
-
-  URxvt.keysym.Meta-Control-0x61:    \033<a>
-  URxvt.keysym.Meta-Control-0x62:    \033<b>
-  URxvt.keysym.Meta-Control-0x63:    \033<c>
 
 =item B<perl-ext-common>: I<string>
 
@@ -1230,17 +1215,14 @@ by default, or specified via the C<perl-ext-common> resource. For
 example, C<default,-selection> will use all the default extension except
 C<selection>.
 
-Extension names can also be followed by an argument in angle brackets
-(e.g.  C<< searchable-scrollback<M-s> >>, which binds the hotkey for
-searchable scrollback to Alt/Meta-s). Mentioning the same extension
-multiple times with different arguments will pass multiple arguments to
-the extension.
+Some extensions define resources or command line switches, and will
+automatically be used when their resource or switch is specified.
 
 Each extension is looked up in the library directories, loaded if
 necessary, and bound to the current terminal instance.
 
-If both of these resources are the empty string, then the perl
-interpreter will not be initialized. The idea behind two options is that
+If both of these resources are the empty string, then the perl interpreter
+will not be initialized. The rationale for having two options is that
 B<perl-ext-common> will be used for extensions that should be available to
 all instances, while B<perl-ext> is used for specific instances.
 
@@ -1268,10 +1250,12 @@ details.
 Selection auto-transform patterns, see the @@RXVT_NAME@@perl(3) manpage
 for details.
 
-=item B<searchable-scrollback:> I<keysym>
+=item B<searchable-scrollback:> I<keysym> *DEPRECATED*
 
-Sets the hotkey that starts the incremental scrollback buffer search
-(default: C<M-s>).
+This resource is deprecated and will be removed. Use a B<keysym> resource
+instead, e.g.:
+
+   URxvt.keysym.M-s: searchable-scrollback:start
 
 =item B<url-launcher>: I<string>
 

@@ -681,14 +681,26 @@ sub invoke {
          grep $_, map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2
       ) {
          if ($_ eq "default") {
-            $ext_arg{$_} ||= [] for qw(selection option-popup selection-popup searchable-scrollback readline);
+
+            $ext_arg{$_} ||= []
+               for
+                  qw(selection option-popup selection-popup readline),
+                  map $_->[0], values %{ $TERM->{meta}{binding} };
+
          } elsif (/^-(.*)$/) {
             delete $ext_arg{$1};
+
          } elsif (/^([^<]+)<(.*)>$/) {
             push @{ $ext_arg{$1} }, $2;
+
          } else {
             $ext_arg{$_} ||= [];
          }
+      }
+
+      # now register default key bindings
+      while (my ($k, $v) = each %{ $TERM->{meta}{binding} }) {
+         $TERM->bind_action ($k, "$v->[0]:$v->[1]");
       }
 
       for my $ext (sort keys %ext_arg) {
@@ -1081,14 +1093,10 @@ sub scan_extensions {
 
    my @libdirs = perl_libdirs $self;
 
-   return if $self->{meta_libdirs} eq join "\x00", @libdirs;
+#   return if $self->{meta_libdirs} eq join "\x00", @libdirs;#d#
 
-   my %meta;
-
-   $self->{meta_libdirs} = join "\x00", @libdirs;
-   $self->{meta}         = \%meta;
-
-   my %ext;
+#   $self->{meta_libdirs} = join "\x00", @libdirs;#d#
+   $self->{meta} = \my %meta;
 
    # first gather extensions
    for my $dir (reverse @libdirs) {
@@ -1112,7 +1120,7 @@ sub scan_extensions {
                }
             } elsif (/^#:META:BINDING:(.*)/) {
                my ($keysym, $action) = split /:/, $1;
-               $ext{binding}{$keysym} = $action;
+               $ext{binding}{$keysym} = [$ext, $action];
             } elsif (/^\s*(?:#|$)/) {
                # skip other comments and empty lines
             } else {
@@ -1120,12 +1128,12 @@ sub scan_extensions {
             }
          }
 
-         $meta{$ext} = \%ext;
+         $meta{ext}{$ext} = \%ext;
       }
    }
 
    # and now merge resources and bindings
-   while (my ($k, $v) = each %ext) {
+   while (my ($k, $v) = each %{ $meta{ext} }) {
       #TODO: should check for extensions overriding each other
       %{ $meta{resource} } = (%{ $meta{resource} }, %{ $v->{resource} });
       %{ $meta{binding}  } = (%{ $meta{binding}  }, %{ $v->{binding}  });
