@@ -1,6 +1,6 @@
 #! perl
 
-#:META:X_RESOURCE:%.pattern-0:string:first selection pattern
+#:META:RESOURCE:%.pattern-0:string:first selection pattern
 
 =head1 NAME
 

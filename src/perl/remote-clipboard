@@ -1,7 +1,7 @@
 #! perl
 
-#:META:X_RESOURCE:%.store:string:the command used to store the selection
-#:META:X_RESOURCE:%.fetch:string:the command used to fetch the selection
+#:META:RESOURCE:%.store:string:the command used to store the selection
+#:META:RESOURCE:%.fetch:string:the command used to fetch the selection
 
 =head1 NAME
 

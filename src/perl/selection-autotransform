@@ -1,6 +1,6 @@
 #! perl
 
-#:META:X_RESOURCE:%.:string:autotransform expression
+#:META:RESOURCE:%.:string:autotransform expression
 
 =head1 NAME
 

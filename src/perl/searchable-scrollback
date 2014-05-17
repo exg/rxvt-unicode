@@ -2,7 +2,7 @@
 
 # this extension implements scrollback buffer search
 
-#:META:X_RESOURCE:%:string:activation hotkey keysym
+#:META:RESOURCE:%:string:activation hotkey keysym
 #:META:KEYSYM:M-s:searchable-scrollback:start
 
 =head1 NAME

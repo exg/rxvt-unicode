@@ -1,9 +1,9 @@
 #! perl
 
-#:META:X_RESOURCE:tabbar-fg:colour:tab bar foreground colour
-#:META:X_RESOURCE:tabbar-bg:colour:tab bar background colour
-#:META:X_RESOURCE:tab-fg:colour:tab foreground colour
-#:META:X_RESOURCE:tab-bg:colour:tab background colour
+#:META:RESOURCE:tabbar-fg:colour:tab bar foreground colour
+#:META:RESOURCE:tabbar-bg:colour:tab bar background colour
+#:META:RESOURCE:tab-fg:colour:tab foreground colour
+#:META:RESOURCE:tab-bg:colour:tab background colour
 
 =head1 NAME
 

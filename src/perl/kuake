@@ -1,6 +1,6 @@
 #! perl
 
-#:META:X_RESOURCE:%.hotkey:string:activation hotkey keysym
+#:META:RESOURCE:%.hotkey:string:activation hotkey keysym
 
 =head1 NAME
 

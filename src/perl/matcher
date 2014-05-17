@@ -3,11 +3,11 @@
 # Author: Tim Pope <rxvt-unicodeNOSPAM@tpope.org>
 #         Bob Farrell <robertanthonyfarrell@gmail.com>
 
-#:META:X_RESOURCE:%.launcher:string:default launcher command
-#:META:X_RESOURCE:%.button:string:the button, yeah
-#:META:X_RESOURCE:%.pattern.:string:extra pattern to match
-#:META:X_RESOURCE:%.launcher.:string:custom launcher for pattern
-#:META:X_RESOURCE:%.rend.:string:custom rednition for pattern
+#:META:RESOURCE:%.launcher:string:default launcher command
+#:META:RESOURCE:%.button:string:the button, yeah
+#:META:RESOURCE:%.pattern.:string:extra pattern to match
+#:META:RESOURCE:%.launcher.:string:custom launcher for pattern
+#:META:RESOURCE:%.rend.:string:custom rednition for pattern
 
 =head1 NAME
 

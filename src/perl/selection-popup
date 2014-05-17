@@ -1,6 +1,6 @@
 #! perl
 
-#:META:X_RESOURCE:url-launcher:string:shell command to use
+#:META:RESOURCE:url-launcher:string:shell command to use
 
 =head1 NAME
 

@@ -1,8 +1,8 @@
 #! perl
 
-#:META:X_RESOURCE:%.expr:string:background expression
-#:META:X_RESOURCE:%.border:boolean:respect the terminal border
-#:META:X_RESOURCE:%.interval:seconds:minimum time between updates
+#:META:RESOURCE:%.expr:string:background expression
+#:META:RESOURCE:%.border:boolean:respect the terminal border
+#:META:RESOURCE:%.interval:seconds:minimum time between updates
 
 =head1 NAME
 
