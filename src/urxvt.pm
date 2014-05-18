@@ -682,10 +682,20 @@ sub invoke {
       ) {
          if ($_ eq "default") {
 
-            $ext_arg{$_} ||= []
+            $ext_arg{$_} = []
                for
                   qw(selection option-popup selection-popup readline),
                   map $_->[0], values %{ $TERM->{meta}{binding} };
+
+            for ($TERM->_keysym_resources) {
+               next if /^(?:string|command|builtin|builtin-string|perl)/;
+               next unless /^([A-Za-z0-9_\-]+):/;
+
+               my $ext = $1;
+               $ext =~ y/-/_/;
+
+               $ext_arg{$ext} = [];
+            }
 
          } elsif (/^-(.*)$/) {
             delete $ext_arg{$1};
@@ -699,8 +709,10 @@ sub invoke {
       }
 
       # now register default key bindings
-      while (my ($k, $v) = each %{ $TERM->{meta}{binding} }) {
-         $TERM->bind_action ($k, "$v->[0]:$v->[1]");
+      for my $ext (sort keys %ext_arg) {
+         while (my ($k, $v) = each %{ $TERM->{meta}{ext}{$ext}{binding} }) {
+            $TERM->bind_action ($k, "$v->[0]:$v->[1]");
+         }
       }
 
       for my $ext (sort keys %ext_arg) {

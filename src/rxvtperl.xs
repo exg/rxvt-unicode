@@ -495,6 +495,20 @@ rxvt_perl_interp::parse_resource (rxvt_term *term, const char *name, bool arg, b
 }
 
 static void
+_keysym_resource_push (rxvt_term *term, const char *k, const char *v)
+{
+  dSP;
+  XPUSHs (sv_2mortal (newSVpv (v, 0)));
+  PUTBACK;
+}
+
+static void
+_keysym_resources (rxvt_term *term)
+{
+  term->enumerate_keysym_resources (_keysym_resource_push);
+}
+
+static void
 ungrab (rxvt_term *THIS)
 {
   if (THIS->perl.grabtime)
@@ -1194,6 +1208,13 @@ void
 rxvt_term::put_option_db (octet_string specifier, octet_string value)
 	CODE:
         XrmPutStringResource (&THIS->option_db, specifier, value);
+
+void
+rxvt_term::_keysym_resources ()
+	PPCODE:
+        PUTBACK;
+        _keysym_resources (THIS);
+        SPAGAIN;
 
 int
 rxvt_term::grab_button (int button, U32 modifiers, Window window = THIS->vt)

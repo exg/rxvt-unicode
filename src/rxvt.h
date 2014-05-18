@@ -1573,6 +1573,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   int bind_action (const char *str, const char *arg);
   const char *x_resource (const char *name);
   void extract_resources ();
+  void enumerate_keysym_resources (void (*cb)(rxvt_term *, const char *, const char *));
   void extract_keysym_resources ();
 };
 

@@ -629,6 +629,12 @@ rxvt_term::get_options (int argc, const char *const *argv)
 /*----------------------------------------------------------------------*/
 
 # ifdef KEYSYM_RESOURCE
+static void
+rxvt_define_key (rxvt_term *term, const char *k, const char *v)
+{
+  term->bind_action (k, v);
+}
+
 /*
  * Define key from XrmEnumerateDatabase.
  *   quarks will be something like
@@ -636,21 +642,27 @@ rxvt_term::get_options (int argc, const char *const *argv)
  *   value will be a string
  */
 static int
-rxvt_define_key (XrmDatabase *database ecb_unused,
-                 XrmBindingList bindings ecb_unused,
-                 XrmQuarkList quarks,
-                 XrmRepresentation *type ecb_unused,
-                 XrmValue *value,
-                 XPointer closure)
+rxvt_keysym_enumerate_helper (
+   XrmDatabase *database ecb_unused,
+   XrmBindingList bindings ecb_unused,
+   XrmQuarkList quarks,
+   XrmRepresentation *type ecb_unused,
+   XrmValue *value,
+   XPointer closure
+)
 {
-  rxvt_term *term = (rxvt_term *)closure;
   int last;
 
   for (last = 0; quarks[last] != NULLQUARK; last++)	/* look for last quark in list */
     ;
 
-  last--;
-  term->bind_action (XrmQuarkToString (quarks[last]), (char *)value->addr);
+  rxvt_term *term = (rxvt_term *)(((void **)closure)[0]);
+  void (*cb)(rxvt_term *, const char *, const char *)
+     = (void (*)(rxvt_term *, const char *, const char *))
+          (((void **)closure)[1]);
+
+  cb (term, XrmQuarkToString (quarks[last - 1]), (char *)value->addr);
+
   return False;
 }
 
@@ -833,13 +845,18 @@ rxvt_term::extract_resources ()
 }
 
 void
-rxvt_term::extract_keysym_resources ()
+rxvt_term::enumerate_keysym_resources (void (*cb)(rxvt_term *, const char *, const char *))
 {
 #ifndef NO_RESOURCES
   /*
    * [R5 or later]: enumerate the resource database
    */
 #  ifdef KEYSYM_RESOURCE
+  void *closure[2] = {
+    (void *)this,
+    (void *)cb,
+  };
+
   XrmDatabase database = XrmGetDatabase (dpy);
   XrmName name_prefix[3];
   XrmClass class_prefix[3];
@@ -852,16 +869,23 @@ rxvt_term::extract_keysym_resources ()
   class_prefix[2] = NULLQUARK;
   /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
-                        XrmEnumOneLevel, rxvt_define_key, (XPointer)this);
+                        XrmEnumOneLevel, rxvt_keysym_enumerate_helper, (XPointer)closure);
 #   ifdef RESFALLBACK
   name_prefix[0] = class_prefix[0] = XrmStringToName (RESFALLBACK);
   /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
-                        XrmEnumOneLevel, rxvt_define_key, (XPointer)this);
+                        XrmEnumOneLevel, rxvt_keysym_enumerate_helper, (XPointer)closure);
 #   endif
 #  endif
 
 #endif /* NO_RESOURCES */
 }
 
+void
+rxvt_term::extract_keysym_resources ()
+{
+  enumerate_keysym_resources (rxvt_define_key);
+}
+
 /*----------------------- end-of-file (C source) -----------------------*/
+
