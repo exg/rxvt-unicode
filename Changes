@@ -33,6 +33,10 @@ TODO IMPL: recalc bg only when not fully covering (no alpha, repeat|extend etc..
 TODO IMPL: colour-change event with index
 TODO IMPL: recalc bg always on bg colour change
 
+<<<<<<< Changes
+TODO: document typical actions in rxvt.1.pod keysyms
+TODO: document meta comments.
+TODO: pelr one-liner, or bug µikachu for zsh oneliner.
 	- the keysym-list extension has been removed, you can use the following
           zsh one-liner provided by Mikachu to expand your existing .Xdefaults
           file to do without it:
