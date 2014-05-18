@@ -1212,14 +1212,19 @@ use in this terminal instance; option B<-pe>.
 Extension names can be prefixed with a C<-> sign to prohibit using
 them. This can be useful to selectively disable some extensions loaded
 by default, or specified via the C<perl-ext-common> resource. For
-example, C<default,-selection> will use all the default extension except
+example, C<default,-selection> will use all the default extensions except
 C<selection>.
 
-Some extensions define resources or command line switches, and will
-automatically be used when their resource or switch is specified.
+The default set includes the C<selection>, C<option-popup>,
+C<selection-popup> and C<readline> extensions, any extensions that define
+keybindings via C<BINDING> meta comments, extensions loaded because
+their resources/commandline switches were used, and extensions which are
+mentioned in B<keysym> resources.
 
 Each extension is looked up in the library directories, loaded if
-necessary, and bound to the current terminal instance.
+necessary, and bound to the current terminal instance. When the library
+search path contains multiple extension files of the same name, then the
+first one found will be used.
 
 If both of these resources are the empty string, then the perl interpreter
 will not be initialized. The rationale for having two options is that
