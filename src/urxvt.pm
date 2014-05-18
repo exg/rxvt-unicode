@@ -677,7 +677,6 @@ sub invoke {
       }
 
       for (
-         @{ delete $TERM->{perl_ext_3} },
          grep $_, map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2
       ) {
          if ($_ eq "default") {
@@ -685,7 +684,8 @@ sub invoke {
             $ext_arg{$_} = []
                for
                   qw(selection option-popup selection-popup readline),
-                  map $_->[0], values %{ $TERM->{meta}{binding} };
+                  map $_->[0], values %{ $TERM->{meta}{binding} },
+                  @{ delete $TERM->{perl_ext_3} };
 
             for ($TERM->_keysym_resources) {
                next if /^(?:string|command|builtin|builtin-string|perl)/;
