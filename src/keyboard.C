@@ -93,18 +93,18 @@ keyboard_manager::~keyboard_manager ()
 void
 keyboard_manager::register_action (KeySym keysym, unsigned int state, const wchar_t *ws)
 {
-  char *translation = rxvt_wcstoutf8 (ws);
+  char *action = rxvt_wcstoutf8 (ws);
 
   keysym_t *key = new keysym_t;
 
   key->keysym = keysym;
   key->state  = state;
-  key->str    = translation;
+  key->str    = action;
   key->type   = keysym_t::STRING;
 
-  if (strncmp (translation, "builtin:", 8) == 0)
+  if (strncmp (action, "builtin:", 8) == 0)
     key->type = keysym_t::BUILTIN;
-  else if (strncmp (translation, "builtin-string:", 15) == 0)
+  else if (strncmp (action, "builtin-string:", 15) == 0)
     key->type = keysym_t::BUILTIN_STRING;
 
   if (keymap.size () == keymap.capacity ())
