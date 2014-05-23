@@ -8,9 +8,10 @@ selection-popup (enabled by default)
 
 =head1 DESCRIPTION
 
-Binds a popup menu to Ctrl-Button3 that lets you convert the selection
-text into various other formats/action (such as uri unescaping, perl
-evaluation, web-browser starting etc.), depending on content.
+Binds a popup menu to Ctrl-Button3 that lets you paste the X
+selections and either modify or use the internal selection text in
+various ways (such as uri unescaping, perl evaluation, web-browser
+starting etc.), depending on content.
 
 Other extensions can extend this popup menu by pushing a code reference
 onto C<< @{ $term->{selection_popup_hook} } >>, which gets called whenever
@@ -61,7 +62,7 @@ sub on_button_press {
       my $popup = $self->popup ($event)
          or return 1;
 
-      $popup->add_title ("Convert Selection");
+      $popup->add_title ("Selection");
 
       my $text = $self->selection;
 
@@ -90,6 +91,16 @@ sub on_button_press {
 
       for ($text) {
          /\n/
+            and $add_button->("paste primary selection" => sub { $self->selection_request (urxvt::CurrentTime, 1) });
+
+         /./
+            and $add_button->("paste clipboard selection" => sub { $self->selection_request (urxvt::CurrentTime, 3) });
+
+         /./
+            and $add_button->("copy selection to clipboard" => sub { $self->selection ($self->selection, 1);
+								     $self->selection_grab (urxvt::CurrentTime, 1) });
+
+         /./
             and $add_button->("newlines to spaces" => sub { y/\n/ / });
 
          /./
