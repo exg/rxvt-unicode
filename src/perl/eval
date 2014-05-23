@@ -1,0 +1,119 @@
+#! perl
+
+=head1 NAME
+
+eval - evaluate arbitrary perl code using actions
+
+=head1 EXAMPLES
+
+  URxvt.keysym.M-c: eval:selection_to_clipboard
+  URxvt.keysym.M-v: eval:paste_clipboard
+  URxvt.keysym.M-V: eval:paste_primary
+
+  URxvt.keysym.M-Up: eval:scroll_up 1
+  URxvt.keysym.M-Down: eval:scroll_down 1
+  URxvt.keysym.M-Home: eval:scroll_to_top
+  URxvt.keysym.M-End:  eval:scroll_to_bottom
+
+=head1 DESCRIPTION
+
+Add support for evaluating arbitrary perl code using actions in keysym
+resources. If a keysym I<action> takes the form C<eval:STRING>, the
+specified B<STRING> is evaluated as a Perl expression. While the full
+urxvt API is available, the following methods are also provided for
+users' convenience, as they implement basic actions:
+
+=cut
+
+our ($self);
+
+=over 4
+
+=item scroll_up $count
+
+=item scroll_up_pages $count
+
+=item scroll_down $count
+
+=item scroll_down_pages $count
+
+Scroll up or down by C<$count> lines or pages.
+
+=cut
+
+sub scroll_up ($) {
+    my $lines = $_[0];
+    $self->view_start ($self->view_start - $lines);
+}
+
+sub scroll_up_pages ($) {
+    my $lines = $_[0] * ($self->nrow - 1);
+    $self->view_start ($self->view_start - $lines);
+}
+
+sub scroll_down ($) {
+    my $lines = $_[0];
+    $self->view_start ($self->view_start + $lines);
+}
+
+sub scroll_down_pages ($) {
+    my $lines = $_[0] * ($self->nrow - 1);
+    $self->view_start ($self->view_start + $lines);
+}
+
+=item scroll_to_top
+
+=item scroll_to_bottom
+
+Scroll to the top or bottom of the scrollback.
+
+=cut
+
+sub scroll_to_top () {
+    $self->view_start ($self->top_row);
+}
+
+sub scroll_to_bottom () {
+    $self->view_start (0);
+}
+
+=item selection_to_clipboard
+
+Copy the selection to the CLIPBOARD.
+
+=cut
+
+sub selection_to_clipboard () {
+    $self->selection ($self->selection, 1);
+    $self->selection_grab (urxvt::CurrentTime, 1);
+}
+
+=item paste_primary
+
+=item paste_clipboard
+
+Paste the value of the PRIMARY or CLIPBOARD selection.
+
+=cut
+
+sub paste_primary () {
+    $self->selection_request (urxvt::CurrentTime, 1);
+}
+
+sub paste_clipboard () {
+    $self->selection_request (urxvt::CurrentTime, 3);
+}
+
+=back
+
+=cut
+
+sub on_action {
+    my ($arg_self, $action) = @_;
+
+    local $self  = $arg_self;
+    eval "#line 1 \"$action\"\n$action";
+    die $@ if $@;
+
+    ()
+}

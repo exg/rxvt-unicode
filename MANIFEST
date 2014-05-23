@@ -158,6 +158,7 @@ src/perl/block-graphics-to-ascii
 src/perl/clipboard-osc
 src/perl/confirm-paste
 src/perl/digital-clock
+src/perl/eval
 src/perl/example-refresh-hooks
 src/perl/kuake
 src/perl/matcher
