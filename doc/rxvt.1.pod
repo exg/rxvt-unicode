@@ -1087,8 +1087,8 @@ escape sequences (C<\n>: newline, C<\\>: backslash, C<\000>: octal
 number), see RESOURCES in C<man 7 X> for further details.
 
 An action starts with an action prefix that selects a certain type
-of action, followed by a colon. An action strings without colons is
-interpreted as a literal string to pass to the tty (as if they were
+of action, followed by a colon. An action string without colons is
+interpreted as a literal string to pass to the tty (as if it was
 prefixed with C<string:>).
 
 The following action prefixes are known - extensions can provide
