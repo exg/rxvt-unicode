@@ -34,11 +34,15 @@ TODO IMPL: colour-change event with index
 TODO IMPL: recalc bg always on bg colour change
 
 TODO: document typical actions in rxvt.1.pod keysyms
-TODO: document meta comments.
-TODO: pelr one-liner, or bug µikachu for zsh oneliner.
+TODO: document meta comments and on_action hook
+TODO: perl one-liner
+
+	- New 'eval' extension to evaluate arbitrary perl code with keysym
+	  bindings. The extension also provides methods that implement basic
+	  actions, such as pasting selections and scrolling.
+	- the macosx-clipboard and macosx-clipboard-native extensions have been removed.
 	- the keysym-list extension has been removed, you can use the following
-          zsh one-liner provided by Mikachu to expand your existing .Xdefaults
-          file to do without it:
+          perl one-liner to expand your existing .Xdefaults file to do without it:
 	- kuake extension now uses the kuake.hotkey resource to specify the hotkey.
 	- searchable-scrollback resource has been deprecated (use keysym instead).
         - extension parameter passing is deprecated (use resource mechanism instead).
