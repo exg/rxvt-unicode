@@ -19,7 +19,7 @@ Uses per-line display filtering (C<on_line_update>) to underline text
 matching a certain pattern and make it clickable. When clicked with the
 mouse button specified in the C<matcher.button> resource (default 2, or
 middle), the program specified in the C<matcher.launcher> resource
-(default, the C<urlLauncher> resource, C<sensible-browser>) will be started
+(default, the C<url-launcher> resource, C<sensible-browser>) will be started
 with the matched text as first argument.  The default configuration is
 suitable for matching URLs and launching a web browser, like the
 former "mark-urls" extension.
