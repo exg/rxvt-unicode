@@ -93,7 +93,6 @@ sub leave {
 
    delete $self->{manpage_overlay};
    delete $self->{overlay};
-   delete $self->{history};
    delete $self->{search};
 }
 
