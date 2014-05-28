@@ -1501,7 +1501,7 @@ to the locale-specific encoding using C<< $term->locale_encode >>.
 =item $term->tt_write_user_input ($octets)
 
 Like C<tt_write>, but should be used when writing strings in response to
-the user pressing a key, to invokes the additional actions requested by
+the user pressing a key, to invoke the additional actions requested by
 the user for that case (C<tt_write> doesn't do that).
 
 The typical use case would be inside C<on_action> hooks.
