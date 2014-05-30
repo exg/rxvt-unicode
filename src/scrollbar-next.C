@@ -148,7 +148,7 @@ void
 scrollBar_t::init_next ()
 {
   XGCValues       gcvalue;
-  XColor          xcol;
+  rxvt_color      color;
   Pixmap          stipple;
   unsigned long   light, dark;
 
@@ -162,20 +162,23 @@ scrollBar_t::init_next ()
   whiteGC = XCreateGC (term->dpy, win,
                        GCForeground | GCGraphicsExposures, &gcvalue);
 
-  xcol.red = 0xaeba;
-  xcol.green = 0xaaaa;
-  xcol.blue = 0xaeba;
-  xcol.pixel = term->pix_colors_focused[Color_scroll];
-  light = gcvalue.foreground = xcol.pixel;
+  light = term->pix_colors_focused[Color_scroll];
+#if 0
+  //color used by rxvt
+  if (color.set (term, rgba (0xaeba, 0xaaaa, 0xaeba)))
+    light = color;
+#endif
+  gcvalue.foreground = light;
   grayGC = XCreateGC (term->dpy, win,
                       GCForeground | GCGraphicsExposures, &gcvalue);
 
-  xcol.red = 0x51aa;
-  xcol.green = 0x5555;
-  xcol.blue = 0x5144;
-  //if (!rXAllocColor (&xcol, "dark gray"))//TODO//D//
-  xcol.pixel = term->pix_colors_focused[Color_Grey25];
-  dark = gcvalue.foreground = xcol.pixel;
+  dark = term->pix_colors_focused[Color_Grey25];
+#if 0
+  //color used by rxvt
+  if (color.set (term, rgba (0x51aa, 0x5555, 0x5144)))
+    dark = color;
+#endif
+  gcvalue.foreground = dark;
   darkGC = XCreateGC (term->dpy, win,
                      GCForeground | GCGraphicsExposures, &gcvalue);
 
@@ -187,8 +190,6 @@ scrollBar_t::init_next ()
   gcvalue.background = light;
   gcvalue.fill_style = FillOpaqueStippled;
   gcvalue.stipple = stipple;
-
-  /*    XSetWindowBackground (dpy, scrollBar.win, pix_colors_focused[Color_Red]); */
 
   stippleGC = XCreateGC (term->dpy, win,
                          GCForeground | GCBackground | GCStipple
