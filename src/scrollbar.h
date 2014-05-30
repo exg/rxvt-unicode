@@ -131,6 +131,7 @@ struct scrollBar_t
                   downArrow,
                   upArrowHi,
                   downArrowHi;
+  bool            last_has_sb;
 #endif
 
 #if defined(RXVT_SCROLLBAR)

@@ -240,17 +240,28 @@ scrollBar_t::show_next (int update)
     {
       init |= SB_STYLE_NEXT;
       init_next ();
+      last_has_sb = false;
     }
 
-  if (term->top_row == 0 || !update)
+  bool has_sb = term->top_row;
+  int stipple_height = height - SB_PADDING;
+
+  if (has_sb)
+      stipple_height -= SB_BUTTON_TOTAL_HEIGHT;
+  else
+      stipple_height -= SB_PADDING;
+
+  if (has_sb != last_has_sb || !update)
     {
+      last_has_sb = has_sb;
       XFillRectangle (term->dpy, win, grayGC, 0, 0,
                       SB_WIDTH_NEXT + 1, height);
       XDrawRectangle (term->dpy, win, blackGC, 0,
                       -SB_BORDER_WIDTH, SB_WIDTH_NEXT,
                       height + SB_BORDER_WIDTH);
       XFillRectangle (term->dpy, win, stippleGC,
-                      SB_LEFT_PADDING, 0, SB_BUTTON_WIDTH, height);
+                      SB_LEFT_PADDING, SB_PADDING,
+                      SB_BUTTON_WIDTH, stipple_height);
     }
 
   if (term->top_row)
