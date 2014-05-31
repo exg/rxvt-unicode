@@ -7,6 +7,10 @@
 
 selection-pastebin - automatic pastebin upload
 
+=head1 EXAMPLES
+
+  URxvt.keysym.C-M-e: selection-pastebin:remote-pastebin
+
 =head1 DESCRIPTION
 
 This is a little rarely useful extension that uploads the selection as
@@ -14,13 +18,9 @@ textfile to a remote site (or does other things). (The implementation is
 not currently secure for use in a multiuser environment as it writes to
 F</tmp> directly.).
 
-It listens to the C<selection-pastebin:remote-pastebin> keyboard command,
-i.e.
-
-   URxvt.keysym.C-M-e: perl:selection-pastebin:remote-pastebin
-
-Pressing this combination runs a command with C<%> replaced by the name of
-the textfile. This command can be set via a resource:
+It listens to the C<selection-pastebin:remote-pastebin> action, which,
+when activated, runs a command with C<%> replaced by the name of the
+textfile. This command can be set via a resource:
 
    URxvt.selection-pastebin.cmd: rsync -apP % ruth:/var/www/www.ta-sa.org/files/txt/.
 

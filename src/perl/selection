@@ -41,15 +41,17 @@ end):
 You can look at the source of the selection extension to see more
 interesting uses, such as parsing a line from beginning to end.
 
-This extension also offers following bindable keyboard commands:
+This extension also offers the following actions:
 
 =over 4
 
 =item rot13
 
-Rot-13 the selection when activated. Used via keyboard trigger:
+Rot-13 the selection when activated.
 
-   URxvt.keysym.C-M-r: perl:selection:rot13
+Example:
+
+   URxvt.keysym.C-M-r: selection:rot13
 
 =back
 

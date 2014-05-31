@@ -7,14 +7,14 @@
 
 =head1 NAME
 
-searchable-scrollback<hotkey> - incremental scrollback search (enabled by default)
+searchable-scrollback - incremental scrollback search (enabled by default)
 
 =head1 DESCRIPTION
 
-Adds regex search functionality to the scrollback buffer, triggered
-by a hotkey (default: C<M-s>). While in search mode, normal terminal
-input/output is suspended and a regex is displayed at the bottom of the
-screen.
+Adds regex search functionality to the scrollback buffer, triggered by
+the C<searchable-scrollback:start> action (bound to C<M-s> by
+default). While in search mode, normal terminal input/output is
+suspended and a regex is displayed at the bottom of the screen.
 
 Inputting characters appends them to the regex and continues incremental
 search. C<BackSpace> removes a character from the regex, C<Up> and C<Down>
