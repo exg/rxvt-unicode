@@ -99,58 +99,58 @@ sub on_user_command {
 sub matchlist {
    my ($self) = @_;
    if ( $self->{showing} ) {
-     $self->{url_overlay}->hide;
-     $self->{showing} = 0;
-     return;
+      $self->{url_overlay}->hide;
+      $self->{showing} = 0;
+      return;
    }
-  @{$self->{urls}} = ();
-  my $line;
-  for (my $i = 0; $i < $self->nrow; $i ++) {
-     $line = $self->line($i);
-     next if ($line->beg != $i);
-     for my $url ($self->get_urls_from_line($line->t)) {
-        if (scalar(@{$self->{urls}}) == 10) {
+   @{$self->{urls}} = ();
+   my $line;
+   for (my $i = 0; $i < $self->nrow; $i ++) {
+      $line = $self->line($i);
+      next if ($line->beg != $i);
+      for my $url ($self->get_urls_from_line($line->t)) {
+         if (scalar(@{$self->{urls}}) == 10) {
             shift @{$self->{urls}};
-        }
-        push @{$self->{urls}}, $url;
-     }
-  }
+         }
+         push @{$self->{urls}}, $url;
+      }
+   }
 
-  if (! scalar(@{$self->{urls}})) {
-    return;
-  }
+   if (! scalar(@{$self->{urls}})) {
+      return;
+   }
 
-  my $max = 0;
-  my $i = scalar( @{$self->{urls}} ) - 1 ;;
+   my $max = 0;
+   my $i = scalar( @{$self->{urls}} ) - 1 ;;
 
-  my @temp = ();
+   my @temp = ();
 
-  for my $url (@{$self->{urls}}) {
-     my $url = "$i-$url";
-     my $xpos = 0;
+   for my $url (@{$self->{urls}}) {
+      my $url = "$i-$url";
+      my $xpos = 0;
 
-     if ($self->ncol + (length $url) >= $self->ncol) {
-        $url = substr( $url, 0, $self->ncol );
-     }
+      if ($self->ncol + (length $url) >= $self->ncol) {
+         $url = substr( $url, 0, $self->ncol );
+      }
 
-     push @temp, $url;
+      push @temp, $url;
 
-     if( length $url > $max ) {
-        $max = length $url;
-     }
+      if( length $url > $max ) {
+         $max = length $url;
+      }
 
-     $i--;
-  }
+      $i--;
+   }
 
-  @temp = reverse @temp;
+   @temp = reverse @temp;
 
-  $self->{url_overlay} = $self->overlay(0, 0, $max, scalar( @temp ), urxvt::OVERLAY_RSTYLE, 2);
-  my $i = 0;
-  for my $url (@temp) {
-     $self->{url_overlay}->set( 0, $i, $url, [(urxvt::OVERLAY_RSTYLE) x length $url]);
-	$self->{showing} = 1;
-     $i++;
-  }
+   $self->{url_overlay} = $self->overlay(0, 0, $max, scalar( @temp ), urxvt::OVERLAY_RSTYLE, 2);
+   my $i = 0;
+   for my $url (@temp) {
+      $self->{url_overlay}->set( 0, $i, $url, [(urxvt::OVERLAY_RSTYLE) x length $url]);
+      $self->{showing} = 1;
+      $i++;
+   }
 
 }
 
@@ -232,9 +232,9 @@ sub get_urls_from_line {
    my ($self, $line) = @_;
    my @urls;
    for my $matcher (@{$self->{matchers}}) {
-     while ($line =~ /$matcher->[0]/g) {
-        push @urls, substr( $line, $-[0], $+[0] - $-[0] );
-     }
+      while ($line =~ /$matcher->[0]/g) {
+         push @urls, substr( $line, $-[0], $+[0] - $-[0] );
+      }
    }
    return @urls;
 }
@@ -332,7 +332,7 @@ sub on_button_release {
       && join("\x00", @$cmd) eq join("\x00", $self->command_for($row,$col))) {
       if($self->valid_button($event)) {
 
-	 $self->exec_async (@$cmd);
+         $self->exec_async (@$cmd);
 
       }
    }
