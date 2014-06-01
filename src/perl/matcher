@@ -62,20 +62,18 @@ my $url =
 sub on_key_press {
    my ($self, $event, $keysym, $octets) = @_;
 
-   if (! $self->{showing} ) {
-      return;
-   }
+   return unless $self->{overlay};
+
+   delete $self->{overlay};
 
    my $i = ($keysym == 96 ? 0 : $keysym - 48);
-   if (($i > scalar(@{$self->{urls}})) || ($i < 0)) {
-      $self->matchlist();
-      return;
+   if ($i >= 0 && $i < @{ $self->{matches} }) {
+      my @exec = @{ $self->{matches}[$i] };
+      shift @exec;
+      $self->exec_async (@exec);
    }
 
-   my @args = ($self->{urls}[ -$i-1 ]);
-   $self->matchlist();
-
-   $self->exec_async( $self->{launcher}, @args );
+   1
 }
 
 # backwards compat
@@ -98,57 +96,58 @@ sub on_user_command {
 
 sub matchlist {
    my ($self) = @_;
-   if ( $self->{showing} ) {
-      $self->{url_overlay}->hide;
-      $self->{showing} = 0;
-      return;
-   }
-   @{$self->{urls}} = ();
-   my $line;
-   for (my $i = 0; $i < $self->nrow; $i ++) {
-      $line = $self->line($i);
-      next if ($line->beg != $i);
-      for my $url ($self->get_urls_from_line($line->t)) {
-         if (scalar(@{$self->{urls}}) == 10) {
-            shift @{$self->{urls}};
-         }
-         push @{$self->{urls}}, $url;
-      }
-   }
 
-   if (! scalar(@{$self->{urls}})) {
-      return;
-   }
+   @{ $self->{matches} } = ();
+   my $row = $self->nrow - 1;
+   while ($row >= 0 && @{ $self->{matches} } < 10) {
+      my $line = $self->line ($row);
+      my $text = $line->t;
 
-   my $max = 0;
-   my $i = scalar( @{$self->{urls}} ) - 1 ;;
+      # FIXME: code duplicated from 'command_for'
+      for my $matcher (@{$self->{matchers}}) {
+	 my $launcher = $matcher->[1] || $self->{launcher};
+	 while ($text =~ /$matcher->[0]/g) {
+	    my $match = substr ($text, $-[0], $+[0] - $-[0]);
+	    my @beg = @-;
+	    my @end = @+;
+	    my @exec;
 
-   my @temp = ();
+            if ($launcher !~ /\$/) {
+	       @exec = ($launcher, $match);
+	    } else {
+               @exec = map { s/\$(\d+)|\$\{(\d+)\}/
+                  substr ($text, $beg[$1 || $2], $end[$1 || $2] - $beg[$1 || $2])
+                  /egx; $_ } split /\s+/, $launcher;
+            }
 
-   for my $url (@{$self->{urls}}) {
-      my $url = "$i-$url";
-      my $xpos = 0;
-
-      if ($self->ncol + (length $url) >= $self->ncol) {
-         $url = substr( $url, 0, $self->ncol );
+	    push @{ $self->{matches} }, [ $match, @exec ];
+	 }
       }
 
-      push @temp, $url;
-
-      if( length $url > $max ) {
-         $max = length $url;
-      }
-
-      $i--;
+      $row = $line->beg - 1;
    }
 
-   @temp = reverse @temp;
+   return unless @{ $self->{matches} };
 
-   $self->{url_overlay} = $self->overlay(0, 0, $max, scalar( @temp ), urxvt::OVERLAY_RSTYLE, 2);
+   my $width = 0;
+
    my $i = 0;
-   for my $url (@temp) {
-      $self->{url_overlay}->set( 0, $i, $url, [(urxvt::OVERLAY_RSTYLE) x length $url]);
-      $self->{showing} = 1;
+   for my $match (@{ $self->{matches} }) {
+      my $text = $match->[0];
+      my $w = $self->strwidth ("$i-$text");
+
+      $width = $w if $w > $width;
+      $i++;
+   }
+
+   $width = $self->ncol - 2 if $width > $self->ncol - 2;
+
+   $self->{overlay} = $self->overlay (0, 0, $width, scalar (@{ $self->{matches} }), urxvt::OVERLAY_RSTYLE, 2);
+   my $i = 0;
+   for my $match (@{ $self->{matches} }) {
+      my $text = $match->[0];
+
+      $self->{overlay}->set (0, $i, "$i-$text");
       $i++;
    }
 
@@ -192,8 +191,7 @@ sub on_start {
 
    $self->{launcher} = $self->my_resource ("launcher") || $self->x_resource("url-launcher") || "sensible-browser";
 
-   $self->{urls} = [];
-   $self->{showing} = 0;
+   $self->{matches} = [];
    $self->{button}  = 2;
    $self->{state}   = 0;
    if($self->{argv}[0] || $self->my_resource ("button")) {
@@ -226,17 +224,6 @@ sub on_start {
    $self->{matchers} = \@matchers;
 
    ()
-}
-
-sub get_urls_from_line {
-   my ($self, $line) = @_;
-   my @urls;
-   for my $matcher (@{$self->{matchers}}) {
-      while ($line =~ /$matcher->[0]/g) {
-         push @urls, substr( $line, $-[0], $+[0] - $-[0] );
-      }
-   }
-   return @urls;
 }
 
 sub on_line_update {
