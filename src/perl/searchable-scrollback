@@ -103,10 +103,9 @@ sub idle {
 }
 
 sub search {
-   my ($self, $dir) = @_;
+   my ($self, $dir, $row) = @_;
 
    delete $self->{found};
-   my $row = $self->{row};
 
    my $search = $self->special_encode ($self->{search});
 
@@ -169,14 +168,16 @@ sub key_press {
       $self->{row} = $self->nrow - 1;
       $self->view_start (0);
    } elsif ($keysym == 0xff52) { # up
-      $self->{row}-- if $self->{row} > $self->top_row;
-      $self->search (-1);
+      my $line = $self->line ($self->{row});
+      $self->search (-1, $line->beg - 1)
+         if $line->beg > $self->top_row;
    } elsif ($keysym == 0xff54) { # down
-      $self->{row}++ if $self->{row} < $self->nrow;
-      $self->search (+1);
+      my $line = $self->line ($self->{row});
+      $self->search (+1, $line->end + 1)
+         if $line->end < $self->nrow;
    } elsif ($keysym == 0xff08) { # backspace
       substr $self->{search}, -1, 1, "";
-      $self->search;
+      $self->search (+1, $self->{row});
       $self->idle;
    } elsif ($string !~ /[\x00-\x1f\x80-\xaf]/) {
       return; # pass to tt_write
@@ -193,7 +194,7 @@ sub tt_write {
    $self->{search} =~ s/^\(\?i\)//
       if $self->{search} =~ /^\(.*[[:upper:]]/;
 
-   $self->search (-1);
+   $self->search (-1, $self->{row});
    $self->idle;
 
    1
