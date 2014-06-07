@@ -46,6 +46,8 @@ TODO: perl one-liner
 	- kuake extension now uses the kuake.hotkey resource to specify the hotkey.
 	- the 'matcher:list' feature of matcher now honours the launcher
 	  associated to a matched pattern.
+	- fix up/down commands of searchable scrollback so that they always move
+	  to the previous/next logical line with a match, if any.
 	- searchable-scrollback resource has been deprecated (use keysym instead).
         - extension parameter passing is deprecated (use resource mechanism instead).
         - upgrade to GPLv3 (see COPYING).
