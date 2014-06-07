@@ -104,6 +104,7 @@ sub matchlist {
       my $text = $line->t;
 
       # FIXME: code duplicated from 'command_for'
+      my @matches;
       for my $matcher (@{$self->{matchers}}) {
 	 my $launcher = $matcher->[1] || $self->{launcher};
 	 while ($text =~ /$matcher->[0]/g) {
@@ -120,8 +121,14 @@ sub matchlist {
                   /egx; $_ } split /\s+/, $launcher;
             }
 
-	    push @{ $self->{matches} }, [ $match, @exec ];
+	    push @matches, [ $beg[0], $match, @exec ];
 	 }
+      }
+
+      for (sort { $b->[0] <=> $a->[0] } @matches) {
+         shift @$_;
+         push @{ $self->{matches} }, $_;
+         last if @{ $self->{matches} } == 10;
       }
 
       $row = $line->beg - 1;
