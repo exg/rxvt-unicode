@@ -1182,7 +1182,7 @@ this:
 
 An action of this form passes the B<STRING> to the @@RXVT_NAME@@perl(3)
 extension of the same name. The extension will be loaded automatically if
-neccessary.
+necessary.
 
 Not all extensions define key actions, but popular extensions that do
 include the I<selection> and I<matcher> extensions (documented in their
