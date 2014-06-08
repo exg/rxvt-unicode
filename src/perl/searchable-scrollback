@@ -105,8 +105,6 @@ sub idle {
 sub search {
    my ($self, $dir, $row) = @_;
 
-   delete $self->{found};
-
    my $search = $self->special_encode ($self->{search});
 
    no re 'eval'; # just to be sure
@@ -117,6 +115,8 @@ sub search {
 
          my $text = $line->t;
          if ($text =~ /$re/g) {
+            delete $self->{found};
+
             do {
                push @{ $self->{found} }, [$line->coord_of ($-[0]), $line->coord_of ($+[0])];
             } while $text =~ /$re/g;
@@ -194,6 +194,7 @@ sub tt_write {
    $self->{search} =~ s/^\(\?i\)//
       if $self->{search} =~ /^\(.*[[:upper:]]/;
 
+   delete $self->{found};
    $self->search (-1, $self->{row});
    $self->idle;
 
