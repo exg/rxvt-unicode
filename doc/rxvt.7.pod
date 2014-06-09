@@ -1632,7 +1632,7 @@ Device Status Report (DSR)
 
 =item B<< C<ESC [ Ps SP q> >>
 
-Set Cursor Style (DESCUSR)
+Set Cursor Style (DECSCUSR)
 
 =begin table
 
