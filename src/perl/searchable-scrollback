@@ -124,14 +124,14 @@ sub search {
             $self->{row} = $row;
             $self->view_start (List::Util::min 0, $row - ($self->nrow >> 1));
             $self->want_refresh;
-            last;
+            return;
          }
 
          $row = $dir < 0 ? $line->beg - 1 : $line->end + 1;
       }
    }
 
-   $self->scr_bell unless $self->{found};
+   $self->scr_bell;
 }
 
 sub refresh {
