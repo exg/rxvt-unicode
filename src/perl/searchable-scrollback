@@ -46,6 +46,15 @@ sub on_init {
    ()
 }
 
+sub on_user_command {
+   my ($self, $cmd) = @_;
+
+   $cmd eq "searchable-scrollback:start"
+      and $self->enter;
+
+   ()
+}
+
 sub on_action {
    my ($self, $action) = @_;
 

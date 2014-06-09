@@ -57,6 +57,15 @@ Example:
 
 =cut
 
+sub on_user_command {
+   my ($self, $cmd) = @_;
+
+   $cmd eq "selection:rot13"
+      and $self->selection (map { y/A-Za-z/N-ZA-Mn-za-m/; $_ } $self->selection);
+
+   ()
+}
+
 sub on_action {
    my ($self, $action) = @_;
 
