@@ -113,7 +113,7 @@ sub matchlist {
    my $row = $self->nrow - 1;
    while ($row >= 0 && @{ $self->{matches} } < 10) {
       my $line = $self->line ($row);
-      my @matches = $self->find_matches ($row, 0);
+      my @matches = $self->find_matches ($row);
 
       for (sort { $b->[0] <=> $a->[0] } @matches) {
          shift @$_;
