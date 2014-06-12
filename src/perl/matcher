@@ -278,7 +278,7 @@ sub find_matches {
                # It'd be nice to just access a list like ($&,$1,$2...),
                # but alas, m//g behaves differently in list context.
                @exec = map { s/\$(\d+)|\$\{(\d+)\}/
-                  substr $text, $begin[$1 || $2], $end[$1 || $2] - $begin[$1 || $2])
+                  substr $text, $begin[$1 || $2], $end[$1 || $2] - $begin[$1 || $2]
                   /egx; $_ } split /\s+/, $launcher;
             }
 
