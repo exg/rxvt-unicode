@@ -30,8 +30,8 @@ with numbered patterns, in a manner similar to the "selection" extension.
 The launcher can also be overridden on a per-pattern basis.
 
 It is possible to activate the most recently seen match or a list of matches
-from the keyboard.  Simply bind a keysym to "perl:matcher:last" or
-"perl:matcher:list" as seen in the example below.
+from the keyboard.  Simply bind a keysym to "matcher:last" or
+"matcher:list" as seen in the example below.
 
 Example: load and use the matcher extension with defaults.
 
@@ -40,8 +40,8 @@ Example: load and use the matcher extension with defaults.
 Example: use a custom configuration.
 
     URxvt.url-launcher:       sensible-browser
-    URxvt.keysym.C-Delete:    perl:matcher:last
-    URxvt.keysym.M-Delete:    perl:matcher:list
+    URxvt.keysym.C-Delete:    matcher:last
+    URxvt.keysym.M-Delete:    matcher:list
     URxvt.matcher.button:     1
     URxvt.matcher.pattern.1:  \\bwww\\.[\\w-]+\\.[\\w./?&@#-]*[\\w/-]
     URxvt.matcher.pattern.2:  \\B(/\\S+?):(\\d+)(?=:|$)
@@ -89,6 +89,18 @@ sub on_user_command {
          # for backward compatibility
          $self->most_recent;
       }
+   }
+
+   ()
+}
+
+sub on_action {
+   my ($self, $action) = @_;
+
+   if ($action eq "list") {
+      $self->matchlist;
+   } elsif ($action eq "last") {
+      $self->most_recent;
    }
 
    ()
