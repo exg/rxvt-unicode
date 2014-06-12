@@ -265,7 +265,7 @@ sub find_matches {
    my @matches;
    for my $matcher (@{$self->{matchers}}) {
       my $launcher = $matcher->[1] || $self->{launcher};
-      while (($text =~ /$matcher->[0]/g)) {
+      while ($text =~ /$matcher->[0]/g) {
          my $match = substr $text, $-[0], $+[0] - $-[0];
          my @begin = @-;
          my @end = @+;
@@ -278,8 +278,8 @@ sub find_matches {
                # It'd be nice to just access a list like ($&,$1,$2...),
                # but alas, m//g behaves differently in list context.
                @exec = map { s/\$(\d+)|\$\{(\d+)\}/
-                  substr($text,$begin[$1||$2],$end[$1||$2]-$begin[$1||$2])
-                  /egx; $_ } split(/\s+/, $launcher);
+                  substr $text, $begin[$1 || $2], $end[$1 || $2] - $begin[$1 || $2])
+                  /egx; $_ } split /\s+/, $launcher;
             }
 
             push @matches, [ $begin[0], $match, @exec ];
