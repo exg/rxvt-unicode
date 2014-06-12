@@ -113,29 +113,7 @@ sub matchlist {
    my $row = $self->nrow - 1;
    while ($row >= 0 && @{ $self->{matches} } < 10) {
       my $line = $self->line ($row);
-      my $text = $line->t;
-
-      # FIXME: code duplicated from 'command_for'
-      my @matches;
-      for my $matcher (@{$self->{matchers}}) {
-	 my $launcher = $matcher->[1] || $self->{launcher};
-	 while ($text =~ /$matcher->[0]/g) {
-	    my $match = substr ($text, $-[0], $+[0] - $-[0]);
-	    my @beg = @-;
-	    my @end = @+;
-	    my @exec;
-
-            if ($launcher !~ /\$/) {
-	       @exec = ($launcher, $match);
-	    } else {
-               @exec = map { s/\$(\d+)|\$\{(\d+)\}/
-                  substr ($text, $beg[$1 || $2], $end[$1 || $2] - $beg[$1 || $2])
-                  /egx; $_ } split /\s+/, $launcher;
-            }
-
-	    push @matches, [ $beg[0], $match, @exec ];
-	 }
-      }
+      my @matches = $self->find_matches ($row, 0);
 
       for (sort { $b->[0] <=> $a->[0] } @matches) {
          shift @$_;
@@ -279,30 +257,46 @@ sub valid_button {
       ($event->{state} & $mask) == $self->{state});
 }
 
-sub command_for {
+sub find_matches {
    my ($self, $row, $col) = @_;
    my $line = $self->line ($row);
    my $text = $line->t;
 
+   my @matches;
    for my $matcher (@{$self->{matchers}}) {
       my $launcher = $matcher->[1] || $self->{launcher};
       while (($text =~ /$matcher->[0]/g)) {
-         my $match = $&;
+         my $match = substr $text, $-[0], $+[0] - $-[0];
          my @begin = @-;
          my @end = @+;
+         my @exec;
+
          if (!defined($col) || ($-[0] <= $col && $+[0] >= $col)) {
             if ($launcher !~ /\$/) {
-               return ($launcher,$match);
+               @exec = ($launcher, $match);
             } else {
                # It'd be nice to just access a list like ($&,$1,$2...),
                # but alas, m//g behaves differently in list context.
-               my @exec = map { s/\$(\d+)|\$\{(\d+)\}/
+               @exec = map { s/\$(\d+)|\$\{(\d+)\}/
                   substr($text,$begin[$1||$2],$end[$1||$2]-$begin[$1||$2])
                   /egx; $_ } split(/\s+/, $launcher);
-               return @exec;
             }
+
+            push @matches, [ $begin[0], $match, @exec ];
          }
       }
+   }
+
+   @matches;
+}
+
+sub command_for {
+   my ($self, $row, $col) = @_;
+
+   my @matches = $self->find_matches ($row, $col);
+   if (@matches) {
+      my @match = @{ $matches[0] };
+      return @match[2 .. $#match];
    }
 
    ()
