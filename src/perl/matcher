@@ -59,18 +59,16 @@ my $url =
       )+
    }x;
 
-sub on_key_press {
+sub matchlist_key_press {
    my ($self, $event, $keysym, $octets) = @_;
 
-   return unless $self->{overlay};
-
    delete $self->{overlay};
+   $self->disable ("key_press");
 
    my $i = ($keysym == 96 ? 0 : $keysym - 48);
    if ($i >= 0 && $i < @{ $self->{matches} }) {
       my @exec = @{ $self->{matches}[$i] };
-      shift @exec;
-      $self->exec_async (@exec);
+      $self->exec_async (@exec[5 .. $#exec]);
    }
 
    1
@@ -109,14 +107,13 @@ sub on_action {
 sub matchlist {
    my ($self) = @_;
 
-   @{ $self->{matches} } = ();
+   $self->{matches} = [];
    my $row = $self->nrow - 1;
    while ($row >= 0 && @{ $self->{matches} } < 10) {
       my $line = $self->line ($row);
       my @matches = $self->find_matches ($row);
 
-      for (sort { $b->[0] <=> $a->[0] } @matches) {
-         shift @$_;
+      for (sort { $b->[0] <=> $a->[0] or $b->[1] <=> $a->[1] } @matches) {
          push @{ $self->{matches} }, $_;
          last if @{ $self->{matches} } == 10;
       }
@@ -130,7 +127,7 @@ sub matchlist {
 
    my $i = 0;
    for my $match (@{ $self->{matches} }) {
-      my $text = $match->[0];
+      my $text = $match->[4];
       my $w = $self->strwidth ("$i-$text");
 
       $width = $w if $w > $width;
@@ -142,12 +139,13 @@ sub matchlist {
    $self->{overlay} = $self->overlay (0, 0, $width, scalar (@{ $self->{matches} }), urxvt::OVERLAY_RSTYLE, 2);
    my $i = 0;
    for my $match (@{ $self->{matches} }) {
-      my $text = $match->[0];
+      my $text = $match->[4];
 
       $self->{overlay}->set (0, $i, "$i-$text");
       $i++;
    }
 
+   $self->enable (key_press => \&matchlist_key_press);
 }
 
 sub most_recent {
@@ -188,7 +186,6 @@ sub on_start {
 
    $self->{launcher} = $self->my_resource ("launcher") || $self->x_resource("url-launcher") || "sensible-browser";
 
-   $self->{matches} = [];
    $self->{button}  = 2;
    $self->{state}   = 0;
    if($self->{argv}[0] || $self->my_resource ("button")) {
@@ -283,7 +280,7 @@ sub find_matches {
                   /egx; $_ } split /\s+/, $launcher;
             }
 
-            push @matches, [ $begin[0], $match, @exec ];
+            push @matches, [ $line->coord_of ($begin[0]), $line->coord_of ($end[0]), $match, @exec ];
          }
       }
    }
@@ -297,7 +294,7 @@ sub command_for {
    my @matches = $self->find_matches ($row, $col);
    if (@matches) {
       my @match = @{ $matches[0] };
-      return @match[2 .. $#match];
+      return @match[5 .. $#match];
    }
 
    ()
