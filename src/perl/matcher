@@ -257,7 +257,7 @@ sub find_matches {
    my ($self, $row, $col) = @_;
    my $line = $self->line ($row);
    my $text = $line->t;
-   my $off = $line->offset_of ($row, $col) if $col;
+   my $off = $line->offset_of ($row, $col) if defined $col;
 
    my @matches;
    for my $matcher (@{$self->{matchers}}) {
