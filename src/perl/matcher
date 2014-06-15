@@ -7,7 +7,7 @@
 #:META:RESOURCE:%.button:string:the button, yeah
 #:META:RESOURCE:%.pattern.:string:extra pattern to match
 #:META:RESOURCE:%.launcher.:string:custom launcher for pattern
-#:META:RESOURCE:%.rend.:string:custom rednition for pattern
+#:META:RESOURCE:%.rend.:string:custom rendition for pattern
 
 =head1 NAME
 
