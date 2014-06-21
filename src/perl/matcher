@@ -236,7 +236,7 @@ sub on_line_update {
          # mark all characters as underlined. we _must_ not toggle underline,
          # as we might get called on an already-marked url.
          &{$matcher->[2]}
-         for @{$rend}[ $-[0] .. $+[0] - 1];
+            for @{$rend}[$-[0] .. $+[0] - 1];
 
          $line->r ($rend);
       }
