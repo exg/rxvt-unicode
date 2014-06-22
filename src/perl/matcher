@@ -33,6 +33,43 @@ It is possible to activate the most recently seen match or a list of matches
 from the keyboard.  Simply bind a keysym to "matcher:last" or
 "matcher:list" as seen in the example below.
 
+The 'matcher:select' action enables a mode in which it is possible to
+iterate over the matches using the keyboard and either activate them
+or copy them to the clipboard. While the mode is active, normal terminal
+input/output is suspended and the following bindings are recognized:
+
+=over 4
+
+=item C<Up>
+
+Search for a match upwards.
+
+=item C<Down>
+
+Search for a match downwards.
+
+=item C<Home>
+
+Jump to the topmost match.
+
+=item C<End>
+
+Jump to the bottommost match.
+
+=item C<Escape>
+
+Leave the mode and return to the point where search was started.
+
+=item C<Enter>
+
+Activate the current match.
+
+=item C<y>
+
+Copy the current match to the clipboard.
+
+=back
+
 Example: load and use the matcher extension with defaults.
 
     URxvt.perl-ext:           default,matcher
@@ -99,6 +136,8 @@ sub on_action {
       $self->matchlist;
    } elsif ($action eq "last") {
       $self->most_recent;
+   } elsif ($action eq "select") {
+      $self->select_enter;
    }
 
    ()
@@ -335,6 +374,114 @@ sub on_button_release {
    }
 
    1;
+}
+
+sub select_enter {
+   my ($self) = @_;
+
+   $self->{view_start} = $self->view_start;
+   $self->{pty_ev_events} = $self->pty_ev_events (urxvt::EV_NONE);
+   $self->{cur_row} = $self->nrow - 1;
+
+   $self->enable (
+      key_press     => \&select_key_press,
+      refresh_begin => \&select_refresh,
+      refresh_end   => \&select_refresh,
+   );
+
+   $self->{overlay} = $self->overlay (0, -1, $self->ncol, 1, urxvt::OVERLAY_RSTYLE, 0);
+   $self->{overlay}->set (0, 0, "match-select");
+}
+
+sub select_leave {
+   my ($self) = @_;
+
+   $self->disable ("key_press", "refresh_begin", "refresh_end");
+   $self->pty_ev_events ($self->{pty_ev_events});
+
+   delete $self->{overlay};
+   delete $self->{matches};
+   delete $self->{id};
+}
+
+sub select_search {
+   my ($self, $dir, $row) = @_;
+
+   while ($self->nrow > $row && $row >= $self->top_row) {
+      my $line = $self->line ($row)
+          or last;
+
+      my @matches = $self->find_matches ($row);
+      if (@matches) {
+         @matches = sort { $a->[0] <=> $b->[0] or $a->[1] <=> $b->[1] } @matches;
+         $self->{matches} = \@matches;
+         $self->{cur_row} = $row;
+         $self->{id} = $dir < 0 ? @{ $self->{matches} } - 1 : 0;
+         $self->view_start (List::Util::min 0, $row - ($self->nrow >> 1));
+         $self->want_refresh;
+         return;
+      }
+
+      $row = $dir < 0 ? $line->beg - 1 : $line->end + 1;
+   }
+
+   $self->scr_bell;
+}
+
+sub select_refresh {
+   my ($self) = @_;
+
+   return unless $self->{matches};
+
+   my $cur = $self->{matches}[$self->{id}];
+   $self->scr_xor_span (@$cur[0 .. 3], urxvt::RS_RVid);
+
+   ()
+}
+
+sub select_key_press {
+   my ($self, $event, $keysym, $string) =  @_;
+
+   if ($keysym == 0xff0d || $keysym == 0xff8d) { # enter
+      if ($self->{matches}) {
+         my @match = @{ $self->{matches}[$self->{id}] };
+         $self->exec_async (@match[5 .. $#match]);
+      }
+      $self->select_leave;
+   } elsif ($keysym == 0x79) { # y
+      if ($self->{matches}) {
+         $self->selection ($self->{matches}[$self->{id}][4], 1);
+         $self->selection_grab (urxvt::CurrentTime, 1);
+      }
+      $self->select_leave;
+   } elsif ($keysym == 0xff1b) { # escape
+      $self->view_start ($self->{view_start});
+      $self->select_leave;
+   } elsif ($keysym == 0xff50) { # home
+      $self->select_search (+1, $self->top_row)
+   } elsif ($keysym == 0xff57) { # end
+      $self->select_search (-1, $self->nrow - 1)
+   } elsif ($keysym == 0xff52) { # up
+      if ($self->{id} > 0) {
+         $self->{id}--;
+         $self->want_refresh;
+      } else {
+         my $line = $self->line ($self->{cur_row});
+         $self->select_search (-1, $line->beg - 1)
+            if $line->beg > $self->top_row;
+      }
+   } elsif ($keysym == 0xff54) { # down
+      if ($self->{id} < @{ $self->{matches} } - 1) {
+         $self->{id}++;
+         $self->want_refresh;
+      } else {
+         my $line = $self->line ($self->{cur_row});
+         $self->select_search (+1, $line->end + 1)
+            if $line->end < $self->nrow;
+      }
+   }
+
+   1
 }
 
 # vim:set sw=3 sts=3 et:

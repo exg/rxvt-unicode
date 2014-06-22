@@ -44,6 +44,7 @@ TODO: perl one-liner
 	- the keysym-list extension has been removed, you can use the following
           perl one-liner to expand your existing .Xdefaults file to do without it:
 	- kuake extension now uses the kuake.hotkey resource to specify the hotkey.
+	- new 'matcher:select' mode of matcher to iterate over the matches with the keyboard.
 	- the 'matcher:list' feature of matcher now honours the launcher
 	  associated to a matched pattern.
 	- fix up/down commands of searchable scrollback so that they always move
