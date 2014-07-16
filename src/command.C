@@ -498,6 +498,15 @@ rxvt_term::key_press (XKeyEvent &ev)
 
   if (valid_keysym)
     {
+      KeySym orig_keysym = keysym;
+
+      /* Shift + F1 - F10 generates F11 - F20 */
+      if (shft && keysym >= XK_F1 && keysym <= XK_F10)
+        {
+          keysym += (XK_F11 - XK_F1);
+          shft = 0;	/* turn off Shift */
+        }
+
       if (keysym >= 0xFF00 && keysym <= 0xFFFF)
         {
           bool kp = priv_modes & PrivMode_aplKP ? !shft : shft;
@@ -687,6 +696,8 @@ rxvt_term::key_press (XKeyEvent &ev)
 #endif
           /* nil */ ;
         }
+
+      keysym = orig_keysym;
     }
 
   /* escape prefix */
@@ -772,13 +783,7 @@ rxvt_term::key_press (XKeyEvent &ev)
 
       if (shft)
         {
-          /* Shift + F1 - F10 generates F11 - F20 */
-          if (keysym >= XK_F1 && keysym <= XK_F10)
-            {
-              keysym += (XK_F11 - XK_F1);
-              shft = 0;	/* turn off Shift */
-            }
-          else if (!ctrl && !meta && (priv_modes & PrivMode_ShiftKeys))
+          if (!ctrl && !meta && (priv_modes & PrivMode_ShiftKeys))
             {
               switch (keysym)
                 {
