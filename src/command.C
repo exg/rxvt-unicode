@@ -415,8 +415,7 @@ void ecb_cold
 rxvt_term::key_press (XKeyEvent &ev)
 {
   int ctrl, meta, shft, len;
-  KeySym keysym;
-  int valid_keysym;
+  KeySym keysym = NoSymbol;
   char rkbuf[KBUFSZ + 1];
   char *kbuf = rkbuf + 1;
 
@@ -485,18 +484,14 @@ rxvt_term::key_press (XKeyEvent &ev)
           else
             len = 0;
         }
-
-      valid_keysym = status_return == XLookupKeySym
-                     || status_return == XLookupBoth;
     }
   else
 #endif
     {
       len = XLookupString (&ev, kbuf, KBUFSZ, &keysym, &compose);
-      valid_keysym = keysym != NoSymbol;
     }
 
-  if (valid_keysym)
+  if (keysym != NoSymbol)
     {
       KeySym orig_keysym = keysym;
 
@@ -714,7 +709,7 @@ rxvt_term::key_press (XKeyEvent &ev)
   if (HOOK_INVOKE ((this, HOOK_KEY_PRESS, DT_XEVENT, &ev, DT_INT, keysym, DT_STR_LEN, kbuf, len, DT_END)))
     return;
 
-  if (valid_keysym)
+  if (keysym != NoSymbol)
     {
 #ifdef KEYSYM_RESOURCE
       if (keyboard->dispatch (this, keysym, ev.state, kbuf, len))
