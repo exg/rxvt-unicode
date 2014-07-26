@@ -317,13 +317,8 @@ translate_keypad (KeySym keysym, bool kp)
     XK_KP_8, // XK_KP_Up
     XK_KP_6, // XK_KP_Right
     XK_KP_2, // XK_KP_Down
-# ifndef UNSHIFTED_SCROLLKEYS
     XK_KP_9, // XK_KP_Prior
     XK_KP_3, // XK_KP_Next
-# else
-    XK_Prior,
-    XK_Next,
-# endif
     XK_KP_1, // XK_KP_End
     XK_KP_5, // XK_KP_Begin
   };
@@ -378,7 +373,6 @@ map_function_key (KeySym keysym)
         case XK_Select:
           param = 4;
           break;
-#ifndef UNSHIFTED_SCROLLKEYS
         case XK_Prior:
           param = 5;
           break;
@@ -391,7 +385,6 @@ map_function_key (KeySym keysym)
         case XK_End:
           param = 8;
           break;
-#endif
         case XK_Help:
           param = 28;
           break;
