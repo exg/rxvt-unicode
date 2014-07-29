@@ -309,6 +309,11 @@ support MWM hints (e.g. kwin), enables override-redirect mode.
 Compile I<frills>: Sets override-redirect on the window; resource
 B<override-redirect>.
 
+=item B<-dockapp>
+
+Sets the initial state of the window to WithdrawnState, which makes
+window managers that support this extension treat it as a dockapp.
+
 =item B<-sbg>
 
 Compile I<frills>: Disable the usage of the built-in block graphics/line

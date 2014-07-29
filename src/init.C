@@ -1398,7 +1398,9 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 
   wmHint.flags         = InputHint | StateHint | WindowGroupHint;
   wmHint.input         = True;
-  wmHint.initial_state = option (Opt_iconic) ? IconicState : NormalState;
+  wmHint.initial_state = option (Opt_iconic) ? IconicState
+                         : option (Opt_dockapp) ? WithdrawnState
+                         : NormalState;
   wmHint.window_group  = top;
 
   XmbSetWMProperties (dpy, top, NULL, NULL, (char **)argv, argc,

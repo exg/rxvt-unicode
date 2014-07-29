@@ -64,4 +64,5 @@
 #else
  nodef(buffered)
 #endif
+ def(dockapp)
 

@@ -98,6 +98,7 @@ optList[] = {
               SWCH ("iconic", Opt_iconic, 0, "start iconic"),
               SWCH ("ic", Opt_iconic, 0, NULL),	/* short form */
               STRG (Rs_chdir, "chdir", "cd", "string", "start shell in this directory"),
+              SWCH ("dockapp", Opt_dockapp, 0, "start as dockapp"),
               BOOL (Rs_reverseVideo, "reverseVideo", "rv", Opt_reverseVideo, 0, "reverse video"),
               BOOL (Rs_loginShell, "loginShell", "ls", Opt_loginShell, 0, "login shell"),
               BOOL (Rs_jumpScroll, "jumpScroll", "j", Opt_jumpScroll, 0, "jump scrolling"),
