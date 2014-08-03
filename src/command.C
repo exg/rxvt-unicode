@@ -678,8 +678,6 @@ rxvt_term::key_press (XKeyEvent &ev)
 
               for (ch = kbuf; ch < kbuf + len; ch++)
                 *ch |= 0x80;
-
-              meta = 0;
             }
 #endif
           /* nil */ ;
