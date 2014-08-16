@@ -37,6 +37,8 @@ TODO: document typical actions in rxvt.1.pod keysyms
 TODO: document meta comments and on_action hook
 TODO: perl one-liner
 
+	- Add -mc option and multiClickTime resource to set the maximum time
+	  between multi-click select events (patch by Joe Peterson).
 	- New 'eval' extension to evaluate arbitrary perl code with keysym
 	  bindings. The extension also provides methods that implement basic
 	  actions, such as pasting selections and scrolling.

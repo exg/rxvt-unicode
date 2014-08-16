@@ -221,6 +221,10 @@ rather than the default executable file name. Name should not contain
 
 Start as a login-shell/sub-shell; resource B<loginShell>.
 
+=item B<-mc> I<milliseconds>
+
+Specify the maximum time between multi-click selections.
+
 =item B<-ut>|B<+ut>
 
 Compile I<utmp>: Inhibit/enable writing a utmp entry; resource
@@ -787,6 +791,11 @@ B<False>: no visual bell [default]; option B<+vb>.
 B<True>: start as a login shell by prepending a `-' to B<argv[0]> of
 the shell; option B<-ls>. B<False>: start as a normal sub-shell
 [default]; option B<+ls>.
+
+=item B<multiClickTime:> I<number>
+
+Specify the maximum time in milliseconds between multi-click select
+events. The default is 500 milliseconds; option B<-mc>.
 
 =item B<utmpInhibit:> I<boolean>
 

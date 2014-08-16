@@ -662,6 +662,11 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     pointerBlankDelay = 2;
 #endif
 
+  if (rs[Rs_multiClickTime] && (i = atoi (rs[Rs_multiClickTime])) >= 0)
+    multiClickTime = i;
+  else
+    multiClickTime = 500;
+
   /* no point having a scrollbar without having any scrollback! */
   if (!saveLines)
     set_option (Opt_scrollBar, 0);

@@ -1913,7 +1913,7 @@ rxvt_term::button_press (XButtonEvent &ev)
         }
 #endif
 
-      clickintime = ev.time - MEvent.time < MULTICLICK_TIME;
+      clickintime = ev.time - MEvent.time < multiClickTime;
 
       if (reportmode)
         {
@@ -2173,7 +2173,7 @@ rxvt_term::button_release (XButtonEvent &ev)
           if (MEvent.button != AnyButton
               && (ev.button != MEvent.button
                   || (ev.time - MEvent.time
-                      > MULTICLICK_TIME / 2)))
+                      > multiClickTime / 2)))
             {
               MEvent.clicks = 0;
               MEvent.button = AnyButton;

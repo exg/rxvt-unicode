@@ -22,6 +22,7 @@
   def (backgroundPixmap)
 #endif
   def (loginShell)
+  def (multiClickTime)
   def (jumpScroll)
   def (skipScroll)
   def (scrollBar)

@@ -7,9 +7,6 @@
 
 #define ESC_ARGS	32	/* max # of args for esc sequences */
 
-#ifndef MULTICLICK_TIME
-# define MULTICLICK_TIME	500
-#endif
 #ifndef SCROLLBAR_INITIAL_DELAY
 # define SCROLLBAR_INITIAL_DELAY	0.33
 #endif
