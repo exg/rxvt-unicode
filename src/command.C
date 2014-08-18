@@ -3094,7 +3094,7 @@ rxvt_term::process_csi_seq ()
           priv_modes |= PrivMode_LFNL;
         break;
 
-      case CSI_71:		// DESCUSR: set cursor style
+      case CSI_71:		// DECSCUSR: set cursor style
         if (prev_ch == ' ')
           set_cursor_style (arg[0]);
         break;
