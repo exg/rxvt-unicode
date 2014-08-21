@@ -1641,6 +1641,8 @@ Set Cursor Style (DECSCUSR)
 	B<< C<Ps = 2> >>	Steady Block
 	B<< C<Ps = 3> >>	Blink Underline
 	B<< C<Ps = 4> >>	Steady Underline
+	B<< C<Ps = 5> >>	Blink Bar (XTerm)
+	B<< C<Ps = 6> >>	Steady Bar (XTerm)
 
 =end table
 

@@ -2120,11 +2120,11 @@ rxvt_term::scr_refresh () NOTHROW
           ccol2 = Color_bg;
 #endif
 
-        if (focus)
+        if (focus && cursor_type != 2)
           {
             rend_t rend = cur_rend;
 
-            if (option (Opt_cursorUnderline))
+            if (cursor_type == 1)
               rend ^= RS_Uline;
             else
               {
@@ -2141,7 +2141,7 @@ rxvt_term::scr_refresh () NOTHROW
     if (ocrow != -1)
       {
         if (screen.cur.row - view_start != ocrow
-            || screen.cur.col != oldcursor.col)
+            || screen.cur.col != oldcursor.col || !showcursor)
           {
             if (ocrow < nrow
                 && oldcursor.col < ncol)
@@ -2150,9 +2150,10 @@ rxvt_term::scr_refresh () NOTHROW
       }
 
     // save the current cursor coordinates if the cursor is visible
-    // and the window is unfocused, so as to clear the outline cursor
-    // in the next refresh if the cursor moves
-    if (showcursor && !focus && screen.cur.row - view_start < nrow)
+    // and either the window is unfocused or the cursor style is
+    // vertical bar, so as to clear the outline cursor in the next
+    // refresh if the cursor moves or becomes invisible
+    if (showcursor && (!focus || cursor_type == 2) && screen.cur.row - view_start < nrow)
       {
         oldcursor.row = screen.cur.row - view_start;
         oldcursor.col = screen.cur.col;
@@ -2458,7 +2459,19 @@ rxvt_term::scr_refresh () NOTHROW
   if (showcursor)
     {
       if (focus)
-        scr_set_char_rend (ROW(screen.cur.row), cur_col, cur_rend);
+        {
+          if (cursor_type != 2)
+            scr_set_char_rend (ROW(screen.cur.row), cur_col, cur_rend);
+          else if (oldcursor.row >= 0)
+            {
+              XSetForeground (dpy, gc, pix_colors[ccol1]);
+              XFillRectangle (dpy, vt, gc,
+                              Col2Pixel (cur_col),
+                              Row2Pixel (oldcursor.row),
+                              1,
+                              Height2Pixel (1));
+            }
+        }
       else if (oldcursor.row >= 0)
         {
           XSetForeground (dpy, gc, pix_colors[ccol1]);

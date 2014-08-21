@@ -4017,13 +4017,17 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
 void
 rxvt_term::set_cursor_style (int style)
 {
-  if (!IN_RANGE_INC (style, 0, 4))
+  if (!IN_RANGE_INC (style, 0, 6))
     return;
 
-  set_option (Opt_cursorUnderline, style >= 3);
+  if (style == 0)
+    style = 1;
+
+  cursor_type = (style - 1) / 2;
+  set_option (Opt_cursorUnderline, cursor_type == 1);
 
 #ifdef CURSOR_BLINK
-  set_option (Opt_cursorBlink, !style || (style & 1));
+  set_option (Opt_cursorBlink, style & 1);
   cursor_blink_reset ();
 #endif
 

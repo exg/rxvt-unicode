@@ -1165,6 +1165,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
                   pointerBlankDelay,
 # endif
                   multiClickTime,
+                  cursor_type,
                   allowedxerror;
 /* ---------- */
   unsigned int    ModLevel3Mask,
