@@ -1189,8 +1189,8 @@ Similarly, to let applications gain access to the C<C-M-c> (copy to
 clipboard) and C<C-M-v> (paste clipboard) key combination, you can do
 this:
 
-   URxvt.keysym.C-S-c: builtin-string:
-   URxvt.keysym.C-S-v: builtin-string:
+   URxvt.keysym.C-M-c: builtin-string:
+   URxvt.keysym.C-M-v: builtin-string:
 
 =item EXTENSION:STRING
 
