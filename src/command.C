@@ -212,7 +212,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y, int y2)
 
   if (y >= 0)
     {
-      y = (y >= nrow - len - 4 && x < width + 2) ? 0 : -1;
+      y = (y >= nrow - len - 5 && x < width + 2) ? 0 : -1;
       x = 0;
     }
 

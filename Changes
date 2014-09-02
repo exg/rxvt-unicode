@@ -35,6 +35,10 @@ TODO IMPL: recalc bg always on bg colour change
 
 TODO: document typical actions in rxvt.1.pod keysyms
 TODO: document meta comments and on_action hook
+
+TODO: mikachu says the keymap changed (S-F1 no longer 23$ but 11$)
+TODO: home/end also changed from 1/4 to 7/8 i think
+TODO: http://mika.l3ib.org/tmp/b3c68e35f91e6b5b9b4481b58372a5ad.txt is my full diff (i don't index ctrl-shift apparently)
 TODO: perl one-liner
 
 	- Add DECSCUSR xterm extension to set the cursor to a vertical bar.
@@ -57,6 +61,8 @@ TODO: perl one-liner
         - upgrade to GPLv3 (see COPYING).
         - Fix height and position of the stippled area in next scrollbar (patch
           by Thomas Otto).
+        - fix off-by-one bug causing the iso14755 window not to jump out of the
+          way properly.
 
 9.20 Sat Apr 26 16:22:27 CEST 2014
         - (libptytty) fix bug that prevented urxvtd from writing utmp
