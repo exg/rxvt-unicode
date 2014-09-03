@@ -709,11 +709,12 @@ static const keysym_vocabulary_t keysym_vocabulary[] =
 };
 
 int
-rxvt_term::bind_action (const char *str, const char *arg)
+rxvt_term::parse_keysym (const char *str, unsigned int &state)
 {
   int sym;
-  unsigned int state = 0;
   const char *key = strrchr (str, '-');
+
+  state = 0;
 
   if (!key)
     key = str;
@@ -721,7 +722,7 @@ rxvt_term::bind_action (const char *str, const char *arg)
     key++;
 
   // string or key is empty
-  if (*arg == '\0' || *key == '\0')
+  if (*key == '\0')
     return -1;
 
   // parse modifiers
@@ -755,6 +756,18 @@ rxvt_term::bind_action (const char *str, const char *arg)
       if (*end)
         return -1;
     }
+
+  return sym;
+}
+
+int
+rxvt_term::bind_action (const char *str, const char *arg)
+{
+  int sym;
+  unsigned int state;
+
+  if (*arg == '\0' || (sym = parse_keysym (str, state)) == -1)
+    return -1;
 
   wchar_t *ws = rxvt_mbstowcs (arg);
   keyboard->register_action (sym, state, ws);

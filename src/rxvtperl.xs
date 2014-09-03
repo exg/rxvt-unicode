@@ -497,6 +497,11 @@ rxvt_perl_interp::parse_resource (rxvt_term *term, const char *name, bool arg, b
 static void
 _keysym_resource_push (rxvt_term *term, const char *k, const char *v)
 {
+  unsigned int state;
+
+  if (term->parse_keysym (k, state) == -1)
+    return;
+
   dSP;
   XPUSHs (sv_2mortal (newSVpv (v, 0)));
   PUTBACK;
