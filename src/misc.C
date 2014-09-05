@@ -329,3 +329,13 @@ rxvt_realloc (void *ptr, size_t size)
 
   return p;
 }
+
+KeySym
+rxvt_XKeycodeToKeysym (Display *dpy, KeyCode code, int index)
+{
+  int size;
+  KeySym *mapping = XGetKeyboardMapping (dpy, code, 1, &size);
+  KeySym keysym = IN_RANGE_EXC (index, 0, size) ? mapping[index] : NoSymbol;
+  XFree (mapping);
+  return keysym;
+}

@@ -1210,7 +1210,7 @@ rxvt_term::get_ourmods ()
           if (kc[k] == 0)
             break;
 
-          switch (XKeycodeToKeysym (dpy, kc[k], 0))
+          switch (rxvt_XKeycodeToKeysym (dpy, kc[k], 0))
             {
               case XK_Num_Lock:
                 ModNumLockMask = modmasks[i - 1];

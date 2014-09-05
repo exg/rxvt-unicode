@@ -178,6 +178,8 @@ void           * rxvt_malloc                      (size_t size);
 void           * rxvt_calloc                      (size_t number, size_t size);
 void           * rxvt_realloc                     (void *ptr, size_t size);
 
+KeySym rxvt_XKeycodeToKeysym (Display *dpy, KeyCode keycode, int index);
+
 /////////////////////////////////////////////////////////////////////////////
 
 // temporarily replace the process environment

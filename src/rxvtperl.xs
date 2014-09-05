@@ -1309,7 +1309,7 @@ rxvt_term::XKeysymToKeycode (int sym)
 int
 rxvt_term::XKeycodeToKeysym (int code, int index)
 	CODE:
-        RETVAL = XKeycodeToKeysym (THIS->dpy, code, index);
+        RETVAL = rxvt_XKeycodeToKeysym (THIS->dpy, code, index);
 	OUTPUT: RETVAL
 
 int
