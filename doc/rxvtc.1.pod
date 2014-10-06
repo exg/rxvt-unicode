@@ -16,6 +16,9 @@ contacting the daemon.
 
 =head1 OPTIONS
 
+If the first option is B<-k>, B<@@RXVT_NAME@@c> tries to kill the
+daemon process and returns.
+
 All options that are valid for B<@@RXVT_NAME@@> are valid for
 B<@@RXVT_NAME@@c>, too. Please note that options are interpreted in the
 context of the daemon process. However, as current working directory,

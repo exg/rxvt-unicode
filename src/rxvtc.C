@@ -95,6 +95,12 @@ main (int argc, const char *const *argv)
     sigprocmask (SIG_BLOCK, &ss, 0);
   }
 
+  if (argc >= 2 && !strcmp (argv[1], "-k"))
+    {
+      c.send ("QUIT");
+      return 0;
+    }
+
   c.send ("NEW");
 
   for (char **var = environ; *var; var++)
