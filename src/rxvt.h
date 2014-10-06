@@ -187,17 +187,6 @@ extern char **environ;
 extern char **rxvt_environ; // the original environ pointer
 
 static inline void
-set_environ (stringvec *envv)
-{
-#if ENABLE_PERL
-  assert (envv);
-#else
-  if (envv)
-#endif
-    environ = (char **)envv->begin ();
-}
-
-static inline void
 set_environ (char **envv)
 {
 #if ENABLE_PERL
@@ -1246,6 +1235,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   char           *v_buffer;           /* pointer to physical buffer */
   unsigned int    v_buflen;           /* size of area to write */
   stringvec      *argv, *envv;        /* if != 0, will be freed at destroy time */
+  char           **env;
 
 #ifdef KEYSYM_RESOURCE
   keyboard_manager *keyboard;
@@ -1346,7 +1336,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void make_current () const // make this the "currently active" urxvt instance
   {
     SET_R (this);
-    set_environ (envv);
+    set_environ (env);
     rxvt_set_locale (locale);
   }
 

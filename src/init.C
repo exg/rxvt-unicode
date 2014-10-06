@@ -748,6 +748,10 @@ rxvt_term::init (stringvec *argv, stringvec *envv)
   this->argv = argv;
   this->envv = envv;
 
+  env = new char *[this->envv->size ()];
+  for (int i = 0; i < this->envv->size (); i++)
+    env[i] = this->envv->at (i);
+
   init2 (argv->size () - 1, argv->begin ());
 }
 
@@ -775,7 +779,7 @@ rxvt_term::init2 (int argc, const char *const *argv)
 {
   SET_R (this);
   set_locale ("");
-  set_environ (envv); // a few things in X do not call setlocale :(
+  set_environ (env); // a few things in X do not call setlocale :(
 
   init_vars ();
 
@@ -952,7 +956,7 @@ rxvt_term::init_env ()
 void
 rxvt_term::set_locale (const char *locale)
 {
-  set_environ (envv);
+  set_environ (env);
 
   free (this->locale);
   this->locale = setlocale (LC_CTYPE, locale);
@@ -990,7 +994,7 @@ rxvt_term::set_locale (const char *locale)
 void
 rxvt_term::init_xlocale ()
 {
-  set_environ (envv);
+  set_environ (env);
 
 #if USE_XIM
   if (!locale)

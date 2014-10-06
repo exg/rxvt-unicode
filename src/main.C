@@ -279,6 +279,11 @@ rxvt_term::~rxvt_term ()
 
   delete selection_req;
 
+  if (memcmp (env, envv->begin (), envv->size () * sizeof (char *)))
+    rxvt_warn ("env has been modified, probably as a result of a lib calling setenv.\n");
+
+  delete env;
+
   delete envv;
   delete argv;
 
@@ -1372,7 +1377,7 @@ rxvt_term::im_get_ic (const char *modifiers)
   char **s;
   XIMStyles *xim_styles;
 
-  set_environ (envv);
+  set_environ (env);
 
   if (!((p = XSetLocaleModifiers (modifiers)) && *p))
     return false;
