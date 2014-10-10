@@ -37,6 +37,8 @@ TODO: document typical actions in rxvt.1.pod keysyms
 TODO: document meta comments and on_action hook
 TODO: perl one-liner
 TODO: warn with a graphical message when env has been modified
+TODO: urxvt --bell-command (or any extension resource name containing a '-') does not work
+TODO: urxvt --matcher.button 1 does not autoload matcher if perl-ext{,-common} does not contain 'default'. This is a backward incompatible change.
 
 	- Add DECSCUSR xterm extension to set the cursor to a vertical bar.
 	- Add -mc option and multiClickTime resource to set the maximum time
