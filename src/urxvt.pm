@@ -557,19 +557,21 @@ no warnings 'utf8';
 sub parse_resource {
    my ($term, $name, $isarg, $longopt, $flag, $value) = @_;
 
-   $name =~ y/-/./ if $isarg;
-
    $term->scan_extensions;
 
    my $r = $term->{meta}{resource};
    keys %$r; # reset iterator
-   while (my ($pattern, $v) = each %$r) {
-      if (
-         $pattern =~ /\.$/
-         ? $pattern eq substr $name, 0, length $pattern
-         : $pattern eq $name
-      ) {
-         $name = "$urxvt::RESCLASS.$name";
+   while (my ($k, $v) = each %$r) {
+      my $pattern = $k;
+      $pattern =~ y/./-/ if $isarg;
+      my $prefix = $name;
+      my $suffix;
+      if ($pattern =~ /\-$/) {
+         $prefix = substr $name, 0, length $pattern;
+         $suffix = substr $name, length $pattern;
+      }
+      if ($pattern eq $prefix) {
+         $name = "$urxvt::RESCLASS.$k$suffix";
 
          push @{ $term->{perl_ext_3} }, $v->[0];
 
