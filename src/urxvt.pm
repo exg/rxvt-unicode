@@ -684,15 +684,14 @@ sub invoke {
             $ext_arg{$_} = []
                for
                   qw(selection option-popup selection-popup readline),
-                  map $_->[0], values %{ $TERM->{meta}{binding} },
-                  @{ delete $TERM->{perl_ext_3} };
+                  @{ delete $TERM->{perl_ext_3} },
+                  map $_->[0], values %{ $TERM->{meta}{binding} };
 
             for ($TERM->_keysym_resources) {
                next if /^(?:string|command|builtin|builtin-string|perl)/;
                next unless /^([A-Za-z0-9_\-]+):/;
 
                my $ext = $1;
-               $ext =~ y/-/_/;
 
                $ext_arg{$ext} = [];
             }
