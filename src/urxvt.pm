@@ -45,8 +45,10 @@ Or by adding them to the resource for extensions loaded by default:
 
   URxvt.perl-ext-common: default,selection-autotransform
 
-Extensions that add command line parameters or resources on their own are
-loaded automatically when used.
+Extensions may add resources on their own. Similarly to builtin
+resources, these resources can also be specified on the command line
+as long options (with '.' replaced by '-'), in which case the
+corresponding extension is loaded automatically.
 
 =head1 API DOCUMENTATION
 
@@ -1275,8 +1277,8 @@ class name, i.e.  C<< $term->x_resource ("boldFont") >> should return the
 same value as used by this instance of rxvt-unicode. Returns C<undef> if no
 resource with that pattern exists.
 
-Extensions that define extra resource or command line arguments also need
-to call this method to access their values.
+Extensions that define extra resources also need to call this method
+to access their values.
 
 If the method is called on an extension object (basically, from an
 extension), then the special prefix C<%.> will be replaced by the name of
