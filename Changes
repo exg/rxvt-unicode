@@ -39,6 +39,10 @@ TODO: perl one-liner
 TODO: warn with a graphical message when env has been modified
 
 	- Add DECSCUSR xterm extension to set the cursor to a vertical bar.
+	- add 'builtin-string' action for keysym resources that restores string
+	  mappings for keys that have predefined actions in urxvt.
+	- add -k option to urxvtc for killing the daemon process.
+	- add -dockapp option to make the wm treat urxvt as a dockapp.
 	- Add -mc option and multiClickTime resource to set the maximum time
 	  between multi-click select events (patch by Joe Peterson).
 	- New 'eval' extension to evaluate arbitrary perl code with keysym
@@ -60,6 +64,7 @@ TODO: warn with a graphical message when env has been modified
           by Thomas Otto).
         - fix off-by-one bug causing the iso14755 window not to jump out of the
           way properly.
+	- fix crash that may happen if a lib to which urxvt is linked to calls setenv.
 
 9.20 Sat Apr 26 16:22:27 CEST 2014
         - (libptytty) fix bug that prevented urxvtd from writing utmp
