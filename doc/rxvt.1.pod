@@ -1194,11 +1194,11 @@ this:
 
 =item EXTENSION:STRING
 
-An action of this form passes the B<STRING> to the @@RXVT_NAME@@perl(3)
-extension of the same name. The extension will be loaded automatically if
-necessary.
+An action of this form invokes the action B<STRING>, if any, provided
+by the @@RXVT_NAME@@perl(3) extension B<EXTENSION>. The extension will
+be loaded automatically if necessary.
 
-Not all extensions define key actions, but popular extensions that do
+Not all extensions define actions, but popular extensions that do
 include the I<selection> and I<matcher> extensions (documented in their
 own manpages, @@RXVT_NAME@@-selection(1) and @@RXVT_NAME@@-matcher(1),
 respectively).
@@ -1211,8 +1211,8 @@ keyboards:
 
 =item perl:STRING *DEPRECATED*
 
-This is a deprecated way of passing key mappings to perl extensions. It is
-still supported, but should not be used anymore.
+This is a deprecated way of invoking commands provided by perl
+extensions. It is still supported, but should not be used anymore.
 
 =back
 
