@@ -34,18 +34,21 @@ TODO IMPL: colour-change event with index
 TODO IMPL: recalc bg always on bg colour change
 
 TODO: document typical actions in rxvt.1.pod keysyms
-TODO: document meta comments and on_action hook
 TODO: perl one-liner
 TODO: warn with a graphical message when env has been modified
 
-	- Add DECSCUSR xterm extension to set the cursor to a vertical bar.
+	- add DECSCUSR xterm extension to set the cursor to a vertical bar.
+	- add 'extension:string' action, and associated on_action perl
+	  hook, for keysym resources that invokes actions provided by
+	  perl extensions. The 'perl:string' action and
+	  on_user_command hook are deprecated but still supported.
 	- add 'builtin-string' action for keysym resources that restores string
 	  mappings for keys that have predefined actions in urxvt.
 	- add -k option to urxvtc for killing the daemon process.
 	- add -dockapp option to make the wm treat urxvt as a dockapp.
-	- Add -mc option and multiClickTime resource to set the maximum time
+	- add -mc option and multiClickTime resource to set the maximum time
 	  between multi-click select events (patch by Joe Peterson).
-	- New 'eval' extension to evaluate arbitrary perl code with keysym
+	- new 'eval' extension to evaluate arbitrary perl code with keysym
 	  bindings. The extension also provides methods that implement basic
 	  actions, such as pasting selections and scrolling.
 	- the macosx-clipboard and macosx-clipboard-native extensions have been removed.
@@ -60,7 +63,7 @@ TODO: warn with a graphical message when env has been modified
 	- searchable-scrollback resource has been deprecated (use keysym instead).
         - extension parameter passing is deprecated (use resource mechanism instead).
         - upgrade to GPLv3 (see COPYING).
-        - Fix height and position of the stippled area in next scrollbar (patch
+        - fix height and position of the stippled area in next scrollbar (patch
           by Thomas Otto).
         - fix off-by-one bug causing the iso14755 window not to jump out of the
           way properly.
