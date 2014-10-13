@@ -45,10 +45,15 @@ Or by adding them to the resource for extensions loaded by default:
 
   URxvt.perl-ext-common: default,selection-autotransform
 
-Extensions may add resources on their own. Similarly to builtin
-resources, these resources can also be specified on the command line
-as long options (with '.' replaced by '-'), in which case the
-corresponding extension is loaded automatically.
+Extensions may add additional resources and C<actions>, i.e., methods
+which can be bound to a key and invoked by the user. An extension can
+define the resources it support and also default bindings for one or
+more actions it provides using so called META comments, described
+below. Similarly to builtin resources, extension resources can also be
+specified on the command line as long options (with C<.> replaced by
+C<->), in which case the corresponding extension is loaded
+automatically. For this to work the extension B<must> define META
+comments for its resources.
 
 =head1 API DOCUMENTATION
 
@@ -109,6 +114,29 @@ C<urxvt::term> class on this object.
 
 Additional methods only supported for extension objects are described in
 the C<urxvt::extension> section below.
+
+=head2 META comments
+
+rxvt-unicode recognizes special comments in extensions that define
+different types of metadata:
+
+=over 4
+
+=item #:META:RESOURCE:name:type:desc
+
+The RESOURCE comment defines a resource used by the extension, where
+C<name> is the resource name, C<type> is the resource type, C<boolean>
+or C<string>, and C<desc> is the resource description.
+
+=item #:META:BINDING:sym:action
+
+The BINDING comment defines a default binding for an action provided
+by the extension, where C<sym> is the key combination that triggers
+the action, whose format is defined in the description of the
+B<keysym> resource in the urxvt(1) manpage, and C<action> is the name
+of the action method.
+
+=back
 
 =head2 Hooks
 
@@ -284,6 +312,14 @@ code is run after this hook, and takes precedence.
 =item on_refresh_end $term
 
 Called just after the screen gets redrawn. See C<on_refresh_begin>.
+
+=item on_action $term, $string
+
+Called whenever an action is invoked for the corresponding extension
+(e.g. via a C<extension:string> builtin action bound to a key, see
+description of the B<keysym> resource in the urxvt(1) manpage). The
+event is simply the action string. Note that an action event is always
+associated to a single extension.
 
 =item on_user_command $term, $string *DEPRECATED*
 
@@ -1284,8 +1320,8 @@ If the method is called on an extension object (basically, from an
 extension), then the special prefix C<%.> will be replaced by the name of
 the extension and a dot, and the lone string C<%> will be replaced by the
 extension name itself. This makes it possible to code extensions so you
-can rename them and get a new set of commandline switches and resources
-without having to change the actual code.
+can rename them and get a new set of resources without having to change
+the actual code.
 
 This method should only be called during the C<on_start> hook, as there is
 only one resource database per display, and later invocations might return
