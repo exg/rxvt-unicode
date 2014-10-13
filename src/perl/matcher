@@ -268,21 +268,22 @@ sub on_line_update {
    # fetch the line that has changed
    my $line = $self->line ($row);
    my $text = $line->t;
+   my $rend;
 
    # find all urls (if any)
    for my $matcher (@{$self->{matchers}}) {
       while ($text =~ /$matcher->[0]/g) {
          #print "$&\n";
-         my $rend = $line->r;
+         $rend ||= $line->r;
 
          # mark all characters as underlined. we _must_ not toggle underline,
          # as we might get called on an already-marked url.
          &{$matcher->[2]}
             for @{$rend}[$-[0] .. $+[0] - 1];
-
-         $line->r ($rend);
       }
    }
+
+   $line->r ($rend) if $rend;
 
    ()
 }
