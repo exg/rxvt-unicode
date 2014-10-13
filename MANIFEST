@@ -160,6 +160,7 @@ src/perl/confirm-paste
 src/perl/digital-clock
 src/perl/eval
 src/perl/example-refresh-hooks
+src/perl/keysym-list
 src/perl/kuake
 src/perl/matcher
 src/perl/option-popup

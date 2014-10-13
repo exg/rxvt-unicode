@@ -26,6 +26,7 @@
 
   def (ACTION)
   def (USER_COMMAND)
+  def (REGISTER_COMMAND)
 
   def (ROOT_EVENT)
   def (X_EVENT)

@@ -770,7 +770,8 @@ rxvt_term::bind_action (const char *str, const char *arg)
     return -1;
 
   wchar_t *ws = rxvt_mbstowcs (arg);
-  keyboard->register_action (sym, state, ws);
+  if (!HOOK_INVOKE ((this, HOOK_REGISTER_COMMAND, DT_INT, sym, DT_INT, state, DT_WCS_LEN, ws, wcslen (ws), DT_END)))
+    keyboard->register_action (sym, state, ws);
 
   free (ws);
   return 1;
