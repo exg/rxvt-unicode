@@ -2,9 +2,10 @@
 
 # Author: Tim Pope <rxvt-unicodeNOSPAM@tpope.org>
 #         Bob Farrell <robertanthonyfarrell@gmail.com>
+#         Emanuele Giaquinta
 
 #:META:RESOURCE:%.launcher:string:default launcher command
-#:META:RESOURCE:%.button:string:the button, yeah
+#:META:RESOURCE:%.button:string:the mouse button used to activate a match
 #:META:RESOURCE:%.pattern.:string:extra pattern to match
 #:META:RESOURCE:%.launcher.:string:custom launcher for pattern
 #:META:RESOURCE:%.rend.:string:custom rendition for pattern
@@ -115,15 +116,15 @@ sub matchlist_key_press {
 sub on_user_command {
    my ($self, $cmd) = @_;
 
-   if ($cmd =~ s/^matcher:list\b//) {
+   if ($cmd eq "matcher:list") {
       $self->matchlist;
-   } else {
-      if ($cmd =~ s/^matcher:last\b//) {
-         $self->most_recent;
-      } elsif ($cmd =~ s/^matcher\b//) {
-         # for backward compatibility
-         $self->most_recent;
-      }
+   } elsif ($cmd eq "matcher:last") {
+      $self->most_recent;
+   } elsif ($cmd eq "matcher:select") {
+      $self->select_enter;
+   } elsif ($cmd eq "matcher") {
+      # for backward compatibility
+      $self->most_recent;
    }
 
    ()
