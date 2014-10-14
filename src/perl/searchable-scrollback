@@ -103,6 +103,7 @@ sub leave {
    delete $self->{manpage_overlay};
    delete $self->{overlay};
    delete $self->{search};
+   delete $self->{found};
 }
 
 sub idle {
