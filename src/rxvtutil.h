@@ -90,14 +90,14 @@ struct rxvt_vec : simplevec<void *>
 #endif
 
 inline void *
-operator new (size_t size)
+operator new (size_t size) throw (std::bad_alloc)
 {
   // TODO: use rxvt_malloc
   return malloc (size);
 }
 
 inline void
-operator delete (void *p)
+operator delete (void *p) throw ()
 {
   free (p);
 }
