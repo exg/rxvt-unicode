@@ -1,3 +1,17 @@
+/* enable mremap on GNU/Linux */
+#ifdef __linux__
+# define _GNU_SOURCE
+#endif
+
+/* enable the POSIX prototypes of mmap/munmap on Solaris */
+#ifdef __sun
+# if __STDC_VERSION__ - 0 >= 199901L
+#  define _XOPEN_SOURCE 600
+# else
+#  define _XOPEN_SOURCE 500
+# endif
+#endif
+
 #include "emman.h"
 
 #include <ecb.h>
@@ -10,9 +24,6 @@
 
 #if  _POSIX_MAPPED_FILES
 # define USE_MMAP 1
-# ifdef __linux__
-#  define _GNU_SOURCE
-# endif
 # include <sys/mman.h>
 # ifndef MAP_FAILED
 #  define MAP_FAILED ((void *)-1)
