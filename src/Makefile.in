@@ -107,7 +107,7 @@ install-perl:
 @IF_PERL@	$(INSTALL_DATA) $(srcdir)/urxvt.pm $(DESTDIR)$(libdir)/urxvt/urxvt.pm
 @IF_PERL@	for ext in $(srcdir)/perl/*; do \
 @IF_PERL@	   test -f "$$ext" || continue; \
-@IF_PERL@	   base="$${ext##*/}"; \
+@IF_PERL@	   base=`basename "$$ext"`; \
 @IF_PERL@	   $(INSTALL_DATA) "$$ext" $(DESTDIR)$(libdir)/urxvt/perl/; \
 @IF_PERL@	   < "$$ext" \
 @IF_PERL@	   $(PERL) -MPod::Man -e '(new Pod::Man name => "'urxvt-$$base'", $(PODOPTS))->parse_from_file' \
