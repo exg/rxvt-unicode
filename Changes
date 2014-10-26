@@ -55,11 +55,13 @@ TODO: warn with a graphical message when env has been modified
 	- new 'matcher:select' mode of matcher to iterate over the matches with the keyboard.
 	- the 'matcher:list' feature of matcher now honours the launcher
 	  associated to a matched pattern.
-	- fix up/down commands of searchable scrollback so that they always move
+	- speed-up matcher underlining on very long lines (reported by Edward Z. Yang).
+	- fix up/down commands of searchable-scrollback so that they always move
 	  to the previous/next logical line with a match, if any.
 	- searchable-scrollback resource has been deprecated (use keysym instead).
         - extension parameter passing is deprecated (use resource mechanism instead).
         - upgrade to GPLv3 (see COPYING).
+	- compile out of the box on Solaris 10, again.
         - fix height and position of the stippled area in next scrollbar (patch
           by Thomas Otto).
         - fix off-by-one bug causing the iso14755 window not to jump out of the
