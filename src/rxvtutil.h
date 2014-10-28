@@ -63,6 +63,10 @@ struct zero_initialized
   void operator delete (void *p, size_t s);
 };
 
+// alas new/delete cannot be specified as inline in C++11 (see 17.6.4.6)
+void *operator new (size_t s) throw (std::bad_alloc);
+void operator delete (void *p) throw ();
+
 struct stringvec : simplevec<char *>
 {
   ~stringvec ()
@@ -88,19 +92,6 @@ struct rxvt_vec : simplevec<void *>
   const T &operator [] (int i) const { return * (const T *) (& ((* (const simplevec<void *> *)this)[i])); }
 };
 #endif
-
-inline void *
-operator new (size_t size) throw (std::bad_alloc)
-{
-  // TODO: use rxvt_malloc
-  return malloc (size);
-}
-
-inline void
-operator delete (void *p) throw ()
-{
-  free (p);
-}
 
 template<typename T>
 struct auto_ptr

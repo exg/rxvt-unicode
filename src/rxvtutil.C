@@ -49,6 +49,19 @@ zero_initialized::operator delete (void *p, size_t s)
   free (p);
 }
 
+void *
+operator new (size_t s) throw (std::bad_alloc)
+{
+  // TODO: use rxvt_malloc
+  return malloc (s);
+}
+
+void
+operator delete (void *p) throw ()
+{
+  free (p);
+}
+
 static void *temp_buf;
 static uint32_t temp_len;
 
