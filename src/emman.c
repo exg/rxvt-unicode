@@ -5,7 +5,7 @@
 
 /* enable the POSIX prototypes of mmap/munmap on Solaris */
 #ifdef __sun
-# if __STDC_VERSION__ - 0 >= 199901L
+# if __STDC_VERSION__ >= 199901L
 #  define _XOPEN_SOURCE 600
 # else
 #  define _XOPEN_SOURCE 500
