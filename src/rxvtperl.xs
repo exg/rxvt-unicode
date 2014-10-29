@@ -1728,6 +1728,7 @@ rxvt_term::special_encode (SV *string)
 
 	rxvt_pop_locale ();
 
+        free (wstr);
         RETVAL = wcs2sv (rstr, r - rstr);
 }
 	OUTPUT:
@@ -1761,6 +1762,7 @@ rxvt_term::special_decode (SV *text)
           else
             *r++ = *s;
 
+        free (wstr);
         RETVAL = wcs2sv (rstr, r - rstr);
 }
 	OUTPUT:
