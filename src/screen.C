@@ -2253,7 +2253,7 @@ rxvt_term::scr_refresh () NOTHROW
           if (stp[col] == dtp[col]    /* Must match characters to skip. */
               && (RS_SAME (srp[col], drp[col])    /* Either rendition the same or   */
                   || (stp[col] == ' ' /* space w/ no background change  */
-                      && GET_BGATTR (srp[col]) == GET_BGATTR (drp[col]))))
+                      && !((srp[col] ^ drp[col]) & (RS_attrMask | RS_bgMask)))))
             continue;
 
           // redraw one or more characters

@@ -738,13 +738,6 @@ typedef struct _mwmhints
 #define SET_STYLE(x,style)	(((x) & ~RS_styleMask) | ((style) << RS_styleShift))
 
 #define GET_ATTR(x)             (((x) & RS_attrMask))
-// return attributes defining the background, encoding doesn't matter
-// depends on RS_fgShift > RS_bgShift
-#define GET_BGATTR(x)                                      \
-  (ecb_unlikely ((x) & RS_RVid)                            \
-    ? (((x) & (RS_attrMask & ~RS_RVid))                    \
-      | (((x) & RS_fgMask) >> (RS_fgShift - RS_bgShift)))  \
-    : ((x) & (RS_attrMask | RS_bgMask)))
 #define SET_FGCOLOR(x,fg)       (((x) & ~RS_fgMask)   | ((fg) << RS_fgShift))
 #define SET_BGCOLOR(x,bg)       (((x) & ~RS_bgMask)   | ((bg) << RS_bgShift))
 #define SET_ATTR(x,a)           (((x) & ~RS_attrMask) | (a))
