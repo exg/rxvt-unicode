@@ -39,9 +39,9 @@ sub msg {
 
    my $overlay = $self->overlay (0, 0, $self->strwidth ($msg), 1);
    $overlay->set (0, 0, $msg);
-   my $iow; $iow = urxvt::timer->new->after (1)->cb (sub {
+   $self->{timer} = urxvt::timer->new->after (1)->cb (sub {
+      delete $self->{timer};
       undef $overlay;
-      undef $iow;
    });
 }
 
