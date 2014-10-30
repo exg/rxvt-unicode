@@ -45,6 +45,7 @@ static uint32_t pagesize;
 # endif
 #else
 # define PAGESIZE 1
+# define BOOT_PAGESIZE
 #endif
 
 size_t
