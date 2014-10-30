@@ -22,7 +22,7 @@
 # include <unistd.h>
 #endif
 
-#if  _POSIX_MAPPED_FILES
+#if _POSIX_MAPPED_FILES > 0
 # define USE_MMAP 1
 # include <sys/mman.h>
 # ifndef MAP_FAILED
