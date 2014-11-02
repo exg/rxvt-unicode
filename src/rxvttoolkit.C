@@ -492,14 +492,9 @@ bool rxvt_display::ref_init ()
 #if XRENDER
   int major, minor;
   if (XRenderQueryVersion (dpy, &major, &minor))
-    if (major > 0 || (major == 0 && minor >= 10))
+    if (major > 0 || (major == 0 && minor >= 11))
       {
         flags |= DISPLAY_HAS_RENDER;
-
-#if 0
-        if (major > 0 || (major == 0 && minor >= 11))
-          flags |= DISPLAY_HAS_RENDER_MUL;
-#endif
 
         if (XFilters *filters = XRenderQueryFilters (dpy, root))
           {

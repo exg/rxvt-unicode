@@ -637,11 +637,23 @@ if test x$support_xft = xyes && test x$rxvt_have_xrender = xyes; then
 fi
 
 if test x$support_image = xyes && test x$rxvt_have_xrender = xyes; then
-  LIBS="$LIBS -lm"
-  AC_DEFINE(XRENDER, 1, Define to enable xrender support)
+  AC_MSG_CHECKING(for Render >= 0.11)
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#include <X11/extensions/Xrender.h>
+#if RENDER_MAJOR == 0 && RENDER_MINOR <= 10
+error
+#endif
+]])],[],[support_image=no])
+  if test x$support_image = xyes; then
+    AC_MSG_RESULT(ok)
+    LIBS="$LIBS -lm"
+    AC_DEFINE(XRENDER, 1, Define to enable xrender support)
 
-  if test x$support_inheritpixmap = xyes; then
-    AC_DEFINE(ENABLE_TRANSPARENCY, 1, Define if you want your background to use the parent window background)
+    if test x$support_inheritpixmap = xyes; then
+      AC_DEFINE(ENABLE_TRANSPARENCY, 1, Define if you want your background to use the parent window background)
+    fi
+  else
+    AC_MSG_RESULT(no)
   fi
 fi
 
