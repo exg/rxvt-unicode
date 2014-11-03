@@ -279,7 +279,7 @@ rxvt_term::~rxvt_term ()
 
   delete selection_req;
 
-  if (memcmp (env, envv->begin (), envv->size () * sizeof (char *)))
+  if (env && memcmp (env, envv->begin (), envv->size () * sizeof (char *)))
     rxvt_warn ("env has been modified, probably as a result of a lib calling setenv.\n");
 
   delete env;
