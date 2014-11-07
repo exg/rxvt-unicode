@@ -936,7 +936,8 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
       if (!has_char (*t, &prop, careful))
         continue;
 
-      XChar2b ch = { *t >> 8, *t };
+      // the casts are needed in C++11 (see 8.5.1)
+      XChar2b ch = { (unsigned char)(*t >> 8), (unsigned char)*t };
 
       XCharStruct g;
       int dir_ret, asc_ret, des_ret;

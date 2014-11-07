@@ -190,11 +190,12 @@ namespace
     // CreateSolidFill creates a very very very weird picture
     void mask (const rgba &c)
     {
+      // the casts are needed in C++11 (see 8.5.1)
       XRenderColor rc = {
-        c.r * c.a / 65535,
-        c.g * c.a / 65535,
-        c.b * c.a / 65535,
-              c.a
+        (unsigned short)(c.r * c.a / 65535),
+        (unsigned short)(c.g * c.a / 65535),
+        (unsigned short)(c.b * c.a / 65535),
+        c.a
       };
       msk = XRenderCreateSolidFill (dpy, &rc);
       ecb_assume (msk);
@@ -203,10 +204,10 @@ namespace
     void fill (const rgba &c)
     {
       XRenderColor rc = {
-        c.r * c.a / 65535,
-        c.g * c.a / 65535,
-        c.b * c.a / 65535,
-              c.a
+        (unsigned short)(c.r * c.a / 65535),
+        (unsigned short)(c.g * c.a / 65535),
+        (unsigned short)(c.b * c.a / 65535),
+        c.a
       };
 
       XRenderFillRectangle (dpy, PictOpSrc, msk, &rc, 0, 0, 1, 1);
