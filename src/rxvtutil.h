@@ -93,67 +93,7 @@ struct rxvt_vec : simplevec<void *>
 };
 #endif
 
-template<typename T>
-struct auto_ptr
-{
-  T *p;
-
-  auto_ptr ()     : p (0) { }
-
-  explicit
-  auto_ptr (T *a) : p (a) { }
-
-  auto_ptr (auto_ptr &a)
-  {
-    p = a.p;
-    a.p = 0;
-  }
-
-  template<typename A>
-  auto_ptr (auto_ptr<A> &a)
-  {
-    p = a.p;
-    a.p = 0;
-  }
-
-  ~auto_ptr ()
-  {
-    delete p;
-  }
-
-  void reset (T *a)
-  {
-    delete p;
-    p = a;
-  }
-
-  // void because it makes sense in our context
-  void operator =(auto_ptr &a)
-  {
-    reset (a.release ());
-  }
-
-  template<typename A>
-  void operator =(auto_ptr<A> &a)
-  {
-    reset (a.release ());
-  }
-
-  T *operator ->() const { return p; }
-  T &operator *() const { return *p; }
-
-  operator T *()  { return p; }
-  T *get () const { return p; }
-
-  T *release()
-  {
-    T *r = p;
-    p = 0;
-    return r;
-  }
-};
-
-typedef auto_ptr<char> auto_str;
+typedef estl::scoped_array<char> auto_str;
 
 #endif
 
