@@ -1,7 +1,6 @@
 #ifndef RXVT_UTIL_H
 #define RXVT_UTIL_H
 
-#include <new>
 #include <stdlib.h>
 #include <string.h>
 #include "ecb.h"
@@ -62,10 +61,6 @@ struct zero_initialized
   void *operator new (size_t s);
   void operator delete (void *p, size_t s);
 };
-
-// alas new/delete cannot be specified as inline in C++11 (see 17.6.4.6)
-void *operator new (size_t s) throw (std::bad_alloc);
-void operator delete (void *p) throw ();
 
 struct stringvec : simplevec<char *>
 {

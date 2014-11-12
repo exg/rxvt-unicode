@@ -26,6 +26,29 @@
 #include "../config.h"		/* NECESSARY */
 #include "rxvt.h"		/* NECESSARY */
 
+#include <new>
+
+// alas new/delete cannot be specified as inline in C++11 (see 17.6.4.6)
+void *
+operator new (size_t s)
+#if !ECB_CPP11
+  throw (std::bad_alloc)
+#endif
+{
+  return rxvt_malloc (s);
+}
+
+void
+operator delete (void *p)
+#if ECB_CPP11
+  noexcept
+#else
+  throw ()
+#endif
+{
+  free (p);
+}
+
 char *
 rxvt_wcstombs (const wchar_t *str, int len)
 {
