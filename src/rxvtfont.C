@@ -1047,7 +1047,8 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
 
   bool slow = this->slow
               || width  != term->fwidth
-              || height != term->fheight;
+              || height != term->fheight
+              || ascent != f->ascent;
 
   int base = ascent; // sorry, incorrect: term->fbase;
 

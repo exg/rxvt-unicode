@@ -36,6 +36,8 @@ TODO IMPL: recalc bg always on bg colour change
 TODO: document typical actions in rxvt.1.pod keysyms
 TODO: warn with a graphical message when env has been modified
 
+	- fix pixel droppings on overdraw when a secondary core font has the
+          same height but different ascent.
 	- add DECSCUSR xterm extension to set the cursor to a vertical bar.
 	- add 'extension:string' action, and associated on_action perl
 	  hook, for keysym resources that invokes actions provided by
