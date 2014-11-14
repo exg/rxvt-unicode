@@ -2573,13 +2573,13 @@ rxvt_term::process_nonprinting (unicode_t ch)
 
 #ifdef EIGHT_BIT_CONTROLS
       // 8-bit controls
-      case 0x90: 	/* DCS */
+      case 0x90:		/* DCS */
         process_dcs_seq ();
         break;
-      case 0x9b: 	/* CSI */
+      case 0x9b:		/* CSI */
         process_csi_seq ();
         break;
-      case 0x9d: 	/* OSC */
+      case 0x9d:		/* OSC */
         process_osc_seq ();
         break;
 #endif
