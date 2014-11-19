@@ -2250,10 +2250,7 @@ rxvt_term::scr_refresh () NOTHROW
       for (col = 0; col < ncol; col++)
         {
           /* compare new text with old - if exactly the same then continue */
-          if (stp[col] == dtp[col]    /* Must match characters to skip. */
-              && (RS_SAME (srp[col], drp[col])    /* Either rendition the same or   */
-                  || (stp[col] == ' ' /* space w/ no background change  */
-                      && !((srp[col] ^ drp[col]) & (RS_attrMask | RS_bgMask)))))
+          if (stp[col] == dtp[col] && RS_SAME (srp[col], drp[col]))
             continue;
 
           // redraw one or more characters
