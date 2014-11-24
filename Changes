@@ -36,9 +36,12 @@ TODO IMPL: recalc bg always on bg colour change
 TODO: document typical actions in rxvt.1.pod keysyms
 TODO: warn with a graphical message when env has been modified
 
+TODO: cvvis = blinking, talk to exg because we reste to block
 	- fix pixel droppings on overdraw when a secondary core font has the
           same height but different ascent.
 	- add DECSCUSR xterm extension to set the cursor to a vertical bar.
+        - implement cvvis in terminfo as blinking cursor, to distinguish it
+          from cnorm (emacs uses cvvis which is commonly a blinking cursor).
 	- add 'extension:string' action, and associated on_action perl
 	  hook, for keysym resources that invokes actions provided by
 	  perl extensions. The 'perl:string' action and

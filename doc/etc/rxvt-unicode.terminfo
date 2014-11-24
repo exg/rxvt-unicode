@@ -2,6 +2,7 @@
 # Updated: Özgür Kesim <kesim@math.fu-berlin.de> 02 Nov 1997
 # Updated: Marc Lehmann <schmorp@schmorp.de>, 17 Feb 2005
 # Updated: Marc Lehmann <schmorp@schmorp.de>, 04 Nov 2008: change init/reset sequences
+# Updated: Marc Lehmann <schmorp@schmorp.de>, 24 Nov 2014: implement cvvis as blinking cursor
 rxvt-unicode|rxvt-unicode terminal (X Window System),
 	am,
 	bce,
@@ -17,9 +18,10 @@ rxvt-unicode|rxvt-unicode terminal (X Window System),
 	bel=^G,
 	blink=\E[5m,
 	bold=\E[1m,
-	civis=\E[?25l,
 	clear=\E[H\E[2J,
-	cnorm=\E[?25h,
+	civis=\E[?25l,
+	cnorm=\E[?25h\E[2 q,
+	cvvis=\E[?25h\E[1 q,
 	cr=^M,
 	csr=\E[%i%p1%d;%p2%dr,
 	cub=\E[%p1%dD,
@@ -31,7 +33,6 @@ rxvt-unicode|rxvt-unicode terminal (X Window System),
 	cup=\E[%i%p1%d;%p2%dH,
 	cuu=\E[%p1%dA,
 	cuu1=\E[A,
-	cvvis=\E[?25h,
 	dch=\E[%p1%dP,
 	dch1=\E[P,
 	dl=\E[%p1%dM,
