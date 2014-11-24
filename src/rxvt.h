@@ -643,6 +643,7 @@ enum {
 #define PrivMode_BracketPaste   (1UL<<22)
 #define PrivMode_ExtModeMouse   (1UL<<23) // xterm pseudo-utf-8 hack
 #define PrivMode_ExtMouseRight  (1UL<<24) // xterm pseudo-utf-8, but works in non-utf-8-locales
+#define PrivMode_BlinkingCursor (1UL<<25)
 
 #define PrivMode_mouse_report   (PrivMode_MouseX10|PrivMode_MouseX11|PrivMode_MouseBtnEvent|PrivMode_MouseAnyEvent)
 

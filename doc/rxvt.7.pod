@@ -1799,6 +1799,15 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
+=item B<< C<Pm = 12> >>
+
+=begin table
+
+	B<< C<h> >>	Blinking cursor
+	B<< C<l> >>	Steady cursor
+
+=end table
+
 =item B<< C<Pm = 25> >> (DECTCEM)
 
 =begin table

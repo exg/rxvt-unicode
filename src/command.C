@@ -3682,6 +3682,7 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
                   { 7, PrivMode_Autowrap },     // DECAWM
                  // 8, auto-repeat keys         // DECARM
                   { 9, PrivMode_MouseX10 },
+                  { 12, PrivMode_BlinkingCursor },
                  // 18 end FF to printer after print screen
                  // 19 Print screen prints full screen/scroll region
                   { 25, PrivMode_VisibleCursor }, // DECTCEM cnorm/cvvis/civis
@@ -3798,6 +3799,12 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
               scrollBar.map (state);
               resize_all_windows (0, 0, 0);
               scr_touch (true);
+              break;
+#endif
+#ifdef CURSOR_BLINK
+            case 12:
+              set_option (Opt_cursorBlink, state);
+              cursor_blink_reset ();
               break;
 #endif
             case 25:		/* visible/invisible cursor */
