@@ -1790,7 +1790,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Pm = 9> >> X10 XTerm
+=item B<< C<Pm = 9> >> (X10 XTerm mouse protocol)
 
 =begin table
 
@@ -1799,12 +1799,12 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Pm = 12> >>
+=item B<< C<Pm = 12> >> (AT&T 610, XTerm)
 
 =begin table
 
-	B<< C<h> >>	Blinking cursor
-	B<< C<l> >>	Steady cursor
+	B<< C<h> >>	Blinking cursor (cvvis)
+	B<< C<l> >>	Steady cursor (cnorm)
 
 =end table
 
@@ -1817,7 +1817,7 @@ Toggle DEC Private Mode Values (rxvt extension). I<where>
 
 =end table
 
-=item B<< C<Pm = 30> >>
+=item B<< C<Pm = 30> >> (B<rxvt>)
 
 =begin table
 
@@ -1897,7 +1897,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Pm = 1000> >> (X11 XTerm)
+=item B<< C<Pm = 1000> >> (X11 XTerm mouse protocol)
 
 =begin table
 
@@ -1915,7 +1915,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Pm = 1002> >> (X11 XTerm)
+=item B<< C<Pm = 1002> >> (X11 XTerm cell motion mouse tracking)
 
 =begin table
 
@@ -1924,7 +1924,7 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Pm = 1003> >> (X11 XTerm)
+=item B<< C<Pm = 1003> >> (X11 XTerm all motion mouse tracking)
 
 =begin table
 
@@ -1933,7 +1933,16 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Pm = 1005> >> (X11 XTerm) (Compile frills)
+=item B<< C<Pm = 1004> >> (X11 XTerm focus in/focus out events) I<unimplemented>
+
+=begin table
+
+	B<< C<h> >>	Send Mouse focus in/focus out events.
+	B<< C<l> >>	Don'T send focus events.
+
+=end table
+
+=item B<< C<Pm = 1005> >> (X11 XTerm UTF-8 mouse mode) (Compile frills)
 
 Try to avoid this mode, it doesn't work sensibly in non-UTF-8 locales. Use
 mode C<1015> instead.
@@ -1967,6 +1976,13 @@ Unlike XTerm, coordinates larger than 2015) will work fine.
 
 =item B<< C<Pm = 1015> >> (B<rxvt-unicode>) (Compile frills)
 
+=begin table
+
+	B<< C<h> >>	Enable urxvt mouse coordinate reporting.
+	B<< C<l> >>	Use old-style C<CSI M C C C> encoding.
+
+=end table
+
 Changes all mouse reporting codes to use decimal parameters instead of
 octets or characters.
 
@@ -1998,13 +2014,6 @@ Other (to be implemented) reply sequences will use a similar encoding.
 In the future, more parameters might get added (pixel coordinates for
 example - anybody out there who needs this?).
 
-=begin table
-
-	B<< C<h> >>	Enable new mouse coordinate reporting.
-	B<< C<l> >>	Use old-style C<CSI M C C C> encoding.
-
-=end table
-
 =item B<< C<Pm = 1021> >> (B<rxvt>)
 
 =begin table
@@ -2014,7 +2023,7 @@ example - anybody out there who needs this?).
 
 =end table
 
-=item B<< C<Pm = 1047> >>
+=item B<< C<Pm = 1047> >> (X11 XTerm alternate screen buffer)
 
 =begin table
 
@@ -2023,7 +2032,7 @@ example - anybody out there who needs this?).
 
 =end table
 
-=item B<< C<Pm = 1048> >>
+=item B<< C<Pm = 1048> >> (X11 XTerm alternate DECSC)
 
 =begin table
 
@@ -2032,7 +2041,7 @@ example - anybody out there who needs this?).
 
 =end table
 
-=item B<< C<Pm = 1049> >>
+=item B<< C<Pm = 1049> >> (X11 XTerm 1047 + 1048)
 
 =begin table
 
@@ -2041,7 +2050,7 @@ example - anybody out there who needs this?).
 
 =end table
 
-=item B<< C<Pm = 2004> >>
+=item B<< C<Pm = 2004> >> (X11 XTerm bracketed paste mode)
 
 =begin table
 
