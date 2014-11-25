@@ -21,7 +21,7 @@ rxvt-unicode|rxvt-unicode terminal (X Window System),
 	clear=\E[H\E[2J,
 	civis=\E[?25l,
 	cnorm=\E[?12l\E[?25h,
-	cvvis=\E[?12;25h
+	cvvis=\E[?12;25h,
 	cr=^M,
 	csr=\E[%i%p1%d;%p2%dr,
 	cub=\E[%p1%dD,
