@@ -37,11 +37,10 @@ interested in learning about new and exciting problems (but not FAQs :).
 
 =head3 I use Gentoo, and I have a problem...
 
-There are three big problems with Gentoo Linux: first of all, most if not
-all Gentoo systems are completely broken (missing or mismatched header
-files, broken compiler etc. are just the tip of the iceberg); secondly,
-the Gentoo maintainer thinks it is a good idea to add broken patches to
-the code; and lastly, it should be called Gentoo GNU/Linux.
+There are two big problems with Gentoo Linux: first, most if not all
+Gentoo systems are completely broken (missing or mismatched header
+files, broken compiler etc. are just the tip of the iceberg);
+secondly, it should be called Gentoo GNU/Linux.
 
 For these reasons, it is impossible to support rxvt-unicode on
 Gentoo. Problems appearing on Gentoo systems will usually simply be
@@ -1086,22 +1085,6 @@ So the only workaround is not to kill your Input Method Servers.
 
 
 =head2 Operating Systems / Package Maintaining
-
-=head3 I am using Debian GNU/Linux and have a problem...
-
-The Debian GNU/Linux package of rxvt-unicode in sarge contains large
-patches that considerably change the behaviour of rxvt-unicode (but
-unfortunately this notice has been removed). Before reporting a bug to
-the original rxvt-unicode author please download and install the genuine
-version (L<http://software.schmorp.de/pkg/rxvt-unicode.html>) and try to
-reproduce the problem. If you cannot, chances are that the problems are
-specific to Debian GNU/Linux, in which case it should be reported via the
-Debian Bug Tracking System (use C<reportbug> to report the bug).
-
-For other problems that also affect the Debian package, you can and
-probably should use the Debian BTS, too, because, after all, it's also a
-bug in the Debian version and it serves as a reminder for other users that
-might encounter the same issue.
 
 =head3 I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?
 
