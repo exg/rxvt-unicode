@@ -847,10 +847,7 @@ user and root):
    infocmp rxvt-unicode | ssh $REMOTE "mkdir -p .terminfo && cat >/tmp/ti && tic /tmp/ti"
 
 One some systems you might need to set C<$TERMINFO> to the full path of
-F<$HOME/.terminfo> for this to work. Debian systems have a broken tic
-which will not be able to overwrite the existing rxvt-unicode terminfo
-entry - you might have to manually delete all traces of F<rxvt-unicode*>
-from F</etc/terminfo>.
+F<$HOME/.terminfo> for this to work.
 
 If you cannot or do not want to do this, then you can simply set
 C<TERM=rxvt> or even C<TERM=xterm>, and live with the small number of
@@ -924,12 +921,11 @@ See next entry.
 =head3 Why are the secondary screen-related options not working properly?
 
 Make sure you are using C<TERM=rxvt-unicode>. Some pre-packaged
-distributions (most notably Debian GNU/Linux) break rxvt-unicode
-by setting C<TERM> to C<rxvt>, which doesn't have these extra
-features. Unfortunately, some of these (most notably, again, Debian
-GNU/Linux) furthermore fail to even install the C<rxvt-unicode> terminfo
-file, so you will need to install it on your own (See the question B<When
-I log-in to another system it tells me about missing terminfo data?> on
+distributions break rxvt-unicode by setting C<TERM> to C<rxvt>, which
+doesn't have these extra features. Unfortunately, some of these
+furthermore fail to even install the C<rxvt-unicode> terminfo file, so
+you will need to install it on your own (See the question B<When I
+log-in to another system it tells me about missing terminfo data?> on
 how to do this).
 
 
