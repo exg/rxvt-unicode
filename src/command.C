@@ -1042,7 +1042,7 @@ rxvt_term::cursor_blink_reset ()
       want_refresh = 1;
     }
 
-  if (option (Opt_cursorBlink))
+  if (option (Opt_cursorBlink) || (priv_modes & PrivMode_BlinkingCursor))
     cursor_blink_ev.again ();
   else
     cursor_blink_ev.stop ();
@@ -3803,7 +3803,6 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
 #endif
 #ifdef CURSOR_BLINK
             case 12:
-              set_option (Opt_cursorBlink, state);
               cursor_blink_reset ();
               break;
 #endif
