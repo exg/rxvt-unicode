@@ -3920,22 +3920,22 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 21: // disable bold, faint, sometimes doubly underlined (iso 8613)
             rendset = 0, rendstyle = RS_Bold;
             break;
-          case 22: // normal intensity
+          case 22: // bold off (vt220)
             rendset = 0, rendstyle = RS_Bold;
             break;
           case 23: // disable italic
             rendset = 0, rendstyle = RS_Italic;
             break;
-          case 24:
+          case 24: // underline off (vt220)
             rendset = 0, rendstyle = RS_Uline;
             break;
-          case 25:
+          case 25: // blink off (vt220)
             rendset = 0, rendstyle = RS_Blink;
             break;
           case 26: // variable spacing (iso 8613)
             rendset = 0, rendstyle = RS_Blink;
             break;
-          case 27:
+          case 27: // reverse off (vt220)
             rendset = 0, rendstyle = RS_RVid;
             break;
           //case 28: // visible. NYI
