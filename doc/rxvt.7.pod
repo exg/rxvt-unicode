@@ -1359,13 +1359,13 @@ Where B<< C<C> >> is one of:
 
 =begin table
 
-	C = C<0> 	DEC Special Character and Line Drawing Set
-	C = C<A> 	United Kingdom (UK)
-	C = C<B> 	United States (USASCII)
+	C = C<0>	DEC Special Character and Line Drawing Set
+	C = C<A>	United Kingdom (UK)
+	C = C<B>	United States (USASCII)
 	C = C<< < >>	Multinational character set I<unimplemented>
-	C = C<5> 	Finnish character set I<unimplemented>
-	C = C<C> 	Finnish character set I<unimplemented>
-	C = C<K> 	German character set I<unimplemented>
+	C = C<5>	Finnish character set I<unimplemented>
+	C = C<C>	Finnish character set I<unimplemented>
+	C = C<K>	German character set I<unimplemented>
 
 =end table
 
@@ -1439,7 +1439,7 @@ Erase in Line (EL)
 	B<< C<Ps = 1> >>	Clear to Left
 	B<< C<Ps = 2> >>	Clear All
 	B<< C<Ps = 3> >>	Like Ps = 0, but is ignored when wrapped
-	                	(@@RXVT_NAME@@ extension)
+				(@@RXVT_NAME@@ extension)
 
 =end table
 
