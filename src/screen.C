@@ -2553,7 +2553,7 @@ rxvt_term::scr_recolour (bool refresh) NOTHROW
 
   XClearWindow (dpy, parent);
 
-  if (scrollBar.state)
+  if (scrollBar.state && scrollBar.win)
     {
       if (transparent)
         XSetWindowBackgroundPixmap (dpy, scrollBar.win, ParentRelative);
