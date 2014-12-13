@@ -2138,16 +2138,8 @@ rxvt_term::scr_refresh () NOTHROW
       }
 
     /* make sure no outline cursor is left around */
-    if (ocrow != -1)
-      {
-        if (screen.cur.row - view_start != ocrow
-            || screen.cur.col != oldcursor.col || !showcursor)
-          {
-            if (ocrow < nrow
-                && oldcursor.col < ncol)
-              drawn_buf[ocrow].r[oldcursor.col] ^= (RS_RVid | RS_Uline);
-          }
-      }
+    if (ocrow != -1 && ocrow < nrow && oldcursor.col < ncol)
+      drawn_buf[ocrow].r[oldcursor.col] ^= (RS_RVid | RS_Uline);
 
     // save the current cursor coordinates if the cursor is visible
     // and either the window is unfocused or the cursor style is
