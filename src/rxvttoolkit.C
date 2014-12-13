@@ -877,26 +877,34 @@ rxvt_color::set (rxvt_screen *screen, const rgba &color)
       // many extra optimisations.
       XQueryColors (screen->dpy, screen->cmap, colors, cmap_size);
 
-      int diff = 0x7fffffffUL;
-      XColor *best = colors;
-
-      for (int i = 0; i < cmap_size; i++)
+      while (cmap_size)
         {
-          int d = (squared_diff<int> (color.r >> 2, colors [i].red   >> 2))
-                + (squared_diff<int> (color.g >> 2, colors [i].green >> 2))
-                + (squared_diff<int> (color.b >> 2, colors [i].blue  >> 2));
+          int diff = 0x7fffffffUL;
+          XColor *best = colors;
 
-          if (d < diff)
+          for (int i = 0; i < cmap_size; i++)
             {
-              diff = d;
-              best = colors + i;
+              int d = (squared_diff<int> (color.r >> 2, colors [i].red   >> 2))
+                    + (squared_diff<int> (color.g >> 2, colors [i].green >> 2))
+                    + (squared_diff<int> (color.b >> 2, colors [i].blue  >> 2));
+
+              if (d < diff)
+                {
+                  diff = d;
+                  best = colors + i;
+                }
             }
+
+          //rxvt_warn ("could not allocate %04x %04x %04x, getting %04x %04x %04x instead (%d,%d)\n",
+          //    color.r, color.g, color.b, best->red, best->green, best->blue, diff, best - colors);
+
+          got = alloc (screen, rgba (best->red, best->green, best->blue));
+
+          if (got)
+            break;
+
+          *best = colors [--cmap_size];
         }
-
-      //rxvt_warn ("could not allocate %04x %04x %04x, getting %04x %04x %04x instead (%d)\n",
-      //    color.r, color.g, color.b, best->red, best->green, best->blue, diff);
-
-      got = alloc (screen, rgba (best->red, best->green, best->blue));
 
       delete [] colors;
     }

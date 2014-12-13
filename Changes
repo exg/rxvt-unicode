@@ -79,6 +79,9 @@ TODO: warn with a graphical message when env has been modified
         - fix crash that may happen if an x error is received after a terminal
           window/popup has been destroyed already.
         - removed superfluous 0 digit from sgr terminfo sequence.
+        - greatly improve colour allocation on colour-starved pseudocolor
+          displays to avoid read-write cells instead of simply failing
+          (this is only relevant for antique 8bpp frame buffers).
 
 9.20 Sat Apr 26 16:22:27 CEST 2014
         - (libptytty) fix bug that prevented urxvtd from writing utmp
