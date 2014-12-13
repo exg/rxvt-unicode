@@ -1057,6 +1057,7 @@ rxvt_term::set_color (rxvt_color &color, const char *name)
 void
 rxvt_term::alias_color (int dst, int src)
 {
+  pix_colors[dst].free (this);
   pix_colors[dst].set (this, rs[Rs_color + dst] = rs[Rs_color + src]);
 }
 

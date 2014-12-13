@@ -84,6 +84,8 @@ TODO: warn with a graphical message when env has been modified
           (this is only relevant for antique 8bpp frame buffers).
         - do not free fade colours when not doing fading (this is likely
           only relevant for antique 8bpp frame buffers).
+	- do not specialcase 2 or 4 colour visuals, leading to
+          simpler and actually more correct code.
 
 9.20 Sat Apr 26 16:22:27 CEST 2014
         - (libptytty) fix bug that prevented urxvtd from writing utmp
