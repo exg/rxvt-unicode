@@ -256,7 +256,8 @@ rxvt_term::~rxvt_term ()
           {
             pix_colors_focused   [i].free (this);
 #if OFF_FOCUS_FADING
-            pix_colors_unfocused [i].free (this);
+            if (rs[Rs_fade])
+              pix_colors_unfocused [i].free (this);
 #endif
           }
 
