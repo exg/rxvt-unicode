@@ -504,7 +504,7 @@ rxvt_term::bg_render ()
     render_image (fimage);
 # endif
 
-  scr_recolour (false);
+  scr_recolor (false);
   bg_flags |= BG_NEEDS_REFRESH;
 
   bg_valid_since = ev::now ();

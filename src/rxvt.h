@@ -1373,7 +1373,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 #else
   void set_urgency (bool enable) { }
 #endif
-  void update_fade_color (unsigned int idx);
+  void update_fade_color (unsigned int idx, bool first_time = false);
 #ifdef PRINTPIPE
   FILE *popen_printer ();
   int pclose_printer (FILE *stream);
@@ -1407,7 +1407,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   int run_child (const char *const *argv);
   void color_aliases (int idx);
   void create_windows (int argc, const char *const *argv);
-  void get_colours ();
+  void get_colors ();
   void get_ourmods ();
   void set_icon (const char *file);
   // main.C
@@ -1416,7 +1416,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   ~rxvt_term ();
   void destroy ();
   void emergency_cleanup ();
-  void recolour_cursor ();
+  void recolor_cursor ();
   void resize_all_windows (unsigned int newwidth, unsigned int newheight, int ignoreparent);
   void window_calc (unsigned int newwidth, unsigned int newheight);
   bool set_fonts ();
@@ -1492,7 +1492,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 #endif
   void scr_touch (bool refresh) NOTHROW;
   void scr_expose (int x, int y, int width, int height, bool refresh) NOTHROW;
-  void scr_recolour (bool refresh = true) NOTHROW;
+  void scr_recolor (bool refresh = true) NOTHROW;
   void scr_remap_chars () NOTHROW;
   void scr_remap_chars (line_t &l) NOTHROW;
 

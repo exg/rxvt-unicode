@@ -944,8 +944,6 @@ void
 rxvt_term::set_window_color (int idx, const char *color)
 {
 #ifdef XTERM_COLOR_CHANGE
-  rxvt_color xcol;
-
   if (color == NULL || *color == '\0')
     return;
 
@@ -961,38 +959,32 @@ rxvt_term::set_window_color (int idx, const char *color)
       if (i >= 8 && i <= 15)
         {
           /* bright colors */
-          pix_colors_focused[idx] = pix_colors_focused[minBrightCOLOR + i - 8];
+          alias_color (idx, minBrightCOLOR + i - 8);
           goto done;
         }
 
       if (i >= 0 && i <= 7)
         {
           /* normal colors */
-          pix_colors_focused[idx] = pix_colors_focused[minCOLOR + i];
+          alias_color (idx, minCOLOR + i);
           goto done;
         }
     }
 
-  set_color (xcol, color);
-
-  /*
-   * FIXME: should free colors here, but no idea how to do it so instead,
-   * so just keep gobbling up the colormap
-   */
-
-  pix_colors_focused[idx] = xcol;
+  pix_colors_focused[idx].free (this);
+  set_color (pix_colors_focused[idx], color);
 
 done:
   /*TODO: handle Color_BD, scrollbar background, etc. */
 
   update_fade_color (idx);
-  recolour_cursor ();
-  scr_recolour ();
+  recolor_cursor ();
+  scr_recolor ();
 #endif /* XTERM_COLOR_CHANGE */
 }
 
 void
-rxvt_term::recolour_cursor ()
+rxvt_term::recolor_cursor ()
 {
   XColor fg, bg;
 

@@ -1997,7 +1997,7 @@ void
 rxvt_term::scr_bell ()
 
 void
-rxvt_term::scr_recolour (bool refresh = true);
+rxvt_term::scr_recolor (bool refresh = true);
 
 void
 rxvt_term::scr_change_screen (int screen)

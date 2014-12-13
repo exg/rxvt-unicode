@@ -1188,7 +1188,7 @@ sub recalculate {
    # set background pixmap
 
    $self->set_background ($img, $self->{border});
-   $self->scr_recolour (0);
+   $self->scr_recolor (0);
    $self->want_refresh;
 }
 

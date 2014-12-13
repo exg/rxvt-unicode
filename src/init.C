@@ -1058,7 +1058,7 @@ rxvt_term::init_command (const char *const *argv)
 
 /*----------------------------------------------------------------------*/
 void
-rxvt_term::get_colours ()
+rxvt_term::get_colors ()
 {
   int i;
 
@@ -1066,7 +1066,7 @@ rxvt_term::get_colours ()
   pix_colors = pix_colors_focused;
 #endif
 
-  for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
+  for (i = 0; i < NRS_COLORS; i++)
     {
       const char *name = rs[Rs_color + i];
 
@@ -1086,6 +1086,8 @@ rxvt_term::get_colours ()
 
           if (!name)
             continue;
+
+          xcol.free (this);
 
           if (!set_color (xcol, name))
             {
@@ -1115,13 +1117,6 @@ rxvt_term::get_colours ()
       rs[Rs_color + i] = name;
     }
 
-  if (depth <= 2)
-    {
-      if (!rs[Rs_color + Color_pointer_fg]) alias_color (Color_pointer_fg, Color_fg);
-      if (!rs[Rs_color + Color_pointer_bg]) alias_color (Color_pointer_bg, Color_bg);
-      if (!rs[Rs_color + Color_border]    ) alias_color (Color_border,     Color_fg);
-    }
-
   /*
    * get scrollBar shadow colors
    *
@@ -1129,35 +1124,25 @@ rxvt_term::get_colours ()
    * from the fvwm window manager.
    */
 #ifdef RXVT_SCROLLBAR
-  if (depth <= 2)
-    {
-      /* Monochrome */
-      alias_color (Color_scroll,       Color_fg);
-      alias_color (Color_topShadow,    Color_bg);
-      alias_color (Color_bottomShadow, Color_bg);
-    }
-  else
-    {
-      pix_colors [Color_scroll].fade (this, 50, pix_colors [Color_bottomShadow]);
+  pix_colors [Color_scroll].fade (this, 50, pix_colors [Color_bottomShadow]);
 
-      rgba cscroll;
-      pix_colors [Color_scroll].get (cscroll);
+  rgba cscroll;
+  pix_colors [Color_scroll].get (cscroll);
 
-      /* topShadowColor */
-      if (!pix_colors[Color_topShadow].set (this,
-                       rgba (
-                         min ((int)rgba::MAX_CC, max (cscroll.r / 5, cscroll.r) * 7 / 5),
-                         min ((int)rgba::MAX_CC, max (cscroll.g / 5, cscroll.g) * 7 / 5),
-                         min ((int)rgba::MAX_CC, max (cscroll.b / 5, cscroll.b) * 7 / 5),
-                         cscroll.a)
-                       ))
-        alias_color (Color_topShadow, Color_White);
-    }
+  /* topShadowColor */
+  if (!pix_colors[Color_topShadow].set (this,
+                   rgba (
+                     min ((int)rgba::MAX_CC, max (cscroll.r / 5, cscroll.r) * 7 / 5),
+                     min ((int)rgba::MAX_CC, max (cscroll.g / 5, cscroll.g) * 7 / 5),
+                     min ((int)rgba::MAX_CC, max (cscroll.b / 5, cscroll.b) * 7 / 5),
+                     cscroll.a)
+                   ))
+    alias_color (Color_topShadow, Color_White);
 #endif
 
 #ifdef OFF_FOCUS_FADING
-  for (i = 0; i < (depth <= 2 ? 2 : NRS_COLORS); i++)
-    update_fade_color (i);
+  for (i = 0; i < NRS_COLORS; i++)
+    update_fade_color (i, true);
 #endif
 }
 
@@ -1346,7 +1331,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
   dLocal (Display *, dpy);
 
   /* grab colors before netscape does */
-  get_colours ();
+  get_colors ();
 
   if (!set_fonts ())
     rxvt_fatal ("unable to load base fontset, please specify a valid one using -fn, aborting.\n");
@@ -1509,7 +1494,7 @@ rxvt_term::create_windows (int argc, const char *const *argv)
 #endif
 
   pointer_unblank ();
-  scr_recolour ();
+  scr_recolor ();
 }
 
 /*----------------------------------------------------------------------*/

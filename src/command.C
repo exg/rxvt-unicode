@@ -1241,7 +1241,7 @@ void ecb_cold
 rxvt_term::pointer_unblank ()
 {
   XDefineCursor (dpy, vt, TermWin_cursor);
-  recolour_cursor ();
+  recolor_cursor ();
 
 #ifdef POINTER_BLANK
   hidden_pointer = 0;
@@ -1781,7 +1781,7 @@ rxvt_term::focus_in ()
       if (rs[Rs_fade])
         {
           pix_colors = pix_colors_focused;
-          scr_recolour ();
+          scr_recolor ();
         }
 #endif
 #if ENABLE_FRILLS
@@ -1828,7 +1828,7 @@ rxvt_term::focus_out ()
       if (rs[Rs_fade])
         {
           pix_colors = pix_colors_unfocused;
-          scr_recolour ();
+          scr_recolor ();
         }
 #endif
 
@@ -1837,11 +1837,14 @@ rxvt_term::focus_out ()
 }
 
 void ecb_cold
-rxvt_term::update_fade_color (unsigned int idx)
+rxvt_term::update_fade_color (unsigned int idx, bool first_time)
 {
 #if OFF_FOCUS_FADING
   if (rs[Rs_fade])
     {
+      if (!first_time)
+        pix_colors_focused [idx].free (this);
+
       rgba c;
       pix_colors [Color_fade].get (c);
       pix_colors_focused [idx].fade (this, atoi (rs[Rs_fade]), pix_colors_unfocused [idx], c);

@@ -2514,7 +2514,7 @@ rxvt_term::scr_remap_chars () NOTHROW
 }
 
 void ecb_cold
-rxvt_term::scr_recolour (bool refresh) NOTHROW
+rxvt_term::scr_recolor (bool refresh) NOTHROW
 {
   bool transparent = false;
 
