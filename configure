@@ -6997,8 +6997,8 @@ fi
 
 
 save_LIBS=$LIBS
-save_CFLAGS=$CFLAGS
-CFLAGS="$CFLAGS $X_CFLAGS"
+save_CXXFLAGS=$CXXFLAGS
+CXXFLAGS="$CXXFLAGS $X_CFLAGS"
 LIBS="$LIBS $X_LIBS $X_EXTRA_LIBS -lX11"
 if test x$support_xim = xyes; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working Xlocale" >&5
@@ -7108,7 +7108,7 @@ $as_echo "#define HAVE_XSETLOCALE 1" >>confdefs.h
 
 fi
 LIBS=$save_LIBS
-CFLAGS=$save_CFLAGS
+CXXFLAGS=$save_CXXFLAGS
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working nl_langinfo" >&5
 $as_echo_n "checking for working nl_langinfo... " >&6; }
@@ -7143,11 +7143,32 @@ $as_echo "#define HAVE_NL_LANGINFO 1" >>confdefs.h
 fi
 
 
+
 case $host in
    *-*-solaris*)
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
 
-$as_echo "#define _XOPEN_SOURCE 500" >>confdefs.h
+#if __STDC_VERSION__ >= 199901L
+error
+#endif
 
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  $as_echo "#define _XOPEN_SOURCE 500" >>confdefs.h
+
+else
+  $as_echo "#define _XOPEN_SOURCE 600" >>confdefs.h
+
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing sendmsg" >&5
 $as_echo_n "checking for library containing sendmsg... " >&6; }
 if ${ac_cv_search_sendmsg+:} false; then :
@@ -7667,15 +7688,46 @@ $as_echo "#define XFT 1" >>confdefs.h
 fi
 
 if test x$support_image = xyes && test x$rxvt_have_xrender = xyes; then
-  LIBS="$LIBS -lm"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Render >= 0.11" >&5
+$as_echo_n "checking for Render >= 0.11... " >&6; }
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include <X11/extensions/Xrender.h>
+#if RENDER_MAJOR == 0 && RENDER_MINOR <= 10
+error
+#endif
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+else
+  support_image=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  if test x$support_image = xyes; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
+$as_echo "ok" >&6; }
+    LIBS="$LIBS -lm"
 
 $as_echo "#define XRENDER 1" >>confdefs.h
 
 
-  if test x$support_inheritpixmap = xyes; then
+    if test x$support_inheritpixmap = xyes; then
 
 $as_echo "#define ENABLE_TRANSPARENCY 1" >>confdefs.h
 
+    fi
+  else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
   fi
 fi
 
