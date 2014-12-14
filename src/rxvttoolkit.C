@@ -25,6 +25,8 @@
 #include <rxvt.h>
 #include <rxvttoolkit.h>
 
+#include <stdlib.h>
+
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -809,7 +811,8 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
     return true;
 #endif
 
-  c.pixel = (color.r + color.g + color.b) > 128*3
+  //TODO: set c.color* or c.*
+  c.pixel = (color.r * 2 + color.g * 3 + color.b) >= 0x8000 * 6
           ? WhitePixelOfScreen (DefaultScreenOfDisplay (screen->dpy))
           : BlackPixelOfScreen (DefaultScreenOfDisplay (screen->dpy));
 
@@ -879,14 +882,15 @@ rxvt_color::set (rxvt_screen *screen, const rgba &color)
 
       while (cmap_size)
         {
-          int diff = 0x7fffffffUL;
+          int diff = 0x7fffffffL;
           XColor *best = colors;
 
           for (int i = 0; i < cmap_size; i++)
             {
-              int d = (squared_diff<int> (color.r >> 2, colors [i].red   >> 2))
-                    + (squared_diff<int> (color.g >> 2, colors [i].green >> 2))
-                    + (squared_diff<int> (color.b >> 2, colors [i].blue  >> 2));
+              // simple weighted rgb distance sucks, but keeps it simple
+              int d = abs (color.r - colors [i].red  ) * 2
+                    + abs (color.g - colors [i].green) * 3
+                    + abs (color.b - colors [i].blue );
 
               if (d < diff)
                 {
@@ -917,6 +921,7 @@ void
 rxvt_color::get (rgba &color) const
 {
 #if XFT
+  //TODO premultiplied alpha??
   color.r = c.color.red;
   color.g = c.color.green;
   color.b = c.color.blue;
