@@ -1067,14 +1067,8 @@ rxvt_term::get_colors ()
 #endif
 
   for (i = 0; i < NRS_COLORS; i++)
-    {
-      const char *name = rs[Rs_color + i];
-
-      if (!name)
-        continue;
-
+    if (const char *name = rs[Rs_color + i])
       set_color (pix_colors [i], name);
-    }
 
   /*
    * get scrollBar shadow colors
