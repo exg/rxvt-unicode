@@ -37,6 +37,7 @@ TODO: document typical actions in rxvt.1.pod keysyms
 TODO: warn with a graphical message when env has been modified
 
 TODO: open question, what does the nested set_color calls in get_coplours actualyl do? we can fail, but we always allocyte a replacement color.
+	- the "moa redraw 8-bit british vintage colour management" release.
 	- NOTICE: this release updates terminfo.
 	- fix pixel droppings on overdraw when a secondary core font has the
           same height but different ascent.
@@ -92,6 +93,9 @@ TODO: open question, what does the nested set_color calls in get_coplours actual
         - use simpler (but slightly less bogus) formula for nearest
           colour choice (this is likely only relevant for antique 8bpp
           frame buffers).
+        - remove fallback behaviour when initialising colours - the
+          behaviour was incosistent between startup vs. later and
+          was only effective when valid colours couldn't be allocated.
 
 9.20 Sat Apr 26 16:22:27 CEST 2014
         - (libptytty) fix bug that prevented urxvtd from writing utmp

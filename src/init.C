@@ -1073,48 +1073,7 @@ rxvt_term::get_colors ()
       if (!name)
         continue;
 
-      rxvt_color xcol;
-
-      if (!set_color (xcol, name))
-        {
-#ifndef XTERM_REVERSE_VIDEO
-          if (i < 2 && option (Opt_reverseVideo))
-            name = def_colorName [1 - i];
-          else
-#endif
-            name = def_colorName [i];
-
-          if (!name)
-            continue;
-
-          xcol.free (this);
-
-          if (!set_color (xcol, name))
-            {
-              switch (i)
-                {
-                  case Color_fg:
-                  case Color_bg:
-                    rxvt_warn ("unable to get foreground/background colour, continuing.\n");
-                    name = "";
-                    break;
-#ifndef NO_CURSORCOLOR
-                  case Color_cursor2:
-#endif
-                  case Color_pointer_fg:
-                    name = rs[Rs_color + Color_fg];
-                    xcol.set (this, name);
-                    break;
-                  default:
-                    name = rs[Rs_color + Color_bg];
-                    xcol.set (this, name);
-                    break;
-                }
-            }
-        }
-
-      pix_colors[i] = xcol;
-      rs[Rs_color + i] = name;
+      set_color (pix_colors [i], name);
     }
 
   /*
