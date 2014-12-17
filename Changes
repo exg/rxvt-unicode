@@ -43,6 +43,10 @@ TODO: open question, what does the nested set_color calls in get_coplours actual
           same height but different ascent.
         - implement cvvis in terminfo as blinking cursor, to distinguish it
           from cnorm (emacs uses cvvis which is commonly a blinking cursor).
+        - when xft support was compiled in, color queries errornously returned
+          premultiplied values, this also affected internal queries, for example
+          when calculating faded colors. alpha is now divided out when possible,
+          which is more correct but loses color resolution.
 	- add DECSCUSR xterm extension to set the cursor to a vertical bar.
 	- add 'extension:string' action, and associated on_action perl
 	  hook, for keysym resources that invokes actions provided by

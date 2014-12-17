@@ -924,16 +924,26 @@ void
 rxvt_color::get (rgba &color) const
 {
 #if XFT
-  //TODO premultiplied alpha??
+
   color.r = c.color.red;
   color.g = c.color.green;
   color.b = c.color.blue;
   color.a = c.color.alpha;
+
+  if (IN_RANGE_INC (color.a, 0x0001, 0xfffe))
+    {
+      color.r = color.r * 0xffff / color.a;
+      color.g = color.g * 0xffff / color.a;
+      color.b = color.b * 0xffff / color.a;
+    }
+
 #else
+
   color.r = c.red;
   color.g = c.green;
   color.b = c.blue;
   color.a = rgba::MAX_CC;
+
 #endif
 }
 
