@@ -791,6 +791,7 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
       d.blue  = color.b;
       d.alpha = alpha;
 
+      // XftColorAlloc always returns 100% transparent pixels(!)
       if (XftColorAllocValue (screen->dpy, screen->visual, screen->cmap, &d, &c))
         return true;
     }
