@@ -857,9 +857,7 @@ struct mbstate
 struct compose_char
 {
   unicode_t c1, c2; // any chars != NOCHAR are valid
-  #if __cplusplus >= 201103L || ECB_GCC_VERSION(4,4)
-  compose_char () = default;
-  #endif
+
   compose_char (unicode_t c1, unicode_t c2)
   : c1(c1), c2(c2)
   { }
