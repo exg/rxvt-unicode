@@ -110,8 +110,9 @@ this, so watch out]
 
 =item B<-visual> I<visualID>
 
-Compile I<frills>: Use the given visual (see e.g. C<xdpyinfo> for possible
-visual ids).
+Compile I<frills>: Use the given visual (see e.g. C<xdpyinfo> for
+possible visual ids) instead of the default, and also allocate a private
+colormap. All visual types except for DirectColor are supported.
 
 =item B<-geometry> I<geom>
 
