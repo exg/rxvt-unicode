@@ -757,6 +757,13 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
 #if XFT
   XRenderPictFormat *format;
 
+  // not needed by XftColorAlloc, but by the other paths (ours
+  // and fallback), so just set all components here.
+  c.color.red   = color.r;
+  c.color.green = color.g;
+  c.color.blue  = color.b;
+  c.color.alpha = alpha;
+
   // FUCKING Xft gets it wrong, of course, so work around it.
   // Transparency users should eat shit and die, and then
   // XRenderQueryPictIndexValues themselves plenty.
@@ -764,10 +771,6 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
       && (format = XRenderFindVisualFormat (screen->dpy, screen->visual)))
     {
       // the fun lies in doing everything manually...
-      c.color.red   = color.r;
-      c.color.green = color.g;
-      c.color.blue  = color.b;
-      c.color.alpha = alpha;
 
       // Xft wants premultiplied alpha, but abuses the alpha channel
       // as blend factor, and doesn't allow us to set the alpha channel
@@ -812,7 +815,6 @@ rxvt_color::alloc (rxvt_screen *screen, const rgba &color)
     return true;
 #endif
 
-  //TODO: set c.color* or c.*
   c.pixel = (color.r * 2 + color.g * 3 + color.b) >= 0x8000 * 6
           ? WhitePixelOfScreen (DefaultScreenOfDisplay (screen->dpy))
           : BlackPixelOfScreen (DefaultScreenOfDisplay (screen->dpy));
