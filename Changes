@@ -36,14 +36,13 @@ TODO IMPL: recalc bg always on bg colour change
 TODO: document typical actions in rxvt.1.pod keysyms
 TODO: warn with a graphical message when env has been modified
 
-TODO: open question, what does the nested set_color calls in get_coplours actualyl do? we can fail, but we always allocyte a replacement color.
 	- the "moa redraw 8-bit british vintage colour management" release.
 	- NOTICE: this release updates terminfo.
 	- fix pixel droppings on overdraw when a secondary core font has the
           same height but different ascent.
         - implement cvvis in terminfo as blinking cursor, to distinguish it
           from cnorm (emacs uses cvvis which is commonly a blinking cursor).
-        - when xft support was compiled in, color queries errornously returned
+        - when xft support was compiled in, color queries erroneously returned
           premultiplied values, this also affected internal queries, for example
           when calculating faded colors. alpha is now divided out when possible,
           which is more correct but loses color resolution.
