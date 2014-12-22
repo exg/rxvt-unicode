@@ -1514,8 +1514,9 @@ Ring the bell!
 
 Write the given text string to the screen, as if output by the application
 running inside the terminal. It may not contain command sequences (escape
-codes), but is free to use line feeds, carriage returns and tabs. The
-string is a normal text string, not in locale-dependent encoding.
+codes - see C<cmd_parse> for that), but is free to use line feeds,
+carriage returns and tabs. The string is a normal text string, not in
+locale-dependent encoding.
 
 Normally its not a good idea to use this function, as programs might be
 confused by changes in cursor position or scrolling. Its useful inside a
@@ -1533,9 +1534,10 @@ locale-specific encoding of the terminal and can contain command sequences
 
 =item $term->tt_write ($octets)
 
-Write the octets given in C<$octets> to the tty (i.e. as program input). To
-pass characters instead of octets, you should convert your strings first
-to the locale-specific encoding using C<< $term->locale_encode >>.
+Write the octets given in C<$octets> to the tty (i.e. as user input
+to the program, see C<cmd_parse> for the opposite direction). To pass
+characters instead of octets, you should convert your strings first to the
+locale-specific encoding using C<< $term->locale_encode >>.
 
 =item $term->tt_write_user_input ($octets)
 
