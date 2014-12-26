@@ -47,11 +47,10 @@ Or by adding them to the resource for extensions loaded by default:
 
 Extensions may add additional resources and C<actions>, i.e., methods
 which can be bound to a key and invoked by the user. An extension can
-define the resources it support and also default bindings for one or
-more actions it provides using so called META comments, described
-below. Similarly to builtin resources, extension resources can also be
-specified on the command line as long options (with C<.> replaced by
-C<->), in which case the corresponding extension is loaded
+define the resources it support using so called META comments,
+described below. Similarly to builtin resources, extension resources
+can also be specified on the command line as long options (with C<.>
+replaced by C<->), in which case the corresponding extension is loaded
 automatically. For this to work the extension B<must> define META
 comments for its resources.
 
@@ -120,7 +119,7 @@ the C<urxvt::extension> section below.
 Rxvt-unicode recognizes special meta comments in extensions that define
 different types of metadata.
 
-Currently, it recxognises only one such comment:
+Currently, it recognises only one such comment:
 
 =over 4
 
@@ -1351,9 +1350,9 @@ sub x_resource_boolean {
 Adds a key binding exactly as specified via a C<keysym> resource. See the
 C<keysym> resource in the urxvt(1) manpage.
 
-To add default bindings for an extension, the extension should call C<<
-->bind_action >> on it's C<init> hook for every such binding. Doing it
-in the C<init> hook allows users the override or remove the the binding
+To add default bindings for actions, an extension should call C<<
+->bind_action >> in its C<init> hook for every such binding. Doing it
+in the C<init> hook allows users to override or remove the binding
 again.
 
 Example: the C<searchable-scrollback> by default binds itself

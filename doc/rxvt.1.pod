@@ -1246,9 +1246,8 @@ example, C<default,-selection> will use all the default extensions except
 C<selection>.
 
 The default set includes the C<selection>, C<option-popup>,
-C<selection-popup> and C<readline> extensions, any extensions that
-define keybindings via C<BINDING> meta comments, and extensions which
-are mentioned in B<keysym> resources.
+C<selection-popup>, C<readline> and C<searchable-scrollback>
+extensions, and extensions which are mentioned in B<keysym> resources.
 
 Any extension such that a corresponding resource is given on the
 command line is automatically appended to B<perl-ext>.
