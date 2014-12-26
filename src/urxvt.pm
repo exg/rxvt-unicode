@@ -117,8 +117,10 @@ the C<urxvt::extension> section below.
 
 =head2 META comments
 
-rxvt-unicode recognizes special comments in extensions that define
-different types of metadata:
+Rxvt-unicode recognizes special meta comments in extensions that define
+different types of metadata.
+
+Currently, it recxognises only one such comment:
 
 =over 4
 
@@ -127,14 +129,6 @@ different types of metadata:
 The RESOURCE comment defines a resource used by the extension, where
 C<name> is the resource name, C<type> is the resource type, C<boolean>
 or C<string>, and C<desc> is the resource description.
-
-=item #:META:BINDING:sym:action
-
-The BINDING comment defines a default binding for an action provided
-by the extension, where C<sym> is the key combination that triggers
-the action, whose format is defined in the description of the
-B<keysym> resource in the urxvt(1) manpage, and C<action> is the name
-of the action method.
 
 =back
 
@@ -983,15 +977,24 @@ sub on {
    bless \%disable, "urxvt::extension::on_disable"
 }
 
+=item $self->bind_action ($hotkey, $action)
+
 =item $self->x_resource ($pattern)
 
 =item $self->x_resource_boolean ($pattern)
 
-These methods support an additional C<%> prefix when called on an
-extension object - see the description of these methods in the
-C<urxvt::term> class for details.
+These methods support an additional C<%> prefix for C<$action> or
+C<$pattern> when called on an extension object, compared to the
+C<urxvt::term> methods of the same name - see the description of these
+methods in the C<urxvt::term> class for details.
 
 =cut
+
+sub bind_action {
+   my ($self, $hotkey, $action) = @_;
+   $action =~ s/^%:/$_[0]{_name}:/;
+   $self->{term}->bind_action ($hotkey, $action)
+}
 
 sub x_resource {
    my ($self, $name) = @_;
@@ -1343,10 +1346,25 @@ sub x_resource_boolean {
    $res =~ /^\s*(?:true|yes|on|1)\s*$/i ? 1 : defined $res && 0
 }
 
-=item $success = $term->bind_action ($key, $octets)
+=item $success = $term->bind_action ($key, $action)
 
 Adds a key binding exactly as specified via a C<keysym> resource. See the
 C<keysym> resource in the urxvt(1) manpage.
+
+To add default bindings for an extension, the extension should call C<<
+->bind_action >> on it's C<init> hook for every such binding. Doing it
+in the C<init> hook allows users the override or remove the the binding
+again.
+
+Example: the C<searchable-scrollback> by default binds itself
+on C<Meta-s>, using C<< $self->bind_action >>, which calls C<<
+$term->bind_action >>.
+
+   sub init {
+      my ($self) = @_;
+
+      $self->bind_action ("M-s" => "%:start");
+   }
 
 =item $rend = $term->rstyle ([$new_rstyle])
 
