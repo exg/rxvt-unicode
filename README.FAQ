@@ -6,11 +6,10 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     interested in learning about new and exciting problems (but not FAQs :).
 
    I use Gentoo, and I have a problem...
-    There are three big problems with Gentoo Linux: first of all, most if
-    not all Gentoo systems are completely broken (missing or mismatched
-    header files, broken compiler etc. are just the tip of the iceberg);
-    secondly, the Gentoo maintainer thinks it is a good idea to add broken
-    patches to the code; and lastly, it should be called Gentoo GNU/Linux.
+    There are two big problems with Gentoo Linux: first, most if not all
+    Gentoo systems are completely broken (missing or mismatched header
+    files, broken compiler etc. are just the tip of the iceberg); secondly,
+    it should be called Gentoo GNU/Linux.
 
     For these reasons, it is impossible to support rxvt-unicode on Gentoo.
     Problems appearing on Gentoo systems will usually simply be ignored
@@ -484,8 +483,8 @@ xterm? I need this to decide about setting colours etc.
 
        URxvt.perl-ext-common: default,-readline
 
-   My numerical keypad acts weird and generates differing output?
-    Some Debian GNUL/Linux users seem to have this problem, although no
+   My numeric keypad acts weird and generates differing output?
+    Some Debian GNU/Linux users seem to have this problem, although no
     specific details were reported so far. It is possible that this is
     caused by the wrong "TERM" setting, although the details of whether and
     how this can happen are unknown, as "TERM=rxvt" should offer a
@@ -776,10 +775,7 @@ xterm? I need this to decide about setting colours etc.
        infocmp rxvt-unicode | ssh $REMOTE "mkdir -p .terminfo && cat >/tmp/ti && tic /tmp/ti"
 
     One some systems you might need to set $TERMINFO to the full path of
-    $HOME/.terminfo for this to work. Debian systems have a broken tic which
-    will not be able to overwrite the existing rxvt-unicode terminfo entry -
-    you might have to manually delete all traces of rxvt-unicode* from
-    /etc/terminfo.
+    $HOME/.terminfo for this to work.
 
     If you cannot or do not want to do this, then you can simply set
     "TERM=rxvt" or even "TERM=xterm", and live with the small number of
@@ -845,9 +841,8 @@ xterm? I need this to decide about setting colours etc.
 
    Why are the secondary screen-related options not working properly?
     Make sure you are using "TERM=rxvt-unicode". Some pre-packaged
-    distributions (most notably Debian GNU/Linux) break rxvt-unicode by
-    setting "TERM" to "rxvt", which doesn't have these extra features.
-    Unfortunately, some of these (most notably, again, Debian GNU/Linux)
+    distributions break rxvt-unicode by setting "TERM" to "rxvt", which
+    doesn't have these extra features. Unfortunately, some of these
     furthermore fail to even install the "rxvt-unicode" terminfo file, so
     you will need to install it on your own (See the question When I log-in
     to another system it tells me about missing terminfo data? on how to do
@@ -990,21 +985,6 @@ xterm? I need this to decide about setting colours etc.
     So the only workaround is not to kill your Input Method Servers.
 
   Operating Systems / Package Maintaining
-   I am using Debian GNU/Linux and have a problem...
-    The Debian GNU/Linux package of rxvt-unicode in sarge contains large
-    patches that considerably change the behaviour of rxvt-unicode (but
-    unfortunately this notice has been removed). Before reporting a bug to
-    the original rxvt-unicode author please download and install the genuine
-    version (<http://software.schmorp.de/pkg/rxvt-unicode.html>) and try to
-    reproduce the problem. If you cannot, chances are that the problems are
-    specific to Debian GNU/Linux, in which case it should be reported via
-    the Debian Bug Tracking System (use "reportbug" to report the bug).
-
-    For other problems that also affect the Debian package, you can and
-    probably should use the Debian BTS, too, because, after all, it's also a
-    bug in the Debian version and it serves as a reminder for other users
-    that might encounter the same issue.
-
    I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?
     You should build one binary with the default options. configure now
     enables most useful options, and the trend goes to making them

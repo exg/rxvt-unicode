@@ -4,7 +4,7 @@
 
 =head1 SYNOPSIS
 
-B<@@RXVT_NAME@@d> [-q|--quiet] [-o|--opendisplay] [-f|--fork] [-m|--mlock]
+B<@@RXVT_NAME@@d> [-q|--quiet] [-o|--opendisplay] [-f|--fork] [-m|--mlock] [-e|--eval I<perlstring>]
 
 B<@@RXVT_NAME@@d> -q -o -f    # for .xsession use
 
@@ -68,6 +68,18 @@ Note 2: There is a known bug in glibc (possibly fixed in 2.8 and later
 versions) where calloc returns non-zeroed memory when mlockall is in
 effect. If you experience crashes or other odd behaviour while using
 --mlock, try it without it.
+
+=item B<-e>, B<--eval> I<perlstring>
+
+Evaluate the given perl code after basic initialisation (requires perl
+support to be enabled when compiling B<@@RXVT_NAME@@d>).
+
+This can be used for example to configure the internal perl interpreter,
+which is shared between all terminal instances, or create additional
+listening sockets for additional protocols.
+
+The code is currently executed I<before> creating the normal listening
+sockets: this might change in future versions.
 
 =back
 

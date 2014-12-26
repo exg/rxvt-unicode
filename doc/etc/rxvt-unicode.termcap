@@ -2,6 +2,8 @@
 # Updated: Özgür Kesim <kesim@math.fu-berlin.de> 02 Nov 1997
 # Updated: Marc Lehmann <schmorp@schmorp.de>, 17 Feb 2005
 # Updated: Marc Lehmann <schmorp@schmorp.de>, 04 Nov 2008: change init/reset sequences
+# Updated: Marc Lehmann <schmorp@schmorp.de>, 24 Nov 2014: implement cvvis as blinking cursor
+# Updated: Marc Lehmann <schmorp@schmorp.de>, 13 Dec 2014: removed superfluous 0 from sgr
 # (untranslatable capabilities removed to fit entry within 1023 bytes)
 # (sgr removed to fit entry within 1023 bytes)
 # (acsc removed to fit entry within 1023 bytes)
@@ -21,11 +23,11 @@ rxvt-unicode|rxvt-unicode terminal (X Window System):\
 	:k6=\E[17~:k7=\E[18~:k8=\E[19~:k9=\E[20~:kD=\E[3~:\
 	:kI=\E[2~:kN=\E[6~:kP=\E[5~:kb=\177:kd=\E[B:ke=\E>:\
 	:kh=\E[7~:kl=\E[D:kr=\E[C:ks=\E=:ku=\E[A:le=^H:mb=\E[5m:\
-	:md=\E[1m:me=\E[0m:mr=\E[7m:nd=\E[C:rc=\E8:sc=\E7:\
-	:se=\E[27m:sf=^J:so=\E[7m:sr=\EM:st=\EH:ta=^I:\
-	:te=\E[r\E[?1049l:ti=\E[?1049h:ts=\E]2;:ue=\E[24m:\
-	:up=\E[A:us=\E[4m:vb=\E[?5h\E[?5l:ve=\E[?25h:vi=\E[?25l:\
-	:vs=\E[?25h:
+	:md=\E[1m:me=\E[m:mr=\E[7m:nd=\E[C:rc=\E8:sc=\E7:se=\E[27m:\
+	:sf=^J:so=\E[7m:sr=\EM:st=\EH:ta=^I:te=\E[r\E[?1049l:\
+	:ti=\E[?1049h:ts=\E]2;:ue=\E[24m:up=\E[A:us=\E[4m:\
+	:vb=\E[?5h\E[?5l:ve=\E[?12l\E[?25h:vi=\E[?25l:\
+	:vs=\E[?12;25h:
 
 rxvt-unicode-256color|rxvt-unicode terminal with 256 colors (X Window System):\
 	:Co#256:pa#32767:tc=rxvt-unicode:

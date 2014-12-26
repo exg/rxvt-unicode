@@ -1187,9 +1187,12 @@ sub scan_extensions {
    $gather->($_, 1) for @urxvtdirs;
 
    # and now merge resources
+
+   $meta{resource} = \my %resource;
+
    while (my ($k, $v) = each %{ $meta{ext} }) {
       #TODO: should check for extensions overriding each other
-      %{ $meta{resource} } = (%{ $meta{resource} }, %{ $v->{resource} });
+      %resource = (%resource, %{ $v->{resource} });
    }
 }
 

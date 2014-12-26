@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2014-04-26" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2014-12-26" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -152,6 +152,9 @@ will also be respected. Currently, it always returns immediately after
 contacting the daemon.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
+If the first option is \fB\-k\fR, \fB@@RXVT_NAME@@c\fR tries to kill the
+daemon process and returns.
+.PP
 All options that are valid for \fB@@RXVT_NAME@@\fR are valid for
 \&\fB@@RXVT_NAME@@c\fR, too. Please note that options are interpreted in the
 context of the daemon process. However, as current working directory,

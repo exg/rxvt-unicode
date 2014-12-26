@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2014-04-26" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2014-12-26" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -142,7 +142,7 @@
 @@RXVT_NAME@@d \- @@RXVT_NAME@@ terminal daemon
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-\&\fB@@RXVT_NAME@@d\fR [\-q|\-\-quiet] [\-o|\-\-opendisplay] [\-f|\-\-fork] [\-m|\-\-mlock]
+\&\fB@@RXVT_NAME@@d\fR [\-q|\-\-quiet] [\-o|\-\-opendisplay] [\-f|\-\-fork] [\-m|\-\-mlock] [\-e|\-\-eval \fIperlstring\fR]
 .PP
 \&\fB@@RXVT_NAME@@d\fR \-q \-o \-f    # for .xsession use
 .SH "DESCRIPTION"
@@ -198,6 +198,17 @@ Note 2: There is a known bug in glibc (possibly fixed in 2.8 and later
 versions) where calloc returns non-zeroed memory when mlockall is in
 effect. If you experience crashes or other odd behaviour while using
 \&\-\-mlock, try it without it.
+.IP "\fB\-e\fR, \fB\-\-eval\fR \fIperlstring\fR" 4
+.IX Item "-e, --eval perlstring"
+Evaluate the given perl code after basic initialisation (requires perl
+support to be enabled when compiling \fB@@RXVT_NAME@@d\fR).
+.Sp
+This can be used for example to configure the internal perl interpreter,
+which is shared between all terminal instances, or create additional
+listening sockets for additional protocols.
+.Sp
+The code is currently executed \fIbefore\fR creating the normal listening
+sockets: this might change in future versions.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 This is a useful invocation of \fB@@RXVT_NAME@@d\fR in a \fI.xsession\fR\-style

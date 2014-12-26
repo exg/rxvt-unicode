@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2014-04-26" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2014-12-26" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -176,11 +176,10 @@ interested in learning about new and exciting problems (but not FAQs :).
 \fII use Gentoo, and I have a problem...\fR
 .IX Subsection "I use Gentoo, and I have a problem..."
 .PP
-There are three big problems with Gentoo Linux: first of all, most if not
-all Gentoo systems are completely broken (missing or mismatched header
-files, broken compiler etc. are just the tip of the iceberg); secondly,
-the Gentoo maintainer thinks it is a good idea to add broken patches to
-the code; and lastly, it should be called Gentoo GNU/Linux.
+There are two big problems with Gentoo Linux: first, most if not all
+Gentoo systems are completely broken (missing or mismatched header
+files, broken compiler etc. are just the tip of the iceberg);
+secondly, it should be called Gentoo GNU/Linux.
 .PP
 For these reasons, it is impossible to support rxvt-unicode on
 Gentoo. Problems appearing on Gentoo systems will usually simply be
@@ -752,10 +751,10 @@ extension:
 \&   URxvt.perl\-ext\-common: default,\-readline
 .Ve
 .PP
-\fIMy numerical keypad acts weird and generates differing output?\fR
-.IX Subsection "My numerical keypad acts weird and generates differing output?"
+\fIMy numeric keypad acts weird and generates differing output?\fR
+.IX Subsection "My numeric keypad acts weird and generates differing output?"
 .PP
-Some Debian GNUL/Linux users seem to have this problem, although no
+Some Debian GNU/Linux users seem to have this problem, although no
 specific details were reported so far. It is possible that this is caused
 by the wrong \f(CW\*(C`TERM\*(C'\fR setting, although the details of whether and how
 this can happen are unknown, as \f(CW\*(C`TERM=rxvt\*(C'\fR should offer a compatible
@@ -1104,10 +1103,7 @@ user and root):
 .Ve
 .PP
 One some systems you might need to set \f(CW$TERMINFO\fR to the full path of
-\&\fI\f(CI$HOME\fI/.terminfo\fR for this to work. Debian systems have a broken tic
-which will not be able to overwrite the existing rxvt-unicode terminfo
-entry \- you might have to manually delete all traces of \fIrxvt\-unicode*\fR
-from \fI/etc/terminfo\fR.
+\&\fI\f(CI$HOME\fI/.terminfo\fR for this to work.
 .PP
 If you cannot or do not want to do this, then you can simply set
 \&\f(CW\*(C`TERM=rxvt\*(C'\fR or even \f(CW\*(C`TERM=xterm\*(C'\fR, and live with the small number of
@@ -1197,12 +1193,11 @@ See next entry.
 .IX Subsection "Why are the secondary screen-related options not working properly?"
 .PP
 Make sure you are using \f(CW\*(C`TERM=rxvt\-unicode\*(C'\fR. Some pre-packaged
-distributions (most notably Debian GNU/Linux) break rxvt-unicode
-by setting \f(CW\*(C`TERM\*(C'\fR to \f(CW\*(C`rxvt\*(C'\fR, which doesn't have these extra
-features. Unfortunately, some of these (most notably, again, Debian
-GNU/Linux) furthermore fail to even install the \f(CW\*(C`rxvt\-unicode\*(C'\fR terminfo
-file, so you will need to install it on your own (See the question \fBWhen
-I log-in to another system it tells me about missing terminfo data?\fR on
+distributions break rxvt-unicode by setting \f(CW\*(C`TERM\*(C'\fR to \f(CW\*(C`rxvt\*(C'\fR, which
+doesn't have these extra features. Unfortunately, some of these
+furthermore fail to even install the \f(CW\*(C`rxvt\-unicode\*(C'\fR terminfo file, so
+you will need to install it on your own (See the question \fBWhen I
+log-in to another system it tells me about missing terminfo data?\fR on
 how to do this).
 .SS "Encoding / Locale / Input Method Issues"
 .IX Subsection "Encoding / Locale / Input Method Issues"
@@ -1371,23 +1366,6 @@ crashes cannot be completely avoided even if both sides cooperate.
 So the only workaround is not to kill your Input Method Servers.
 .SS "Operating Systems / Package Maintaining"
 .IX Subsection "Operating Systems / Package Maintaining"
-\fII am using Debian GNU/Linux and have a problem...\fR
-.IX Subsection "I am using Debian GNU/Linux and have a problem..."
-.PP
-The Debian GNU/Linux package of rxvt-unicode in sarge contains large
-patches that considerably change the behaviour of rxvt-unicode (but
-unfortunately this notice has been removed). Before reporting a bug to
-the original rxvt-unicode author please download and install the genuine
-version (<http://software.schmorp.de/pkg/rxvt\-unicode.html>) and try to
-reproduce the problem. If you cannot, chances are that the problems are
-specific to Debian GNU/Linux, in which case it should be reported via the
-Debian Bug Tracking System (use \f(CW\*(C`reportbug\*(C'\fR to report the bug).
-.PP
-For other problems that also affect the Debian package, you can and
-probably should use the Debian \s-1BTS,\s0 too, because, after all, it's also a
-bug in the Debian version and it serves as a reminder for other users that
-might encounter the same issue.
-.PP
 \fII am maintaining rxvt-unicode for distribution/OS \s-1XXX,\s0 any recommendation?\fR
 .IX Subsection "I am maintaining rxvt-unicode for distribution/OS XXX, any recommendation?"
 .PP
@@ -1589,9 +1567,8 @@ Application Keypad (\s-1SMKX\s0). See also next sequence.
 .IX Item "ESC >"
 Normal Keypad (\s-1RMKX\s0)
 .Sp
-\&\fBNote:\fR If the numeric keypad is activated, eg, \fBNum_Lock\fR has been
-pressed, numbers or control functions are generated by the numeric keypad
-(see Key Codes).
+\&\fBNote:\fR numbers or control functions are generated by the numeric
+keypad in normal or application mode, respectively (see Key Codes).
 .ie n .IP "\fB\fB""ESC D""\fB\fR" 4
 .el .IP "\fB\f(CBESC D\fB\fR" 4
 .IX Item "ESC D"
@@ -1658,13 +1635,13 @@ Designate Kanji Character Set
 Where \fB\f(CB\*(C`C\*(C'\fB\fR is one of:
 .TS
 l l .
-C = 0 	DEC Special Character and Line Drawing Set
-C = A 	United Kingdom (UK)
-C = B 	United States (USASCII)
+C = 0	DEC Special Character and Line Drawing Set
+C = A	United Kingdom (UK)
+C = B	United States (USASCII)
 C = <	Multinational character set unimplemented
-C = 5 	Finnish character set unimplemented
-C = C 	Finnish character set unimplemented
-C = K 	German character set unimplemented
+C = 5	Finnish character set unimplemented
+C = C	Finnish character set unimplemented
+C = K	German character set unimplemented
 .TE
 .PP
 
@@ -1729,12 +1706,12 @@ Ps = 2	Clear All
 .IX Item "ESC [ Ps K"
 Erase in Line (\s-1EL\s0)
 .TS
-l l .
+l l l l .
 Ps = 0	Clear to Right (default)
 Ps = 1	Clear to Left
 Ps = 2	Clear All
 Ps = 3	Like Ps = 0, but is ignored when wrapped
-                	(@@RXVT_NAME@@ extension)
+			(@@RXVT_NAME@@ extension)
 .TE
 .ie n .IP "\fB\fB""ESC [ Ps L""\fB\fR" 4
 .el .IP "\fB\f(CBESC [ Ps L\fB\fR" 4
@@ -1895,7 +1872,7 @@ Ps = 8	Request Version Number (place in window title)
 .ie n .IP "\fB\fB""ESC [ Ps SP q""\fB\fR" 4
 .el .IP "\fB\f(CBESC [ Ps SP q\fB\fR" 4
 .IX Item "ESC [ Ps SP q"
-Set Cursor Style (\s-1DESCUSR\s0)
+Set Cursor Style (\s-1DECSCUSR\s0)
 .TS
 l l .
 Ps = 0	Blink Block
@@ -1903,6 +1880,8 @@ Ps = 1	Blink Block
 Ps = 2	Steady Block
 Ps = 3	Blink Underline
 Ps = 4	Steady Underline
+Ps = 5	Blink Bar (XTerm)
+Ps = 6	Steady Bar (XTerm)
 .TE
 .ie n .IP "\fB\fB""ESC [ Ps;Ps r""\fB\fR" 4
 .el .IP "\fB\f(CBESC [ Ps;Ps r\fB\fR" 4
@@ -2035,13 +2014,21 @@ l l .
 h	Auto-repeat Keys
 l	No Auto-repeat Keys
 .TE
-.ie n .IP "\fB\fB""Pm = 9""\fB\fR X10 XTerm" 4
-.el .IP "\fB\f(CBPm = 9\fB\fR X10 XTerm" 4
-.IX Item "Pm = 9 X10 XTerm"
+.ie n .IP "\fB\fB""Pm = 9""\fB\fR (X10 XTerm mouse protocol)" 4
+.el .IP "\fB\f(CBPm = 9\fB\fR (X10 XTerm mouse protocol)" 4
+.IX Item "Pm = 9 (X10 XTerm mouse protocol)"
 .TS
 l l .
 h	Send Mouse X & Y on button press.
 l	No mouse reporting.
+.TE
+.ie n .IP "\fB\fB""Pm = 12""\fB\fR (\s-1AT&T 610,\s0 XTerm)" 4
+.el .IP "\fB\f(CBPm = 12\fB\fR (\s-1AT&T 610,\s0 XTerm)" 4
+.IX Item "Pm = 12 (AT&T 610, XTerm)"
+.TS
+l l .
+h	Blinking cursor (cvvis)
+l	Steady cursor (cnorm)
 .TE
 .ie n .IP "\fB\fB""Pm = 25""\fB\fR (\s-1DECTCEM\s0)" 4
 .el .IP "\fB\f(CBPm = 25\fB\fR (\s-1DECTCEM\s0)" 4
@@ -2051,9 +2038,9 @@ l l .
 h	Visible cursor {cnorm/cvvis}
 l	Invisible cursor {civis}
 .TE
-.ie n .IP "\fB\fB""Pm = 30""\fB\fR" 4
-.el .IP "\fB\f(CBPm = 30\fB\fR" 4
-.IX Item "Pm = 30"
+.ie n .IP "\fB\fB""Pm = 30""\fB\fR (\fBrxvt\fR)" 4
+.el .IP "\fB\f(CBPm = 30\fB\fR (\fBrxvt\fR)" 4
+.IX Item "Pm = 30 (rxvt)"
 .TS
 l l .
 h	scrollBar visible
@@ -2128,9 +2115,9 @@ l l .
 h	Backspace key sends BS
 l	Backspace key sends DEL
 .TE
-.ie n .IP "\fB\fB""Pm = 1000""\fB\fR (X11 XTerm)" 4
-.el .IP "\fB\f(CBPm = 1000\fB\fR (X11 XTerm)" 4
-.IX Item "Pm = 1000 (X11 XTerm)"
+.ie n .IP "\fB\fB""Pm = 1000""\fB\fR (X11 XTerm mouse protocol)" 4
+.el .IP "\fB\f(CBPm = 1000\fB\fR (X11 XTerm mouse protocol)" 4
+.IX Item "Pm = 1000 (X11 XTerm mouse protocol)"
 .TS
 l l .
 h	Send Mouse X & Y on button press and release.
@@ -2144,25 +2131,33 @@ l l .
 h	Use Hilite Mouse Tracking.
 l	No mouse reporting.
 .TE
-.ie n .IP "\fB\fB""Pm = 1002""\fB\fR (X11 XTerm)" 4
-.el .IP "\fB\f(CBPm = 1002\fB\fR (X11 XTerm)" 4
-.IX Item "Pm = 1002 (X11 XTerm)"
+.ie n .IP "\fB\fB""Pm = 1002""\fB\fR (X11 XTerm cell motion mouse tracking)" 4
+.el .IP "\fB\f(CBPm = 1002\fB\fR (X11 XTerm cell motion mouse tracking)" 4
+.IX Item "Pm = 1002 (X11 XTerm cell motion mouse tracking)"
 .TS
 l l .
 h	Send Mouse X & Y on button press and release, and motion with a button pressed.
 l	No mouse reporting.
 .TE
-.ie n .IP "\fB\fB""Pm = 1003""\fB\fR (X11 XTerm)" 4
-.el .IP "\fB\f(CBPm = 1003\fB\fR (X11 XTerm)" 4
-.IX Item "Pm = 1003 (X11 XTerm)"
+.ie n .IP "\fB\fB""Pm = 1003""\fB\fR (X11 XTerm all motion mouse tracking)" 4
+.el .IP "\fB\f(CBPm = 1003\fB\fR (X11 XTerm all motion mouse tracking)" 4
+.IX Item "Pm = 1003 (X11 XTerm all motion mouse tracking)"
 .TS
 l l .
 h	Send Mouse X & Y on button press and release, and motion.
 l	No mouse reporting.
 .TE
-.ie n .IP "\fB\fB""Pm = 1005""\fB\fR (X11 XTerm) (Compile frills)" 4
-.el .IP "\fB\f(CBPm = 1005\fB\fR (X11 XTerm) (Compile frills)" 4
-.IX Item "Pm = 1005 (X11 XTerm) (Compile frills)"
+.ie n .IP "\fB\fB""Pm = 1004""\fB\fR (X11 XTerm focus in/focus out events) \fIunimplemented\fR" 4
+.el .IP "\fB\f(CBPm = 1004\fB\fR (X11 XTerm focus in/focus out events) \fIunimplemented\fR" 4
+.IX Item "Pm = 1004 (X11 XTerm focus in/focus out events) unimplemented"
+.TS
+l l .
+h	Send Mouse focus in/focus out events.
+l	Don'T send focus events.
+.TE
+.ie n .IP "\fB\fB""Pm = 1005""\fB\fR (X11 XTerm \s-1UTF\-8\s0 mouse mode) (Compile frills)" 4
+.el .IP "\fB\f(CBPm = 1005\fB\fR (X11 XTerm \s-1UTF\-8\s0 mouse mode) (Compile frills)" 4
+.IX Item "Pm = 1005 (X11 XTerm UTF-8 mouse mode) (Compile frills)"
 .PD
 Try to avoid this mode, it doesn't work sensibly in non\-UTF\-8 locales. Use
 mode \f(CW1015\fR instead.
@@ -2193,6 +2188,11 @@ l	Don't scroll to bottom when a key is pressed
 .ie n .IP "\fB\fB""Pm = 1015""\fB\fR (\fBrxvt-unicode\fR) (Compile frills)" 4
 .el .IP "\fB\f(CBPm = 1015\fB\fR (\fBrxvt-unicode\fR) (Compile frills)" 4
 .IX Item "Pm = 1015 (rxvt-unicode) (Compile frills)"
+.TS
+l l .
+h	Enable urxvt mouse coordinate reporting.
+l	Use old-style CSI M C C C encoding.
+.TE
 .PD
 Changes all mouse reporting codes to use decimal parameters instead of
 octets or characters.
@@ -2228,11 +2228,6 @@ Other (to be implemented) reply sequences will use a similar encoding.
 .Sp
 In the future, more parameters might get added (pixel coordinates for
 example \- anybody out there who needs this?).
-.TS
-l l .
-h	Enable new mouse coordinate reporting.
-l	Use old-style CSI M C C C encoding.
-.TE
 .ie n .IP "\fB\fB""Pm = 1021""\fB\fR (\fBrxvt\fR)" 4
 .el .IP "\fB\f(CBPm = 1021\fB\fR (\fBrxvt\fR)" 4
 .IX Item "Pm = 1021 (rxvt)"
@@ -2242,33 +2237,33 @@ h	Bold/italic implies high intensity (see option -is)
 l	Font styles have no effect on intensity (Compile styles)
 .TE
 .PD 0
-.ie n .IP "\fB\fB""Pm = 1047""\fB\fR" 4
-.el .IP "\fB\f(CBPm = 1047\fB\fR" 4
-.IX Item "Pm = 1047"
+.ie n .IP "\fB\fB""Pm = 1047""\fB\fR (X11 XTerm alternate screen buffer)" 4
+.el .IP "\fB\f(CBPm = 1047\fB\fR (X11 XTerm alternate screen buffer)" 4
+.IX Item "Pm = 1047 (X11 XTerm alternate screen buffer)"
 .TS
 l l .
 h	Use Alternate Screen Buffer
 l	Use Normal Screen Buffer - clear Alternate Screen Buffer if returning from it
 .TE
-.ie n .IP "\fB\fB""Pm = 1048""\fB\fR" 4
-.el .IP "\fB\f(CBPm = 1048\fB\fR" 4
-.IX Item "Pm = 1048"
+.ie n .IP "\fB\fB""Pm = 1048""\fB\fR (X11 XTerm alternate \s-1DECSC\s0)" 4
+.el .IP "\fB\f(CBPm = 1048\fB\fR (X11 XTerm alternate \s-1DECSC\s0)" 4
+.IX Item "Pm = 1048 (X11 XTerm alternate DECSC)"
 .TS
 l l .
 h	Save cursor position
 l	Restore cursor position
 .TE
-.ie n .IP "\fB\fB""Pm = 1049""\fB\fR" 4
-.el .IP "\fB\f(CBPm = 1049\fB\fR" 4
-.IX Item "Pm = 1049"
+.ie n .IP "\fB\fB""Pm = 1049""\fB\fR (X11 XTerm 1047 + 1048)" 4
+.el .IP "\fB\f(CBPm = 1049\fB\fR (X11 XTerm 1047 + 1048)" 4
+.IX Item "Pm = 1049 (X11 XTerm 1047 + 1048)"
 .TS
 l l .
 h	Use Alternate Screen Buffer - clear Alternate Screen Buffer if switching to it
 l	Use Normal Screen Buffer
 .TE
-.ie n .IP "\fB\fB""Pm = 2004""\fB\fR" 4
-.el .IP "\fB\f(CBPm = 2004\fB\fR" 4
-.IX Item "Pm = 2004"
+.ie n .IP "\fB\fB""Pm = 2004""\fB\fR (X11 XTerm bracketed paste mode)" 4
+.el .IP "\fB\f(CBPm = 2004\fB\fR (X11 XTerm bracketed paste mode)" 4
+.IX Item "Pm = 2004 (X11 XTerm bracketed paste mode)"
 .TS
 l l .
 h	Enable bracketed paste mode - prepend / append to the pasted text the control sequences ESC [ 200 ~ / ESC [ 201 ~
@@ -2385,16 +2380,16 @@ Row = \fB\f(CB\*(C`<y> \- SPACE\*(C'\fB\fR
 .PP
 Note: \fBShift\fR + \fBF1\fR\-\fBF10\fR generates \fBF11\fR\-\fBF20\fR
 .PP
-For the keypad, use \fBShift\fR to temporarily override Application-Keypad
-setting use \fBNum_Lock\fR to toggle Application-Keypad setting if
-\&\fBNum_Lock\fR is off, toggle Application-Keypad setting. Also note that
-values of \fBBackSpace\fR, \fBDelete\fR may have been compiled differently on
-your system.
+For the keypad, use \fBShift\fR to temporarily toggle Application Keypad
+mode and use \fBNum_Lock\fR to override Application Keypad mode, i.e. if
+\&\fBNum_Lock\fR is on the keypad is in normal mode. Also note that the
+values of \fBBackSpace\fR, \fBDelete\fR may have been compiled differently
+on your system.
 .TS
 l l l l l .
 	Normal	Shift	Control	Ctrl+Shift
 Tab	^I	ESC [ Z	^I	ESC [ Z
-BackSpace	^H	^?	^?	^?
+BackSpace	^?	^?	^H	^H
 Find	ESC [ 1 ~	ESC [ 1 $	ESC [ 1 ^	ESC [ 1 @
 Insert	ESC [ 2 ~	paste	ESC [ 2 ^	ESC [ 2 @
 Execute	ESC [ 3 ~	ESC [ 3 $	ESC [ 3 ^	ESC [ 3 @
@@ -2434,22 +2429,22 @@ KP_F1	ESC O P			ESC O P
 KP_F2	ESC O Q			ESC O Q
 KP_F3	ESC O R			ESC O R
 KP_F4	ESC O S			ESC O S
-XK_KP_Multiply	*			ESC O j
-XK_KP_Add	+			ESC O k
-XK_KP_Separator	,			ESC O l
-XK_KP_Subtract	-			ESC O m
-XK_KP_Decimal	.			ESC O n
-XK_KP_Divide	/			ESC O o
-XK_KP_0	0			ESC O p
-XK_KP_1	1			ESC O q
-XK_KP_2	2			ESC O r
-XK_KP_3	3			ESC O s
-XK_KP_4	4			ESC O t
-XK_KP_5	5			ESC O u
-XK_KP_6	6			ESC O v
-XK_KP_7	7			ESC O w
-XK_KP_8	8			ESC O x
-XK_KP_9	9			ESC O y
+KP_Multiply	*			ESC O j
+KP_Add	+			ESC O k
+KP_Separator	,			ESC O l
+KP_Subtract	-			ESC O m
+KP_Decimal	.			ESC O n
+KP_Divide	/			ESC O o
+KP_0	0			ESC O p
+KP_1	1			ESC O q
+KP_2	2			ESC O r
+KP_3	3			ESC O s
+KP_4	4			ESC O t
+KP_5	5			ESC O u
+KP_6	6			ESC O v
+KP_7	7			ESC O w
+KP_8	8			ESC O x
+KP_9	9			ESC O y
 .TE
 .SH "CONFIGURE OPTIONS"
 .IX Header "CONFIGURE OPTIONS"

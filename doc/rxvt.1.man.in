@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2014-04-26" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2014-12-26" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -238,8 +238,9 @@ of graphical corruption. This is harmless, but we can't do anything about
 this, so watch out]
 .IP "\fB\-visual\fR \fIvisualID\fR" 4
 .IX Item "-visual visualID"
-Compile \fIfrills\fR: Use the given visual (see e.g. \f(CW\*(C`xdpyinfo\*(C'\fR for possible
-visual ids).
+Compile \fIfrills\fR: Use the given visual (see e.g. \f(CW\*(C`xdpyinfo\*(C'\fR for
+possible visual ids) instead of the default, and also allocate a private
+colormap. All visual types except for DirectColor are supported.
 .IP "\fB\-geometry\fR \fIgeom\fR" 4
 .IX Item "-geometry geom"
 Window geometry (\fB\-g\fR still respected); resource \fBgeometry\fR.
@@ -330,6 +331,9 @@ rather than the default executable file name. Name should not contain
 .IP "\fB\-ls\fR|\fB+ls\fR" 4
 .IX Item "-ls|+ls"
 Start as a login\-shell/sub\-shell; resource \fBloginShell\fR.
+.IP "\fB\-mc\fR \fImilliseconds\fR" 4
+.IX Item "-mc milliseconds"
+Specify the maximum time between multi-click selections.
 .IP "\fB\-ut\fR|\fB+ut\fR" 4
 .IX Item "-ut|+ut"
 Compile \fIutmp\fR: Inhibit/enable writing a utmp entry; resource
@@ -401,6 +405,10 @@ support \s-1MWM\s0 hints (e.g. kwin), enables override-redirect mode.
 .IX Item "-override-redirect"
 Compile \fIfrills\fR: Sets override-redirect on the window; resource
 \&\fBoverride-redirect\fR.
+.IP "\fB\-dockapp\fR" 4
+.IX Item "-dockapp"
+Sets the initial state of the window to WithdrawnState, which makes
+window managers that support this extension treat it as a dockapp.
 .IP "\fB\-sbg\fR" 4
 .IX Item "-sbg"
 Compile \fIfrills\fR: Disable the usage of the built-in block graphics/line
@@ -829,6 +837,10 @@ de-iconify (map) on receipt of a bell character [default].
 \&\fBTrue\fR: start as a login shell by prepending a `\-' to \fBargv[0]\fR of
 the shell; option \fB\-ls\fR. \fBFalse\fR: start as a normal sub-shell
 [default]; option \fB+ls\fR.
+.IP "\fBmultiClickTime:\fR \fInumber\fR" 4
+.IX Item "multiClickTime: number"
+Specify the maximum time in milliseconds between multi-click select
+events. The default is 500 milliseconds; option \fB\-mc\fR.
 .IP "\fButmpInhibit:\fR \fIboolean\fR" 4
 .IX Item "utmpInhibit: boolean"
 \&\fBTrue\fR: inhibit writing record into the system log file \fButmp\fR;
@@ -1049,35 +1061,76 @@ Sets the working directory for the shell (or the command specified via
 \&\fB\-e\fR). The \fIpath\fR must be an absolute path and it must exist for
 @@RXVT_NAME@@ to start. If it isn't specified then the current working
 directory will be used; option \fB\-cd\fR.
-.IP "\fBkeysym.\fR\fIsym\fR: \fIstring\fR" 4
-.IX Item "keysym.sym: string"
-Compile \fIfrills\fR: Associate \fIstring\fR with keysym \fIsym\fR. The
-intervening resource name \fBkeysym.\fR cannot be omitted.
+.IP "\fBkeysym.\fR\fIsym\fR: \fIaction\fR" 4
+.IX Item "keysym.sym: action"
+Compile \fIfrills\fR: Associate \fIaction\fR with keysym \fIsym\fR. The intervening
+resource name \fBkeysym.\fR cannot be omitted.
 .Sp
-The format of \fIsym\fR is "\fI(modifiers\-)key\fR", where \fImodifiers\fR can be
-any combination of \fBISOLevel3\fR, \fBAppKeypad\fR, \fBControl\fR, \fBNumLock\fR,
-\&\fBShift\fR, \fBMeta\fR, \fBLock\fR, \fBMod1\fR, \fBMod2\fR, \fBMod3\fR, \fBMod4\fR, \fBMod5\fR,
-and the abbreviated \fBI\fR, \fBK\fR, \fBC\fR, \fBN\fR, \fBS\fR, \fBM\fR, \fBA\fR, \fBL\fR, \fB1\fR,
-\&\fB2\fR, \fB3\fR, \fB4\fR, \fB5\fR.
+Using this resource, you can map key combinations such as
+\&\f(CW\*(C`Ctrl\-Shift\-BackSpace\*(C'\fR to various actions, such as outputting a different
+string than would normally result from that combination, making the
+terminal scroll up or down the way you want it, or any other thing an
+extension might provide.
+.Sp
+The key combination that triggers the action, \fIsym\fR, has the following format:
+.Sp
+.Vb 1
+\&   (modifiers\-)key
+.Ve
+.Sp
+Where \fImodifiers\fR can be any combination of \fBISOLevel3\fR, \fBAppKeypad\fR,
+\&\fBControl\fR, \fBNumLock\fR, \fBShift\fR, \fBMeta\fR, \fBLock\fR, \fBMod1\fR, \fBMod2\fR,
+\&\fBMod3\fR, \fBMod4\fR, \fBMod5\fR, and the abbreviated \fBI\fR, \fBK\fR, \fBC\fR, \fBN\fR,
+\&\fBS\fR, \fBM\fR, \fBA\fR, \fBL\fR, \fB1\fR, \fB2\fR, \fB3\fR, \fB4\fR, \fB5\fR.
 .Sp
 The \fBNumLock\fR, \fBMeta\fR and \fBISOLevel3\fR modifiers are usually aliased to
 whatever modifier the NumLock key, Meta/Alt keys or \s-1ISO\s0 Level3 Shift/AltGr
 keys are being mapped. \fBAppKeypad\fR is a synthetic modifier mapped to the
 current application keymap mode state.
 .Sp
-The spellings of \fIkey\fR can be obtained by using \fBxev\fR(1) command or
-searching keysym macros from \fB/usr/X11R6/include/X11/keysymdef.h\fR and
-omitting the prefix \fB\s-1XK_\s0\fR. Alternatively you can specify \fIkey\fR by its hex
-keysym value (\fB0x0000 \- 0xFFFF\fR). Note that the lookup of \fIsym\fRs is not
-performed in an exact manner; however, the closest match is assured.
+Due the the large number of modifier combinations, a key mapping will
+match if \fIat least\fR the specified identifiers are being set, and no other
+key mappings with those and more bits are being defined. That means that
+defining a mapping for \f(CW\*(C`a\*(C'\fR will automatically provide definitions for
+\&\f(CW\*(C`Meta\-a\*(C'\fR, \f(CW\*(C`Shift\-a\*(C'\fR and so on, unless some of those are defined mappings
+themselves. See the \f(CW\*(C`builtin:\*(C'\fR action, below, for a way to work around
+this when this is a problem.
 .Sp
-\&\fIstring\fR may contain escape values (\f(CW\*(C`\en\*(C'\fR: newline, \f(CW\*(C`\e000\*(C'\fR: octal
+The spelling of \fIkey\fR depends on your implementation of X. An easy way to
+find a key name is to use the \fBxev\fR(1) command. You can find a list by
+looking for the \f(CW\*(C`XK_\*(C'\fR macros in the \fBX11/keysymdef.h\fR include file (omit
+the \f(CW\*(C`XK_\*(C'\fR prefix). Alternatively you can specify \fIkey\fR by its hex keysym
+value (\fB0x0000 \- 0xFFFF\fR).
+.Sp
+As with any resource value, the \fIaction\fR string may contain backslash
+escape sequences (\f(CW\*(C`\en\*(C'\fR: newline, \f(CW\*(C`\e\e\*(C'\fR: backslash, \f(CW\*(C`\e000\*(C'\fR: octal
 number), see \s-1RESOURCES\s0 in \f(CW\*(C`man 7 X\*(C'\fR for further details.
 .Sp
-You can define a range of keysyms in one shot by
-loading the \f(CW\*(C`keysym\-list\*(C'\fR perl extension and providing a \fIstring\fR
-with pattern \fBlist/PREFIX/MIDDLE/SUFFIX\fR, where the delimiter `/'
-should be a character not used by the strings.
+An action starts with an action prefix that selects a certain type
+of action, followed by a colon. An action string without colons is
+interpreted as a literal string to pass to the tty (as if it was
+prefixed with \f(CW\*(C`string:\*(C'\fR).
+.Sp
+The following action prefixes are known \- extensions can provide
+additional prefixes:
+.RS 4
+.IP "string:STRING" 4
+.IX Item "string:STRING"
+If the \fIaction\fR starts with \f(CW\*(C`string:\*(C'\fR (or otherwise contains no colons),
+then the remaining \f(CW\*(C`STRING\*(C'\fR will be passed to the program running in the
+terminal. For example, you could replace whatever Shift-Tab outputs by the
+string \f(CW\*(C`echo rm \-rf /\*(C'\fR followed by a newline:
+.Sp
+.Vb 1
+\&   URxvt.keysym.Shift\-Tab: string:echo rm \-rf /\en
+.Ve
+.Sp
+This could in theory be used to completely redefine your keymap.
+.Sp
+In addition, for actions of this type, you can define a range of
+keysyms in one shot by loading the \f(CW\*(C`keysym\-list\*(C'\fR perl extension and
+providing an \fIaction\fR with pattern \fBlist/PREFIX/MIDDLE/SUFFIX\fR, where
+the delimiter `/' should be a character not used by the strings.
 .Sp
 Its usage can be demonstrated by an example:
 .Sp
@@ -1088,49 +1141,24 @@ Its usage can be demonstrated by an example:
 The above line is equivalent to the following three lines:
 .Sp
 .Vb 3
-\&  URxvt.keysym.Meta\-Control\-0x61:    \e033<a>
-\&  URxvt.keysym.Meta\-Control\-0x62:    \e033<b>
-\&  URxvt.keysym.Meta\-Control\-0x63:    \e033<c>
+\&  URxvt.keysym.Meta\-Control\-0x61:    string:\e033<a>
+\&  URxvt.keysym.Meta\-Control\-0x62:    string:\e033<b>
+\&  URxvt.keysym.Meta\-Control\-0x63:    string:\e033<c>
 .Ve
+.IP "command:STRING" 4
+.IX Item "command:STRING"
+If \fIaction\fR takes the form of \f(CW\*(C`command:STRING\*(C'\fR, the specified \fB\s-1STRING\s0\fR
+is interpreted and executed as @@RXVT_NAME@@'s control sequence (basically
+the opposite of \f(CW\*(C`string:\*(C'\fR \- instead of sending it to the program running
+in the terminal, it will be treated as if it were program output). This is
+most useful to feed command sequences into @@RXVT_NAME@@.
 .Sp
-If \fIstring\fR takes the form of \f(CW\*(C`command:STRING\*(C'\fR, the specified \fB\s-1STRING\s0\fR
-is interpreted and executed as @@RXVT_NAME@@'s control sequence. For
-example the following means "change the current locale to \f(CW\*(C`zh_CN.GBK\*(C'\fR
+For example the following means "change the current locale to \f(CW\*(C`zh_CN.GBK\*(C'\fR
 when Control-Meta-c is being pressed":
 .Sp
 .Vb 1
 \&  URxvt.keysym.M\-C\-c: command:\e033]701;zh_CN.GBK\e007
 .Ve
-.Sp
-If \fIstring\fR takes the form \f(CW\*(C`perl:STRING\*(C'\fR, then the specified \fB\s-1STRING\s0\fR
-is passed to the \f(CW\*(C`on_user_command\*(C'\fR perl handler. See the @@RXVT_NAME@@\fIperl\fR\|(3)
-manpage. For example, the \fIselection\fR extension (activated via
-\&\f(CW\*(C`@@RXVT_NAME@@ \-pe selection\*(C'\fR) listens for \f(CW\*(C`selection:rot13\*(C'\fR events:
-.Sp
-.Vb 1
-\&  URxvt.keysym.M\-C\-c: perl:selection:rot13
-.Ve
-.Sp
-Due the the large number of modifier combinations, a defined key mapping
-will match if \fIat least\fR the specified identifiers are being set, and
-no other key mappings with those and more bits are being defined. That
-means that defining a key map for \f(CW\*(C`a\*(C'\fR will automatically provide
-definitions for \f(CW\*(C`Meta\-a\*(C'\fR, \f(CW\*(C`Shift\-a\*(C'\fR and so on, unless some of those are defined
-mappings themselves.
-.Sp
-Unfortunately, this will override built-in key mappings. For example
-if you overwrite the \f(CW\*(C`Insert\*(C'\fR key you will disable @@RXVT_NAME@@'s
-\&\f(CW\*(C`Shift\-Insert\*(C'\fR mapping. To re-enable that, you can poke \*(L"holes\*(R" into the
-user-defined keymap using the \f(CW\*(C`builtin:\*(C'\fR replacement:
-.Sp
-.Vb 2
-\&  URxvt.keysym.Insert: <my insert key sequence>
-\&  URxvt.keysym.S\-Insert: builtin:
-.Ve
-.Sp
-The first line defines a mapping for \f(CW\*(C`Insert\*(C'\fR and \fIany\fR combination
-of modifiers. The second line re-establishes the default mapping for
-\&\f(CW\*(C`Shift\-Insert\*(C'\fR.
 .Sp
 The following example will map Control\-Meta\-1 and Control\-Meta\-2 to
 the fonts \f(CW\*(C`suxuseuro\*(C'\fR and \f(CW\*(C`9x15bold\*(C'\fR, so you can have some limited
@@ -1148,6 +1176,80 @@ info):
 \&  URxvt.keysym.M\-C\-3: command:\e033[8;25;80t
 \&  URxvt.keysym.M\-C\-4: command:\e033[8;48;110t
 .Ve
+.IP "builtin:" 4
+.IX Item "builtin:"
+The builtin action is the action that @@RXVT_NAME@@ would execute if no
+key binding existed for the key combination. The obvious use is to undo
+the effect of existing bindings. The not so obvious use is to reinstate
+bindings when another binding overrides too many modifiers.
+.Sp
+For example if you overwrite the \f(CW\*(C`Insert\*(C'\fR key you will disable
+@@RXVT_NAME@@'s \f(CW\*(C`Shift\-Insert\*(C'\fR mapping. To re-enable that, you can poke
+\&\*(L"holes\*(R" into the user-defined keymap using the \f(CW\*(C`builtin:\*(C'\fR replacement:
+.Sp
+.Vb 2
+\&  URxvt.keysym.Insert: <my insert key sequence>
+\&  URxvt.keysym.S\-Insert: builtin:
+.Ve
+.Sp
+The first line defines a mapping for \f(CW\*(C`Insert\*(C'\fR and \fIany\fR combination
+of modifiers. The second line re-establishes the default mapping for
+\&\f(CW\*(C`Shift\-Insert\*(C'\fR.
+.IP "builtin-string:" 4
+.IX Item "builtin-string:"
+This action is mainly useful to restore string mappings for keys that
+have predefined actions in @@RXVT_NAME@@. The exact semantics are a bit
+difficult to explain \- basically, this action will send the string to the
+application that would be sent if @@RXVT_NAME@@ wouldn't have a built-in
+action for it.
+.Sp
+An example might make it clearer: @@RXVT_NAME@@ normally pastes the
+selection when you press \f(CW\*(C`Shift\-Insert\*(C'\fR. With the following bindings, it
+would instead emit the (undocumented, but what applications running in the
+terminal might expect) sequence \f(CW\*(C`ESC [ 2 $\*(C'\fR instead:
+.Sp
+.Vb 2
+\&   URxvt.keysym.S\-Insert: builtin\-string:
+\&   URxvt.keysym.C\-S\-Insert: builtin:
+.Ve
+.Sp
+The first line disables the paste functionality for that key
+combination, and the second reinstates the default behaviour for
+\&\f(CW\*(C`Control\-Shift\-Insert\*(C'\fR, which would otherwise be overridden.
+.Sp
+Similarly, to let applications gain access to the \f(CW\*(C`C\-M\-c\*(C'\fR (copy to
+clipboard) and \f(CW\*(C`C\-M\-v\*(C'\fR (paste clipboard) key combination, you can do
+this:
+.Sp
+.Vb 2
+\&   URxvt.keysym.C\-M\-c: builtin\-string:
+\&   URxvt.keysym.C\-M\-v: builtin\-string:
+.Ve
+.IP "\s-1EXTENSION:STRING\s0" 4
+.IX Item "EXTENSION:STRING"
+An action of this form invokes the action \fB\s-1STRING\s0\fR, if any, provided
+by the @@RXVT_NAME@@\fIperl\fR\|(3) extension \fB\s-1EXTENSION\s0\fR. The extension will
+be loaded automatically if necessary.
+.Sp
+Not all extensions define actions, but popular extensions that do
+include the \fIselection\fR and \fImatcher\fR extensions (documented in their
+own manpages, @@RXVT_NAME@@\-\fIselection\fR\|(1) and @@RXVT_NAME@@\-\fImatcher\fR\|(1),
+respectively).
+.Sp
+From the silly examples department, this will rot13\-\*(L"encrypt\*(R"
+@@RXVT_NAME@@'s selection when Alt-Control-c is pressed on typical \s-1PC\s0
+keyboards:
+.Sp
+.Vb 1
+\&  URxvt.keysym.M\-C\-c: selection:rot13
+.Ve
+.IP "perl:STRING *DEPRECATED*" 4
+.IX Item "perl:STRING *DEPRECATED*"
+This is a deprecated way of invoking commands provided by perl
+extensions. It is still supported, but should not be used anymore.
+.RE
+.RS 4
+.RE
 .IP "\fBperl-ext-common\fR: \fIstring\fR" 4
 .IX Item "perl-ext-common: string"
 .PD 0
@@ -1160,20 +1262,24 @@ use in this terminal instance; option \fB\-pe\fR.
 Extension names can be prefixed with a \f(CW\*(C`\-\*(C'\fR sign to prohibit using
 them. This can be useful to selectively disable some extensions loaded
 by default, or specified via the \f(CW\*(C`perl\-ext\-common\*(C'\fR resource. For
-example, \f(CW\*(C`default,\-selection\*(C'\fR will use all the default extension except
+example, \f(CW\*(C`default,\-selection\*(C'\fR will use all the default extensions except
 \&\f(CW\*(C`selection\*(C'\fR.
 .Sp
-Extension names can also be followed by an argument in angle brackets
-(e.g.  \f(CW\*(C`searchable\-scrollback<M\-s>\*(C'\fR, which binds the hotkey for
-searchable scrollback to Alt/Meta\-s). Mentioning the same extension
-multiple times with different arguments will pass multiple arguments to
-the extension.
+The default set includes the \f(CW\*(C`selection\*(C'\fR, \f(CW\*(C`option\-popup\*(C'\fR,
+\&\f(CW\*(C`selection\-popup\*(C'\fR and \f(CW\*(C`readline\*(C'\fR extensions, any extensions that
+define keybindings via \f(CW\*(C`BINDING\*(C'\fR meta comments, and extensions which
+are mentioned in \fBkeysym\fR resources.
+.Sp
+Any extension such that a corresponding resource is given on the
+command line is automatically appended to \fBperl-ext\fR.
 .Sp
 Each extension is looked up in the library directories, loaded if
-necessary, and bound to the current terminal instance.
+necessary, and bound to the current terminal instance. When the library
+search path contains multiple extension files of the same name, then the
+first one found will be used.
 .Sp
-If both of these resources are the empty string, then the perl
-interpreter will not be initialized. The idea behind two options is that
+If both of these resources are the empty string, then the perl interpreter
+will not be initialized. The rationale for having two options is that
 \&\fBperl-ext-common\fR will be used for extensions that should be available to
 all instances, while \fBperl-ext\fR is used for specific instances.
 .IP "\fBperl-eval\fR: \fIstring\fR" 4
@@ -1196,10 +1302,14 @@ details.
 .IX Item "selection-autotransform.idx: perl-transform"
 Selection auto-transform patterns, see the @@RXVT_NAME@@\fIperl\fR\|(3) manpage
 for details.
-.IP "\fBsearchable-scrollback:\fR \fIkeysym\fR" 4
-.IX Item "searchable-scrollback: keysym"
-Sets the hotkey that starts the incremental scrollback buffer search
-(default: \f(CW\*(C`M\-s\*(C'\fR).
+.IP "\fBsearchable-scrollback:\fR \fIkeysym\fR *DEPRECATED*" 4
+.IX Item "searchable-scrollback: keysym *DEPRECATED*"
+This resource is deprecated and will be removed. Use a \fBkeysym\fR resource
+instead, e.g.:
+.Sp
+.Vb 1
+\&   URxvt.keysym.M\-s: searchable\-scrollback:start
+.Ve
 .IP "\fBurl-launcher\fR: \fIstring\fR" 4
 .IX Item "url-launcher: string"
 Specifies the program to be started with a \s-1URL\s0 argument. Used by the
