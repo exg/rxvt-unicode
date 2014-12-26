@@ -97,7 +97,7 @@ TODO: warn with a graphical message when env has been modified
           colour choice (this is likely only relevant for antique 8bpp
           frame buffers).
         - remove fallback behaviour when initialising colours - the
-          behaviour was incosistent between startup vs. later and
+          behaviour was inconsistent between startup vs. later and
           was only effective when valid colours couldn't be allocated.
 
 9.20 Sat Apr 26 16:22:27 CEST 2014
