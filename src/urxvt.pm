@@ -724,7 +724,7 @@ sub invoke {
 
             $ext_arg{$_} = []
                for
-                  qw(selection option-popup selection-popup readline),
+                  qw(selection option-popup selection-popup readline searchable-scrollback),
                   map $_->[0], values %{ $TERM->{meta}{binding} };
 
             for ($TERM->_keysym_resources) {

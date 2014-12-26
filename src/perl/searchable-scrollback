@@ -3,7 +3,6 @@
 # this extension implements scrollback buffer search
 
 #:META:RESOURCE:%:string:activation hotkey keysym
-#:META:BINDING:M-s:start
 
 =head1 NAME
 
@@ -38,9 +37,9 @@ sub on_init {
    # only for backwards compatibility
    my $hotkey = $self->{argv}[0]
                 || $self->x_resource ("%")
-                || return;
+                || "M-s";
 
-   $self->bind_action ($hotkey, "searchable-scrollback:start") # ugh
+   $self->bind_action ($hotkey, "searchable-scrollback:start")
       or warn "unable to register '$hotkey' as scrollback search start hotkey\n";
 
    ()
