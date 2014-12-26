@@ -1136,20 +1136,30 @@ sub scan_extensions {
 
    return if exists $self->{meta};
 
-   my @libdirs = perl_libdirs $self;
+   my @urxvtdirs = perl_libdirs $self;
+   my @cpandirs = grep -d, map "$_/URxvt/Ext", @INC;
 
-#   return if $self->{meta_libdirs} eq join "\x00", @libdirs;#d#
-
-#   $self->{meta_libdirs} = join "\x00", @libdirs;#d#
    $self->{meta} = \my %meta;
 
    # first gather extensions
-   for my $dir (reverse @libdirs) {
+
+   my $gather = sub {
+      my ($dir, $core) = @_;
+
       opendir my $fh, $dir
-         or next;
+         or return;
+
       for my $ext (readdir $fh) {
          $ext !~ /^\./
-            and open my $fh, "<", "$dir/$ext"
+            or next;
+
+         open my $fh, "<", "$dir/$ext"
+            or next;
+
+         -f $fh
+            or next;
+
+         $ext =~ s/\.uext$// or $core
             or next;
 
          my %ext = (dir => $dir);
@@ -1172,7 +1182,10 @@ sub scan_extensions {
 
          $meta{ext}{$ext} = \%ext;
       }
-   }
+   };
+
+   $gather->($_, 0) for @cpandirs;
+   $gather->($_, 1) for @urxvtdirs;
 
    # and now merge resources
    while (my ($k, $v) = each %{ $meta{ext} }) {
