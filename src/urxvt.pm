@@ -717,9 +717,7 @@ sub invoke {
          if ($_ eq "default") {
 
             $ext_arg{$_} = []
-               for
-                  qw(selection option-popup selection-popup readline searchable-scrollback),
-                  map $_->[0], values %{ $TERM->{meta}{binding} };
+               for qw(selection option-popup selection-popup readline searchable-scrollback);
 
             for ($TERM->_keysym_resources) {
                next if /^(?:string|command|builtin|builtin-string|perl)/;
@@ -738,13 +736,6 @@ sub invoke {
 
          } else {
             $ext_arg{$_} ||= [];
-         }
-      }
-
-      # now register default key bindings
-      for my $ext (sort keys %ext_arg) {
-         while (my ($k, $v) = each %{ $TERM->{meta}{ext}{$ext}{binding} }) {
-            $TERM->bind_action ($k, "$v->[0]:$v->[1]");
          }
       }
 
@@ -1172,9 +1163,6 @@ sub scan_extensions {
                } else {
                   $ext{resource}{$pattern} = [$ext, $type, $desc];
                }
-            } elsif (/^#:META:BINDING:(.*)/) {
-               my ($keysym, $action) = split /:/, $1;
-               $ext{binding}{$keysym} = [$ext, $action];
             } elsif (/^\s*(?:#|$)/) {
                # skip other comments and empty lines
             } else {
@@ -1186,11 +1174,10 @@ sub scan_extensions {
       }
    }
 
-   # and now merge resources and bindings
+   # and now merge resources
    while (my ($k, $v) = each %{ $meta{ext} }) {
       #TODO: should check for extensions overriding each other
       %{ $meta{resource} } = (%{ $meta{resource} }, %{ $v->{resource} });
-      %{ $meta{binding}  } = (%{ $meta{binding}  }, %{ $v->{binding}  });
    }
 }
 
