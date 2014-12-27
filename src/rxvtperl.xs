@@ -1862,7 +1862,7 @@ rxvt_term::option (U8 optval, int set = -1)
         RETVAL
 
 bool
-rxvt_term::bind_action (octet_string keysym, utf8_string action)
+rxvt_term::bind_action (octet_string keysym, octet_string action)
         ALIAS:
            parse_keysym = 1
 	CODE:
