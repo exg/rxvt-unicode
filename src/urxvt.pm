@@ -1136,7 +1136,7 @@ sub scan_extensions {
    return if exists $self->{meta};
 
    my @urxvtdirs = perl_libdirs $self;
-   my @cpandirs = grep -d, map "$_/URxvt/Ext", @INC;
+#   my @cpandirs = grep -d, map "$_/URxvt/Ext", @INC;
 
    $self->{meta} = \my %meta;
 
@@ -1183,7 +1183,7 @@ sub scan_extensions {
       }
    };
 
-   $gather->($_, 0) for @cpandirs;
+#   $gather->($_, 0) for @cpandirs;
    $gather->($_, 1) for @urxvtdirs;
 
    # and now merge resources

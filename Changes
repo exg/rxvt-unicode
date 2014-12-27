@@ -36,12 +36,9 @@ TODO IMPL: recalc bg always on bg colour change
 TODO: document typical actions in rxvt.1.pod keysyms
 TODO: warn with a graphical message when env has been modified
 TODO: c&c perl socket via daemon-ext mechanism
+TODO: simplify extension metainfo cache, cache on disk
+TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
 
-TODO: axe :BINDING:, move to init hook
-TODO: no autloading for binding, maybe futgure for resource
-TODO: unbundle tabbed to other name, or maybe not...
-TODO: URxvt::Ext::Name::Part2 installs urxvt ext name-part2 and provides pod/manpage for URxvt::Ext::Name::Part2
-TODO: think aboiut actions - are thesy tetx vstrings (utf-8) or octets
 	- the "moa redraw 8-bit british vintage colour management" release.
 	- NOTICE: this release updates terminfo.
 	- fix pixel droppings on overdraw when a secondary core font has the
