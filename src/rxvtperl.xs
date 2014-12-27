@@ -1029,17 +1029,17 @@ BOOT:
 }
 
 void
-log (const char *msg)
+log (utf8_string msg)
 	CODE:
         rxvt_log ("%s", msg);
 
 void
-warn (const char *msg)
+warn (utf8_string msg)
 	CODE:
         rxvt_warn ("%s", msg);
 
 void
-fatal (const char *msg)
+fatal (utf8_string msg)
 	CODE:
         rxvt_fatal ("%s", msg);
 
@@ -1289,7 +1289,7 @@ rxvt_term::ungrab ()
         ungrab (THIS);
 
 int
-rxvt_term::XStringToKeysym (char *string)
+rxvt_term::XStringToKeysym (octet_string string)
 	CODE:
         RETVAL = XStringToKeysym (string);
 	OUTPUT: RETVAL
@@ -1769,7 +1769,7 @@ rxvt_term::special_decode (SV *text)
         RETVAL
 
 void
-rxvt_term::_resource (char *name, int index, SV *newval = 0)
+rxvt_term::_resource (octet_string name, int index, SV *newval = 0)
 	PPCODE:
 {
 	static const struct resval { const char *name; int value; } *rs, rslist [] = {
@@ -1817,7 +1817,7 @@ rxvt_term::_resource (char *name, int index, SV *newval = 0)
 }
 
 const char *
-rxvt_term::x_resource (const char *name)
+rxvt_term::x_resource (octet_string name)
 
 bool
 rxvt_term::option (U8 optval, int set = -1)
@@ -1862,11 +1862,11 @@ rxvt_term::option (U8 optval, int set = -1)
         RETVAL
 
 bool
-rxvt_term::bind_action (char *keysym, char *str)
+rxvt_term::bind_action (octet_string keysym, utf8_string action)
         ALIAS:
            parse_keysym = 1
 	CODE:
-        RETVAL = 0 < THIS->bind_action (keysym, str);
+        RETVAL = 0 < THIS->bind_action (keysym, action);
         THIS->keyboard->register_done ();
 	OUTPUT:
         RETVAL
