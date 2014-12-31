@@ -76,16 +76,18 @@ alldoc: rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in \
 	../README.configure ../README.FAQ \
 	$(srcdir)/etc/rxvt-unicode.termcap
 
+alldocclean:
+	rm -f rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in
+	rm -f ../README.configure ../README.FAQ
+	rm -f $(srcdir)/etc/rxvt-unicode.termcap
+
 clean:
 	rm -f rxvt.1.man rxvt.7.man rxvtc.1.man rxvtd.1.man
 
 distclean: clean
 	rm -f Makefile
 
-realclean: distclean
-	rm -f rxvt.1.man.in rxvt.7.man.in rxvtc.1.man.in rxvtd.1.man.in
-	rm -f ../README.configure ../README.FAQ
-	rm -f $(srcdir)/etc/rxvt-unicode.termcap
+realclean: distclean alldocclean
 
 cleandir: realclean
 
