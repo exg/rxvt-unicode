@@ -485,6 +485,25 @@ We are working on it, in the meantime, as a workaround, use something like:
 
    @@URXVT_NAME@@ -b 600 -geometry 20x1 -e sh -c 'mplayer -wid $WINDOWID file...'
 
+=head3 Why is the cursor now blinking in emacs/vi/...?
+
+This is likely caused by your editor/program's use of the C<cvvis>
+terminfo capability. Emacs uses it by default, as well as some versions of
+vi and possibly other programs.
+
+In emacs, you can switch that off by adding this to your C<.emacs> file:
+
+   (setq visible-cursor nil)
+
+For other programs, if they do not have an option, your have to remove the
+C<cvvis> capability from the terminfo description.
+
+When @@URXVT_NAME@@ first added the blinking cursor option, it didn't
+add a C<cvvis> capability, which served no purpose before. Version 9.21
+introduced C<cvvis> (and the ability to control blinking independent of
+cursor shape) for compatibility with other terminals, which traditionally
+use a blinking cursor for C<cvvis>. This also reflects the intent of
+programs such as emacs, who expect C<cvvis> to enable a blinking cursor.
 
 =head2 Keyboard, Mouse & User Interaction
 

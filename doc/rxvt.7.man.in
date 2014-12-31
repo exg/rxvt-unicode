@@ -680,6 +680,29 @@ We are working on it, in the meantime, as a workaround, use something like:
 .Vb 1
 \&   @@URXVT_NAME@@ \-b 600 \-geometry 20x1 \-e sh \-c \*(Aqmplayer \-wid $WINDOWID file...\*(Aq
 .Ve
+.PP
+\fIWhy is the cursor now blinking in emacs/vi/...?\fR
+.IX Subsection "Why is the cursor now blinking in emacs/vi/...?"
+.PP
+This is likely caused by your editor/program's use of the \f(CW\*(C`cvvis\*(C'\fR
+terminfo capability. Emacs uses it by default, as well as some versions of
+vi and possibly other programs.
+.PP
+In emacs, you can switch that off by adding this to your \f(CW\*(C`.emacs\*(C'\fR file:
+.PP
+.Vb 1
+\&   (setq visible\-cursor nil)
+.Ve
+.PP
+For other programs, if they do not have an option, your have to remove the
+\&\f(CW\*(C`cvvis\*(C'\fR capability from the terminfo description.
+.PP
+When @@URXVT_NAME@@ first added the blinking cursor option, it didn't
+add a \f(CW\*(C`cvvis\*(C'\fR capability, which served no purpose before. Version 9.21
+introduced \f(CW\*(C`cvvis\*(C'\fR (and the ability to control blinking independent of
+cursor shape) for compatibility with other terminals, which traditionally
+use a blinking cursor for \f(CW\*(C`cvvis\*(C'\fR. This also reflects the intent of
+programs such as emacs, who expect \f(CW\*(C`cvvis\*(C'\fR to enable a blinking cursor.
 .SS "Keyboard, Mouse & User Interaction"
 .IX Subsection "Keyboard, Mouse & User Interaction"
 \fIThe new selection selects pieces that are too big, how can I select single words?\fR

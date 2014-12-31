@@ -430,6 +430,26 @@ xterm? I need this to decide about setting colours etc.
 
        urxvt -b 600 -geometry 20x1 -e sh -c 'mplayer -wid $WINDOWID file...'
 
+   Why is the cursor now blinking in emacs/vi/...?
+    This is likely caused by your editor/program's use of the "cvvis"
+    terminfo capability. Emacs uses it by default, as well as some versions
+    of vi and possibly other programs.
+
+    In emacs, you can switch that off by adding this to your ".emacs" file:
+
+       (setq visible-cursor nil)
+
+    For other programs, if they do not have an option, your have to remove
+    the "cvvis" capability from the terminfo description.
+
+    When urxvt first added the blinking cursor option, it didn't add a
+    "cvvis" capability, which served no purpose before. Version 9.21
+    introduced "cvvis" (and the ability to control blinking independent of
+    cursor shape) for compatibility with other terminals, which
+    traditionally use a blinking cursor for "cvvis". This also reflects the
+    intent of programs such as emacs, who expect "cvvis" to enable a
+    blinking cursor.
+
   Keyboard, Mouse & User Interaction
    The new selection selects pieces that are too big, how can I select single words?
     If you want to select e.g. alphanumeric words, you can use the following
