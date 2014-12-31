@@ -46,10 +46,10 @@ TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxv
           same height but different ascent.
         - implement cvvis in terminfo as blinking cursor, to distinguish it
           from cnorm (emacs uses cvvis which is commonly a blinking cursor).
-        - when xft support was compiled in, color queries erroneously returned
+        - when xft support was compiled in, colour queries erroneously returned
           premultiplied values, this also affected internal queries, for example
-          when calculating faded colors. alpha is now divided out when possible,
-          which is more correct but loses color resolution.
+          when calculating faded colour. alpha is now divided out when possible,
+          which is more correct but loses colour resolution.
 	- add DECSCUSR xterm extension to set the cursor to a vertical bar.
 	- add 'extension:string' action, and associated on_action perl
 	  hook, for keysym resources that invokes actions provided by
@@ -85,19 +85,19 @@ TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxv
 	- fix crash that may happen if a lib to which urxvt is linked to calls setenv.
 	- fix memory leak in special_{encode,decode} perl methods.
 	- fix refresh bug that occurs when reverse video is set on a cell
-	  containing a space and with the same bg and fg color, red hat bug
+	  containing a space and with the same bg and fg colour, red hat bug
 	  #830236.
         - fix crash that may happen if an x error is received after a terminal
           window/popup has been destroyed already.
         - removed superfluous 0 digit from sgr terminfo sequence.
-        - greatly improve colour allocation on colour-starved pseudocolor
+        - greatly improve colour allocation on colour-starved pseudocolour
           displays to avoid read-write cells instead of simply failing
           (this is only relevant for antique 8bpp frame buffers).
         - do not free fade colours when not doing fading (this is likely
           only relevant for antique 8bpp frame buffers).
 	- do not specialcase 2 or 4 colour visuals, leading to
           simpler and actually more correct code.
-        - hopefully no longer leak colours on !truecolor visuals.
+        - hopefully no longer leak colours on !truecolour visuals.
         - use consistent method names (scr_recolour => scr_recolor).
         - use simpler (but slightly less bogus) formula for nearest
           colour choice (this is likely only relevant for antique 8bpp
