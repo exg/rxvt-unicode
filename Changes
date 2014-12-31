@@ -39,6 +39,7 @@ TODO: c&c perl socket via daemon-ext mechanism
 TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
 
+9.21 Wed Dec 31 14:50:03 CET 2014
 	- the "moa redraw 8-bit british vintage colour management" release.
 	- NOTICE: this release updates terminfo.
 	- fix pixel droppings on overdraw when a secondary core font has the

@@ -242,8 +242,8 @@ rxvttoolkit.o: rxvttoolkit.h ev_cpp.h ../config.h ../libev/ev++.h
 rxvttoolkit.o: ../libev/ev.h callback.h rxvtimg.h scrollbar.h
 rxvttoolkit.o: ../libptytty/src/libptytty.h rxvtperl.h hookinc.h rsinc.h
 rxvttoolkit.o: optinc.h
-rxvtutil.o: rxvtutil.h ../libptytty/src/ecb.h ../libptytty/src/estl.h emman.h
-rxvtutil.o: emman.c
+rxvtutil.o: emman.c emman.h ../libptytty/src/ecb.h rxvtutil.h
+rxvtutil.o: ../libptytty/src/estl.h
 screen.o: ../config.h rxvt.h feature.h ../libptytty/src/ecb.h encoding.h
 screen.o: rxvtutil.h ../libptytty/src/estl.h emman.h rxvtfont.h rxvttoolkit.h
 screen.o: ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h callback.h
