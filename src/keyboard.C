@@ -91,6 +91,24 @@ keyboard_manager::~keyboard_manager ()
 }
 
 void
+keyboard_manager::unregister_action (KeySym keysym, unsigned int state)
+{
+  for (unsigned int i = 0; i < keymap.size (); ++i)
+    if (keymap [i]->keysym == keysym
+        && keymap [i]->state == state)
+      {
+        free (keymap [i]->str);
+        delete keymap [i];
+
+        if (i < keymap.size () - 1)
+          keymap [i] = keymap [keymap.size () - 1];
+        keymap.pop_back ();
+
+        break;
+      }
+}
+
+void
 keyboard_manager::register_action (KeySym keysym, unsigned int state, const wchar_t *ws)
 {
   char *action = rxvt_wcstoutf8 (ws);
@@ -106,6 +124,8 @@ keyboard_manager::register_action (KeySym keysym, unsigned int state, const wcha
     key->type = keysym_t::BUILTIN;
   else if (strncmp (action, "builtin-string:", 15) == 0)
     key->type = keysym_t::BUILTIN_STRING;
+
+  unregister_action (keysym, state);
 
   if (keymap.size () == keymap.capacity ())
     keymap.reserve (keymap.size () * 2);
