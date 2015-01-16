@@ -39,6 +39,12 @@ TODO: c&c perl socket via daemon-ext mechanism
 TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
 
+	- a keysym resource for a key which is already bound to an
+	  action now properly rebinds the key.
+	- the tabbed extension now properly refreshes the active tab
+	  when scrolling and the mouse pointer is outside the terminal
+	  window.
+
 9.21 Wed Dec 31 14:50:03 CET 2014
 	- the "moa redraw 8-bit british vintage colour management" release.
 	- NOTICE: this release updates terminfo.
