@@ -1576,6 +1576,9 @@ rxvt_term::want_refresh ()
 	THIS->refresh_check ();
 
 void
+rxvt_term::refresh_check ()
+
+void
 rxvt_term::ROW_t (int row_number, SV *new_text = 0, int start_col = 0, int start_ofs = 0, int max_len = MAX_COLS)
 	PPCODE:
 {

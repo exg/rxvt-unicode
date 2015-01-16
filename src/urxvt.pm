@@ -1699,6 +1699,10 @@ differ, it redraws the differences.
 
 Used after changing terminal contents to display them.
 
+=item $term->refresh_check
+
+Checks if a refresh has been requested and, if so, schedules one.
+
 =item $text = $term->ROW_t ($row_number[, $new_text[, $start_col]])
 
 Returns the text of the entire row with number C<$row_number>. Row C<< $term->top_row >>

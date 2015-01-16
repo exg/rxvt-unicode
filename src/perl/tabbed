@@ -216,6 +216,7 @@ sub on_key_press {
    my ($self, $event) = @_;
 
    $self->{cur}->key_press ($event->{state}, $event->{keycode}, $event->{time});
+   $self->{cur}->refresh_check;
 
    1
 }
@@ -224,6 +225,7 @@ sub on_key_release {
    my ($self, $event) = @_;
 
    $self->{cur}->key_release ($event->{state}, $event->{keycode}, $event->{time});
+   $self->{cur}->refresh_check;
 
    1
 }
