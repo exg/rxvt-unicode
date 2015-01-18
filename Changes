@@ -39,6 +39,8 @@ TODO: c&c perl socket via daemon-ext mechanism
 TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
 
+	- change the width of underline and i-beam cursor to 2 pixels (based on
+	  a patch by Omar Sandoval).
 	- a keysym resource for a key which is already bound to an
 	  action now properly rebinds the key.
 	- the tabbed extension now properly refreshes the active tab
