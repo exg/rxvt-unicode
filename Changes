@@ -42,8 +42,15 @@ TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxv
 	  a patch by Omar Sandoval).
 	- a keysym resource for a key which is already bound to an
 	  action now properly rebinds the key.
+	- the key_press hook is now invoked before processing the
+	  event, as documented. This change was done in 9.21 but not
+	  announced and fixes debian bugs #511377, #531751 and red hat
+	  bug #1105069. Note that this change breaks a few scripts,
+	  such as mark-yank-urls, which rely on the previous buggy
+	  behaviour that urxvt processes the event (in particular
+	  keysym bindings) before invoking the hook.
 	- the tabbed extension now properly refreshes the active tab
-	  when scrolling and the mouse pointer is outside the terminal
+	  on a key press when the mouse pointer is outside the terminal
 	  window.
 
 9.21 Wed Dec 31 14:50:03 CET 2014
