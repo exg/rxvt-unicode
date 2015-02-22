@@ -905,7 +905,7 @@ See next entry.
 
 One reason you might want this is that some distributions or operating
 systems still compile some programs using the long-obsoleted termcap
-library (Fedora Core's bash is one example) and rely on a termcap entry
+library (Fedora's bash is one example) and rely on a termcap entry
 for C<rxvt-unicode>.
 
 You could use rxvt's termcap entry with reasonable results in many cases.
