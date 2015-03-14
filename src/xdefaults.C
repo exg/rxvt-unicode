@@ -876,21 +876,25 @@ rxvt_term::enumerate_keysym_resources (void (*cb)(rxvt_term *, const char *, con
   XrmName name_prefix[3];
   XrmClass class_prefix[3];
 
-  name_prefix[0] = XrmStringToName (rs[Rs_name]);
   name_prefix[1] = XrmStringToName ("keysym");
   name_prefix[2] = NULLQUARK;
-  class_prefix[0] = XrmStringToName (RESCLASS);
   class_prefix[1] = XrmStringToName ("Keysym");
   class_prefix[2] = NULLQUARK;
-  /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
-  XrmEnumerateDatabase (database, name_prefix, class_prefix,
-                        XrmEnumOneLevel, rxvt_keysym_enumerate_helper, (XPointer)closure);
+
 #   ifdef RESFALLBACK
   name_prefix[0] = class_prefix[0] = XrmStringToName (RESFALLBACK);
   /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
                         XrmEnumOneLevel, rxvt_keysym_enumerate_helper, (XPointer)closure);
 #   endif
+
+  name_prefix[0] = class_prefix[0] = XrmStringToName (RESCLASS);
+  XrmEnumerateDatabase (database, name_prefix, class_prefix,
+                        XrmEnumOneLevel, rxvt_keysym_enumerate_helper, (XPointer)closure);
+
+  name_prefix[0] = class_prefix[0] = XrmStringToName (rs[Rs_name]);
+  XrmEnumerateDatabase (database, name_prefix, class_prefix,
+                        XrmEnumOneLevel, rxvt_keysym_enumerate_helper, (XPointer)closure);
 #  endif
 
 #endif /* NO_RESOURCES */
