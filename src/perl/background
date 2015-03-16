@@ -56,7 +56,7 @@ use:
 
 Or specified as a X resource:
 
-   URxvt.background-expr: scale keep { load "/path/to/mybg.png" }
+   URxvt.background.expr: scale keep { load "/path/to/mybg.png" }
 
 =head1 THEORY OF OPERATION
 
