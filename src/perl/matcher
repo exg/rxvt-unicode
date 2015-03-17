@@ -34,7 +34,7 @@ It is possible to activate the most recently seen match or a list of matches
 from the keyboard.  Simply bind a keysym to "matcher:last" or
 "matcher:list" as seen in the example below.
 
-The 'matcher:select' action enables a mode in which it is possible to
+The C<matcher:select> action enables a mode in which it is possible to
 iterate over the matches using the keyboard and either activate them
 or copy them to the clipboard. While the mode is active, normal terminal
 input/output is suspended and the following bindings are recognized:
@@ -70,6 +70,9 @@ Activate the current match.
 Copy the current match to the clipboard.
 
 =back
+
+It is also possible to cycle through the matches using a key
+combination bound to the C<matcher:select> action.
 
 Example: load and use the matcher extension with defaults.
 
@@ -424,13 +427,15 @@ sub select_search {
          $self->{id} = $dir < 0 ? @{ $self->{matches} } - 1 : 0;
          $self->view_start (List::Util::min 0, $row - ($self->nrow >> 1));
          $self->want_refresh;
-         return;
+         return 1;
       }
 
       $row = $dir < 0 ? $line->beg - 1 : $line->end + 1;
    }
 
    $self->scr_bell;
+
+   ()
 }
 
 sub select_refresh {
@@ -483,6 +488,15 @@ sub select_key_press {
          my $line = $self->line ($self->{cur_row});
          $self->select_search (+1, $line->end + 1)
             if $line->end < $self->nrow;
+      }
+   } elsif ($self->lookup_keysym ($keysym, $event->{state}) eq "matcher:select") {
+      if ($self->{id} > 0) {
+         $self->{id}--;
+         $self->want_refresh;
+      } else {
+         my $line = $self->line ($self->{cur_row});
+         $self->select_search (-1, $self->nrow - 1)
+            unless $self->select_search (-1, $line->beg - 1);
       }
    }
 
