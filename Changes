@@ -52,6 +52,10 @@ TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxv
 	- the tabbed extension now properly refreshes the active tab
 	  on a key press when the mouse pointer is outside the terminal
 	  window.
+	- add 'lookup_keysym' perl method to lookup the action bound
+	  to a key combination.
+	- a key combination bound to 'matcher:select' can now be used
+	  to cycle through the matches in matcher.
 
 9.21 Wed Dec 31 14:50:03 CET 2014
 	- the "moa redraw 8-bit british vintage colour management" release.
