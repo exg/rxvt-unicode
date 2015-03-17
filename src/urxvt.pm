@@ -1348,6 +1348,11 @@ sub x_resource_boolean {
    $res =~ /^\s*(?:true|yes|on|1)\s*$/i ? 1 : defined $res && 0
 }
 
+=item $action = $term->lookup_keysym ($keysym, $state)
+
+Returns the action bound to key combination C<($keysym, $state)>,
+if a binding for it exists, and C<undef> otherwise.
+
 =item $success = $term->bind_action ($key, $action)
 
 Adds a key binding exactly as specified via a C<keysym> resource. See the

@@ -134,8 +134,8 @@ keyboard_manager::register_action (KeySym keysym, unsigned int state, const wcha
   hash[0] = 3;
 }
 
-bool
-keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state, const char *kbuf, int len)
+keysym_t *
+keyboard_manager::lookup_keysym (rxvt_term *term, KeySym keysym, unsigned int state)
 {
   assert (("register_done() need to be called", hash[0] == 0));
 
@@ -150,10 +150,16 @@ keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state, 
 
   int index = find_keysym (keysym, state);
 
-  if (index >= 0)
-    {
-      keysym_t *key = keymap [index];
+  return index >= 0 ? keymap [index] : 0;
+}
 
+bool
+keyboard_manager::dispatch (rxvt_term *term, KeySym keysym, unsigned int state, const char *kbuf, int len)
+{
+  keysym_t *key = lookup_keysym (term, keysym, state);
+
+  if (key)
+    {
       if (key->type == keysym_t::BUILTIN_STRING)
         {
           term->tt_write_user_input (kbuf, len);

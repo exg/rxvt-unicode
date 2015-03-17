@@ -1864,6 +1864,16 @@ rxvt_term::option (U8 optval, int set = -1)
         OUTPUT:
         RETVAL
 
+SV *
+rxvt_term::lookup_keysym (int keysym, unsigned int state)
+        CODE:
+{
+        keysym_t *key = THIS->keyboard->lookup_keysym (THIS, keysym, state);
+        RETVAL = key ? sv_2mortal (newSVpv (key->str, 0)) : &PL_sv_undef;
+}
+        OUTPUT:
+        RETVAL
+
 bool
 rxvt_term::bind_action (octet_string keysym, octet_string action)
         ALIAS:
