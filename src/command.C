@@ -1036,6 +1036,9 @@ rxvt_term::flush_cb (ev::timer &w, int revents)
 void
 rxvt_term::cursor_blink_reset ()
 {
+  if (!focus)
+    return;
+
   if (hidden_cursor)
     {
       hidden_cursor = 0;
