@@ -423,6 +423,8 @@ AC_PATH_PROG(TIC, tic, :)
 
 AC_PATH_XTRA
 
+AC_PATH_TOOL(PKG_CONFIG, pkg-config, no)
+
 image_lib=none
 
 PIXBUF_CFLAGS=
@@ -430,7 +432,6 @@ PIXBUF_LIBS=
 
 if test x$support_pixbuf = xyes; then
   support_pixbuf=no
-  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
   AC_MSG_CHECKING(for gdk-pixbuf)
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists gdk-pixbuf-2.0; then
     PIXBUF_CFLAGS="`$PKG_CONFIG gdk-pixbuf-2.0 --cflags`"
@@ -455,7 +456,6 @@ STARTUP_NOTIFICATION_LIBS=
 
 if test x$support_startup_notification = xyes; then
   support_startup_notification=no
-  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
   AC_MSG_CHECKING(for libstartup-notification)
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists libstartup-notification-1.0; then
     STARTUP_NOTIFICATION_CFLAGS="`$PKG_CONFIG libstartup-notification-1.0 --cflags`"
@@ -593,7 +593,6 @@ if test x$support_inheritpixmap = xyes || test x$support_pixbuf = xyes; then
 fi
 if test x$support_xft = xyes || test x$support_image = xyes; then
   rxvt_have_xrender=no
-  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists xrender; then
     X_LIBS="`$PKG_CONFIG xrender --libs` $X_LIBS"
     CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xrender --cflags`"
@@ -608,7 +607,6 @@ if test x$support_xft = xyes || test x$support_image = xyes; then
 fi
 
 if test x$support_xft = xyes && test x$rxvt_have_xrender = xyes; then
-  AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists xft; then
     X_LIBS="`$PKG_CONFIG xft --libs` $X_LIBS"
     CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xft --cflags`"
