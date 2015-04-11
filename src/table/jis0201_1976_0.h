@@ -8,7 +8,7 @@ static uint32_t cs_jis0201_1976_0_from_unicode (unicode_t unicode) {
     if (unicode <= 0x007d) return unicode;
     if (0x007f <= unicode && unicode <= 0x009f) return unicode;
     if (unicode == 0x203e) return 0x007e;
-    if (unicode <= 0xff61 && 0xff9f <= unicode) return unicode - 0xfec0;
+    if (unicode >= 0xff61 && 0xff9f >= unicode) return unicode - 0xfec0;
     return NOCHAR;
 }
 

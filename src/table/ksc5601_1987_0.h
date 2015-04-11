@@ -3474,7 +3474,7 @@ const uint16_t *ksc5601_1987_0_f_i[] = {
 
 static uint32_t cs_ksc5601_1987_0_from_unicode (unicode_t unicode) {
     if (unicode == 0x2312) return 0x2152;
-    if (unicode <= 0x3131 && 0x318e <= unicode) return unicode - 0x0d10;
+    if (unicode >= 0x3131 && 0x318e >= unicode) return unicode - 0x0d10;
     uint8_t  l = unicode;
     uint16_t h = unicode >> 8;
     if (0x00 <= h && h <= 0xff

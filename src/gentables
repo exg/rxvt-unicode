@@ -95,7 +95,7 @@ sub gen {
          } elsif (linear $enc, $b + $l, $b + $h, $enc->[$b + $l]) {
             my $dif = $enc->[$b + $l] - ($b + $l);
             $dif = $dif < 0 ? sprintf "- 0x%04x", -$dif : sprintf "+ 0x%04x", $dif;
-            $fun .= sprintf "if (· <= 0x%04x && 0x%04x <= ·) return · %s;\n", $b + $l, $b + $h, $dif;
+            $fun .= sprintf "if (· >= 0x%04x && 0x%04x >= ·) return · %s;\n", $b + $l, $b + $h, $dif;
          } elsif ($map2[$p] <= 5) { # defunct
             $fun .= "switch (·)\n  {\n";
             for ($l .. $h) {

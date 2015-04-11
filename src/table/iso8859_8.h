@@ -14,7 +14,7 @@ static const uint8_t iso8859_8_f_0[] = {
 
 static uint32_t cs_iso8859_8_from_unicode (unicode_t unicode) {
     if (unicode <= 0x009f) return unicode;
-    if (unicode <= 0x05d0 && 0x05ea <= unicode) return unicode - 0x04f0;
+    if (unicode >= 0x05d0 && 0x05ea >= unicode) return unicode - 0x04f0;
     if (unicode == 0x200e) return 0x00fd;
     if (unicode == 0x200f) return 0x00fe;
     if (unicode == 0x2017) return 0x00df;

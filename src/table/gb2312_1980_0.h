@@ -2199,8 +2199,8 @@ static uint32_t cs_gb2312_1980_0_from_unicode (unicode_t unicode) {
     if (unicode == 0x2606) return 0x216e;
     if (unicode == 0x2640) return 0x2162;
     if (unicode == 0x2642) return 0x2161;
-    if (unicode <= 0x3105 && 0x3129 <= unicode) return unicode - 0x08c0;
-    if (unicode <= 0x3220 && 0x3229 <= unicode) return unicode - 0x0fbb;
+    if (unicode >= 0x3105 && 0x3129 >= unicode) return unicode - 0x08c0;
+    if (unicode >= 0x3220 && 0x3229 >= unicode) return unicode - 0x0fbb;
     if (unicode == 0x9274) return 0x3c78;
     if (unicode == 0x928e) return 0x7646;
     if (unicode == 0x92ae) return 0x7647;

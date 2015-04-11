@@ -2414,7 +2414,7 @@ static uint32_t cs_big5_from_unicode (unicode_t unicode) {
     if (unicode == 0x32a3) return 0xa1c0;
     if (unicode == 0xf6ee) return 0xc6de;
     if (unicode == 0xf6ef) return 0xc6df;
-    if (unicode <= 0xf800 && 0xf816 <= unicode) return unicode - 0x2f4a;
+    if (unicode >= 0xf800 && 0xf816 >= unicode) return unicode - 0x2f4a;
     if (unicode == 0xfa0c) return 0xc94a;
     if (unicode == 0xfa0d) return 0xddfc;
     uint8_t  l = unicode;
