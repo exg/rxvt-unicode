@@ -37,11 +37,6 @@ TODO: warn with a graphical message when env has been modified
 TODO: c&c perl socket via daemon-ext mechanism
 TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
-TODO: 12:02:08 <Mikachu> oh, the bug is that name.keysym.foo doesn't override class.keysym.foo
-TODO: 12:02:30 <Mikachu> and maybe also that things like *.foo are accepted as keysyms, but that's less important
-TODO: 12:14:33 <Mikachu> http://mika.l3ib.org/tmp/7d6f7fe5c964f2b958d70e9b7dc41a19.txt is what i did, but we felt that xrmenumeratedatabase should handle it correctly already
-TODO: 12:15:46 <Mikachu> and in either case, i think the fallback line should come first, as the last called callback will overwrite previous keybinds
-TODO: 12:16:00 <Mikachu> not that rxvt supports keysym anyway.. :)
 
         - fix longstanding core font encoding bug where some character
           ranges could not be mapped from unicode to the font: affected
