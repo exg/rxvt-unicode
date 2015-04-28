@@ -1637,9 +1637,9 @@ rxvt_term::x_cb (XEvent &ev)
                                &ev.xbutton.state);
 #ifdef MOUSE_THRESHOLD
                 /* deal with a `jumpy' mouse */
-                if ((ev.xmotion.time - MEvent.time) > MOUSE_THRESHOLD)
-                  {
+                if (ev.xmotion.time - MEvent.time > MOUSE_THRESHOLD)
 #endif
+                  {
 #if ISO_14755
                     // 5.4
                     if (iso14755buf & (ISO_14755_STARTED | ISO_14755_54))
@@ -1698,9 +1698,7 @@ rxvt_term::x_cb (XEvent &ev)
                         sel_scroll_ev.stop();
                       }
 #endif
-#ifdef MOUSE_THRESHOLD
                   }
-#endif
               }
           }
         else if (scrollBar.state == SB_STATE_MOTION && ev.xany.window == scrollBar.win)
