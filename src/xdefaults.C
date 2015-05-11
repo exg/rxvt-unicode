@@ -627,7 +627,6 @@ rxvt_term::get_options (int argc, const char *const *argv)
 
 /*}}} */
 
-#ifndef NO_RESOURCES
 /*----------------------------------------------------------------------*/
 
 # ifdef KEYSYM_RESOURCE
@@ -778,7 +777,6 @@ rxvt_term::bind_action (const char *str, const char *arg)
 }
 
 # endif /* KEYSYM_RESOURCE */
-#endif /* NO_RESOURCES */
 
 static char *
 get_res (XrmDatabase database, const char *program, const char *option)
@@ -862,7 +860,6 @@ rxvt_term::extract_resources ()
 void
 rxvt_term::enumerate_keysym_resources (void (*cb)(rxvt_term *, const char *, const char *))
 {
-#ifndef NO_RESOURCES
   /*
    * [R5 or later]: enumerate the resource database
    */
@@ -896,8 +893,6 @@ rxvt_term::enumerate_keysym_resources (void (*cb)(rxvt_term *, const char *, con
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
                         XrmEnumOneLevel, rxvt_keysym_enumerate_helper, (XPointer)closure);
 #  endif
-
-#endif /* NO_RESOURCES */
 }
 
 void

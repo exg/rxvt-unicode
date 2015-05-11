@@ -47,7 +47,6 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 
 #if defined (ISO_14755) || defined (ENABLE_PERL)
 # define ENABLE_OVERLAY 1
-# undef NO_RESOURCES
 #endif
 
 #if ENABLE_PERL
@@ -102,6 +101,12 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 #include "libptytty.h"
 
 #include "rxvtperl.h"
+
+// this must occur after the last (indirect) include of config.h,
+// otherwise it has no effect because config.h does not have include guards.
+#if defined (ISO_14755) || defined(ENABLE_PERL) || defined(KEYSYM_RESOURCE)
+# undef NO_RESOURCES
+#endif
 
 // try to avoid some macros to decrease code size, on some systems
 #if ENABLE_MINIMAL
