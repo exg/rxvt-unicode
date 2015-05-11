@@ -898,7 +898,9 @@ rxvt_term::enumerate_keysym_resources (void (*cb)(rxvt_term *, const char *, con
 void
 rxvt_term::extract_keysym_resources ()
 {
+#ifdef KEYSYM_RESOURCE
   enumerate_keysym_resources (rxvt_define_key);
+#endif
 }
 
 /*----------------------- end-of-file (C source) -----------------------*/
