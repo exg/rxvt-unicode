@@ -1209,7 +1209,7 @@ rxvt_term::get_ourmods ()
 void
 rxvt_term::set_icon (const char *file)
 {
-#if HAVE_PIXBUF
+#if HAVE_PIXBUF && ENABLE_EWMH
   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (file, NULL);
   if (!pixbuf)
     {
