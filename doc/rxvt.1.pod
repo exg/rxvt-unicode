@@ -382,6 +382,9 @@ Capture system console messages.
 Compile I<XIM>: input style for input method; B<OverTheSpot>,
 B<OffTheSpot>, B<Root>; resource B<preeditType>.
 
+If the perl extension C<xim-onthespot> is used (which is the default),
+then additionally the C<OnTheSpot> preedit type is available.
+
 =item B<-im> I<text>
 
 Compile I<XIM>: input method name. resource B<inputMethod>.
@@ -979,7 +982,7 @@ B<< BACKSLASH `"'&()*,;<=>?@[]^{|} >>
 
 =item B<preeditType:> I<style>
 
-B<OverTheSpot>, B<OffTheSpot>, B<Root>; option B<-pt>.
+B<OnTheSpot>, B<OverTheSpot>, B<OffTheSpot>, B<Root>; option B<-pt>.
 
 =item B<inputMethod:> I<name>
 
