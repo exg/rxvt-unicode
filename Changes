@@ -46,6 +46,8 @@ TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxv
 	  Devin J. Pohly).
 	- change the width of underline and i-beam cursor to 2 pixels (based on
 	  a patch by Omar Sandoval).
+	- add pointerShape resource to change the mouse pointer shape
+	  (based on a patch by Brian Watson).
 	- a keysym resource for a key which is already bound to an
 	  action now properly rebinds the key.
 	- the key_press hook is now invoked before processing the
