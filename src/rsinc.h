@@ -121,3 +121,6 @@
 #if ENABLE_EWMH
   def (iconfile)
 #endif
+#ifdef HAVE_XMU
+  def (pointerShape)
+#endif

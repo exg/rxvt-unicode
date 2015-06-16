@@ -452,6 +452,14 @@ fi
 AC_SUBST(STARTUP_NOTIFICATION_CFLAGS)
 AC_SUBST(STARTUP_NOTIFICATION_LIBS)
 
+if test x$support_frills = xyes; then
+  RXVT_CHECK_MODULES([XMU], [xmu], [
+    X_LIBS="$XMU_LIBS $X_LIBS"
+    CPPFLAGS="$CPPFLAGS $XMU_CFLAGS"
+    AC_DEFINE(HAVE_XMU, 1, Define to enable Xmu support)
+  ], [:])
+fi
+
 dnl# --------------------------------------------------------------------------
 dnl# CHECKING FOR HEADER FILES
 dnl# --------------------------------------------------------------------------

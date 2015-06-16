@@ -203,6 +203,9 @@ optList[] = {
 #if ENABLE_EWMH
               STRG (Rs_iconfile, "iconFile", "icon", "file", "path to application icon image"),
 #endif
+#ifdef HAVE_XMU
+              RSTRG (Rs_pointerShape, "pointerShape", "string"),
+#endif
               /* fonts: command-line option = resource name */
               STRG (Rs_font, "font", "fn", "fontname", "normal text font"),
 #if ENABLE_STYLES

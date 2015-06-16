@@ -947,6 +947,12 @@ Mouse pointer foreground colour.
 
 Mouse pointer background colour.
 
+=item B<pointerShape:> I<string>
+
+Compile I<frills>: Specifies the name of the mouse pointer shape
+[default B<xterm>]. See the macros in the B<X11/cursorfont.h> include
+file for possible values (omit the C<XC_> prefix).
+
 =item B<pointerBlankDelay:> I<number>
 
 Specifies number of seconds before blanking the pointer [default 2]. Use a
