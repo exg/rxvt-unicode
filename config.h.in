@@ -250,6 +250,9 @@
 /* Define to 1 if you have the `XftDrawString32' function. */
 #undef HAVE_XFTDRAWSTRING32
 
+/* Define to enable Xmu support */
+#undef HAVE_XMU
+
 /* Define if setlocale (defined to Xsetlocale) works */
 #undef HAVE_XSETLOCALE
 
