@@ -431,21 +431,10 @@ PIXBUF_CFLAGS=
 PIXBUF_LIBS=
 
 if test x$support_pixbuf = xyes; then
-  support_pixbuf=no
-  AC_MSG_CHECKING(for gdk-pixbuf)
-  if test $PKG_CONFIG != no && $PKG_CONFIG --exists gdk-pixbuf-2.0; then
-    PIXBUF_CFLAGS="`$PKG_CONFIG gdk-pixbuf-2.0 --cflags`"
-    PIXBUF_LIBS="`$PKG_CONFIG gdk-pixbuf-2.0 --libs`"
-    support_pixbuf=yes
-  fi
-
-  if test x$support_pixbuf = xyes; then
-    AC_MSG_RESULT(ok)
+  RXVT_CHECK_MODULES([PIXBUF], [gdk-pixbuf-2.0], [
     image_lib=gdk-pixbuf
     AC_DEFINE(HAVE_PIXBUF, 1, Define if you want to use gdk-pixbuf for image processing)
-  else
-    AC_MSG_RESULT(no)
-  fi
+  ], [:])
 fi
 
 AC_SUBST(PIXBUF_CFLAGS)
@@ -455,20 +444,9 @@ STARTUP_NOTIFICATION_CFLAGS=
 STARTUP_NOTIFICATION_LIBS=
 
 if test x$support_startup_notification = xyes; then
-  support_startup_notification=no
-  AC_MSG_CHECKING(for libstartup-notification)
-  if test $PKG_CONFIG != no && $PKG_CONFIG --exists libstartup-notification-1.0; then
-    STARTUP_NOTIFICATION_CFLAGS="`$PKG_CONFIG libstartup-notification-1.0 --cflags`"
-    STARTUP_NOTIFICATION_LIBS="`$PKG_CONFIG libstartup-notification-1.0 --libs`"
-    support_startup_notification=yes
-  fi
-
-  if test x$support_startup_notification = xyes; then
-    AC_MSG_RESULT(ok)
+  RXVT_CHECK_MODULES([STARTUP_NOTIFICATION], [libstartup-notification-1.0], [
     AC_DEFINE(HAVE_STARTUP_NOTIFICATION, 1, Define if freedesktop startup notifications should be supported)
-  else
-    AC_MSG_RESULT(no)
-  fi
+  ], [:])
 fi
 
 AC_SUBST(STARTUP_NOTIFICATION_CFLAGS)
@@ -593,9 +571,9 @@ if test x$support_inheritpixmap = xyes || test x$support_pixbuf = xyes; then
 fi
 if test x$support_xft = xyes || test x$support_image = xyes; then
   rxvt_have_xrender=no
-  if test $PKG_CONFIG != no && $PKG_CONFIG --exists xrender; then
-    X_LIBS="`$PKG_CONFIG xrender --libs` $X_LIBS"
-    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xrender --cflags`"
+  RXVT_CHECK_MODULES([XRENDER], [xrender], [
+    X_LIBS="$XRENDER_LIBS $X_LIBS"
+    CPPFLAGS="$CPPFLAGS $XRENDER_CFLAGS"
     rxvt_have_xrender=yes
 
     save_LIBS="$LIBS"
@@ -603,25 +581,20 @@ if test x$support_xft = xyes || test x$support_image = xyes; then
     AC_CHECK_HEADER(X11/extensions/Xrender.h,,[rxvt_have_xrender=no])
     AC_CHECK_FUNC(XRenderFindStandardFormat,,[rxvt_have_xrender=no])
     LIBS="$save_LIBS"
-  fi
+  ], [:])
 fi
 
 if test x$support_xft = xyes && test x$rxvt_have_xrender = xyes; then
-  if test $PKG_CONFIG != no && $PKG_CONFIG --exists xft; then
-    X_LIBS="`$PKG_CONFIG xft --libs` $X_LIBS"
-    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG xft --cflags`"
-  else
+  RXVT_CHECK_MODULES([XFT], [fontconfig xft], [
+    X_LIBS="$XFT_LIBS $X_LIBS"
+    CPPFLAGS="$CPPFLAGS $XFT_CFLAGS"
+  ], [
     AC_PATH_PROG(XFT_CONFIG, xft-config, no)
     if test $XFT_CONFIG != no; then
       X_LIBS="`$XFT_CONFIG --libs` $X_LIBS"
       CPPFLAGS="$CPPFLAGS `$XFT_CONFIG --cflags`"
     fi
-  fi
-
-  if test $PKG_CONFIG != no && $PKG_CONFIG --exists fontconfig; then
-    X_LIBS="`$PKG_CONFIG fontconfig --libs` $X_LIBS"
-    CPPFLAGS="$CPPFLAGS `$PKG_CONFIG fontconfig --cflags`"
-  fi
+  ])
 
   save_LIBS="$LIBS"
   LIBS="$LIBS $X_LIBS"
