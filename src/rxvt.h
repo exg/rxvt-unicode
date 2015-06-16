@@ -102,12 +102,6 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 
 #include "rxvtperl.h"
 
-// this must occur after the last (indirect) include of config.h,
-// otherwise it has no effect because config.h does not have include guards.
-#if defined (ISO_14755) || defined(ENABLE_PERL) || defined(KEYSYM_RESOURCE)
-# undef NO_RESOURCES
-#endif
-
 // try to avoid some macros to decrease code size, on some systems
 #if ENABLE_MINIMAL
 # define strcmp(a,b)   (strcmp)(a,b)

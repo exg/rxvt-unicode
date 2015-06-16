@@ -295,10 +295,11 @@ AC_ARG_ENABLE(delete-key,
     AC_DEFINE(NO_DELETE_KEY, 1, Define if you don't want support for the (non-keypad) delete key)
   fi])
 
+support_resources=yes
 AC_ARG_ENABLE(resources,
   [  --disable-resources     disable all resource checking],
   [if test x$enableval = xno; then
-    AC_DEFINE(NO_RESOURCES, 1, Define if you don't want any resources read)
+    support_resources=no
   fi])
 
 AC_ARG_ENABLE(8bitctrls,
@@ -411,6 +412,14 @@ AC_ARG_WITH(terminfo,
   [if test x$withval != x; then
     AC_DEFINE_UNQUOTED(RXVT_TERMINFO, "$withval", Set TERMINFO value to the value given by configure) terminfo="$withval"
   fi])
+
+if test x$support_resources = xno; then
+  if test x$support_frills = xyes || test x$support_perl = xyes; then
+    AC_MSG_ERROR([--disable-resources requires --disable-frills --disable-perl])
+  fi
+
+  AC_DEFINE(NO_RESOURCES, 1, Define if you don't want any resources read)
+fi
 
 dnl# --------------------------------------------------------------------------
 
