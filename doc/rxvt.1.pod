@@ -873,8 +873,7 @@ bottom when a non-special key is pressed; option B<+sk>.
 
 =item B<saveLines:> I<number>
 
-Save I<number> lines in the scrollback buffer [default 64]. This
-resource is limited on most machines to 65535; option B<-sl>.
+Save I<number> lines in the scrollback buffer [default 1000]; option B<-sl>.
 
 =item B<internalBorder:> I<number>
 

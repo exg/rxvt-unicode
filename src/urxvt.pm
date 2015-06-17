@@ -1619,31 +1619,32 @@ Enable/disable the urgency hint on the toplevel window.
 
 Deliver various fake events to to terminal.
 
-=item $window_width = $term->width
+=item $window_width = $term->width ([$new_value])
 
-=item $window_height = $term->height
+=item $window_height = $term->height ([$new_value])
 
-=item $font_width = $term->fwidth
+=item $font_width = $term->fwidth ([$new_value])
 
-=item $font_height = $term->fheight
+=item $font_height = $term->fheight ([$new_value])
 
-=item $font_ascent = $term->fbase
+=item $font_ascent = $term->fbase ([$new_value])
 
-=item $terminal_rows = $term->nrow
+=item $terminal_rows = $term->nrow ([$new_value])
 
-=item $terminal_columns = $term->ncol
+=item $terminal_columns = $term->ncol ([$new_value])
 
-=item $has_focus = $term->focus
+=item $has_focus = $term->focus ([$new_value])
 
-=item $is_mapped = $term->mapped
+=item $is_mapped = $term->mapped ([$new_value])
 
-=item $max_scrollback = $term->saveLines
+=item $max_scrollback = $term->saveLines ([$new_value])
 
-=item $nrow_plus_saveLines = $term->total_rows
+=item $nrow_plus_saveLines = $term->total_rows ([$new_value])
 
-=item $topmost_scrollback_row = $term->top_row
+=item $topmost_scrollback_row = $term->top_row ([$new_value])
 
-Return various integers describing terminal characteristics.
+Return various integers describing terminal characteristics. If an
+argument is given, changes the value and returns the previous one.
 
 =item $x_display = $term->display_id
 

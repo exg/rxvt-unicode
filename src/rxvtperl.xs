@@ -1389,7 +1389,7 @@ rxvt_term::locale_decode (SV *octets)
 #define TERM_OFFSET_top_row     TERM_OFFSET(top_row)
 
 int
-rxvt_term::width ()
+rxvt_term::width (int new_value = NO_INIT)
 	ALIAS:
            width       = TERM_OFFSET_width
            height      = TERM_OFFSET_height
@@ -1409,6 +1409,8 @@ rxvt_term::width ()
            top_row     = TERM_OFFSET_top_row
 	CODE:
         RETVAL = *(int *)((char *)THIS + ix);
+        if (items > 1)
+          *(int *)((char *)THIS + ix) = new_value;
         OUTPUT:
         RETVAL
 
