@@ -1608,7 +1608,7 @@ rxvt_fontset::add_fonts (const char *desc)
                 rxvt_warn ("unknown parameter '%s' in font specification, skipping.\n", spec);
 
               desc++;
-              while (*desc <= ' ') desc++;
+              while (*desc <= ' ' && *desc) desc++;
             }
 
           end = strchr (desc, ',');
