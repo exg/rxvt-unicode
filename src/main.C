@@ -283,7 +283,7 @@ rxvt_term::~rxvt_term ()
   if (env && memcmp (env, envv->begin (), envv->size () * sizeof (char *)))
     rxvt_warn ("env has been modified, probably as a result of a lib calling setenv.\n");
 
-  delete env;
+  delete [] env;
 
   delete envv;
   delete argv;
