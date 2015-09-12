@@ -42,7 +42,8 @@ TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxv
           ranges could not be mapped from unicode to the font: affected
           encodings are big5, gb2312, iso8859-8 (hebrew), jis0201 and
           ksc5601 (reported by Mikachu).
-        - fix a buffer overflow in font name parser(reported by Kuang-che Wu).
+        - fix a crash when parsing an invalid color specification (reported by Kuang-che Wu).
+        - fix a buffer overflow in font name parser (reported by Kuang-che Wu).
 	- do not start blinking cursor if the window is unfocused (reported by
 	  Devin J. Pohly).
 	- change the width of underline and i-beam cursor to 2 pixels (based on
