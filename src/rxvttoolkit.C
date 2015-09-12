@@ -827,7 +827,7 @@ rxvt_color::set (rxvt_screen *screen, const char *name)
 {
   rgba c;
   char eos;
-  int skip;
+  int skip = 0;
 
   c.a = rgba::MAX_CC;
 
