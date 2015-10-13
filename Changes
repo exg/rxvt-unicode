@@ -39,6 +39,9 @@ TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
 
 9.22 Sun Oct 11 18:23:42 CEST 2015
+	- NOTICE: this release updates terminfo.
+	- add terminfo capabilities for various ctrl and shift-ctrl key variants
+	  (patch by Sebastian Schmidt).
         - fix longstanding core font encoding bug where some character
           ranges could not be mapped from unicode to the font: affected
           encodings are big5, gb2312, iso8859-8 (hebrew), jis0201 and
