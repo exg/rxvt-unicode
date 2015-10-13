@@ -5,6 +5,7 @@
  * All portions of code are copyright by their respective author/s.
  * Copyright (c) 2005      WU Fengguang
  * Copyright (c) 2005-2006 Marc Lehmann <schmorp@schmorp.de>
+ * Copyright (c) 2015      Emanuele Giaquinta <e.giaquinta@glauco.it>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -14,6 +14,7 @@
  * Copyright (c) 1998-2001 Geoff Wing <gcw@pobox.com>
  *                              - extensive modifications
  * Copyright (c) 2003-2014 Marc Lehmann <schmorp@schmorp.de>
+ * Copyright (c) 2015      Emanuele Giaquinta <e.giaquinta@glauco.it>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
