@@ -484,9 +484,12 @@ xterm? I need this to decide about setting colours etc.
     This will keep the default extensions, but disable the two popup
     extensions. Some extensions can also be configured, for example,
     scrollback search mode is triggered by M-s. You can move it to any other
-    combination either by setting the searchable-scrollback resource:
+    combination by adding a keysym resource that binds the desired
+    combination to the "start" action of "searchable-scrollback" and another
+    one that binds M-s to the "builtin:" action:
 
-       URxvt.searchable-scrollback: CM-s
+       URxvt.keysym.CM-s: searchable-scrollback:start
+       URxvt.keysym.M-s: builtin:
 
    The cursor moves when selecting text in the current input line, how do I switch this off?
     See next entry.
@@ -827,8 +830,8 @@ xterm? I need this to decide about setting colours etc.
    I need a termcap file entry.
     One reason you might want this is that some distributions or operating
     systems still compile some programs using the long-obsoleted termcap
-    library (Fedora Core's bash is one example) and rely on a termcap entry
-    for "rxvt-unicode".
+    library (Fedora's bash is one example) and rely on a termcap entry for
+    "rxvt-unicode".
 
     You could use rxvt's termcap entry with reasonable results in many
     cases. You can also create a termcap entry by using terminfo's infocmp

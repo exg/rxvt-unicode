@@ -27,6 +27,7 @@ TODO: load must not cache, but global image cache must be cleaned
 TODO: description into --help output?
 TODO: rxvt -help => (see rxvt-XXX(1))?
 TODO: xor_rect should shift right
+TODO: implement iso-8613 38/48 sgr sequences with subparameters
 TODO IMPL: recalc bg only when not fully covering (no alpha, repeat|extend etc..)
 
 TODO IMPL: colour-change event with index
@@ -37,8 +38,9 @@ TODO: warn with a graphical message when env has been modified
 TODO: c&c perl socket via daemon-ext mechanism
 TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
+TODO: üpixel droppins idenrasm,ll,scrollup
 
-9.22 Sun Oct 11 18:23:42 CEST 2015
+9.22 Sat Jan 23 21:07:33 CET 2016
 	- NOTICE: this release updates terminfo.
 	- add terminfo capabilities for various ctrl and shift-ctrl key variants
 	  (patch by Sebastian Schmidt).
