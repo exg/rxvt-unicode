@@ -1789,6 +1789,9 @@ rxvt_term::focus_in ()
 #if ENABLE_FRILLS
       if (option (Opt_urgentOnBell))
         set_urgency (0);
+
+      if (priv_modes & PrivMode_FocusEvent)
+        tt_printf ("\x1b[I");
 #endif
 
       HOOK_INVOKE ((this, HOOK_FOCUS_IN, DT_END));
@@ -1806,6 +1809,9 @@ rxvt_term::focus_out ()
 #if ENABLE_FRILLS
       if (option (Opt_urgentOnBell))
         set_urgency (0);
+
+      if (priv_modes & PrivMode_FocusEvent)
+        tt_printf ("\x1b[O");
 #endif
 #if ENABLE_FRILLS || ISO_14755
       if (iso14755buf)
@@ -3709,6 +3715,7 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
                   { 1002, PrivMode_MouseBtnEvent },
                   { 1003, PrivMode_MouseAnyEvent },
 #if ENABLE_FRILLS
+                  { 1004, PrivMode_FocusEvent },
                   { 1005, PrivMode_ExtModeMouse },
 #endif
                   { 1010, PrivMode_TtyOutputInh }, // rxvt extension

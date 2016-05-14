@@ -1934,12 +1934,12 @@ X<Priv66>
 
 =end table
 
-=item B<< C<Pm = 1004> >> (X11 XTerm focus in/focus out events) I<unimplemented>
+=item B<< C<Pm = 1004> >> (X11 XTerm focus in/focus out events)
 
 =begin table
 
 	B<< C<h> >>	Send Mouse focus in/focus out events.
-	B<< C<l> >>	Don'T send focus events.
+	B<< C<l> >>	Don't send focus events.
 
 =end table
 
@@ -2469,6 +2469,7 @@ in combination with other switches) is:
   compile in built-in block graphics
   skip builtin block graphics (-sbg)
   separate highlight colour (-highlightColor, -highlightTextColor)
+  focus reporting mode (1004).
   extended mouse reporting modes (1005 and 1015).
   visual selection via -visual and -depth.
 
