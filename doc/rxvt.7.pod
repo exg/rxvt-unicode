@@ -1605,6 +1605,8 @@ Character Attributes (SGR)
 	B<< C<Pm = 36 / 46> >>	fg/bg Cyan
 	B<< C<Pm = 37 / 47> >>	fg/bg White
 	B<< C<Pm = 38;5 / 48;5> >>	set fg/bg to colour #m (ISO 8613-6)
+	B<< C<Pm = 38;2;R;G;B> >>	set fg to 24-bit colour #RGB (ISO 8613-3)
+	B<< C<Pm = 48;2;R;G;B> >>	set bg to 24-bit colour #RGB (ISO 8613-3)
 	B<< C<Pm = 39 / 49> >>	fg/bg Default
 	B<< C<Pm = 90 / 100> >>	fg/bg Bright Black
 	B<< C<Pm = 91 / 101> >>	fg/bg Bright Red

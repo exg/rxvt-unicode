@@ -357,6 +357,21 @@ struct mouse_event
 # endif
 #endif
 
+// Hidden color cube for indexed 24-bit colors. There are less Green levels
+// because normal human eye is less sensitive to the blue component than to
+// the red or green. (https://en.m.wikipedia.org/wiki/Color_depth#8-bit_color)
+#if USE_256_COLORS
+// 7x7x5=245 < 254 unused color indices
+# define Red_levels      7
+# define Green_levels    7
+# define Blue_levels     5
+#else
+// 6x6x4=144 < 166 unused color indices
+# define Red_levels      6
+# define Green_levels    6
+# define Blue_levels     4
+#endif
+
 #if defined (NO_MOUSE_REPORT) && !defined (NO_MOUSE_REPORT_SCROLLBAR)
 # define NO_MOUSE_REPORT_SCROLLBAR 1
 #endif
@@ -560,6 +575,9 @@ enum colour_list {
 #else
   maxTermCOLOR = Color_White + 72,
 #endif
+  minTermCOLOR24,
+  maxTermCOLOR24 = minTermCOLOR24 +
+                   (Red_levels * Green_levels * Blue_levels) - 1,
 #ifndef NO_CURSORCOLOR
   Color_cursor,
   Color_cursor2,
@@ -601,9 +619,13 @@ enum colour_list {
 };
 
 #if USE_256_COLORS
-# define Color_Bits      9 // 0 .. maxTermCOLOR
+# define Color_Bits      9 // 0 .. maxTermCOLOR24
 #else
-# define Color_Bits      7 // 0 .. maxTermCOLOR
+# define Color_Bits      8 // 0 .. maxTermCOLOR24
+#endif
+
+#if maxTermCOLOR24 >= (1 << Color_Bits)
+# error color index overflow
 #endif
 
 /*
@@ -1389,6 +1411,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void process_osc_seq ();
   void process_color_seq (int report, int color, const char *str, char resp);
   void process_xterm_seq (int op, char *str, char resp);
+  unsigned int map_rgb24_color (unsigned int r, unsigned int g, unsigned int b);
   int privcases (int mode, unsigned long bit);
   void process_terminal_mode (int mode, int priv, unsigned int nargs, const int *arg);
   void process_sgr_mode (unsigned int nargs, const int *arg);

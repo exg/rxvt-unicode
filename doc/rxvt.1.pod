@@ -1598,6 +1598,15 @@ high-intensity (potentially bold/blink) versions of the same, and 72 (or
 240 in 256 colour mode) colours arranged in an 4x4x4 (or 6x6x6) colour RGB
 cube plus a 8 (24) colour greyscale ramp.
 
+B<@@RXVT_NAME@@> supports direct 24-bit fg/bg RGB colour escapes
+C< ESC [ 38 ; 2 ; R ; G ; Bm > / C< ESC [ 48 ; 2; R ; G ; Bm >. However the
+number of 24-bit colours that can be used is limited: an internal 7x7x5 (256
+colour mode) or 6x6x4 (88 colour mode) colour cube is used to index into the
+24-bit colour space. When indexing collisions happen, the nearest old colour in
+the cube will be adapted to the new 24-bit RGB colour. That means one cannot
+use many similar 24-bit colours. It's typically not a problem in common
+scenarios.
+
 Here is a list of the ANSI colours with their names.
 
 =begin table

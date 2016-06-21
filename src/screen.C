@@ -617,7 +617,7 @@ rxvt_term::scr_do_wrap () NOTHROW
 void
 rxvt_term::scr_color (unsigned int color, int fgbg) NOTHROW
 {
-  if (!IN_RANGE_INC (color, minCOLOR, maxTermCOLOR))
+  if (!IN_RANGE_INC (color, minCOLOR, maxTermCOLOR24))
     color = fgbg;
 
   if (fgbg == Color_fg)

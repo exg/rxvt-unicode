@@ -153,6 +153,31 @@ rxvt_network_display (const char *display)
 }
 #endif
 
+#define NULL_5   \
+        NULL,    \
+        NULL,    \
+        NULL,    \
+        NULL,    \
+        NULL,
+
+#define NULL_10  \
+        NULL_5   \
+        NULL_5
+
+#define NULL_40  \
+        NULL_10  \
+        NULL_10  \
+        NULL_10  \
+        NULL_10
+
+#define NULL_50  \
+        NULL_40  \
+        NULL_10
+
+#define NULL_100 \
+        NULL_50  \
+        NULL_50
+
 static const char *const def_colorName[] =
   {
     COLOR_FOREGROUND,
@@ -258,6 +283,12 @@ static const char *const def_colorName[] =
     "rgb:b9/b9/b9",
     "rgb:d0/d0/d0",
     "rgb:e7/e7/e7",
+    NULL_100
+    NULL_40
+    NULL,
+    NULL,
+    NULL,
+    NULL,
 #else
     // 256 xterm colours
     "rgb:00/00/00",
@@ -500,6 +531,10 @@ static const char *const def_colorName[] =
     "rgb:da/da/da",
     "rgb:e4/e4/e4",
     "rgb:ee/ee/ee",
+    NULL_100
+    NULL_100
+    NULL_40
+    NULL_5
 #endif
 
 #ifndef NO_CURSORCOLOR

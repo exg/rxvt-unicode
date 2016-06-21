@@ -73,9 +73,9 @@ struct rxvt_fontset
 
   // must be power-of-two - 1, also has to match RS_fontMask in rxvt.h
 #if USE_256_COLORS
-  enum { fontCount =   7 }; // 4 extra colors bits, 4 fewer fontcount bits
+  enum { fontCount =   7 }; // 2 extra colors bits, 2 fewer fontcount bits
 #else
-  enum { fontCount = 127 };
+  enum { fontCount =  31 };
 #endif
 
   // index of first font in set

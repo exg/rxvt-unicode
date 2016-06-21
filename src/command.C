@@ -3336,6 +3336,31 @@ rxvt_term::process_osc_seq ()
     }
 }
 
+/*
+ * Find the nearest color slot in the hidden color cube,
+ * adapt its value to the 24bit RGB color.
+ */
+unsigned int
+rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
+{
+  unsigned int idx_r = (r & 0xff) / (0xff / (Red_levels - 1));
+  unsigned int idx_g = (g & 0xff) / (0xff / (Green_levels - 1));
+  unsigned int idx_b = (b & 0xff) / (0xff / (Blue_levels - 1));
+  unsigned int idx;
+
+  idx = minTermCOLOR24 + idx_r * Blue_levels * Green_levels +
+                         idx_g * Blue_levels +
+                         idx_b;
+
+  pix_colors_focused [idx].free (this);
+  pix_colors_focused [idx].set (this, rgba (r * 0x0101,
+                                            g * 0x0101,
+                                            b * 0x0101));
+  update_fade_color (idx, false);
+
+  return idx;
+}
+
 void
 rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
 {
@@ -3978,6 +4003,15 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
                 scr_color ((unsigned int) (minCOLOR + arg[i + 2]), Color_fg);
                 i += 2;
               }
+            else if (nargs > i + 4 && arg[i + 1] == 2)
+              {
+                unsigned int r = arg[i + 2];
+                unsigned int g = arg[i + 3];
+                unsigned int b = arg[i + 4];
+                unsigned int idx = map_rgb24_color (r, g, b);
+                scr_color (idx, Color_fg);
+                i += 4;
+              }
             break;
           case 39:		/* default fg */
             scr_color (Color_fg, Color_fg);
@@ -3998,6 +4032,15 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
               {
                 scr_color ((unsigned int) (minCOLOR + arg[i + 2]), Color_bg);
                 i += 2;
+              }
+            else if (nargs > i + 4 && arg[i + 1] == 2)
+              {
+                unsigned int r = arg[i + 2];
+                unsigned int g = arg[i + 3];
+                unsigned int b = arg[i + 4];
+                unsigned int idx = map_rgb24_color (r, g, b);
+                scr_color (idx, Color_bg);
+                i += 4;
               }
             break;
           case 49:		/* default bg */
