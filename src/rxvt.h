@@ -357,7 +357,7 @@ struct mouse_event
 # endif
 #endif
 
-// Hidden color cube for indexed 24-bit colors. There are less Green levels
+// Hidden color cube for indexed 24-bit colors. There are fewer blue levels
 // because normal human eye is less sensitive to the blue component than to
 // the red or green. (https://en.m.wikipedia.org/wiki/Color_depth#8-bit_color)
 #if USE_256_COLORS
