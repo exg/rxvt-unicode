@@ -1950,7 +1950,7 @@ X<Priv66>
 Try to avoid this mode, it doesn't work sensibly in non-UTF-8 locales. Use
 mode C<1015> instead.
 
-Unlike XTerm, coordinates larger than 2015) will work fine.
+Unlike XTerm, coordinates larger than 2015 will work fine.
 
 =begin table
 
