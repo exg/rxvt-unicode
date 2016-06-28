@@ -1054,6 +1054,25 @@ rxvt_term::alias_color (int dst, int src)
   pix_colors[dst].set (this, rs[Rs_color + dst] = rs[Rs_color + src]);
 }
 
+#ifdef SMART_RESIZE
+static unsigned int
+get_parent_bw (Display *dpy, Window w)
+{
+  int idummy;
+  unsigned int udummy;
+  Window wdummy, parent;
+  Window *children;
+  unsigned int nchildren, border_width;
+
+  XQueryTree (dpy, w, &wdummy, &parent, &children, &nchildren);
+  XFree (children);
+  XGetGeometry (dpy, parent, &wdummy, &idummy, &idummy,
+                &udummy, &udummy, &border_width, &udummy);
+
+  return border_width;
+}
+#endif
+
 /* -------------------------------------------------------------------- *
  * -                         WINDOW RESIZING                          - *
  * -------------------------------------------------------------------- */
@@ -1098,8 +1117,10 @@ rxvt_term::resize_all_windows (unsigned int newwidth, unsigned int newheight, in
        */
       if (x1 != x || y1 != y)
         {
-          x -= x1;
-          y -= y1;
+          unsigned int border_width = get_parent_bw (dpy, parent);
+
+          x -= x1 + border_width;
+          y -= y1 + border_width;
         }
 
       x1 = (DisplayWidth  (dpy, display->screen) - old_width ) / 2;
