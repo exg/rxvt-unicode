@@ -3393,7 +3393,7 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
 
       if (rgb24_color[index] == color)
         {
-          rgb24_seqno[idx] = ++rgb24_sequence;
+          rgb24_seqno[index] = ++rgb24_sequence;
           return index + minTermCOLOR24;
         }
 
