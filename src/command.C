@@ -3403,7 +3403,9 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
               if (rgb24_color[index] == color)
                 return index + minTermCOLOR24;
 
-              if (IN_RANGE_INC (rgb24_seqno[idx], rgb24_seqno[index], 0x7fff))
+              // like (rgb24_seqno[idx] > rgb24_seqno[index])
+              // but also handles wrap around values good enough
+              if ((uint16_t) (rgb24_seqno[idx] - rgb24_seqno[index]) < 0x7fff)
                 idx = index;
             }
         }
