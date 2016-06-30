@@ -3374,12 +3374,12 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
   /* to replace the current color, if they not used recently */
   static const signed char dxyz[][3] = {
      0,  0,  0,
-     0,  0, -1,
      0,  0, +1,
-     0, -1,  0,
+     0,  0, -1,
      0, +1,  0,
-    -1,  0,  0,
+     0, -1,  0,
     +1,  0,  0,
+    -1,  0,  0,
   };
 
   for (int n = 0; n < ecb_array_length (dxyz); ++n)
@@ -3421,9 +3421,7 @@ update:
 
   idx += minTermCOLOR24;
   pix_colors_focused [idx].free (this);
-  pix_colors_focused [idx].set (this, rgba (r * 0x0101,
-                                            g * 0x0101,
-                                            b * 0x0101));
+  pix_colors_focused [idx].set (this, rgba (r * 0x0101, g * 0x0101, b * 0x0101));
   update_fade_color (idx, false);
 
   return idx;
