@@ -3388,14 +3388,9 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
       int g = idx_r + dxyz[n][1];
       int b = idx_r + dxyz[n][2];
 
-      if (!IN_RANGE_EXC (r, 0, Red_levels))
-        continue;
-
-      if (!IN_RANGE_EXC (g, 0, Green_levels))
-        continue;
-
-      if (!IN_RANGE_EXC (b, 0, Blue_levels))
-        continue;
+      if (!IN_RANGE_EXC (r, 0, Red_levels  )) continue;
+      if (!IN_RANGE_EXC (g, 0, Green_levels)) continue;
+      if (!IN_RANGE_EXC (b, 0, Blue_levels )) continue;
 
       unsigned int index = colorcube_index (r, g, b);
 
