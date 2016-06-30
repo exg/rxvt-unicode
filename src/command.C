@@ -3367,48 +3367,52 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
   unsigned int idx_b = b / (0xff / (Blue_levels - 1));
   unsigned int idx = colorcube_index (idx_r, idx_g, idx_b);
 
-  // minor issue: could update idx 0 few more times
-  if (rgb24_seqno[idx] == 0
-      && rgb24_color[idx] == 0)
-    goto update;
-
   if (rgb24_color[idx] == color)
     return idx + minTermCOLOR24;
 
-  for (int i = idx_r - 1; i <= (signed) idx_r + 1; i++)
+  /* we allow one of the 6 directly neighbouring colours */
+  /* to replace the current color, if they not used recently */
+  static const signed char dxyz[][3] = {
+     0,  0,  0,
+     0,  0, -1,
+     0,  0, +1,
+     0, -1,  0,
+     0, +1,  0,
+    -1,  0,  0,
+    +1,  0,  0,
+  };
+
+  for (int n = 0; n < ecb_array_length (dxyz); ++n)
     {
+      int i = idx_r + dxyz[n][0];
+      int j = idx_r + dxyz[n][1];
+      int k = idx_r + dxyz[n][2];
+
       if (!IN_RANGE_EXC (i, 0, Red_levels))
         continue;
 
-      for (int j = idx_g - 1; j <= (signed) idx_g + 1; j++)
+      if (!IN_RANGE_EXC (j, 0, Green_levels))
+        continue;
+
+      if (!IN_RANGE_EXC (k, 0, Blue_levels))
+        continue;
+
+      unsigned int index = colorcube_index (i, j, k);
+
+      // minor issue: could update index 0 few more times
+      if ((rgb24_seqno[index] | rgb24_color[index]) == 0)
         {
-          if (!IN_RANGE_EXC (j, 0, Green_levels))
-            continue;
-
-          for (int k = idx_b - 1; k <= (signed) idx_b + 1; k++)
-            {
-              if (!IN_RANGE_EXC (k, 0, Blue_levels))
-                continue;
-
-              unsigned int index = colorcube_index (i, j, k);
-
-              // minor issue: could update index 0 few more times
-              if (rgb24_seqno[index] == 0
-                  && rgb24_color[index] == 0)
-                {
-                  idx = index;
-                  goto update;
-                }
-
-              if (rgb24_color[index] == color)
-                return index + minTermCOLOR24;
-
-              // like (rgb24_seqno[idx] > rgb24_seqno[index])
-              // but also handles wrap around values good enough
-              if ((uint16_t) (rgb24_seqno[idx] - rgb24_seqno[index]) < 0x7fff)
-                idx = index;
-            }
+          idx = index;
+          goto update;
         }
+
+      if (rgb24_color[index] == color)
+        return index + minTermCOLOR24;
+
+      // like (rgb24_seqno[idx] > rgb24_seqno[index])
+      // but also handles wrap around values good enough
+      if ((uint16_t)(rgb24_seqno[idx] - rgb24_seqno[index]) < 0x7fff)
+        idx = index;
     }
 
 update:
