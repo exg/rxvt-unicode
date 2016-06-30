@@ -3352,16 +3352,18 @@ colorcube_index (unsigned int idx_r,
 
 /*
  * Find the nearest color slot in the hidden color cube,
- * adapt its value to the 24bit RGB color.
+ * adapt its value to the 32bit RGBA color.
  */
 unsigned int
-rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
+rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b, unsigned int a)
 {
   r &= 0xff;
   g &= 0xff;
   b &= 0xff;
+  a &= 0xff;
 
-  unsigned int color = (r << 16) | (g << 8) | b;
+  uint32_t color = (a << 24) | (r << 16) | (g << 8) | b;
+
   unsigned int idx_r = r * (Red_levels   - 1) / 0xff;
   unsigned int idx_g = g * (Green_levels - 1) / 0xff;
   unsigned int idx_b = b * (Blue_levels  - 1) / 0xff;
@@ -3382,8 +3384,8 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
   for (int n = 0; n < ecb_array_length (dxyz); ++n)
     {
       int r = idx_r + dxyz[n][0];
-      int g = idx_r + dxyz[n][1];
-      int b = idx_r + dxyz[n][2];
+      int g = idx_g + dxyz[n][1];
+      int b = idx_b + dxyz[n][2];
 
       if (!IN_RANGE_EXC (r, 0, Red_levels  )) continue;
       if (!IN_RANGE_EXC (g, 0, Green_levels)) continue;
@@ -3416,7 +3418,7 @@ update:
 
   idx += minTermCOLOR24;
   pix_colors_focused [idx].free (this);
-  pix_colors_focused [idx].set (this, rgba (r * 0x0101, g * 0x0101, b * 0x0101));
+  pix_colors_focused [idx].set (this, rgba (r * 0x0101, g * 0x0101, b * 0x0101, a * 0x0101));
   update_fade_color (idx, false);
 
   return idx;
@@ -4058,22 +4060,6 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 37:
             scr_color ((unsigned int) (minCOLOR + (arg[i] - 30)), Color_fg);
             break;
-          case 38: // set fg color, ISO 8613-6
-            if (nargs > i + 2 && arg[i + 1] == 5)
-              {
-                scr_color ((unsigned int) (minCOLOR + arg[i + 2]), Color_fg);
-                i += 2;
-              }
-            else if (nargs > i + 4 && arg[i + 1] == 2)
-              {
-                unsigned int r = arg[i + 2];
-                unsigned int g = arg[i + 3];
-                unsigned int b = arg[i + 4];
-                unsigned int idx = map_rgb24_color (r, g, b);
-                scr_color (idx, Color_fg);
-                i += 4;
-              }
-            break;
           case 39:		/* default fg */
             scr_color (Color_fg, Color_fg);
             break;
@@ -4088,24 +4074,35 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
           case 47:
             scr_color ((unsigned int) (minCOLOR + (arg[i] - 40)), Color_bg);
             break;
-          case 48: // set bg color, ISO 8613-6
-            if (nargs > i + 2 && arg[i + 1] == 5)
-              {
-                scr_color ((unsigned int) (minCOLOR + arg[i + 2]), Color_bg);
-                i += 2;
-              }
-            else if (nargs > i + 4 && arg[i + 1] == 2)
-              {
-                unsigned int r = arg[i + 2];
-                unsigned int g = arg[i + 3];
-                unsigned int b = arg[i + 4];
-                unsigned int idx = map_rgb24_color (r, g, b);
-                scr_color (idx, Color_bg);
-                i += 4;
-              }
-            break;
           case 49:		/* default bg */
             scr_color (Color_bg, Color_bg);
+            break;
+
+          case 38: // set fg color, ISO 8613-6
+          case 48: // set bg color, ISO 8613-6
+            {
+              unsigned int fgbg = arg[i] == 38 ? Color_fg : Color_bg;
+              unsigned int idx;
+            
+              if (nargs > i + 2 && arg[i + 1] == 5)
+                {
+                  idx = minCOLOR + arg[i + 2];
+                  i += 2;
+                }
+              else if (nargs > i + 4 && arg[i + 1] == 2)
+                {
+                  unsigned int r = arg[i + 2];
+                  unsigned int g = arg[i + 3];
+                  unsigned int b = arg[i + 4];
+                  unsigned int a = 0xff;
+
+                  idx = map_rgb24_color (r, g, b, a);
+
+                  i += 4;
+                }
+
+              scr_color (idx, fgbg);
+            }
             break;
 
           //case 50: // not variable spacing
