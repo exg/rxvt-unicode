@@ -3362,9 +3362,9 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
   b &= 0xff;
 
   unsigned int color = (r << 16) | (g << 8) | b;
-  unsigned int idx_r = r / (0xff / (Red_levels - 1));
-  unsigned int idx_g = g / (0xff / (Green_levels - 1));
-  unsigned int idx_b = b / (0xff / (Blue_levels - 1));
+  unsigned int idx_r = r * (Red_levels   - 1) / 0xff;
+  unsigned int idx_g = g * (Green_levels - 1) / 0xff;
+  unsigned int idx_b = b * (Blue_levels  - 1) / 0xff;
   unsigned int idx = colorcube_index (idx_r, idx_g, idx_b);
 
   if (rgb24_color[idx] == color)
