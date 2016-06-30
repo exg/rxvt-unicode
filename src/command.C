@@ -3367,9 +3367,6 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
   unsigned int idx_b = b * (Blue_levels  - 1) / 0xff;
   unsigned int idx = colorcube_index (idx_r, idx_g, idx_b);
 
-  if (rgb24_color[idx] == color)
-    return idx + minTermCOLOR24;
-
   /* we allow one of the 6 directly neighbouring colours */
   /* to replace the current color, if they not used recently */
   static const signed char dxyz[][3] = {
@@ -3394,15 +3391,18 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
 
       unsigned int index = colorcube_index (r, g, b);
 
+      if (rgb24_color[index] == color)
+        {
+          rgb24_seqno[idx] = ++rgb24_sequence;
+          return index + minTermCOLOR24;
+        }
+
       // minor issue: could update index 0 few more times
       if ((rgb24_seqno[index] | rgb24_color[index]) == 0)
         {
           idx = index;
           goto update;
         }
-
-      if (rgb24_color[index] == color)
-        return index + minTermCOLOR24;
 
       // like (rgb24_seqno[idx] > rgb24_seqno[index])
       // but also handles wrap around values good enough
