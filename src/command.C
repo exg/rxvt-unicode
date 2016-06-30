@@ -3384,20 +3384,20 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
 
   for (int n = 0; n < ecb_array_length (dxyz); ++n)
     {
-      int i = idx_r + dxyz[n][0];
-      int j = idx_r + dxyz[n][1];
-      int k = idx_r + dxyz[n][2];
+      int r = idx_r + dxyz[n][0];
+      int g = idx_r + dxyz[n][1];
+      int b = idx_r + dxyz[n][2];
 
-      if (!IN_RANGE_EXC (i, 0, Red_levels))
+      if (!IN_RANGE_EXC (r, 0, Red_levels))
         continue;
 
-      if (!IN_RANGE_EXC (j, 0, Green_levels))
+      if (!IN_RANGE_EXC (g, 0, Green_levels))
         continue;
 
-      if (!IN_RANGE_EXC (k, 0, Blue_levels))
+      if (!IN_RANGE_EXC (b, 0, Blue_levels))
         continue;
 
-      unsigned int index = colorcube_index (i, j, k);
+      unsigned int index = colorcube_index (r, g, b);
 
       // minor issue: could update index 0 few more times
       if ((rgb24_seqno[index] | rgb24_color[index]) == 0)
