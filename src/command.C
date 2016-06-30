@@ -3336,6 +3336,20 @@ rxvt_term::process_osc_seq ()
     }
 }
 
+static unsigned int
+colorcube_index (unsigned int idx_r,
+                 unsigned int idx_g,
+                 unsigned int idx_b)
+{
+  assert (idx_r < Red_levels);
+  assert (idx_g < Green_levels);
+  assert (idx_b < Blue_levels);
+
+  return idx_r * Blue_levels * Green_levels +
+         idx_g * Blue_levels +
+         idx_b;
+}
+
 /*
  * Find the nearest color slot in the hidden color cube,
  * adapt its value to the 24bit RGB color.
@@ -3343,15 +3357,63 @@ rxvt_term::process_osc_seq ()
 unsigned int
 rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b)
 {
-  unsigned int idx_r = (r & 0xff) / (0xff / (Red_levels - 1));
-  unsigned int idx_g = (g & 0xff) / (0xff / (Green_levels - 1));
-  unsigned int idx_b = (b & 0xff) / (0xff / (Blue_levels - 1));
-  unsigned int idx;
+  r &= 0xff;
+  g &= 0xff;
+  b &= 0xff;
 
-  idx = minTermCOLOR24 + idx_r * Blue_levels * Green_levels +
-                         idx_g * Blue_levels +
-                         idx_b;
+  unsigned int color = (r << 16) | (g << 8) | b;
+  unsigned int idx_r = r / (0xff / (Red_levels - 1));
+  unsigned int idx_g = g / (0xff / (Green_levels - 1));
+  unsigned int idx_b = b / (0xff / (Blue_levels - 1));
+  unsigned int idx = colorcube_index (idx_r, idx_g, idx_b);
 
+  // minor issue: could update idx 0 few more times
+  if (rgb24_seqno[idx] == 0
+      && rgb24_color[idx] == 0)
+    goto update;
+
+  if (rgb24_color[idx] == color)
+    return idx + minTermCOLOR24;
+
+  for (int i = idx_r - 1; i <= (signed) idx_r + 1; i++)
+    {
+      if (!IN_RANGE_EXC (i, 0, Red_levels))
+        continue;
+
+      for (int j = idx_g - 1; j <= (signed) idx_g + 1; j++)
+        {
+          if (!IN_RANGE_EXC (j, 0, Green_levels))
+            continue;
+
+          for (int k = idx_b - 1; k <= (signed) idx_b + 1; k++)
+            {
+              if (!IN_RANGE_EXC (k, 0, Blue_levels))
+                continue;
+
+              unsigned int index = colorcube_index (i, j, k);
+
+              // minor issue: could update index 0 few more times
+              if (rgb24_seqno[index] == 0
+                  && rgb24_color[index] == 0)
+                {
+                  idx = index;
+                  goto update;
+                }
+
+              if (rgb24_color[index] == color)
+                return index + minTermCOLOR24;
+
+              if (IN_RANGE_INC (rgb24_seqno[idx], rgb24_seqno[index], 0x7fff))
+                idx = index;
+            }
+        }
+    }
+
+update:
+  rgb24_color[idx] = color;
+  rgb24_seqno[idx] = ++rgb24_sequence;
+
+  idx += minTermCOLOR24;
   pix_colors_focused [idx].free (this);
   pix_colors_focused [idx].set (this, rgba (r * 0x0101,
                                             g * 0x0101,

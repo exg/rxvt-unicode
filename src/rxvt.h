@@ -372,6 +372,8 @@ struct mouse_event
 # define Blue_levels     4
 #endif
 
+#define RGB24_CUBE_SIZE (Red_levels * Green_levels * Blue_levels)
+
 #if defined (NO_MOUSE_REPORT) && !defined (NO_MOUSE_REPORT_SCROLLBAR)
 # define NO_MOUSE_REPORT_SCROLLBAR 1
 #endif
@@ -577,7 +579,7 @@ enum colour_list {
 #endif
   minTermCOLOR24,
   maxTermCOLOR24 = minTermCOLOR24 +
-                   (Red_levels * Green_levels * Blue_levels) - 1,
+                   RGB24_CUBE_SIZE - 1,
 #ifndef NO_CURSORCOLOR
   Color_cursor,
   Color_cursor2,
@@ -1271,6 +1273,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   // for drawn_buf, swap_buf and row_buf, in this order
   void           *chunk;
   size_t          chunk_size;
+
+  uint32_t        rgb24_color[RGB24_CUBE_SIZE];   // the 24-bit color value
+  uint16_t        rgb24_seqno[RGB24_CUBE_SIZE];   // which one is older?
+  uint16_t        rgb24_sequence;
 
   static vector<rxvt_term *> termlist; // a vector of all running rxvt_term's
 
