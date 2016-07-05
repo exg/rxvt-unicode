@@ -4088,6 +4088,8 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
                 {
                   idx = minCOLOR + arg[i + 2];
                   i += 2;
+
+                  scr_color (idx, fgbg);
                 }
               else if (nargs > i + 4 && arg[i + 1] == 2)
                 {
@@ -4099,9 +4101,9 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
                   idx = map_rgb24_color (r, g, b, a);
 
                   i += 4;
-                }
 
-              scr_color (idx, fgbg);
+                  scr_color (idx, fgbg);
+                }
             }
             break;
 
