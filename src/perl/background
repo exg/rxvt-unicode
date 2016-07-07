@@ -134,7 +134,7 @@ get a percentage):
    scale 2, load "$HOME/mypic.png"
 
 This enlarges the image by a factor of 2 (200%). As you can see, C<scale>
-has now two arguments, the C<200> and the C<load> expression, while
+has now two arguments, the C<2> and the C<load> expression, while
 C<load> only has one argument. Arguments are separated from each other by
 commas.
 
