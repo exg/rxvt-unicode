@@ -603,6 +603,14 @@ rxvt_term::init_vars ()
   set_option (Opt_buffered);
 }
 
+#if ENABLE_PERL
+static void
+rxvt_perl_parse_resource (rxvt_term *term, const char *k, const char *v)
+{
+  rxvt_perl.parse_resource (term, k, false, false, 0, v);
+}
+#endif
+
 /*----------------------------------------------------------------------*/
 const char **
 rxvt_term::init_resources (int argc, const char *const *argv)
@@ -650,6 +658,7 @@ rxvt_term::init_resources (int argc, const char *const *argv)
       || (rs[Rs_perl_eval] && *rs[Rs_perl_eval]))
     {
       rxvt_perl.init (this);
+      enumerate_resources (rxvt_perl_parse_resource);
       HOOK_INVOKE ((this, HOOK_INIT, DT_END));
     }
 #endif
