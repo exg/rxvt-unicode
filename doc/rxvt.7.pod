@@ -2091,7 +2091,6 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 13> >>	Change colour of mouse foreground to B<< C<Pt> >>
 	B<< C<Ps = 17> >>	Change background colour of highlight characters to B<< C<Pt> >>
 	B<< C<Ps = 19> >>	Change foreground colour of highlight characters to B<< C<Pt> >>
-	B<< C<Ps = 20> >>	Change background pixmap parameters (see section BACKGROUND IMAGE) (Compile pixbuf).
 	B<< C<Ps = 39> >>	Change default foreground colour to B<< C<Pt> >>. [deprecated, use 10]
 	B<< C<Ps = 46> >>	Change Log File to B<< C<Pt> >> I<unimplemented>
 	B<< C<Ps = 49> >>	Change default background colour to B<< C<Pt> >>. [deprecated, use 11]
@@ -2100,7 +2099,6 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 701> >>	Change current locale to B<< C<Pt> >>, or, if B<< C<Pt> >> is B<< C<?> >>, return the current locale (Compile frills).
 	B<< C<Ps = 702> >>	Request version if B<< C<Pt> >> is B<< C<?> >>, returning C<rxvt-unicode>, the resource name, the major and minor version numbers, e.g. C<ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST>.
 	B<< C<Ps = 704> >>	Change colour of italic characters to B<< C<Pt> >>
-	B<< C<Ps = 705> >>	Change background pixmap tint colour to B<< C<Pt> >> (Compile transparency).
 	B<< C<Ps = 706> >>	Change colour of bold characters to B<< C<Pt> >>
 	B<< C<Ps = 707> >>	Change colour of underlined characters to B<< C<Pt> >>
 	B<< C<Ps = 708> >>	Change colour of the border to B<< C<Pt> >>
@@ -2113,27 +2111,6 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 777> >>	Call the perl extension with the given string, which should be of the form C<extension:parameters> (Compile perl).
 
 =end table
-
-=back
-
-=head1 BACKGROUND IMAGE
-
-For the BACKGROUND IMAGE XTerm escape sequence B<< C<ESC ] 20 ; Pt ST> >> the value
-of B<< C<Pt> >> can be one of the following commands:
-
-=over 4
-
-=item B<< C<?> >>
-
-display scale and position in the title
-
-=item B<< C<;WxH+X+Y> >>
-
-change scale and/or position
-
-=item B<< C<FILE;WxH+X+Y> >>
-
-change background image
 
 =back
 

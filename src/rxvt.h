@@ -77,17 +77,7 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 #endif
 
 #if XRENDER && (HAVE_PIXBUF || ENABLE_TRANSPARENCY)
-# define HAVE_BG_PIXMAP 1
 # define HAVE_IMG 1
-#endif
-
-#if HAVE_BG_PIXMAP
-# if HAVE_PIXBUF
-#  define BG_IMAGE_FROM_FILE 1
-# endif
-# if ENABLE_TRANSPARENCY
-#  define BG_IMAGE_FROM_ROOT 1
-# endif
 #endif
 
 #include <ecb.h>
@@ -214,85 +204,6 @@ struct localise_env
   }
 };
 
-#ifdef HAVE_BG_PIXMAP
-struct image_effects
-{
-  bool tint_set;
-  rxvt_color tint;
-  int shade;
-  int h_blurRadius, v_blurRadius;
-
-  image_effects ()
-  {
-    tint_set     =
-    h_blurRadius =
-    v_blurRadius = 0;
-    shade = 100;
-  }
-
-  bool need_tint ()
-  {
-    return shade != 100 || tint_set;
-  }
-
-  bool need_blur ()
-  {
-    return h_blurRadius && v_blurRadius;
-  }
-
-  bool set_tint (const rxvt_color &new_tint);
-  bool set_shade (const char *shade_str);
-  bool set_blur (const char *geom);
-};
-
-# if BG_IMAGE_FROM_FILE
-enum {
-  IM_IS_SIZE_SENSITIVE = 1 << 1,
-  IM_KEEP_ASPECT       = 1 << 2,
-  IM_ROOT_ALIGN        = 1 << 3,
-  IM_TILE              = 1 << 4,
-  IM_GEOMETRY_FLAGS    = IM_KEEP_ASPECT | IM_ROOT_ALIGN | IM_TILE,
-};
-
-enum {
-  noScale = 0,
-  windowScale = 100,
-  defaultScale = windowScale,
-  centerAlign = 50,
-  defaultAlign = centerAlign,
-};
-
-struct rxvt_image : image_effects
-{
-  unsigned short alpha;
-  uint8_t flags;
-  unsigned int h_scale, v_scale; /* percents of the window size */
-  int h_align, v_align;          /* percents of the window size:
-                                    0 - left align, 50 - center, 100 - right */
-
-  bool is_size_sensitive ()
-  {
-    return (!(flags & IM_TILE)
-            || h_scale || v_scale
-            || (!(flags & IM_ROOT_ALIGN) && (h_align || v_align)));
-  }
-
-  rxvt_img *img;
-
-  void destroy ()
-  {
-    delete img;
-    img = 0;
-  }
-
-  rxvt_image ();
-  void set_file_geometry (rxvt_screen *s, const char *file);
-  void set_file (rxvt_screen *s, const char *file);
-  bool set_geometry (const char *geom, bool update = false);
-};
-# endif
-#endif
-
 /*
  *****************************************************************************
  * STRUCTURES AND TYPEDEFS
@@ -344,7 +255,7 @@ struct mouse_event
 
 /* COLORTERM, TERM environment variables */
 #define COLORTERMENV    "rxvt"
-#if BG_IMAGE_FROM_FILE
+#if HAVE_IMG
 # define COLORTERMENVFULL COLORTERMENV "-xpm"
 #else
 # define COLORTERMENVFULL COLORTERMENV
@@ -512,14 +423,12 @@ enum {
   Rxvt_restoreFG         = 39,
   Rxvt_restoreBG         = 49,
 
-  Rxvt_Pixmap            = 20,      // new bg pixmap
   Rxvt_dumpscreen        = 55,      // dump scrollback and all of screen
 
   URxvt_locale           = 701,     // change locale
   URxvt_version          = 702,     // request version
 
   URxvt_Color_IT         = 704,     // change actual 'Italic' colour
-  URxvt_Color_tint       = 705,     // change actual tint colour
   URxvt_Color_BD         = 706,     // change actual 'Bold' color
   URxvt_Color_UL         = 707,     // change actual 'Underline' color
   URxvt_Color_border     = 708,
@@ -603,9 +512,6 @@ enum colour_list {
   Color_scroll,
 #ifdef RXVT_SCROLLBAR
   Color_trough,
-#endif
-#if BG_IMAGE_FROM_ROOT
-  Color_tint,
 #endif
 #if OFF_FOCUS_FADING
   Color_fade,
@@ -1195,35 +1101,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   static struct termios def_tio;
   row_col_t       oldcursor;
 
-#ifdef HAVE_BG_PIXMAP
-  void bg_init ();
-  void bg_destroy ();
-
-# if BG_IMAGE_FROM_FILE
-  rxvt_image fimage;
-  void render_image (rxvt_image &image);
-# endif
-
-# if BG_IMAGE_FROM_ROOT
-  rxvt_img *root_img;
-  image_effects root_effects;
-
-  void render_root_image ();
-# endif
-
-  ev_tstamp bg_valid_since;
-
-  bool bg_window_size_sensitive ();
-  bool bg_window_position_sensitive ();
-
-  void bg_render ();
-#endif
-
 #ifdef HAVE_IMG
   enum {
     BG_IS_TRANSPARENT    = 1 << 1,
     BG_NEEDS_REFRESH     = 1 << 2,
-    BG_INHIBIT_RENDER    = 1 << 3,
   };
 
   uint8_t bg_flags;
@@ -1297,14 +1178,9 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     XSelectInput (dpy, vt, vt_emask | vt_emask_perl | vt_emask_xim | vt_emask_mouse);
   }
 
-#if BG_IMAGE_FROM_ROOT || ENABLE_PERL
+#if ENABLE_PERL
   void rootwin_cb (XEvent &xev);
   xevent_watcher rootwin_ev;
-#endif
-#ifdef HAVE_BG_PIXMAP
-  void update_background ();
-  void update_background_cb (ev::timer &w, int revents);
-  ev::timer update_background_ev;
 #endif
 
   void x_cb (XEvent &xev);

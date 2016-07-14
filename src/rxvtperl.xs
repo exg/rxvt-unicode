@@ -2303,7 +2303,7 @@ rxvt_term::set_background (rxvt_img *img, bool border = false)
                ->replace (img);
 
             THIS->bg_img = img;
-            THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH | rxvt_term::BG_INHIBIT_RENDER;
+            THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH;
 
             if (!border)
               THIS->bg_flags |= rxvt_term::BG_IS_TRANSPARENT;

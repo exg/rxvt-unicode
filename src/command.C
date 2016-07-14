@@ -1484,16 +1484,6 @@ rxvt_term::x_cb (XEvent &ev)
 
             bool want_position_change = SHOULD_INVOKE (HOOK_POSITION_CHANGE);
 
-            bool moved = false;
-#ifdef HAVE_BG_PIXMAP
-            if (bg_window_position_sensitive ())
-              {
-                want_position_change = true;
-                if (bg_img == 0)
-                  moved = true;
-              }
-#endif
-
             if (want_position_change)
               {
                 int x, y;
@@ -1511,7 +1501,6 @@ rxvt_term::x_cb (XEvent &ev)
                     parent_x = x;
                     parent_y = y;
                     HOOK_INVOKE ((this, HOOK_POSITION_CHANGE, DT_INT, x, DT_INT, y, DT_END));
-                    moved = true;
                   }
               }
 
@@ -1519,13 +1508,6 @@ rxvt_term::x_cb (XEvent &ev)
               {
                 seen_resize = 1;
                 resize_all_windows (ev.xconfigure.width, ev.xconfigure.height, 1);
-              }
-            else
-              {
-#ifdef HAVE_BG_PIXMAP
-                if (moved)
-                  update_background ();
-#endif
               }
 
             HOOK_INVOKE ((this, HOOK_CONFIGURE_NOTIFY, DT_XEVENT, &ev, DT_END));
@@ -1545,17 +1527,6 @@ rxvt_term::x_cb (XEvent &ev)
         break;
 
       case MapNotify:
-#ifdef HAVE_BG_PIXMAP
-        // This is needed at startup for the case of no window manager
-        // or a non-reparenting window manager and also because we
-        // defer bg image updates if the window is not mapped. The
-        // short delay is to optimize for multiple ConfigureNotify
-        // events at startup when the window manager reparents the
-        // window, so as to perform the computation after we have
-        // received all of them.
-        if (bg_img == 0)
-          update_background_ev.start (0.025);
-#endif
         mapped = 1;
 #ifdef TEXT_BLINK
         text_blink_ev.start ();
@@ -1860,7 +1831,7 @@ rxvt_term::update_fade_color (unsigned int idx, bool first_time)
 #endif
 }
 
-#if BG_IMAGE_FROM_ROOT || ENABLE_PERL
+#if ENABLE_PERL
 void ecb_hot
 rxvt_term::rootwin_cb (XEvent &ev)
 {
@@ -1880,13 +1851,6 @@ rxvt_term::rootwin_cb (XEvent &ev)
         if (ev.xproperty.atom == xa[XA_XROOTPMAP_ID]
             || ev.xproperty.atom == xa[XA_ESETROOT_PMAP_ID])
           {
-#if BG_IMAGE_FROM_ROOT
-            if (option (Opt_transparent))
-              {
-                rxvt_img::new_from_root (this)->replace (root_img);
-                update_background ();
-              }
-#endif
             HOOK_INVOKE ((this, HOOK_ROOTPMAP_CHANGE, DT_END));
           }
 
@@ -3570,74 +3534,6 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
       case URxvt_Color_border:
         process_color_seq (op, Color_border, str, resp);
         break;
-
-#if BG_IMAGE_FROM_ROOT
-      case URxvt_Color_tint:
-        process_color_seq (op, Color_tint, str, resp);
-        {
-          bool changed = false;
-
-          if (ISSET_PIXCOLOR (Color_tint))
-            changed = root_effects.set_tint (pix_colors_focused [Color_tint]);
-
-          if (changed)
-            update_background ();
-        }
-
-        break;
-#endif
-
-#if BG_IMAGE_FROM_FILE
-      case Rxvt_Pixmap:
-        if (!strcmp (str, "?"))
-          {
-            char str[256];
-            int h_scale = fimage.h_scale;
-            int v_scale = fimage.v_scale;
-            int h_align = fimage.h_align;
-            int v_align = fimage.v_align;
-
-            sprintf (str, "[%dx%d+%d+%d]",
-                     h_scale, v_scale,
-                     h_align, v_align);
-            process_xterm_seq (XTerm_title, str, CHAR_ST);
-          }
-        else
-          {
-            bool changed = false;
-
-            if (*str != ';')
-              {
-                try
-                  {
-                    fimage.set_file_geometry (this, str);
-                    changed = true;
-                  }
-                catch (const class rxvt_failure_exception &e)
-                  {
-                  }
-              }
-            else
-              {
-                str++;
-                if (fimage.set_geometry (str, true))
-                  changed = true;
-              }
-
-            if (changed)
-              {
-                if (bg_window_position_sensitive ())
-                  {
-                    int x, y;
-                    get_window_origin (x, y);
-                    parent_x = x;
-                    parent_y = y;
-                  }
-                update_background ();
-              }
-          }
-        break;
-#endif
 
       case XTerm_logfile:
         // TODO, when secure mode?

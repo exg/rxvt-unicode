@@ -561,9 +561,6 @@ static const char *const def_colorName[] =
 #ifdef RXVT_SCROLLBAR
     COLOR_SCROLLTROUGH,
 #endif
-#if BG_IMAGE_FROM_ROOT
-    NULL,
-#endif
 #if OFF_FOCUS_FADING
     "rgb:00/00/00",
 #endif
@@ -867,10 +864,6 @@ rxvt_term::init2 (int argc, const char *const *argv)
 
   if (option (Opt_scrollBar))
     scrollBar.resize ();      /* create and map scrollbar */
-
-#ifdef HAVE_BG_PIXMAP
-  bg_init ();
-#endif
 
 #if ENABLE_PERL
   rootwin_ev.start (display, display->root);

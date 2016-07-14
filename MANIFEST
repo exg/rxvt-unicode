@@ -42,7 +42,6 @@ doc/extensions.pod.bot
 
 src/.cvsignore
 src/Makefile.in
-src/background.C
 src/callback.h
 src/command.C
 src/command.h
