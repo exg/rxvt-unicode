@@ -1426,7 +1426,7 @@ sub old_bg_expr {
 
    my $bg_opts = $self->{bg_opts};
 
-   if ($bg_opts->{root}) {
+   if ($bg_opts->{root} =~ /^\s*(?:true|yes|on|1)\s*$/i) {
       $expr .= "tile (";
 
       my $shade = $bg_opts->{shade};
@@ -1525,10 +1525,10 @@ sub on_osc_seq {
 }
 
 sub find_resource {
-   my ($self, $a, $b) = @_;
+   my ($self, $res, $opt) = @_;
 
-   my $v = $self->x_resource ($a);
-   $v = $self->x_resource ($b) unless defined $v;
+   my $v = $self->x_resource ($opt);
+   $v = $self->x_resource ($res) unless defined $v;
 
    $v
 }
@@ -1545,10 +1545,7 @@ sub on_start {
       $self->{bg_opts}->{shade} = $self->find_resource ("shading", "sh");
       $self->{bg_opts}->{tint} = $self->find_resource ("tintColor", "tint");
       $self->{bg_opts}->{blur} = $self->find_resource ("blurRadius", "blr");
-      if ($self->x_resource_boolean ("transparent")
-          or $self->x_resource_boolean ("tr")) {
-         $self->{bg_opts}->{root} = 1;
-      }
+      $self->{bg_opts}->{root} = $self->find_resource ("transparent", "tr");
 
       $self->old_bg_opts ($self->find_resource ("backgroundPixmap", "pixmap"));
       $expr = $self->old_bg_expr;
