@@ -41,6 +41,15 @@ TODO: üpixel droppins idenrasm,ll,scrollup
 
 	- ISO 8613-3 direct colour SGR sequences (patch by Fengguang Wu).
 	- xterm focus reporting mode (patch by Daniel Hahler).
+	- in some window managers, if smart resize was enabled, urxvt
+	  erroneously moved the window on font change - awesome bug
+	  #532, arch linux bug ##34807 (patch by Uli Schlachter).
+	- the old bg image resources are now provided by the background
+	  extension, and perl is thus required for bg image support. No
+	  configuration change is needed: urxvt autoloads the background
+	  ext if any bg image resource/option is present. The old bg image
+	  resources are also now deprecated; users are encouraged to
+	  switch to the new bg image interface (see man urxvt-background).
 
 9.22 Sat Jan 23 21:07:33 CET 2016
 	- NOTICE: this release updates terminfo.
