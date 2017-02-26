@@ -31,7 +31,7 @@ following four resources (shown with defaults):
    URxvt.tabbed.tab-fg:    <colour-index, default 0>
    URxvt.tabbed.tab-bg:    <colour-index, default 1>
 
-See I<COLOR AND GRAPHICS> in the @@RXVT_NAME@@(1) manpage for valid
+See I<COLOR AND GRAPHICS> in the urxvt(1) manpage for valid
 indices.
 
 =cut

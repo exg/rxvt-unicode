@@ -8,7 +8,7 @@ kuake - kuake-like hotkey terminal
 
 =head1 EXAMPLES
 
-  @@RXVT_NAME@@ -kuake-hotkey F10
+  urxvt -kuake-hotkey F10
 
   URxvt.kuake.hotkey: F10
 
