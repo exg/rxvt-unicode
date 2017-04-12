@@ -293,7 +293,7 @@ overlay::hide ()
   for (; i < AvFILL (overlay_av); i++)
     av_store (overlay_av, i, SvREFCNT_inc (*av_fetch (overlay_av, i + 1, 0)));
 
-  av_pop (overlay_av);
+  SvREFCNT_dec (av_pop (overlay_av));
 
   SvREFCNT_dec (overlay_av);
   overlay_av = 0;
