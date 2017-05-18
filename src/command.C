@@ -2695,7 +2695,7 @@ rxvt_term::process_escape_seq ()
         /* kidnapped escape sequence: Should be 8.3.48 */
       case C1_ESA:		/* ESC G */
         // used by original rxvt for rob nations own graphics mode
-        if (cmd_getc () == 'Q')
+        if (cmd_getc () == 'Q' && option (Opt_insecure))
           tt_printf ("\033G0\012");	/* query graphics - no graphics */
         break;
 
@@ -2914,7 +2914,7 @@ rxvt_term::process_csi_seq ()
         break;
 
       case CSI_CUB:		/* 8.3.18: (1) CURSOR LEFT */
-      case CSI_HPB: 		/* 8.3.59: (1) CHARACTER POSITION BACKWARD */
+      case CSI_HPB:		/* 8.3.59: (1) CHARACTER POSITION BACKWARD */
 #ifdef ISO6429
         arg[0] = -arg[0];
 #else				/* emulate common DEC VTs */

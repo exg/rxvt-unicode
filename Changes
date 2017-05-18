@@ -38,7 +38,11 @@ TODO: c&c perl socket via daemon-ext mechanism
 TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
 TODO: üpixel droppins idenrasm,ll,scrollup
+TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, in xterm/vt102, but not in rxvt
 
+TODO: fix ESC G reply forever, or simply completely disable it?
+	- improved security: rob nation's (obsolete) graphics mode queries
+          no longer reply with linefeed in secure/default mode.
 	- ISO 8613-3 direct colour SGR sequences (patch by Fengguang Wu).
 	- xterm focus reporting mode (patch by Daniel Hahler).
 	- in some window managers, if smart resize was enabled, urxvt
