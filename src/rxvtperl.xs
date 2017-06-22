@@ -1431,6 +1431,8 @@ rxvt_term::ModLevel3Mask ()
             case 3: RETVAL = THIS->current_screen; break;
 #ifdef CURSOR_BLINK
             case 4: RETVAL = THIS->hidden_cursor;  break;
+#else
+            case 4: RETVAL = 0;                    break;
 #endif
           }
         OUTPUT:
