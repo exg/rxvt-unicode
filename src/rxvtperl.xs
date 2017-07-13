@@ -1022,6 +1022,36 @@ BOOT:
     const_iv (XIMDontChange),
 #   endif
 #   endif
+
+    /* DEC private modes */
+    const_iv (PrivMode_132),
+    const_iv (PrivMode_132OK),
+    const_iv (PrivMode_rVideo),
+    const_iv (PrivMode_relOrigin),
+    const_iv (PrivMode_Screen),
+    const_iv (PrivMode_Autowrap),
+    const_iv (PrivMode_aplCUR),
+    const_iv (PrivMode_aplKP),
+    const_iv (PrivMode_HaveBackSpace),
+    const_iv (PrivMode_BackSpace),
+    const_iv (PrivMode_ShiftKeys),
+    const_iv (PrivMode_VisibleCursor),
+    const_iv (PrivMode_MouseX10),
+    const_iv (PrivMode_MouseX11),
+    const_iv (PrivMode_scrollBar),
+    const_iv (PrivMode_TtyOutputInh),
+    const_iv (PrivMode_Keypress),
+    const_iv (PrivMode_smoothScroll),
+    const_iv (PrivMode_vt52),
+    const_iv (PrivMode_LFNL),
+    const_iv (PrivMode_MouseBtnEvent),
+    const_iv (PrivMode_MouseAnyEvent),
+    const_iv (PrivMode_BracketPaste),
+    const_iv (PrivMode_ExtModeMouse),
+    const_iv (PrivMode_ExtMouseRight),
+    const_iv (PrivMode_BlinkingCursor),
+    const_iv (PrivMode_mouse_report),
+    const_iv (PrivMode_Default),
   };
 
   for (civ = const_iv + ecb_array_length (const_iv); civ > const_iv; civ--)
@@ -1422,6 +1452,7 @@ rxvt_term::ModLevel3Mask ()
            ModNumLockMask = 2
            current_screen = 3
            hidden_cursor  = 4
+           priv_modes     = 5
 	CODE:
         switch (ix)
           {
@@ -1434,6 +1465,7 @@ rxvt_term::ModLevel3Mask ()
 #else
             case 4: RETVAL = 0;                    break;
 #endif
+            case 5: RETVAL = THIS->priv_modes;     break;
           }
         OUTPUT:
         RETVAL

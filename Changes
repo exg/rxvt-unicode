@@ -39,6 +39,7 @@ TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
 TODO: üpixel droppins idenrasm,ll,scrollup
 TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, in xterm/vt102, but not in rxvt
+TODO: implement xterms nih 1006 mouse mode because the fud campaign against urxvt's 1015 mode works.
 
 TODO: fix ESC G reply forever, or simply completely disable it?
 	- improved security: rob nation's (obsolete) graphics mode queries
@@ -56,6 +57,8 @@ TODO: fix ESC G reply forever, or simply completely disable it?
 	  ext if any bg image resource/option is present. The old bg image
 	  resources are also now deprecated; users are encouraged to
 	  switch to the new bg image interface (see man urxvt-background).
+        - expose priv_modes member and constants to perl extensions
+          (patch by Rastislav Barlik).
 
 9.22 Sat Jan 23 21:07:33 CET 2016
 	- NOTICE: this release updates terminfo.

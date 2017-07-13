@@ -514,6 +514,18 @@ SelectionNotify, ColormapNotify, ClientMessage, MappingNotify
 
 Various constants for use in X calls and event processing.
 
+=item urxvt::PrivMode_132, PrivMode_132OK, PrivMode_rVideo, PrivMode_relOrigin,
+PrivMode_Screen, PrivMode_Autowrap, PrivMode_aplCUR, PrivMode_aplKP,
+PrivMode_HaveBackSpace, PrivMode_BackSpace, PrivMode_ShiftKeys,
+PrivMode_VisibleCursor, PrivMode_MouseX10, PrivMode_MouseX11,
+PrivMode_scrollBar, PrivMode_TtyOutputInh, PrivMode_Keypress,
+PrivMode_smoothScroll, PrivMode_vt52, PrivMode_LFNL, PrivMode_MouseBtnEvent,
+PrivMode_MouseAnyEvent, PrivMode_BracketPaste, PrivMode_ExtModeMouse,
+PrivMode_ExtMouseRight, PrivMode_BlinkingCursor, PrivMode_mouse_report,
+PrivMode_Default
+
+Constants for checking DEC private modes.
+
 =back
 
 =head2 RENDITION
@@ -1692,6 +1704,16 @@ Returns the currently displayed screen (0 primary, 1 secondary).
 =item $cursor_is_hidden = $term->hidden_cursor
 
 Returns whether the cursor is currently hidden or not.
+
+=item $priv_modes = $term->priv_modes
+
+Returns a bitset with the state of DEC private modes.
+
+Example:
+
+  if ($term->priv_modes & urxvt::PrivMode_mouse_report) {
+      # mouse reporting is turned on
+  }
 
 =item $view_start = $term->view_start ([$newvalue])
 
