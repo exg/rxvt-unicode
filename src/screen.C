@@ -1716,6 +1716,14 @@ rxvt_term::scr_rvideo_mode (bool on) NOTHROW
     {
       rvideo_state = on;
 
+#if OFF_FOCUS_FADING
+      if (rs[Rs_fade])
+        {
+          ::swap (pix_colors_focused[Color_fg], pix_colors_focused[Color_bg]);
+          ::swap (pix_colors_unfocused[Color_fg], pix_colors_unfocused[Color_bg]);
+        }
+      else
+#endif
       ::swap (pix_colors[Color_fg], pix_colors[Color_bg]);
 #ifdef HAVE_IMG
       if (bg_img == 0)
