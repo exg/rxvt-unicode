@@ -49,6 +49,10 @@ TODO: fix ESC G reply forever, or simply completely disable it?
 	- in some window managers, if smart resize was enabled, urxvt
 	  erroneously moved the window on font change - awesome bug
 	  #532, arch linux bug ##34807 (patch by Uli Schlachter).
+	- fix urxvtd crash when using a background expression.
+	- properly restore colors when using fading and reverse video
+	  is enabled while urxvt is focused and then disabled while it
+	  is not focused, or vice versa (patch by Daniel Hahler).
 	- fix high memory usage when an extension repeatedly hides and
 	  shows an overlay (reported by Marcel Lautenbach).
 	- the old bg image resources are now provided by the background
