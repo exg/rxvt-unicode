@@ -166,7 +166,7 @@ namespace
       else if (!this->dstimg->pm) // somewhat unsatisfying
         this->dstimg->alloc ();
 
-      dpy =       srcimg->s->dpy;
+      dpy =       srcimg->d->dpy;
       src =       srcimg->picture ();
       dst = this->dstimg->picture ();
     }
@@ -249,13 +249,19 @@ find_alpha_format_for (Display *dpy, XRenderPictFormat *format)
 }
 
 rxvt_img::rxvt_img (rxvt_screen *screen, XRenderPictFormat *format, int x, int y, int width, int height, int repeat)
-: s(screen), x(x), y(y), w(width), h(height), format(format), repeat(repeat),
+: d(screen->display), x(x), y(y), w(width), h(height), format(format), repeat(repeat),
+  pm(0), ref(0)
+{
+}
+
+rxvt_img::rxvt_img (rxvt_display *display, XRenderPictFormat *format, int x, int y, int width, int height, int repeat)
+: d(display), x(x), y(y), w(width), h(height), format(format), repeat(repeat),
   pm(0), ref(0)
 {
 }
 
 rxvt_img::rxvt_img (const rxvt_img &img)
-: s(img.s), x(img.x), y(img.y), w(img.w), h(img.h), format(img.format), repeat(img.repeat), pm(img.pm), ref(img.ref)
+: d(img.d), x(img.x), y(img.y), w(img.w), h(img.h), format(img.format), repeat(img.repeat), pm(img.pm), ref(img.ref)
 {
   ++ref->cnt;
 }
@@ -416,7 +422,7 @@ rxvt_img::destroy ()
     return;
 
   if (pm && ref->ours)
-    XFreePixmap (s->dpy, pm);
+    XFreePixmap (d->dpy, pm);
 
   delete ref;
 }
@@ -429,14 +435,14 @@ rxvt_img::~rxvt_img ()
 void
 rxvt_img::alloc ()
 {
-  pm = XCreatePixmap (s->dpy, s->display->root, w, h, format->depth);
+  pm = XCreatePixmap (d->dpy, d->root, w, h, format->depth);
   ref = new pixref (w, h);
 }
 
 rxvt_img *
 rxvt_img::new_empty ()
 {
-  rxvt_img *img = new rxvt_img (s, format, x, y, w, h, repeat);
+  rxvt_img *img = new rxvt_img (d, format, x, y, w, h, repeat);
   img->alloc ();
 
   return img;
@@ -445,7 +451,7 @@ rxvt_img::new_empty ()
 Picture
 rxvt_img::picture ()
 {
-  Display *dpy = s->dpy;
+  Display *dpy = d->dpy;
 
   XRenderPictureAttributes pa;
   pa.repeat = repeat;
@@ -460,10 +466,10 @@ rxvt_img::unshare ()
   if (ref->cnt == 1 && ref->ours)
     return;
 
-  Pixmap pm2 = XCreatePixmap (s->dpy, s->display->root, ref->w, ref->h, format->depth);
-  GC gc = XCreateGC (s->dpy, pm, 0, 0);
-  XCopyArea (s->dpy, pm, pm2, gc, 0, 0, ref->w, ref->h, 0, 0);
-  XFreeGC (s->dpy, gc);
+  Pixmap pm2 = XCreatePixmap (d->dpy, d->root, ref->w, ref->h, format->depth);
+  GC gc = XCreateGC (d->dpy, pm, 0, 0);
+  XCopyArea (d->dpy, pm, pm2, gc, 0, 0, ref->w, ref->h, 0, 0);
+  XFreeGC (d->dpy, gc);
 
   destroy ();
 
@@ -476,7 +482,7 @@ rxvt_img::fill (const rgba &c, int x, int y, int w, int h)
 {
   XRenderColor rc = { c.r, c.g, c.b, c.a };
 
-  Display *dpy = s->dpy;
+  Display *dpy = d->dpy;
   Picture src = picture ();
   XRenderFillRectangle (dpy, PictOpSrc, src, &rc, x, y, w, h);
   XRenderFreePicture (dpy, src);
@@ -494,7 +500,7 @@ rxvt_img::add_alpha ()
   if (format->direct.alphaMask)
     return;
 
-  composer cc (this, new rxvt_img (s, find_alpha_format_for (s->dpy, format), x, y, w, h, repeat));
+  composer cc (this, new rxvt_img (d, find_alpha_format_for (d->dpy, format), x, y, w, h, repeat));
   
   XRenderComposite (cc.dpy, PictOpSrc, cc.src, None, cc.dst, 0, 0, 0, 0, 0, 0, w, h);
 
@@ -530,10 +536,10 @@ get_gaussian_kernel (int radius, int width, nv *kernel, XFixed *params)
 rxvt_img *
 rxvt_img::blur (int rh, int rv)
 {
-  if (!(s->display->flags & DISPLAY_HAS_RENDER_CONV))
+  if (!(d->flags & DISPLAY_HAS_RENDER_CONV))
     return clone ();
 
-  Display *dpy = s->dpy;
+  Display *dpy = d->dpy;
   int size = max (rh, rv) * 2 + 1;
   nv *kernel = (nv *)malloc (size * sizeof (nv));
   XFixed *params = rxvt_temp_buf<XFixed> (size + 2);
@@ -594,7 +600,7 @@ rxvt_img::muladd (nv mul, nv add)
 {
   // STEP 1: double the image width, fill all odd columns with white (==1)
 
-  composer cc (this, new rxvt_img (s, format, 0, 0, w * 2, h, repeat));
+  composer cc (this, new rxvt_img (d, format, 0, 0, w * 2, h, repeat));
 
   // why the hell does XRenderSetPictureTransform want a writable matrix :(
   // that keeps us from just static const'ing this matrix.
@@ -671,7 +677,7 @@ rxvt_img::brightness (int32_t r, int32_t g, int32_t b, int32_t a)
 {
   unshare ();
 
-  Display *dpy = s->dpy;
+  Display *dpy = d->dpy;
   Picture dst = XRenderCreatePicture (dpy, pm, format, 0, 0);
 
   // loop should not be needed for brightness, as only -1..1 makes sense
@@ -765,7 +771,7 @@ rxvt_img::reify ()
                && (x || y)               // we need one because of non-zero offset
                && repeat == RepeatNone;  // and we have no good pixels to fill with
 
-  composer cc (this, new rxvt_img (s, alpha ? find_alpha_format_for (s->dpy, format) : format,
+  composer cc (this, new rxvt_img (d, alpha ? find_alpha_format_for (d->dpy, format) : format,
                                    0, 0, w, h, repeat));
 
   if (repeat == RepeatNone)
@@ -837,7 +843,7 @@ rxvt_img::transform (const nv *matrix)
 
   mat3x3 inv = (mat3x3::translate (-x, -y) * m * mat3x3::translate (x, y)).inverse ();
 
-  composer cc (this, new rxvt_img (s, format, nx, ny, new_width, new_height, repeat));
+  composer cc (this, new rxvt_img (d, format, nx, ny, new_width, new_height, repeat));
 
   XTransform xfrm;
 
@@ -886,7 +892,7 @@ rxvt_img::convert_format (XRenderPictFormat *new_format, const rgba &bg)
   if (new_format == format)
     return clone ();
 
-  composer cc (this, new rxvt_img (s, new_format, x, y, w, h, repeat));
+  composer cc (this, new rxvt_img (d, new_format, x, y, w, h, repeat));
 
   int op = PictOpSrc;
 

@@ -2424,7 +2424,9 @@ void
 rxvt_img::fill (SV *c, int x = 0, int y = 0, int w = THIS->w, int h = THIS->h)
 	PROTOTYPE: $;$$$$
 	INIT:
-        rgba cc = parse_rgba (c, THIS->s);
+	rxvt_screen screen;
+	screen.set (THIS->d);
+	rgba cc = parse_rgba (c, &screen);
 	C_ARGS: cc, x, y, w, h
 
 void
@@ -2492,7 +2494,9 @@ rxvt_img::rotate (int x, int y, rxvt_img::nv phi)
 rxvt_img *
 rxvt_img::tint (SV *c)
 	INIT:
-        rgba cc = parse_rgba (c, THIS->s);
+	rxvt_screen screen;
+	screen.set (THIS->d);
+	rgba cc = parse_rgba (c, &screen);
 	C_ARGS: cc
 
 rxvt_img *
