@@ -1081,10 +1081,25 @@ The key combination that triggers the action, I<sym>, has the following format:
 
    (modifiers-)key
 
-Where I<modifiers> can be any combination of B<ISOLevel3>, B<AppKeypad>,
-B<Control>, B<NumLock>, B<Shift>, B<Meta>, B<Lock>, B<Mod1>, B<Mod2>,
-B<Mod3>, B<Mod4>, B<Mod5>, and the abbreviated B<I>, B<K>, B<C>, B<N>,
-B<S>, B<M>, B<A>, B<L>, B<1>, B<2>, B<3>, B<4>, B<5>.
+Where I<modifiers> can be any combination of the following full or
+abbreviated modifier names:
+
+=begin table
+
+	B<ISOLevel3>	B<I>
+	B<AppKeypad>	B<K>
+	B<Control>	B<C>
+	B<NumLock>	B<N>
+	B<Shift>	B<S>
+	B<Meta>	B<M> B<A>
+	B<Lock>	B<L>
+	B<Mod1>	B<1>
+	B<Mod2>	B<2>
+	B<Mod3>	B<3>
+	B<Mod4>	B<4>
+	B<Mod5>	B<5>
+
+=end table
 
 The B<NumLock>, B<Meta> and B<ISOLevel3> modifiers are usually aliased to
 whatever modifier the NumLock key, Meta/Alt keys or ISO Level3 Shift/AltGr
