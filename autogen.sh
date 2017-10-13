@@ -5,7 +5,7 @@ if ! [ -e libev/ev++.h ]; then
 **
 ** libev/ directory is missing
 **
-** you need a checkout of libev (http://software.schmorp.de/pkg/libev)
+** you need a checkout of libev (http://software.schmorp.de/pkg/libev.html)
 ** in the top-level build directory.
 **
 EOF
