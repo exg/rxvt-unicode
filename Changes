@@ -41,6 +41,7 @@ TODO: üpixel droppins idenrasm,ll,scrollup
 TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, in xterm/vt102, but not in rxvt
 TODO: implement xterms nih 1006 mouse mode because the fud campaign against urxvt's 1015 mode works.
 
+TODO: confirm-pastes should check for any ctl
 TODO: fix ESC G reply forever, or simply completely disable it?
 	- improved security: rob nation's (obsolete) graphics mode queries
           no longer reply with linefeed in secure/default mode.
