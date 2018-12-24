@@ -43,6 +43,8 @@ TODO: implement xterms nih 1006 mouse mode because the fud campaign against urxv
 
 TODO: confirm-pastes should check for any ctl
 TODO: fix ESC G reply forever, or simply completely disable it?
+	- work around API change breakage in perl 5.28, based on a patch by
+          Roman Bogorodskiy.
 	- improved security: rob nation's (obsolete) graphics mode queries
           no longer reply with linefeed in secure/default mode.
 	- ISO 8613-3 direct colour SGR sequences (patch by Fengguang Wu).
