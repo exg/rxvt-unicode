@@ -42,6 +42,8 @@ TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, 
 TODO: implement xterms nih 1006 mouse mode because the fud campaign against urxvt's 1015 mode works.
 
 TODO: confirm-pastes should check for any ctl
+TODO: confirm-paste should be the default
+TODO: bracketed paste mode pastes ^[[200~ etc. into incremental-search inputs
 TODO: fix ESC G reply forever, or simply completely disable it?
 	- work around API change breakage in perl 5.28, based on a patch by
           Roman Bogorodskiy.

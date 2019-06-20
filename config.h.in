@@ -84,6 +84,9 @@
 /* Define to 1 if you have the <libutil.h> header file. */
 #undef HAVE_LIBUTIL_H
 
+/* Define to 1 if you have the <linux/aio_abi.h> header file. */
+#undef HAVE_LINUX_AIO_ABI_H
+
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
