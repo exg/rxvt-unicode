@@ -68,6 +68,10 @@ TODO: fix ESC G reply forever, or simply completely disable it?
 	  switch to the new bg image interface (see man urxvt-background).
         - expose priv_modes member and constants to perl extensions
           (patch by Rastislav Barlik).
+        - fix a whole slew of const sillyness, unfortunately forced upon
+          us by ISO C++.
+        - update to libecb 0x00010006.
+        - disable all thread support in ecb.h as we presumably don't need it.
 
 9.22 Sat Jan 23 21:07:33 CET 2016
 	- NOTICE: this release updates terminfo.

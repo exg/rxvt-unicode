@@ -3502,7 +3502,7 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) NOTHROW
         }
       else
         {
-          cl = L"";
+          cl = (wchar_t *)L"";
           selectlen = 0;
         }
 

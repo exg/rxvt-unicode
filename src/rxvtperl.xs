@@ -393,7 +393,7 @@ rxvt_perl_interp::init ()
         perl_environ = rxvt_environ;
         localise_env set_environ (perl_environ);
 
-        char *args[] = {
+        const char *args[] = {
           "",
           "-e"
           "BEGIN {"
@@ -405,7 +405,7 @@ rxvt_perl_interp::init ()
           0
         };
         int argc = ecb_array_length (args) - 1;
-        char **argv = args;
+        char **argv = (char **)args;
 
         PERL_SYS_INIT3 (&argc, &argv, &environ);
         perl = perl_alloc ();
@@ -1834,7 +1834,7 @@ rxvt_term::_resource (octet_string name, int index, SV *newval = 0)
         else
           {
             --rs;
-            name = "";
+            name = (octet_string)"";
           }
 
         if (!IN_RANGE_EXC (index, 0, NUM_RESOURCES))

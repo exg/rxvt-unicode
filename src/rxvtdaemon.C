@@ -36,7 +36,7 @@
 char *rxvt_connection::unix_sockname ()
 {
   char name[PATH_MAX];
-  char *path = getenv ("RXVT_SOCKET");
+  const char *path = getenv ("RXVT_SOCKET");
 
   if (!path)
     {

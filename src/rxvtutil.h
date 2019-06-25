@@ -3,7 +3,10 @@
 
 #include <stdlib.h>
 #include <string.h>
+
+#define ECB_NO_THREADS 1
 #include "ecb.h"
+
 #include "estl.h"
 
 #include "emman.h"

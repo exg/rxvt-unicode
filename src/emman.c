@@ -1,5 +1,6 @@
 /* enable mremap on GNU/Linux */
 #ifdef __linux__
+# undef _GNU_SOURCE
 # define _GNU_SOURCE
 #endif
 

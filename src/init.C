@@ -975,9 +975,9 @@ rxvt_term::init_env ()
 #endif
 
   if (depth <= 2)
-    putenv ("COLORTERM=" COLORTERMENV "-mono");
+    putenv ((char *)"COLORTERM=" COLORTERMENV "-mono");
   else
-    putenv ("COLORTERM=" COLORTERMENVFULL);
+    putenv ((char *)"COLORTERM=" COLORTERMENVFULL);
 
   if (rs[Rs_term_name] != NULL)
     {
@@ -986,7 +986,7 @@ rxvt_term::init_env ()
       putenv (env_term);
     }
   else
-    putenv ("TERM=" TERMENV);
+    putenv ((char *)"TERM=" TERMENV);
 
 #ifdef HAVE_UNSETENV
   /* avoid passing old settings and confusing term size */
@@ -1015,7 +1015,7 @@ rxvt_term::set_locale (const char *locale)
       else
         rxvt_warn ("default locale unavailable, check LC_* and LANG variables. Continuing.\n");
 
-      this->locale = "C";
+      this->locale = (char *)"C"; /* strdup'ed below */
     }
 
 

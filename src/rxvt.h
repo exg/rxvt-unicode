@@ -80,7 +80,9 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 # define HAVE_IMG 1
 #endif
 
-#include <ecb.h>
+#define ECB_NO_THREADS 1
+#include "ecb.h"
+
 #include "encoding.h"
 #include "rxvtutil.h"
 #include "rxvtfont.h"
