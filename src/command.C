@@ -2692,12 +2692,14 @@ rxvt_term::process_escape_seq ()
         }
         break;
 
+#if 0 // disabled because embedded newlines can make exploits easier
         /* kidnapped escape sequence: Should be 8.3.48 */
       case C1_ESA:		/* ESC G */
         // used by original rxvt for rob nations own graphics mode
         if (cmd_getc () == 'Q' && option (Opt_insecure))
           tt_printf ("\033G0\012");	/* query graphics - no graphics */
         break;
+#endif
 
         /* 8.3.63: CHARACTER TABULATION SET */
       case C1_HTS:		/* ESC H */
