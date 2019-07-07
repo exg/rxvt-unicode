@@ -2356,8 +2356,8 @@ rxvt_term::next_char () NOTHROW
 {
   while (cmdbuf_ptr < cmdbuf_endp)
     {
-      // assume 7-bit to be ascii ALWAYS
-      if (ecb_likely ((unsigned char)*cmdbuf_ptr <= 0x7f && *cmdbuf_ptr != 0x1b))
+      // assume 7-bit to be ascii ALWAYS (always true in POSIX)
+      if (ecb_likely ((unsigned char)*cmdbuf_ptr <= 0x7f))
         return *cmdbuf_ptr++;
 
       wchar_t wc;
