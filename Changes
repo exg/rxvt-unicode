@@ -45,7 +45,8 @@ TODO: confirm-pastes should check for any ctl
 TODO: confirm-paste should be the default
 TODO: bracketed paste mode pastes ^[[200~ etc. into incremental-search inputs
 	- drop ISO 2022 locale support. ISO 2022 encodings are not supported in
-          POSIX locales and clash with vt100 charset emulation.
+          POSIX locales and clash with vt100 charset emulation (the luit
+          program can be used as a substitute).
         - ESC G (query rxvt graphics mode) has been disabled due to security
           implications. The rxvt graphics mode was removed in rxvt-unicode 1.5,
           and no programs relying on being able to query the mode are known.
