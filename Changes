@@ -77,6 +77,7 @@ TODO: bracketed paste mode pastes ^[[200~ etc. into incremental-search inputs
           us by ISO C++.
         - update to libecb 0x00010006.
         - disable all thread support in ecb.h as we presumably don't need it.
+        - slightly improve Makefile source dependencies.
 
 9.22 Sat Jan 23 21:07:33 CET 2016
 	- NOTICE: this release updates terminfo.
