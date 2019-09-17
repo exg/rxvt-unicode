@@ -44,9 +44,20 @@ TODO: implement xterms nih 1006 mouse mode because the fud campaign against urxv
 TODO: confirm-pastes should check for any ctl
 TODO: confirm-paste should be the default
 TODO: bracketed paste mode pastes ^[[200~ etc. into incremental-search inputs
+TODO: xterm-osc does not autoload background
+	- the old bg image resources are now provided by the background
+	  extension, and perl is thus required for bg image support. No
+	  configuration change is needed: urxvt autoloads the background
+	  ext if any bg image resource/option is present (for OSC sequences to
+          work you need to enable it explicity). The old bg image
+	  resources are also now deprecated; users are encouraged to
+	  switch to the new bg image interface (see man urxvt-background).
 	- drop ISO 2022 locale support. ISO 2022 encodings are not supported in
           POSIX locales and clash with vt100 charset emulation (the luit
           program can be used as a substitute).
+        - when iterating over resources, urxvt will now try to properly handle
+          multipart resources (such as "*background.expr"), for the benefit
+          of autoloading perl extensions.
         - ESC G (query rxvt graphics mode) has been disabled due to security
           implications. The rxvt graphics mode was removed in rxvt-unicode 1.5,
           and no programs relying on being able to query the mode are known.
@@ -65,12 +76,6 @@ TODO: bracketed paste mode pastes ^[[200~ etc. into incremental-search inputs
 	  is not focused, or vice versa (patch by Daniel Hahler).
 	- fix high memory usage when an extension repeatedly hides and
 	  shows an overlay (reported by Marcel Lautenbach).
-	- the old bg image resources are now provided by the background
-	  extension, and perl is thus required for bg image support. No
-	  configuration change is needed: urxvt autoloads the background
-	  ext if any bg image resource/option is present. The old bg image
-	  resources are also now deprecated; users are encouraged to
-	  switch to the new bg image interface (see man urxvt-background).
         - expose priv_modes member and constants to perl extensions
           (patch by Rastislav Barlik).
         - fix a whole slew of const sillyness, unfortunately forced upon

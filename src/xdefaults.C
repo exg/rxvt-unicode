@@ -628,6 +628,13 @@ rxvt_define_key (rxvt_term *term, const char *k, const char *v)
   term->bind_action (k, v);
 }
 
+struct rxvt_enumerate_closure
+{
+  rxvt_term *term;
+  void (*cb)(rxvt_term *, const char *, const char *);
+  int specific; // iterate over only a specific subhierarchy
+};
+
 /*
  * Define key from XrmEnumerateDatabase.
  *   quarks will be something like
@@ -644,17 +651,59 @@ rxvt_enumerate_helper (
    XPointer closure
 )
 {
-  int last;
+  const rxvt_enumerate_closure *data = (const rxvt_enumerate_closure *)closure;
 
-  for (last = 0; quarks[last] != NULLQUARK; last++)	/* look for last quark in list */
-    ;
+  if (*quarks == NULLQUARK) return False;
 
-  rxvt_term *term = (rxvt_term *)(((void **)closure)[0]);
-  void (*cb)(rxvt_term *, const char *, const char *)
-     = (void (*)(rxvt_term *, const char *, const char *))
-          (((void **)closure)[1]);
+  // if the quark list starts with a tighly bound quark, we skip it,
+  // as it is the exactly matched the prefix. Otherwise, it matched because
+  // it started with "*", in which case we assuime the prefix is part
+  // of the "*".
+  if (*bindings == XrmBindTightly)
+    {
+      ++quarks, ++bindings; // skip if this is a fixed prefix, rather than a *-match
+      if (*quarks == NULLQUARK) return False;
+    }
 
-  cb (term, XrmQuarkToString (quarks[last - 1]), (char *)value->addr);
+  // specific, a bit misleadingly named, is used when a specific "subclass"
+  // is iterated over, e.g. "keysym", and is used to skip one more
+  // component, as well as all generic prefixes
+  // this is a bit of a hack, ideally, keysym (the only user) should use its
+  // own iteration function, but this ought to be less bloated
+  if (data->specific)
+    {
+      if (*bindings != XrmBindTightly)
+        return False;
+
+      ++quarks, ++bindings; // skip if this is a fixed prefix, rather than a *-match
+      if (*quarks == NULLQUARK) return False;
+    }
+
+  char *pattern;
+  if (quarks[1] == NULLQUARK)
+    pattern = XrmQuarkToString (quarks[0]); // single component, fats path
+  else
+    {
+      // multiple components, slow path - should be rare, to don't optimize for speed
+      int size = 0;
+
+      for (int i = 0; quarks[i] != NULLQUARK; ++i)
+        size += strlen (XrmQuarkToString (quarks[i])) + 1;
+
+      pattern = rxvt_temp_buf<char> (size + 1);
+
+      // now print all components
+      {
+        char *cur = pattern;
+
+        for (int i = 0; quarks[i] != NULLQUARK; ++i)
+          cur += sprintf (cur, ".%s", XrmQuarkToString (quarks[i]));
+      }
+
+      ++pattern; // skip initial dot
+    }
+
+  data->cb (data->term, pattern, (char *)value->addr);
 
   return False;
 }
@@ -855,11 +904,10 @@ rxvt_term::enumerate_resources (void (*cb)(rxvt_term *, const char *, const char
   /*
    * [R5 or later]: enumerate the resource database
    */
+  assert (!name_p == !class_p); // both must be specified, or missing
+
 #ifdef KEYSYM_RESOURCE
-  void *closure[2] = {
-    (void *)this,
-    (void *)cb,
-  };
+  rxvt_enumerate_closure closure = { this, cb, name_p ? 1 : 0 };
 
   XrmDatabase database = XrmGetDatabase (dpy);
   XrmName name_prefix[3];
@@ -872,18 +920,17 @@ rxvt_term::enumerate_resources (void (*cb)(rxvt_term *, const char *, const char
 
 # ifdef RESFALLBACK
   name_prefix[0] = class_prefix[0] = XrmStringToName (RESFALLBACK);
-  /* XXX: Need to check sizeof (rxvt_t) == sizeof (XPointer) */
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
-                        XrmEnumOneLevel, rxvt_enumerate_helper, (XPointer)closure);
+                        XrmEnumAllLevels, rxvt_enumerate_helper, (XPointer)&closure);
 # endif
 
   name_prefix[0] = class_prefix[0] = XrmStringToName (RESCLASS);
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
-                        XrmEnumOneLevel, rxvt_enumerate_helper, (XPointer)closure);
+                        XrmEnumAllLevels, rxvt_enumerate_helper, (XPointer)&closure);
 
   name_prefix[0] = class_prefix[0] = XrmStringToName (rs[Rs_name]);
   XrmEnumerateDatabase (database, name_prefix, class_prefix,
-                        XrmEnumOneLevel, rxvt_enumerate_helper, (XPointer)closure);
+                        XrmEnumAllLevels, rxvt_enumerate_helper, (XPointer)&closure);
 #endif
 }
 

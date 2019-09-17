@@ -117,7 +117,9 @@ the C<urxvt::extension> section below.
 =head2 META comments
 
 Rxvt-unicode recognizes special meta comments in extensions that define
-different types of metadata.
+different types of metadata. These comments are scanned whenever a
+terminal is created and are typically used to autoload extensions when
+their resources or command line parameters are used.
 
 Currently, it recognises only one such comment:
 
@@ -128,6 +130,9 @@ Currently, it recognises only one such comment:
 The RESOURCE comment defines a resource used by the extension, where
 C<name> is the resource name, C<type> is the resource type, C<boolean>
 or C<string>, and C<desc> is the resource description.
+
+The extension will be autoloaded when this resource is specified or used
+as a command line parameter.
 
 =back
 
@@ -602,6 +607,8 @@ sub parse_resource {
 
    $term->scan_extensions;
 
+   # iterating over all resources has quadratic time overhead
+   # overall, maybe this could be optimised?
    my $r = $term->{meta}{resource};
    keys %$r; # reset iterator
    while (my ($k, $v) = each %$r) {

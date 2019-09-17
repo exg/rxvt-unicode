@@ -26,8 +26,8 @@ background - manage terminal background
 
 =head1 QUICK AND DIRTY CHEAT SHEET
 
-Just load a random jpeg image and tile the background with it without
-scaling or anything else:
+Load a random jpeg image and tile the background with it without scaling
+or anything else:
 
    load "/path/to/img.jpg"
 
@@ -1151,6 +1151,13 @@ vertical radius of 0 disables blurring.
 
 =head2 OSC sequences
 
+This extension will react to the following OSC sequences. Note that
+this extension will not be autoloaded when these are used currenmtly,
+so to make urxvt recognize them, you have to enable the C<background>
+extension. One way to achieve that is to use the C<--background-expr ''>
+command line argument or by specifying an empty C<URxvt.background.expr:>>
+resource.
+
 =over 4
 
 =item B<< C<ESC ] 705 ; Pt ST> >> Change transparent background tint colour to B<< C<Pt> >>.
@@ -1216,13 +1223,23 @@ change background image
 }
 
 sub parse_expr {
-   my $expr = eval
-      "sub {\n"
-    . "package urxvt::bgdsl;\n"
-    . "#line 0 'background expression'\n"
-    . "$_[0]\n"
-    . "}";
-   die if $@;
+   my ($expr) = @_;
+
+   # an empty expression is valid and represents the default background
+   if ($expr !~ /\S/) {
+      $expr = sub {
+         undef
+      };
+   } else {
+      $expr = eval
+         "sub {\n"
+       . "package urxvt::bgdsl;\n"
+       . "#line 0 'background expression'\n"
+       . "$expr\n"
+       . "}";
+      die if $@;
+   }
+
    $expr
 }
 
@@ -1323,27 +1340,33 @@ sub recalculate {
    my @img = eval { $self->{expr}->() };
    die $@ if $@;
    die "background-expr did not return anything.\n" unless @img;
-   die "background-expr: expected image(s), got something else.\n"
-      if grep { !UNIVERSAL::isa $_, "urxvt::img" } @img;
 
-   my $img = urxvt::bgdsl::merge @img;
+   if ($img[0]) {
+      die "background-expr: expected image(s), got something else.\n"
+         if grep { !UNIVERSAL::isa $_, "urxvt::img" } @img;
 
-   $frame->[FR_AGAIN]{size} = 1
-      if $img->repeat_mode != urxvt::RepeatNormal;
+      my $img = urxvt::bgdsl::merge @img;
 
-   # if the expression is sensitive to external events, prepare reevaluation then
-   $self->compile_frame ($frame, sub { $arg_self->recalculate });
+      $frame->[FR_AGAIN]{size} = 1
+         if $img->repeat_mode != urxvt::RepeatNormal;
 
-   # clear stuff we no longer need
+      # if the expression is sensitive to external events, prepare reevaluation then
+      $self->compile_frame ($frame, sub { $arg_self->recalculate });
+
+      # clear stuff we no longer need
 
 #   unless (%{ $frame->[FR_STATE] }) {
 #      delete $self->{state};
 #      delete $self->{expr};
 #   }
 
-   # set background pixmap
+      # set background pixmap
 
-   $self->set_background ($img, $self->{border});
+      $self->set_background ($img, $self->{border});
+   } else {
+      $self->clr_background;
+   }
+
    $self->scr_recolor (0);
    $self->want_refresh;
 }
@@ -1566,8 +1589,6 @@ sub on_start {
       $self->old_bg_opts ($self->find_resource ("backgroundPixmap", "pixmap"));
       $expr = $self->old_bg_expr;
    }
-
-   $expr or return;
 
    $self->set_expr (parse_expr $expr);
    $self->{border} = $self->x_resource_boolean ("%.border");

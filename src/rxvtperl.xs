@@ -2314,13 +2314,20 @@ rxvt_term::new_img_from_file (octet_string filename)
 #endif
 
 void
+rxvt_term::clr_background ()
+	CODE:
+        delete THIS->bg_img;
+        THIS->bg_img = 0;
+        THIS->bg_flags = rxvt_term::BG_NEEDS_REFRESH;
+
+void
 rxvt_term::set_background (rxvt_img *img, bool border = false)
 	CODE:
         delete THIS->bg_img;
         THIS->bg_img = 0;
-        THIS->bg_flags = 0;
+        THIS->bg_flags = rxvt_term::BG_NEEDS_REFRESH;
 
-        if (img) // TODO: cannot be false
+        //if (img) // TODO: cannot be false, maybe allow and get rid of clr_background?
           {
             img = img->clone (); // own the img
 
@@ -2338,7 +2345,6 @@ rxvt_term::set_background (rxvt_img *img, bool border = false)
                ->replace (img);
 
             THIS->bg_img = img;
-            THIS->bg_flags |= rxvt_term::BG_NEEDS_REFRESH;
 
             if (!border)
               THIS->bg_flags |= rxvt_term::BG_IS_TRANSPARENT;
