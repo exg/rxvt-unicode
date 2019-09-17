@@ -400,7 +400,7 @@ rxvt_img::new_from_pixbuf (rxvt_screen *s, GdkPixbuf *pb)
 rxvt_img *
 rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
 {
-  GError *err;
+  GError *err = 0;
   GdkPixbuf *pb = gdk_pixbuf_new_from_file (filename, &err);
 
   if (!pb)
