@@ -1398,9 +1398,9 @@ sub old_bg_opts {
          $bg_opts->{h_align} = $bg_opts->{v_align} = 0;
       } elsif (/op=tile/i) {
          $bg_opts->{tile} = 1;
-      } elsif (/op=keep_aspect/i) {
+      } elsif (/op=keep-aspect/i) {
          $bg_opts->{keep_aspect} = 1;
-      } elsif (/op=root_align/i) {
+      } elsif (/op=root-align/i) {
          $bg_opts->{root_align} = 1;
       } elsif (/^ =? ([0-9]+)? (?:[xX] ([0-9]+))? ([+-][0-9]+)? ([+-][0-9]+)? $/x) {
          my ($w, $h, $x, $y) = ($1, $2, $3, $4);
