@@ -1501,7 +1501,7 @@ sub on_osc_seq {
 
    $self->{bg_opts} or return;
 
-   $op =~ /^(20|705)$/ or return;
+   $op =~ /^(?:20|705)$/ or return;
 
    if ($op eq "20") {
       if ($arg eq "?") {
