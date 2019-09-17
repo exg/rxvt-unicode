@@ -1206,6 +1206,12 @@ B<rxvt-unicode>. First the description of supported command sequences,
 followed by pixmap support and last by a description of all features
 selectable at C<configure> time.
 
+When some functionality is marked as (insecure mode), then it requires
+insecure mode to be enabled to work fully, e.g. by using the B<insecure>
+resource or command line switch. As that name implies, a terminal running
+in insecure mode might not be secure against attackers that can output
+arbitrary sequences to the terminal.
+
 =head2 Definitions
 
 =over 4
@@ -1628,7 +1634,7 @@ Device Status Report (DSR)
 
 	B<< C<Ps = 5> >>	Status Report B<< C<ESC [ 0 n> >> (``OK'')
 	B<< C<Ps = 6> >>	Report Cursor Position (CPR) [row;column] as B<< C<ESC [ r ; c R> >>
-	B<< C<Ps = 7> >>	Request Display Name
+	B<< C<Ps = 7> >>	Request Display Name (insecure mode)
 	B<< C<Ps = 8> >>	Request Version Number (place in window title)
 
 =end table
@@ -1677,8 +1683,8 @@ Window Operations
 	B<< C<Ps = 14> >>	Report window pixel size (responds with C<Ps = 4>)
 	B<< C<Ps = 18> >>	Report window text size (responds with C<Ps = 7>)
 	B<< C<Ps = 19> >>	Currently the same as C<Ps = 18>, but responds with C<Ps = 9>
-	B<< C<Ps = 20> >>	Reports icon label (B<< C<ESC ] L NAME \234> >>)
-	B<< C<Ps = 21> >>	Reports window title (B<< C<ESC ] l NAME \234> >>)
+	B<< C<Ps = 20> >>	Reports icon label (B<< C<ESC ] L NAME \234> >>) (insecure mode)
+	B<< C<Ps = 21> >>	Reports window title (B<< C<ESC ] l NAME \234> >>) (insecure mode)
 	B<< C<Ps = 24..> >>	Set window height to C<Ps> rows
 
 =end table
@@ -2078,12 +2084,15 @@ Set XTerm Parameters. 8-bit ST: 0x9c, 7-bit ST sequence: ESC \ (0x1b,
 0x5c), backwards compatible terminator BEL (0x07) is also accepted. any
 B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 
+Many of these settings can be queried by specifying C<?> as parameter, but
+this requires insecure mode to be enabled for most of these.
+
 =begin table
 
 	B<< C<Ps = 0> >>	Change Icon Name and Window Title to B<< C<Pt> >>
 	B<< C<Ps = 1> >>	Change Icon Name to B<< C<Pt> >>
 	B<< C<Ps = 2> >>	Change Window Title to B<< C<Pt> >>
-	B<< C<Ps = 3> >>	If B<< C<Pt> >> starts with a B<< C<?> >>, query the (STRING) property of the window and return it. If B<< C<Pt> >> contains a B<< C<=> >>, set the named property to the given value, else delete the specified property.
+	B<< C<Ps = 3> >>	If B<< C<Pt> >> starts with a B<< C<?> >>, query the (STRING) property of the window and return it (insecure mode). If B<< C<Pt> >> contains a B<< C<=> >>, set the named property to the given value, else delete the specified property.
 	B<< C<Ps = 4> >>	B<< C<Pt> >> is a semi-colon separated sequence of one or more semi-colon separated B<number>/B<name> pairs, where B<number> is an index to a colour and B<name> is the name of a colour. Each pair causes the B<number>ed colour to be changed to B<name>. Numbers 0-7 corresponds to low-intensity (normal) colours and 8-15 corresponds to high-intensity colours. 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white
 	B<< C<Ps = 10> >>	Change colour of text foreground to B<< C<Pt> >>
 	B<< C<Ps = 11> >>	Change colour of text background to B<< C<Pt> >>
@@ -2091,14 +2100,16 @@ B<octet> can be escaped by prefixing it with SYN (0x16, ^V).
 	B<< C<Ps = 13> >>	Change colour of mouse foreground to B<< C<Pt> >>
 	B<< C<Ps = 17> >>	Change background colour of highlight characters to B<< C<Pt> >>
 	B<< C<Ps = 19> >>	Change foreground colour of highlight characters to B<< C<Pt> >>
+	B<< C<Ps = 20> >>	Change background image to B<< C<Pt> >> (see the L<urxvt-background>) extension documentation)
 	B<< C<Ps = 39> >>	Change default foreground colour to B<< C<Pt> >>. [deprecated, use 10]
 	B<< C<Ps = 46> >>	Change Log File to B<< C<Pt> >> I<unimplemented>
 	B<< C<Ps = 49> >>	Change default background colour to B<< C<Pt> >>. [deprecated, use 11]
 	B<< C<Ps = 50> >>	Set fontset to B<< C<Pt> >>, with the following special values of B<< C<Pt> >> (B<rxvt>) B<< C<#+n> >> change up B<< C<n> >> B<< C<#-n> >> change down B<< C<n> >> if B<< C<n> >> is missing of 0, a value of 1 is used I<empty> change to font0 B<< C<n> >> change to font B<< C<n> >>
 	B<< C<Ps = 55> >>	Log all scrollback buffer and all of screen to B<< C<Pt> >> [disabled]
-	B<< C<Ps = 701> >>	Change current locale to B<< C<Pt> >>, or, if B<< C<Pt> >> is B<< C<?> >>, return the current locale (Compile frills).
+	B<< C<Ps = 701> >>	Change current locale to B<< C<Pt> >>, or, if B<< C<Pt> >> is B<< C<?> >>, return the current locale (insecure mode, Compile frills).
 	B<< C<Ps = 702> >>	Request version if B<< C<Pt> >> is B<< C<?> >>, returning C<rxvt-unicode>, the resource name, the major and minor version numbers, e.g. C<ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST>.
 	B<< C<Ps = 704> >>	Change colour of italic characters to B<< C<Pt> >>
+	B<< C<Ps = 705> >>	Change background tint color to B<< C<Pt> >> (see the L<urxvt-background>) extension documentation)
 	B<< C<Ps = 706> >>	Change colour of bold characters to B<< C<Pt> >>
 	B<< C<Ps = 707> >>	Change colour of underlined characters to B<< C<Pt> >>
 	B<< C<Ps = 708> >>	Change colour of the border to B<< C<Pt> >>
