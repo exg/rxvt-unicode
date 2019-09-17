@@ -1304,6 +1304,11 @@ sub recalculate {
 
    $arg_self->{next_refresh} = urxvt::NOW + $MIN_INTERVAL;
 
+   unless ($arg_self->has_render) {
+      warn "background extension needs RENDER extension 0.10 or higher, ignoring background-expr.\n";
+      return;
+   }
+
    # set environment to evaluate user expression
 
    local $self  = $arg_self;
@@ -1552,9 +1557,6 @@ sub on_start {
    }
 
    $expr or return;
-
-   $self->has_render
-      or die "background extension needs RENDER extension 0.10 or higher, ignoring background-expr.\n";
 
    $self->set_expr (parse_expr $expr);
    $self->{border} = $self->x_resource_boolean ("%.border");
