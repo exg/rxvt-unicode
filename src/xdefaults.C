@@ -628,86 +628,6 @@ rxvt_define_key (rxvt_term *term, const char *k, const char *v)
   term->bind_action (k, v);
 }
 
-struct rxvt_enumerate_closure
-{
-  rxvt_term *term;
-  void (*cb)(rxvt_term *, const char *, const char *);
-  int specific; // iterate over only a specific subhierarchy
-};
-
-/*
- * Define key from XrmEnumerateDatabase.
- *   quarks will be something like
- *      "rxvt" "keysym" "0xFF01"
- *   value will be a string
- */
-static int
-rxvt_enumerate_helper (
-   XrmDatabase *database ecb_unused,
-   XrmBindingList bindings ecb_unused,
-   XrmQuarkList quarks,
-   XrmRepresentation *type ecb_unused,
-   XrmValue *value,
-   XPointer closure
-)
-{
-  const rxvt_enumerate_closure *data = (const rxvt_enumerate_closure *)closure;
-
-  if (*quarks == NULLQUARK) return False;
-
-  // if the quark list starts with a tighly bound quark, we skip it,
-  // as it is the exactly matched the prefix. Otherwise, it matched because
-  // it started with "*", in which case we assuime the prefix is part
-  // of the "*".
-  if (*bindings == XrmBindTightly)
-    {
-      ++quarks, ++bindings; // skip if this is a fixed prefix, rather than a *-match
-      if (*quarks == NULLQUARK) return False;
-    }
-
-  // specific, a bit misleadingly named, is used when a specific "subclass"
-  // is iterated over, e.g. "keysym", and is used to skip one more
-  // component, as well as all generic prefixes
-  // this is a bit of a hack, ideally, keysym (the only user) should use its
-  // own iteration function, but this ought to be less bloated
-  if (data->specific)
-    {
-      if (*bindings != XrmBindTightly)
-        return False;
-
-      ++quarks, ++bindings; // skip if this is a fixed prefix, rather than a *-match
-      if (*quarks == NULLQUARK) return False;
-    }
-
-  char *pattern;
-  if (quarks[1] == NULLQUARK)
-    pattern = XrmQuarkToString (quarks[0]); // single component, fats path
-  else
-    {
-      // multiple components, slow path - should be rare, to don't optimize for speed
-      int size = 0;
-
-      for (int i = 0; quarks[i] != NULLQUARK; ++i)
-        size += strlen (XrmQuarkToString (quarks[i])) + 1;
-
-      pattern = rxvt_temp_buf<char> (size + 1);
-
-      // now print all components
-      {
-        char *cur = pattern;
-
-        for (int i = 0; quarks[i] != NULLQUARK; ++i)
-          cur += sprintf (cur, ".%s", XrmQuarkToString (quarks[i]));
-      }
-
-      ++pattern; // skip initial dot
-    }
-
-  data->cb (data->term, pattern, (char *)value->addr);
-
-  return False;
-}
-
 /*
  * look for something like this (XK_Delete)
  * rxvt*keysym.0xFFFF: "\177"
@@ -896,6 +816,86 @@ rxvt_term::extract_resources ()
         }
     }
 #endif /* NO_RESOURCES */
+}
+
+struct rxvt_enumerate_closure
+{
+  rxvt_term *term;
+  void (*cb)(rxvt_term *, const char *, const char *);
+  int specific; // iterate over only a specific subhierarchy
+};
+
+/*
+ * Define key from XrmEnumerateDatabase.
+ *   quarks will be something like
+ *      "rxvt" "keysym" "0xFF01"
+ *   value will be a string
+ */
+static int
+rxvt_enumerate_helper (
+   XrmDatabase *database ecb_unused,
+   XrmBindingList bindings ecb_unused,
+   XrmQuarkList quarks,
+   XrmRepresentation *type ecb_unused,
+   XrmValue *value,
+   XPointer closure
+)
+{
+  const rxvt_enumerate_closure *data = (const rxvt_enumerate_closure *)closure;
+
+  if (*quarks == NULLQUARK) return False;
+
+  // if the quark list starts with a tighly bound quark, we skip it,
+  // as it is the exactly matched the prefix. Otherwise, it matched because
+  // it started with "*", in which case we assuime the prefix is part
+  // of the "*".
+  if (*bindings == XrmBindTightly)
+    {
+      ++quarks, ++bindings; // skip if this is a fixed prefix, rather than a *-match
+      if (*quarks == NULLQUARK) return False;
+    }
+
+  // specific, a bit misleadingly named, is used when a specific "subclass"
+  // is iterated over, e.g. "keysym", and is used to skip one more
+  // component, as well as all generic prefixes
+  // this is a bit of a hack, ideally, keysym (the only user) should use its
+  // own iteration function, but this ought to be less bloated
+  if (data->specific)
+    {
+      if (*bindings != XrmBindTightly)
+        return False;
+
+      ++quarks, ++bindings; // skip if this is a fixed prefix, rather than a *-match
+      if (*quarks == NULLQUARK) return False;
+    }
+
+  char *pattern;
+  if (quarks[1] == NULLQUARK)
+    pattern = XrmQuarkToString (quarks[0]); // single component, fats path
+  else
+    {
+      // multiple components, slow path - should be rare, to don't optimize for speed
+      int size = 0;
+
+      for (int i = 0; quarks[i] != NULLQUARK; ++i)
+        size += strlen (XrmQuarkToString (quarks[i])) + 1;
+
+      pattern = rxvt_temp_buf<char> (size + 1);
+
+      // now print all components
+      {
+        char *cur = pattern;
+
+        for (int i = 0; quarks[i] != NULLQUARK; ++i)
+          cur += sprintf (cur, ".%s", XrmQuarkToString (quarks[i]));
+      }
+
+      ++pattern; // skip initial dot
+    }
+
+  data->cb (data->term, pattern, (char *)value->addr);
+
+  return False;
 }
 
 void
