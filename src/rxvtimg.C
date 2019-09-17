@@ -404,7 +404,15 @@ rxvt_img::new_from_file (rxvt_screen *s, const char *filename)
   GdkPixbuf *pb = gdk_pixbuf_new_from_file (filename, &err);
 
   if (!pb)
-    rxvt_fatal ("rxvt_img::new_from_file: %s\n", err->message);
+    try
+      {
+        rxvt_fatal ("rxvt_img::new_from_file: %s\n", err->message);
+      }
+    catch (...)
+      {
+        g_error_free (err);
+        throw;
+      }
 
   rxvt_img *img = new_from_pixbuf (s, pb);
 
