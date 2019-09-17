@@ -1360,12 +1360,12 @@ sub old_bg_opts {
    my $bg_opts = $self->{bg_opts};
 
    if ($str[0]) {
-      $bg_opts->{tile} = 0;
+      $bg_opts->{tile}        = 0;
       $bg_opts->{keep_aspect} = 0;
-      $bg_opts->{root_align} = 0;
-      $bg_opts->{h_scale} = $bg_opts->{v_scale} = 100;
-      $bg_opts->{h_align} = $bg_opts->{v_align} = 50;
-      $bg_opts->{path} = unpack "H*", $str[0];
+      $bg_opts->{root_align}  = 0;
+      $bg_opts->{h_scale}     = $bg_opts->{v_scale} = 100;
+      $bg_opts->{h_align}     = $bg_opts->{v_align} = 50;
+      $bg_opts->{path}        = $str[0];
    }
 
    my @oplist = split /:/, $str[1];
@@ -1424,6 +1424,14 @@ sub old_bg_opts {
    }
 }
 
+# helper function, quote string as perl without allowing
+# any code execution or other shenanigans. does not
+# support binary NULs in string.
+sub q0 {
+   (my $str = shift) =~ s/\x00//g; # make sure there really aren't any embedded NULs
+   "q\x00$str\x00"
+}
+
 sub old_bg_expr {
    my ($self) = @_;
 
@@ -1448,7 +1456,8 @@ sub old_bg_expr {
       my $tint = $bg_opts->{tint};
 
       if ($tint) {
-         $expr .= "tint $tint, ";
+         $tint = q0 $tint;
+         $expr .= "tint $tint,";
       }
 
       my $blur = $bg_opts->{blur};
@@ -1489,7 +1498,9 @@ sub old_bg_expr {
          $file_expr .= "$op TW * $h_scale, TH * $v_scale, ";
       }
 
-      $file_expr .= "keep { load pack \"H*\", \"$bg_opts->{path}\" })";
+      my $path = q0 $bg_opts->{path};
+
+      $file_expr .= "keep { load $path })";
 
       if ($expr) {
          $expr .= ", tint (\"[50]white\", $file_expr)";
@@ -1547,10 +1558,10 @@ sub on_start {
       $self->{bg_opts} = { h_scale => 100, v_scale => 100,
                            h_align => 50, v_align => 50 };
 
-      $self->{bg_opts}->{shade} = $self->find_resource ("shading", "sh");
-      $self->{bg_opts}->{tint} = $self->find_resource ("tintColor", "tint");
-      $self->{bg_opts}->{blur} = $self->find_resource ("blurRadius", "blr");
-      $self->{bg_opts}->{root} = $self->find_resource ("transparent", "tr");
+      $self->{bg_opts}{shade} = $self->find_resource ("shading", "sh");
+      $self->{bg_opts}{tint}  = $self->find_resource ("tintColor", "tint");
+      $self->{bg_opts}{blur}  = $self->find_resource ("blurRadius", "blr");
+      $self->{bg_opts}{root}  = $self->find_resource ("transparent", "tr");
 
       $self->old_bg_opts ($self->find_resource ("backgroundPixmap", "pixmap"));
       $expr = $self->old_bg_expr;
