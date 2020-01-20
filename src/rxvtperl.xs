@@ -84,15 +84,15 @@ parse_rgba (SV *sv, rxvt_screen *s = 0)
 
       c.a = rgba::MAX_CC;
 
-      c.r = c.g = c.b = float_to_component (SvIV (*av_fetch (av, 0, 0)));
+      c.r = c.g = c.b = float_to_component (SvNV (*av_fetch (av, 0, 0)));
 
       if (len >= 3)
         {
-          c.g = float_to_component (SvIV (*av_fetch (av, 1, 0)));
-          c.b = float_to_component (SvIV (*av_fetch (av, 2, 0)));
+          c.g = float_to_component (SvNV (*av_fetch (av, 1, 0)));
+          c.b = float_to_component (SvNV (*av_fetch (av, 2, 0)));
 
           if (len >= 4)
-            c.a = float_to_component (SvIV (*av_fetch (av, 3, 0)));
+            c.a = float_to_component (SvNV (*av_fetch (av, 3, 0)));
         }
     }
   else if (s)

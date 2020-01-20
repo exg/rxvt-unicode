@@ -45,6 +45,7 @@ TODO: confirm-pastes should check for any ctl
 TODO: confirm-paste should be the default
 TODO: bracketed paste mode pastes ^[[200~ etc. into incremental-search inputs
 TODO: xterm-osc does not autoload background
+TODO: think about daemon delaying urxvt client exit.
 	- the old bg image resources are now provided by the background
 	  extension, and perl is thus required for bg image support. No
 	  configuration change is needed: urxvt autoloads the background
@@ -55,6 +56,8 @@ TODO: xterm-osc does not autoload background
 	- drop ISO 2022 locale support. ISO 2022 encodings are not supported in
           POSIX locales and clash with vt100 charset emulation (the luit
           program can be used as a substitute).
+        - perl didn't parse rgba colours specified as an array correctly,
+          only allowing 0 and 100% intensity for each component.
         - when iterating over resources, urxvt will now try to properly handle
           multipart resources (such as "*background.expr"), for the benefit
           of autoloading perl extensions.
