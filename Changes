@@ -57,7 +57,8 @@ TODO: think about daemon delaying urxvt client exit.
           POSIX locales and clash with vt100 charset emulation (the luit
           program can be used as a substitute).
         - perl didn't parse rgba colours specified as an array correctly,
-          only allowing 0 and 100% intensity for each component.
+          only allowing 0 and 100% intensity for each component (this affected
+          fill and tint).
         - when iterating over resources, urxvt will now try to properly handle
           multipart resources (such as "*background.expr"), for the benefit
           of autoloading perl extensions.
