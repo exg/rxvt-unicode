@@ -1736,6 +1736,7 @@ rxvt_fontset::find_font_idx (unicode_t unicode)
               // TODO: this is a real resource hog, xft takes ages(?)
 #if XFT && USE_SLOW_LOOKUP
               // grab the first xft font that seems suitable
+              // TOOD: should go first for cellchar (spacing 110) then mono, then else
               FcPattern *p = FcPatternCreate ();
 
               FcCharSet *s = FcCharSetCreate ();
