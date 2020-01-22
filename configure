@@ -5354,7 +5354,7 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
-for ac_header in sys/inotify.h sys/epoll.h sys/event.h port.h poll.h
+for ac_header in sys/inotify.h sys/epoll.h sys/event.h port.h poll.h sys/timerfd.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_cxx_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
@@ -5367,7 +5367,7 @@ fi
 
 done
 
-for ac_header in sys/select.h sys/eventfd.h sys/signalfd.h linux/aio_abi.h
+for ac_header in sys/select.h sys/eventfd.h sys/signalfd.h linux/aio_abi.h linux/fs.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_cxx_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
@@ -5570,6 +5570,17 @@ done
 
 fi
 done
+
+
+ac_fn_cxx_check_type "$LINENO" "__kernel_rwf_t" "ac_cv_type___kernel_rwf_t" "#include <linux/fs.h>
+"
+if test "x$ac_cv_type___kernel_rwf_t" = xyes; then :
+
+
+$as_echo "#define HAVE_KERNEL_RWF_T 1" >>confdefs.h
+
+
+fi
 
 
 if test -z "$LIBEV_M4_AVOID_LIBM"; then
