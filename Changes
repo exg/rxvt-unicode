@@ -41,11 +41,11 @@ TODO: üpixel droppins idenrasm,ll,scrollup
 TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, in xterm/vt102, but not in rxvt
 TODO: implement xterms nih 1006 mouse mode because the fud campaign against urxvt's 1015 mode works.
 
-TODO: confirm-pastes should check for any ctl
 TODO: confirm-paste should be the default
 TODO: bracketed paste mode pastes ^[[200~ etc. into incremental-search inputs
 TODO: xterm-osc does not autoload background
 TODO: think about daemon delaying urxvt client exit.
+TODO: libev update
 	- the old bg image resources are now provided by the background
 	  extension, and perl is thus required for bg image support. No
 	  configuration change is needed: urxvt autoloads the background
@@ -53,6 +53,7 @@ TODO: think about daemon delaying urxvt client exit.
           work you need to enable it explicity). The old bg image
 	  resources are also now deprecated; users are encouraged to
 	  switch to the new bg image interface (see man urxvt-background).
+        - confirm-paste now checks for any ctlchars, not just newlines.
 	- drop ISO 2022 locale support. ISO 2022 encodings are not supported in
           POSIX locales and clash with vt100 charset emulation (the luit
           program can be used as a substitute).
