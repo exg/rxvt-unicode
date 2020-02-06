@@ -21,14 +21,15 @@ sub msg {
 sub on_tt_paste {
    my ($self, $str) = @_;
 
-   my $count = ($str =~ tr/\012\015//);
+   my $count = ($str =~ tr/[\x00-\x1f\x80-\x9f]//);
 
    return unless $count;
 
    $self->{paste} = \$str;
-   $self->msg ("Paste of $count lines, continue? (y/n)");
+   $self->msg ("Pasting $count control characters, continue? (y/n)");
    my $preview = substr $self->locale_decode ($str), 0, $self->ncol;
    $preview =~ s/\n/\\n/g;
+   $preview =~ s/([\x00-\x1f\x80-\x9f])/sprintf "\\x%02x", ord $1/ge;
    $self->{overlay}->set (0, 1, $self->special_encode ($preview));
    $self->enable (key_press => \&key_press);
 
