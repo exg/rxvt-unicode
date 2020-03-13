@@ -42,7 +42,6 @@ TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, 
 TODO: implement xterms nih 1006 mouse mode because the fud campaign against urxvt's 1015 mode works.
 
 TODO: confirm-paste should be the default
-TODO: bracketed paste mode pastes ^[[200~ etc. into incremental-search inputs
 TODO: xterm-osc does not autoload background
 TODO: think about daemon delaying urxvt client exit.
 TODO: libev update
@@ -54,6 +53,8 @@ TODO: libev update
 	  resources are also now deprecated; users are encouraged to
 	  switch to the new bg image interface (see man urxvt-background).
         - confirm-paste now checks for any ctlchars, not just newlines.
+        - searchable scrollback will now ignore bracketed paste mode sequences
+          (prompted by Daniel Gröber's patch).
 	- drop ISO 2022 locale support. ISO 2022 encodings are not supported in
           POSIX locales and clash with vt100 charset emulation (the luit
           program can be used as a substitute).

@@ -244,6 +244,7 @@ sub tt_write {
    my ($self, $data) = @_;
 
    $self->{search} .= $self->locale_decode ($data);
+   $self->{search} =~ s/\e\[20[01]~//g;
 
    $self->{search} =~ s/^\(\?i\)//
       if $self->{search} =~ /^\(.*[[:upper:]]/;
