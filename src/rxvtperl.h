@@ -51,7 +51,9 @@ struct rxvt_perl_interp
 {
   char **perl_environ;
 
+  #if 0 // see rxvtperl.xs
   ~rxvt_perl_interp ();
+  #endif
 
   void init ();
   void init (rxvt_term *term);

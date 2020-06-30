@@ -372,6 +372,9 @@ struct rxvt_perl_interp rxvt_perl;
 
 static PerlInterpreter *perl;
 
+#if 0 /* we are not a library anymore, so doing this is just not worth it */
+/*THINK/TODO: this has the side effect of, of course, not calling destructors. */
+/* but therse are not guaranteed anyway... */
 rxvt_perl_interp::~rxvt_perl_interp ()
 {
   if (perl)
@@ -381,6 +384,7 @@ rxvt_perl_interp::~rxvt_perl_interp ()
       PERL_SYS_TERM ();
     }
 }
+#endif
 
 void
 rxvt_perl_interp::init ()

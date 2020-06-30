@@ -45,6 +45,8 @@ TODO: confirm-paste should be the default
 TODO: xterm-osc does not autoload background
 TODO: think about daemon delaying urxvt client exit.
 TODO: libev update
+	- do not destruct perl on exit anymore: this might fail for a variety of
+          reasons, and takes unneccessary time.
 	- the old bg image resources are now provided by the background
 	  extension, and perl is thus required for bg image support. No
 	  configuration change is needed: urxvt autoloads the background
