@@ -691,7 +691,7 @@ author's .Xdefaults entries, with comments on what they do. It's certainly
 not I<typical>, but what's typical...
 
    URxvt.cutchars: "()*,<>[]{}|'
-   URxvt.print-pipe: cat >/tmp/xxx
+   URxvt.print-pipe: cat >/some/path
 
 These are just for testing stuff.
 
