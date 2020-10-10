@@ -1091,7 +1091,7 @@ abbreviated modifier names:
 	B<Control>	B<C>
 	B<NumLock>	B<N>
 	B<Shift>	B<S>
-	B<Meta>	B<M>, B<A>
+	B<Meta>	B<M> I<or> B<A>
 	B<Lock>	B<L>
 	B<Mod1>	B<1>
 	B<Mod2>	B<2>
