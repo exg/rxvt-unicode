@@ -45,6 +45,8 @@ TODO: confirm-paste should be the default
 TODO: xterm-osc does not autoload background
 TODO: think about daemon delaying urxvt client exit.
 TODO: libev update
+
+TODO: https://salsa.debian.org/debian/rxvt-unicode/-/blob/master/debian/patches/18_expand_urxvt-tabbed.1.diff
 	- do not destruct perl on exit anymore: this might fail for a variety of
           reasons, and takes unneccessary time.
 	- the old bg image resources are now provided by the background
@@ -91,6 +93,8 @@ TODO: libev update
         - update to libecb 0x00010006.
         - disable all thread support in ecb.h as we presumably don't need it.
         - slightly improve Makefile source dependencies.
+        - work around bugs in newer Pod::Xhtml versions (flags incorrect formatting codes
+          in xhtml/html sections but does not interpret correct ones).
 
 9.22 Sat Jan 23 21:07:33 CET 2016
 	- NOTICE: this release updates terminfo.

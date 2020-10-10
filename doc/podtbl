@@ -27,8 +27,8 @@ sub htmlfcodes {
    );
    # strip formatting codes, dumb version
    map {
-         s/([IBCLFSXZ])<< (.*?) >>/<$tag{$1}>$2<\/$tag{$1}>/gs;
-         s/([IBCLFSXZ])<(.*?)>/<$tag{$1}>$2<\/$tag{$1}>/gs;
+         s/([IBCLFSXZ])<< (.*?) >>/<$tag{$1}>$2 <\/$tag{$1}>/gs;
+         s/([IBCLFSXZ])<(.*?)>/<$tag{$1}>$2 <\/$tag{$1}>/gs;
          $_
        } @$_;
 }
@@ -82,11 +82,11 @@ sub verbatim {
 #   print $fh "=begin xhtml\n\n";
 
    print $fh "=for xhtml <table>";
-   print $fh map "<tr><td>" . +(join "</td><td>", htmlfcodes @$_) . "</td></tr>", @$table;
+   print $fh map "<tr><td>" . +(join " </td><td>", htmlfcodes @$_) . " </td></tr>", @$table;
    print $fh "</table>\n\n";
 
    print $fh "=for html <table>";
-   print $fh map "<tr><td>" . +(join "</td><td>", htmlfcodes @$_) . "</td></tr>", @$table;
+   print $fh map "<tr><td>" . +(join " </td><td>", htmlfcodes @$_) . " </td></tr>", @$table;
    print $fh "</table>\n\n";
 
 #   print $fh "\n=end xhtml\n\n";
