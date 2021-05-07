@@ -39,7 +39,6 @@ TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
 TODO: üpixel droppins idenrasm,ll,scrollup
 TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, in xterm/vt102, but not in rxvt
-TODO: implement xterms nih 1006 mouse mode because the fud campaign against urxvt's 1015 mode works.
 
 TODO: confirm-paste should be the default
 TODO: xterm-osc does not autoload background
@@ -77,6 +76,7 @@ TODO: https://salsa.debian.org/debian/rxvt-unicode/-/blob/master/debian/patches/
           no longer reply with linefeed in secure/default mode.
 	- ISO 8613-3 direct colour SGR sequences (patch by Fengguang Wu).
 	- xterm focus reporting mode (patch by Daniel Hahler).
+	- xterm SGR mouse mode.
 	- in some window managers, if smart resize was enabled, urxvt
 	  erroneously moved the window on font change - awesome bug
 	  #532, arch linux bug ##34807 (patch by Uli Schlachter).
