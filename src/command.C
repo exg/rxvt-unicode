@@ -1279,9 +1279,9 @@ rxvt_term::pointer_cb (ev::timer &w, int revents)
 void
 rxvt_term::mouse_report (XButtonEvent &ev)
 {
-  int button_number, key_state = 0;
+  int button_number, state = 0;
   int x, y;
-  int code = 32;
+  bool release = ev.type == ButtonRelease;
 
   x = Pixel2Col (ev.x) + 1;
   y = Pixel2Row (ev.y) + 1;
@@ -1293,18 +1293,13 @@ rxvt_term::mouse_report (XButtonEvent &ev)
 
       mouse_row = x;
       mouse_col = y;
-      code += 32;
+      state += 32;
     }
 
-  if (MEvent.button == AnyButton)
-    button_number = 3;
-  else
-    {
-      button_number = MEvent.button - Button1;
-      /* add 0x3D for wheel events, like xterm does */
-      if (button_number >= 3)
-        button_number += 64 - 3;
-    }
+  button_number = MEvent.button - Button1;
+  /* add 0x3D for wheel events, like xterm does */
+  if (button_number >= 3)
+    button_number += 64 - 3;
 
   if (priv_modes & PrivMode_MouseX10)
     {
@@ -1312,8 +1307,7 @@ rxvt_term::mouse_report (XButtonEvent &ev)
        * do not report ButtonRelease
        * no state info allowed
        */
-      key_state = 0;
-      if (button_number == 3)
+      if (release)
         return;
     }
   else
@@ -1325,23 +1319,25 @@ rxvt_term::mouse_report (XButtonEvent &ev)
        * plus will add in our own Double-Click reporting
        *  32 = Double Click
        */
-      key_state = ((MEvent.state & ShiftMask) ? 4 : 0)
-                  + ((MEvent.state & ModMetaMask) ? 8 : 0)
-                  + ((MEvent.state & ControlMask) ? 16 : 0);
+      state += ((MEvent.state & ShiftMask) ? 4 : 0)
+               + ((MEvent.state & ModMetaMask) ? 8 : 0)
+               + ((MEvent.state & ControlMask) ? 16 : 0);
 #ifdef MOUSE_REPORT_DOUBLECLICK
-      key_state += ((MEvent.clicks > 1) ? 32 : 0);
+      state += ((MEvent.clicks > 1) ? 32 : 0);
 #endif
     }
 
+  int code = 32 + (release ? 3 : button_number) + state;
+
 #if DEBUG_MOUSEREPORT
   fprintf (stderr, "Mouse [");
-  if (key_state & 16)
+  if (state & 16)
     fputc ('C', stderr);
-  if (key_state & 4)
+  if (state & 4)
     fputc ('S', stderr);
-  if (key_state & 8)
+  if (state & 8)
     fputc ('A', stderr);
-  if (key_state & 32)
+  if (state & 32)
     fputc ('2', stderr);
   fprintf (stderr, "]: <%d>, %d/%d\n",
           button_number,
@@ -1350,20 +1346,26 @@ rxvt_term::mouse_report (XButtonEvent &ev)
 #endif
 
 #if ENABLE_FRILLS
-  if (priv_modes & PrivMode_ExtMouseRight)
+  if (priv_modes & PrivMode_ExtMouseSGR)
+    tt_printf ("\033[<%d;%d;%d%c",
+              button_number + state,
+              x,
+              y,
+              release ? 'm' : 'M');
+  else if (priv_modes & PrivMode_ExtMouseRight)
     tt_printf ("\033[%d;%d;%dM",
-              code + button_number + key_state,
+              code,
               x,
               y);
   else if (priv_modes & PrivMode_ExtModeMouse)
     tt_printf ("\033[M%c%lc%lc",
-              code + button_number + key_state,
+              code,
               wint_t (32 + x),
               wint_t (32 + y));
   else
 #endif
     tt_printf ("\033[M%c%c%c",
-              code + button_number + key_state,
+              code,
               32 + x,
               32 + y);
 }
@@ -2151,11 +2153,11 @@ rxvt_term::button_release (XButtonEvent &ev)
                       > multiClickTime / 2)))
             {
               MEvent.clicks = 0;
-              MEvent.button = AnyButton;
+              MEvent.button = ev.button;
               mouse_report (ev);
             }
 #else				/* MOUSE_REPORT_DOUBLECLICK */
-          MEvent.button = AnyButton;
+          MEvent.button = ev.button;
           mouse_report (ev);
 #endif /* MOUSE_REPORT_DOUBLECLICK */
           return;
@@ -2876,7 +2878,7 @@ rxvt_term::process_csi_seq ()
                 scr_soft_reset ();
 
                 static const int pm_h[] = { 7, 25 };
-                static const int pm_l[] = { 1, 3, 4, 5, 6, 9, 66, 1000, 1001, 1005, 1015, 1049 };
+                static const int pm_l[] = { 1, 3, 4, 5, 6, 9, 66, 1000, 1001, 1005, 1006, 1015, 1049 };
 
                 process_terminal_mode ('h', 0, ecb_array_length (pm_h), pm_h);
                 process_terminal_mode ('l', 0, ecb_array_length (pm_l), pm_l);
@@ -3703,6 +3705,7 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
 #if ENABLE_FRILLS
                   { 1004, PrivMode_FocusEvent },
                   { 1005, PrivMode_ExtModeMouse },
+                  { 1006, PrivMode_ExtMouseSGR },
 #endif
                   { 1010, PrivMode_TtyOutputInh }, // rxvt extension
                   { 1011, PrivMode_Keypress }, // rxvt extension
@@ -3981,7 +3984,7 @@ rxvt_term::process_sgr_mode (unsigned int nargs, const int *arg)
             {
               unsigned int fgbg = arg[i] == 38 ? Color_fg : Color_bg;
               unsigned int idx;
-            
+
               if (nargs > i + 2 && arg[i + 1] == 5)
                 {
                   idx = minCOLOR + arg[i + 2];
