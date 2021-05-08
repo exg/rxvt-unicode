@@ -1152,7 +1152,7 @@ vertical radius of 0 disables blurring.
 =head2 OSC sequences
 
 This extension will react to the following OSC sequences. Note that
-this extension will not be autoloaded when these are used currenmtly,
+this extension will not be autoloaded when these are used currently,
 so to make urxvt recognize them, you have to enable the C<background>
 extension. One way to achieve that is to use the C<--background-expr ''>
 command line argument or by specifying an empty C<URxvt.background.expr:>>
