@@ -1352,12 +1352,12 @@ rxvt_term::mouse_report (XButtonEvent &ev)
               x,
               y,
               release ? 'm' : 'M');
-  else if (priv_modes & PrivMode_ExtMouseRight)
+  else if (priv_modes & PrivMode_ExtMouseUrxvt)
     tt_printf ("\033[%d;%d;%dM",
               code,
               x,
               y);
-  else if (priv_modes & PrivMode_ExtModeMouse)
+  else if (priv_modes & PrivMode_ExtMouseUTF8)
     tt_printf ("\033[M%c%lc%lc",
               code,
               wint_t (32 + x),
@@ -3704,13 +3704,13 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
                   { 1003, PrivMode_MouseAnyEvent },
 #if ENABLE_FRILLS
                   { 1004, PrivMode_FocusEvent },
-                  { 1005, PrivMode_ExtModeMouse },
+                  { 1005, PrivMode_ExtMouseUTF8 },
                   { 1006, PrivMode_ExtMouseSGR },
 #endif
                   { 1010, PrivMode_TtyOutputInh }, // rxvt extension
                   { 1011, PrivMode_Keypress }, // rxvt extension
 #if ENABLE_FRILLS
-                  { 1015, PrivMode_ExtMouseRight }, // urxvt extension of 1005
+                  { 1015, PrivMode_ExtMouseUrxvt }, // urxvt extension of 1005
 #endif
                  // 1035 enable modifiers for alt, numlock NYI
                  // 1036 send ESC for meta keys NYI

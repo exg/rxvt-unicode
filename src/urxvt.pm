@@ -525,8 +525,8 @@ PrivMode_HaveBackSpace, PrivMode_BackSpace, PrivMode_ShiftKeys,
 PrivMode_VisibleCursor, PrivMode_MouseX10, PrivMode_MouseX11,
 PrivMode_scrollBar, PrivMode_TtyOutputInh, PrivMode_Keypress,
 PrivMode_smoothScroll, PrivMode_vt52, PrivMode_LFNL, PrivMode_MouseBtnEvent,
-PrivMode_MouseAnyEvent, PrivMode_BracketPaste, PrivMode_ExtModeMouse,
-PrivMode_ExtMouseRight, PrivMode_BlinkingCursor, PrivMode_mouse_report,
+PrivMode_MouseAnyEvent, PrivMode_BracketPaste, PrivMode_ExtMouseUTF8,
+PrivMode_ExtMouseUrxvt, PrivMode_BlinkingCursor, PrivMode_mouse_report,
 PrivMode_Default
 
 Constants for checking DEC private modes.
