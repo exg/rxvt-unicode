@@ -691,7 +691,6 @@ rxvt_img::brightness (int32_t r, int32_t g, int32_t b, int32_t a)
   // loop should not be needed for brightness, as only -1..1 makes sense
   //while (r | g | b | a)
     {
-      unsigned short xr, xg, xb, xa;
       XRenderColor mask_c;
 
       if (extract (0, 65535, r, g, b, a, mask_c.red, mask_c.green, mask_c.blue, mask_c.alpha))
@@ -733,7 +732,6 @@ rxvt_img::contrast (int32_t r, int32_t g, int32_t b, int32_t a)
   //TODO: this operator does not yet implement some useful contrast
   while (r | g | b | a)
     {
-      unsigned short xr, xg, xb, xa;
       XRenderColor mask_c;
 
       if (extract (0, 65535, r, g, b, a, mask_c.red, mask_c.green, mask_c.blue, mask_c.alpha))
