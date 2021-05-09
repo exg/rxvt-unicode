@@ -2869,6 +2869,8 @@ rxvt_term::process_csi_seq ()
           case '?':
             if (ch == 'h' || ch == 'l' || ch == 'r' || ch == 's' || ch == 't')
               process_terminal_mode (ch, priv, nargs, arg);
+            if (prev_ch == '$' && ch == 'p')
+              process_terminal_mode (ch, priv, nargs, arg);
             break;
 
           case '!':
@@ -3728,6 +3730,24 @@ rxvt_term::process_terminal_mode (int mode, int priv ecb_unused, unsigned int na
 
   if (nargs == 0)
     return;
+
+  // DECRQM
+  if (mode == 'p')
+    {
+      int status = 0;
+      if (nargs != 1)
+        return;
+
+      for (j = 0; j < ecb_array_length (argtopriv); j++)
+        if (argtopriv[j].argval == arg[0])
+          {
+            status = (priv_modes & argtopriv[j].bit) ? 1 : 2;
+            break;
+          }
+
+      tt_printf ("\33[?%d;%d$y", arg[0], status);
+      return;
+    }
 
   /* make lo/hi boolean */
   if (mode == 'l')
