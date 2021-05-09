@@ -79,6 +79,9 @@ TODO: https://salsa.debian.org/debian/rxvt-unicode/-/blob/master/debian/patches/
 	- ISO 8613-3 direct colour SGR sequences (patch by Fengguang Wu).
 	- xterm focus reporting mode (patch by Daniel Hahler).
 	- xterm SGR mouse mode.
+	- implement DECRQM. Patch by Přemysl Eric Janouch.
+	- add missing color index parameter to OSC 4 response. Patch
+	  by Přemysl Eric Janouch.
 	- in some window managers, if smart resize was enabled, urxvt
 	  erroneously moved the window on font change - awesome bug
 	  #532, arch linux bug ##34807 (patch by Uli Schlachter).
