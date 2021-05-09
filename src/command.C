@@ -3397,15 +3397,19 @@ rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
 {
   if (str[0] == '?' && !str[1])
     {
+      if (!IN_RANGE_INC (color, minCOLOR, maxTermCOLOR))
+        return;
+
       rgba c;
       pix_colors_focused[color].get (c);
+      color -= minCOLOR;
 
 #if XFT
       if (c.a != rgba::MAX_CC)
-        tt_printf ("\033]%d;rgba:%04x/%04x/%04x/%04x%c", report, c.r, c.g, c.b, c.a, resp);
+        tt_printf ("\033]%d;%d;rgba:%04x/%04x/%04x/%04x%c", report, color, c.r, c.g, c.b, c.a, resp);
       else
 #endif
-        tt_printf ("\033]%d;rgb:%04x/%04x/%04x%c", report, c.r, c.g, c.b, resp);
+        tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", report, color, c.r, c.g, c.b, resp);
     }
   else
     set_window_color (color, str);
