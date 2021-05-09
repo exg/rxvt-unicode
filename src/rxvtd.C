@@ -75,13 +75,20 @@ struct unix_listener {
 
   void accept_cb (ev::io &w, int revents); ev::io accept_ev;
 
-  unix_listener (const char *sockname);
+  unix_listener (int fd);
+  static int open (const char *sockname);
 };
 
-unix_listener::unix_listener (const char *sockname)
+unix_listener::unix_listener (int fd) : fd (fd)
 {
   accept_ev.set<unix_listener, &unix_listener::accept_cb> (this);
+  fcntl (fd, F_SETFD, FD_CLOEXEC);
+  fcntl (fd, F_SETFL, O_NONBLOCK);
+  accept_ev.start (fd, ev::READ);
+}
 
+int unix_listener::open (const char *sockname)
+{
   sockaddr_un sa;
 
   if (strlen (sockname) >= sizeof(sa.sun_path))
@@ -90,14 +97,12 @@ unix_listener::unix_listener (const char *sockname)
       exit (EXIT_FAILURE);
     }
 
+  int fd;
   if ((fd = socket (AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
       perror ("unable to create listening socket");
       exit (EXIT_FAILURE);
     }
-
-  fcntl (fd, F_SETFD, FD_CLOEXEC);
-  fcntl (fd, F_SETFL, O_NONBLOCK);
 
   sa.sun_family = AF_UNIX;
   strcpy (sa.sun_path, sockname);
@@ -120,7 +125,7 @@ unix_listener::unix_listener (const char *sockname)
       exit (EXIT_FAILURE);
     }
 
-  accept_ev.start (fd, ev::READ);
+  return fd;
 }
 
 void unix_listener::accept_cb (ev::io &w, int revents)
@@ -224,6 +229,48 @@ void server::read_cb (ev::io &w, int revents)
     return err ();
 }
 
+#ifdef ENABLE_FRILLS
+enum {
+  SD_LISTEN_FDS_START = 3,
+};
+
+// https://www.freedesktop.org/software/systemd/man/sd_listen_fds.html
+// https://github.com/systemd/systemd/blob/main/src/libsystemd/sd-daemon/sd-daemon.c
+static int get_listen_fds ()
+{
+  const char *listen_pid = getenv ("LISTEN_PID");
+  if (!listen_pid)
+    return 0;
+
+  char *end;
+  errno = 0;
+  long pid = strtol (listen_pid, &end, 10);
+  if (errno || end == listen_pid || *end)
+    return -1;
+
+  if (getpid () != pid)
+    return 0;
+
+  const char *listen_fds = getenv ("LISTEN_FDS");
+  if (!listen_fds)
+    return 0;
+
+  errno = 0;
+  long n = strtol (listen_fds, &end, 10);
+  if (errno || end == listen_fds || *end)
+    return -1;
+
+  if (n <= 0 || n > INT_MAX - SD_LISTEN_FDS_START)
+    return -1;
+
+  unsetenv ("LISTEN_PID");
+  unsetenv ("LISTEN_FDS");
+  unsetenv ("LISTEN_FDNAMES");
+
+  return n;
+}
+#endif
+
 int
 main (int argc, char *argv[])
 {
@@ -275,18 +322,39 @@ main (int argc, char *argv[])
     if (const char *dpy = getenv ("DISPLAY"))
       displays.get (dpy ? dpy : ":0"); // move string logic into rxvt_display maybe?
 
-  char *sockname = rxvt_connection::unix_sockname ();
-  unix_listener l (sockname);
-
-  chdir ("/");
-
-  if (!opt_quiet)
+  int fd;
+#ifdef ENABLE_FRILLS
+  int n = get_listen_fds ();
+  if (n > 1)
     {
-      printf ("rxvt-unicode daemon listening on %s.\n", sockname);
-      fflush (stdout);
+      fputs ("received multiple file descriptors, aborting.\n", stderr);
+      exit (EXIT_FAILURE);
+    }
+  else if (n == 1)
+    {
+      fd = SD_LISTEN_FDS_START;
+      if (!opt_quiet)
+        {
+          printf ("rxvt-unicode daemon listening on fd.\n");
+          fflush (stdout);
+        }
+    }
+  else
+#endif
+    {
+      char *sockname = rxvt_connection::unix_sockname ();
+      fd = unix_listener::open (sockname);
+      if (!opt_quiet)
+        {
+          printf ("rxvt-unicode daemon listening on %s.\n", sockname);
+          fflush (stdout);
+        }
+      free (sockname);
     }
 
-  free (sockname);
+  unix_listener l (fd);
+
+  chdir ("/");
 
   pid_t pid = 0;
   if (opt_fork)

@@ -105,6 +105,13 @@ variable F<RXVT_SOCKET> to create a listening socket and to contact
 the @@RXVT_NAME@@d, respectively. If the variable is missing then
 F<<< $HOME/.urxvt/urxvtd-I<< <nodename> >> >>> is used.
 
+=item B<LISTEN_PID>, B<LISTEN_FDS>, B<LISTEN_FDNAMES>
+
+if these environment variables are set, @@RXVT_NAME@@d checks for a file
+descriptor passed by the service manager via systemd native interface. If
+one is provided, @@RXVT_NAME@@d uses it as its listening socket instead of
+creating one as specified above.
+
 =item B<DISPLAY>
 
 Only used when the C<--opendisplay> option is specified. Must contain a

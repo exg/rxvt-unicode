@@ -106,6 +106,34 @@ meaning it couldn't connect to the daemon, it will start the daemon and
 re-run the command. Subsequent invocations of the script will re-use the
 existing daemon.
 
+Another option is to use systemd socket-based activation (see
+systemd.socket(5)). Here is an example of a service unit file and of a
+socket unit file for the default socket path:
+
+=over 4
+
+=item urxvtd.service
+
+  [Unit]
+  Description=urxvt terminal daemon
+  Requires=urxvtd.socket
+
+  [Service]
+  ExecStart=/usr/bin/urxvtd -o
+
+=item urxvtd.socket
+
+  [Unit]
+  Description=urxvt terminal daemon socket
+
+  [Socket]
+  ListenStream=%h/.urxvt/urxvtd-%H
+
+  [Install]
+  WantedBy=sockets.target
+
+=back
+
 =head3 How do I distinguish whether I'm running rxvt-unicode or a regular
 xterm? I need this to decide about setting colours etc.
 
@@ -2519,6 +2547,7 @@ in combination with other switches) is:
   focus reporting mode (1004).
   extended mouse reporting modes (1005, 1006 and 1015).
   visual selection via -visual and -depth.
+  systemd socket activation
 
 It also enables some non-essential features otherwise disabled, such as:
 
