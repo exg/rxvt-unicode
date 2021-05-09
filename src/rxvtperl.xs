@@ -379,6 +379,7 @@ rxvt_perl_interp::~rxvt_perl_interp ()
 {
   if (perl)
     {
+      localise_env set_environ (perl_environ);
       perl_destruct (perl);
       perl_free (perl);
       PERL_SYS_TERM ();
