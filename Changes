@@ -46,6 +46,8 @@ TODO: think about daemon delaying urxvt client exit.
 TODO: libev update
 
 TODO: https://salsa.debian.org/debian/rxvt-unicode/-/blob/master/debian/patches/18_expand_urxvt-tabbed.1.diff
+	- add support for systemd socket-based activation - debian bug #917105,
+	  freebsd bug #234276.
 	- do not destruct perl on exit anymore: this might fail for a variety of
           reasons, and takes unneccessary time.
 	- the old bg image resources are now provided by the background
