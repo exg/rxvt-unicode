@@ -136,7 +136,7 @@
 #define DEFER_TIME	3
 #define ADJUST_TIME
 
-#define CENTURY		2000 / TODO: verify */
+#define CENTURY		2000 /* TODO: verify */
 
 /*----------------------------------------------------------------------*
  * #define FONT_NAME	"7x14"
@@ -280,12 +280,12 @@ static void geometry2sizehint (mywindow_t * /* win */ ,
                                const char * /* geom */ );
 static void Create_Windows (int /* argc */ ,
                             char * /* argv */ []);
-static void getXevent (void);
+static void getXevent ();
 static void print_error (const char * /* fmt */ , ...);
 
 static void Draw_Window (mywindow_t * /* this_win */ ,
                          int /* full_redraw */ );
-static void Reminder (void);
+static void Reminder ();
 static void Next_Reminder (int /* update_only */ );
 
 /* Arguments for Next_Reminder() */
@@ -295,7 +295,7 @@ static void Next_Reminder (int /* update_only */ );
 /*----------------------------------------------------------------------*/
 
 static void
-usage (void)
+usage ()
 {
   int i;
   struct
@@ -344,7 +344,7 @@ usage (void)
  */
 #ifdef MAIL
 static void
-CheckMaildir (void)
+CheckMaildir ()
 {
   struct stat st;
   char *buf, *p;
@@ -744,7 +744,6 @@ mk_time (struct tm *tmval)
 {
   return (tmval->tm_min + 60 * (tmval->tm_hour + 24 * (tmval->tm_mday + 31 * ((tmval->tm_mon + 1) + 12 * tmval->tm_year))));
 }
-
 
 #ifdef MAIL
 static int
@@ -1405,7 +1404,7 @@ Next_Reminder (int update_only)
  * Provide reminder by mapping the message window
  */
 static void
-Reminder (void)
+Reminder ()
 {
   char *beg, *next;
   int lines;
@@ -1478,7 +1477,7 @@ Reminder (void)
  * Loops forever, looking for stuff to do. Sleeps 1 minute if nothing to do
  */
 static void
-getXevent (void)
+getXevent ()
 {
   XEvent ev;
   int num_fds;                  /* number of file descriptors being used */
