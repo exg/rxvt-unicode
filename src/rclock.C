@@ -312,20 +312,19 @@ main (int argc, char * argv [])
      {
 	const char * spool = MAIL_SPOOL;
 	char * user = getenv ("USER");	/* assume this works */
-	val = malloc (strlen (spool) + strlen (user) + 1);
-	if (val == NULL)
-	  goto Malloc_Error;
-	strcpy (val, spool);
-	strcat (val, user);
+	if (user != NULL) {
+	  val = malloc (strlen (spool) + strlen (user) + 1);
+	  if (val == NULL)
+	    goto Malloc_Error;
+	  strcpy (val, spool);
+	  strcat (val, user);
+	}
      }
 #endif
    mail_file = val;
    if( mail_file )
        CheckMaildir();
 #endif
-
-   if ((display_name = getenv ("DISPLAY")) == NULL)
-     display_name = ":0";
 
    /* parse the command line */
    for (i = 1; i < argc; i += 2)
@@ -424,7 +423,9 @@ main (int argc, char * argv [])
    Xdisplay = XOpenDisplay (display_name);
    if (!Xdisplay)
      {
-	print_error ("can't open display %s", display_name);
+	print_error ("can't open display %s", display_name?display_name:
+			getenv("DISPLAY")?getenv("DISPLAY"):
+			"as no -d given and DISPLAY not set");
 	goto Abort;
      }
 
@@ -705,19 +706,68 @@ static void
 Draw_Window (mywindow_t * W, int full_redraw)
 {
    /* pre-computed values for sin() x1000, to avoid using floats */
-   static const short Sin [60] = {
-      0,
-      105, 208, 309, 407, 500, 588, 669,
-      743, 809, 866, 914, 951, 978, 995,
-      1000,
-      995, 978, 951, 914, 866, 809, 743,
-      669, 588, 500, 407, 309, 208, 105,
-      0,
-      -105, -208, -309, -407, -500, -588, -669,
-      -743, -809, -866, -914, -951, -978, -995,
-      -1000,
-      -995, -978, -951, -914, -866, -809, -743,
-      -669, -588, -500, -407, -309, -208, -105
+   static const short Sin [720] = {
+	    0,
+	    9,    17,    26,    35,    44,    52,    61,    70,    78,    87,    96,   105,
+	  113,   122,   131,   139,   148,   156,   165,   174,   182,   191,   199,   208,
+	  216,   225,   233,   242,   250,   259,   267,   276,   284,   292,   301,   309,
+	  317,   326,   334,   342,   350,   358,   367,   375,   383,   391,   399,   407,
+	  415,   423,   431,   438,   446,   454,   462,   469,   477,   485,   492,   500,
+	  508,   515,   522,   530,   537,   545,   552,   559,   566,   574,   581,   588,
+	  595,   602,   609,   616,   623,   629,   636,   643,   649,   656,   663,   669,
+	  676,   682,   688,   695,   701,   707,   713,   719,   725,   731,   737,   743,
+	  749,   755,   760,   766,   772,   777,   783,   788,   793,   799,   804,   809,
+	  814,   819,   824,   829,   834,   839,   843,   848,   853,   857,   862,   866,
+	  870,   875,   879,   883,   887,   891,   895,   899,   903,   906,   910,   914,
+	  917,   921,   924,   927,   930,   934,   937,   940,   943,   946,   948,   951,
+	  954,   956,   959,   961,   964,   966,   968,   970,   972,   974,   976,   978,
+	  980,   982,   983,   985,   986,   988,   989,   990,   991,   993,   994,   995,
+	  995,   996,   997,   998,   998,   999,   999,   999,  1000,  1000,  1000,  1000,
+	 1000,  1000,  1000,   999,   999,   999,   998,   998,   997,   996,   995,   995,
+	  994,   993,   991,   990,   989,   988,   986,   985,   983,   982,   980,   978,
+	  976,   974,   972,   970,   968,   966,   964,   961,   959,   956,   954,   951,
+	  948,   946,   943,   940,   937,   934,   930,   927,   924,   921,   917,   914,
+	  910,   906,   903,   899,   895,   891,   887,   883,   879,   875,   870,   866,
+	  862,   857,   853,   848,   843,   839,   834,   829,   824,   819,   814,   809,
+	  804,   799,   793,   788,   783,   777,   772,   766,   760,   755,   749,   743,
+	  737,   731,   725,   719,   713,   707,   701,   695,   688,   682,   676,   669,
+	  663,   656,   649,   643,   636,   629,   623,   616,   609,   602,   595,   588,
+	  581,   574,   566,   559,   552,   545,   537,   530,   523,   515,   508,   500,
+	  492,   485,   477,   469,   462,   454,   446,   438,   431,   423,   415,   407,
+	  399,   391,   383,   375,   367,   358,   350,   342,   334,   326,   317,   309,
+	  301,   292,   284,   276,   267,   259,   250,   242,   233,   225,   216,   208,
+	  199,   191,   182,   174,   165,   156,   148,   139,   131,   122,   113,   105,
+	   96,    87,    78,    70,    61,    52,    44,    35,    26,    17,     9,     0,
+	   -9,   -17,   -26,   -35,   -44,   -52,   -61,   -70,   -78,   -87,   -96,  -105,
+	 -113,  -122,  -131,  -139,  -148,  -156,  -165,  -174,  -182,  -191,  -199,  -208,
+	 -216,  -225,  -233,  -242,  -250,  -259,  -267,  -276,  -284,  -292,  -301,  -309,
+	 -317,  -326,  -334,  -342,  -350,  -358,  -366,  -375,  -383,  -391,  -399,  -407,
+	 -415,  -423,  -431,  -438,  -446,  -454,  -462,  -469,  -477,  -485,  -492,  -500,
+	 -508,  -515,  -522,  -530,  -537,  -545,  -552,  -559,  -566,  -574,  -581,  -588,
+	 -595,  -602,  -609,  -616,  -623,  -629,  -636,  -643,  -649,  -656,  -663,  -669,
+	 -676,  -682,  -688,  -695,  -701,  -707,  -713,  -719,  -725,  -731,  -737,  -743,
+	 -749,  -755,  -760,  -766,  -772,  -777,  -783,  -788,  -793,  -799,  -804,  -809,
+	 -814,  -819,  -824,  -829,  -834,  -839,  -843,  -848,  -853,  -857,  -862,  -866,
+	 -870,  -875,  -879,  -883,  -887,  -891,  -895,  -899,  -903,  -906,  -910,  -914,
+	 -917,  -921,  -924,  -927,  -930,  -934,  -937,  -940,  -943,  -946,  -948,  -951,
+	 -954,  -956,  -959,  -961,  -964,  -966,  -968,  -970,  -972,  -974,  -976,  -978,
+	 -980,  -982,  -983,  -985,  -986,  -988,  -989,  -990,  -991,  -993,  -994,  -995,
+	 -995,  -996,  -997,  -998,  -998,  -999,  -999,  -999, -1000, -1000, -1000, -1000,
+	-1000, -1000, -1000,  -999,  -999,  -999,  -998,  -998,  -997,  -996,  -995,  -995,
+	 -994,  -993,  -991,  -990,  -989,  -988,  -986,  -985,  -983,  -982,  -980,  -978,
+	 -976,  -974,  -972,  -970,  -968,  -966,  -964,  -961,  -959,  -956,  -954,  -951,
+	 -948,  -946,  -943,  -940,  -937,  -934,  -930,  -927,  -924,  -921,  -917,  -914,
+	 -910,  -906,  -903,  -899,  -895,  -891,  -887,  -883,  -879,  -875,  -870,  -866,
+	 -862,  -857,  -853,  -848,  -843,  -839,  -834,  -829,  -824,  -819,  -814,  -809,
+	 -804,  -799,  -793,  -788,  -783,  -777,  -772,  -766,  -760,  -755,  -749,  -743,
+	 -737,  -731,  -725,  -719,  -713,  -707,  -701,  -695,  -688,  -682,  -676,  -669,
+	 -663,  -656,  -649,  -643,  -636,  -629,  -623,  -616,  -609,  -602,  -595,  -588,
+	 -581,  -574,  -566,  -559,  -552,  -545,  -537,  -530,  -523,  -515,  -508,  -500,
+	 -492,  -485,  -477,  -469,  -462,  -454,  -446,  -438,  -431,  -423,  -415,  -407,
+	 -399,  -391,  -383,  -375,  -367,  -358,  -350,  -342,  -334,  -326,  -317,  -309,
+	 -301,  -292,  -284,  -276,  -267,  -259,  -250,  -242,  -233,  -225,  -216,  -208,
+	 -199,  -191,  -182,  -174,  -165,  -156,  -148,  -139,  -131,  -122,  -113,  -105,
+	  -96,   -87,   -78,   -70,   -61,   -52,   -44,   -35,   -26,   -17,    -9,
    };
 
    static int savedDay = -1;
@@ -905,26 +955,26 @@ Draw_Window (mywindow_t * W, int full_redraw)
    ctr_x = (W->width  / 2);
    ctr_y = (W->height / 2);
 
-#define XPOS(i,val) (ctr_x + (W->width  * Sin[i%60] * (val) + 100000) / 200000)
-#define YPOS(i,val) (ctr_y - (W->height * Sin[(i+15)%60] * (val) + 100000) / 200000)
+#define XPOS(i,val) (ctr_x + (W->width  * Sin[i%720] * (val) + 100000) / 200000)
+#define YPOS(i,val) (ctr_y - (W->height * Sin[(i+180)%720] * (val) + 100000) / 200000)
    /*
     * how to draw the clock face
     */
 
    /* calculate the positions of the hands */
      {
-	int angle = (tmval->tm_hour % 12) * 5 + (tmval->tm_min / 12);
+	int angle = (tmval->tm_hour % 12) * 60 + tmval->tm_min;
 	HandsNow.h_x = XPOS (angle, 60);
 	HandsNow.h_y = YPOS (angle, 60);
      }
      {
-	int angle = tmval->tm_min;
+	int angle = (tmval->tm_min * 12);
 	HandsNow.m_x = XPOS (angle, 80);
 	HandsNow.m_y = YPOS (angle, 80);
      }
    if (clockUpdate == 1)
      {
-	int angle = tmval->tm_sec;
+	int angle = (tmval->tm_sec * 12);
 	HandsNow.s_x = XPOS (angle, 85);
 	HandsNow.s_y = YPOS (angle, 85);
      }
@@ -955,7 +1005,7 @@ Draw_Window (mywindow_t * W, int full_redraw)
 		* I believe this should be drawn always so it does not get
 		* "swept away" by the minute hand.
     */
-#ifdef REMINDERS && DATE_ON_CLOCK_FACE
+#if defined(REMINDERS) && defined(DATE_ON_CLOCK_FACE)
    if( show_date)
      {
 	char date[10];
@@ -971,22 +1021,22 @@ Draw_Window (mywindow_t * W, int full_redraw)
 
    if (full_redraw)
      {
-	int angle;
+	int mintick;
 	/*
 	 * draw clock face
 	 */
 #ifdef SUBTICKS
-	for (angle = 0; angle < 60; angle++)
+	for (mintick = 0; mintick < 60; mintick++)
 	  XDrawPoint (Xdisplay, W->win, X_gc,
-		      XPOS (angle, 95),
-		      YPOS (angle, 95));
+		      XPOS ((mintick * 12), 95),
+		      YPOS ((mintick * 12), 95));
 #endif
-	for (angle = 0; angle < 60; angle += 5)
+	for (mintick = 0; mintick < 60; mintick += 5)
 	  XDrawLine (Xdisplay, W->win, X_gc,
-		     XPOS (angle, 90),
-		     YPOS (angle, 90),
-		     XPOS (angle, 100),
-		     YPOS (angle, 100));
+		     XPOS ((mintick * 12), 90),
+		     YPOS ((mintick * 12), 90),
+		     XPOS ((mintick * 12), 100),
+		     YPOS ((mintick * 12), 100));
      }
    else if (memcmp (pHandsOld, &HandsNow, sizeof(hands_t)))
      {
@@ -1258,8 +1308,16 @@ Next_Reminder (int update_only)
 		       int n = (sizeof(execPrgm) - strlen (execPrgm) - 2);
 		       if ((n > 0) && (n >= strlen (prgm)))
 			 {
-			    /* for co-occurring programs */
-			    strcat (execPrgm, ";");
+			   /* for co-occurring programs */
+			   switch (execPrgm[strlen (execPrgm)-1])
+			     {
+			     case '&':
+			     case ';':
+			       break;
+			     default:
+			       strcat (execPrgm, ";");
+			       break;
+			     }
 			    strncat (execPrgm, prgm, n);
 			 }
 		    }
