@@ -72,6 +72,9 @@ rxvtd: rxvtd.o $(COMMON) $(COMMON_DAEMON)
 rxvtc: rxvtc.o $(COMMON_DAEMON) fdpass_wrapper.o
 	$(LINK) -o $@ rxvtc.o $(COMMON_DAEMON) fdpass_wrapper.o $(LIBS)
 
+rclock: rclock.o
+	$(LINK) -o $@ rclock.o $(LIBS) $(XLIB)
+
 #-------------------------------------------------------------------------
 
 #EXUBERANT_OPTS = -I NOTHROW -I THROW
