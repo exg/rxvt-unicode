@@ -47,6 +47,10 @@ COMMON_DAEMON = rxvtdaemon.o
 RXVT_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)$(EXEEXT)
 RXVTC_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)c$(EXEEXT)
 RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)d$(EXEEXT)
+RCLOCK_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)clock$(EXEEXT)
+
+x:
+	echo $(RCLOCK_BINNAME)
 
 #
 # Distribution variables
