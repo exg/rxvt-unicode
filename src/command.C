@@ -3334,34 +3334,42 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b, unsi
 
   uint32_t color = (a << 24) | (r << 16) | (g << 8) | b;
 
-  unsigned int idx_r = r * (Red_levels   - 1) / 0xff;
-  unsigned int idx_g = g * (Green_levels - 1) / 0xff;
-  unsigned int idx_b = b * (Blue_levels  - 1) / 0xff;
-  unsigned int idx = colorcube_index (idx_r, idx_g, idx_b);
-
-  /* we allow one of the 6 directly neighbouring colours */
+  /* we allow one of the 6 closest neighbouring colours */
   /* to replace the current color, if they not used recently */
   static const signed char dxyz[][3] = {
-     0,  0,  0,
-     0,  0, +1,
-     0,  0, -1,
-     0, +1,  0,
-     0, -1,  0,
-    +1,  0,  0,
-    -1,  0,  0,
+    0, 0, 0,
+    0, 0, 4,
+    0, 4, 0,
+    4, 0, 0,
+    0, 4, 4,
+    4, 4, 0,
+    4, 0, 4,
   };
+
+  static const unsigned char color_level[8][32] = {
+    // neighbour index
+    {0, 0, 1, 0, 0, 1, 1, 2, 2, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+    {0, 1, 0, 1, 1, 2, 1, 1, 2, 2, 3, 3, 2, 2, 2, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4},
+    {0, 0, 1, 2, 1, 1, 2, 3, 3, 2, 2, 3, 3, 4, 4, 3, 3, 3, 4, 4, 5, 5, 5, 4, 4, 4, 5, 5, 5, 5, 5, 5},
+    {0, 0, 2, 1, 2, 3, 2, 2, 3, 4, 4, 3, 3, 4, 4, 5, 5, 4, 4, 5, 5, 5, 6, 6, 5, 5, 5, 6, 6, 6, 6, 6},
+    // Red_levels/Green_levels/Blue_levels index
+    {0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+    {0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
+    {0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5},
+    {0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6},
+  };
+
+  unsigned int idx;
 
   for (int n = 0; n < ecb_array_length (dxyz); ++n)
     {
-      int r = idx_r + dxyz[n][0];
-      int g = idx_g + dxyz[n][1];
-      int b = idx_b + dxyz[n][2];
+      unsigned int idx_r = color_level[  Red_levels - dxyz[n][0]][r / 8];
+      unsigned int idx_g = color_level[Green_levels - dxyz[n][1]][g / 8];
+      unsigned int idx_b = color_level[ Blue_levels - dxyz[n][2]][b / 8];
+      unsigned int index = colorcube_index (idx_r, idx_g, idx_b);
 
-      if (!IN_RANGE_EXC (r, 0, Red_levels  )) continue;
-      if (!IN_RANGE_EXC (g, 0, Green_levels)) continue;
-      if (!IN_RANGE_EXC (b, 0, Blue_levels )) continue;
-
-      unsigned int index = colorcube_index (r, g, b);
+      if (n == 0)
+        idx = index;
 
       if (rgb24_color[index] == color)
         {

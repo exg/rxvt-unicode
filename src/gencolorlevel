@@ -1,0 +1,40 @@
+#!/usr/bin/perl
+
+use strict;
+
+my @coeffs =
+   # (4, 5, 6, 7);
+   # (0.36, 0.6, 0.9, 1.3);
+   # (0.4, 0.7, 1.0, 1.4);
+   (0.48, 0.77, 1.1, 1.5);
+
+my @rows1;
+my @rows2;
+for my $coeff (@coeffs) {
+   my @row1;
+   my %occ;
+   for (0 .. 31) {
+      my $i = int sqrt $_ * $coeff;
+      push @row1, $i;
+      $occ{$i}++;
+   }
+
+   my @row2;
+   for my $i (sort keys %occ) {
+      my $n = $occ{$i};
+      my @values = ($i) x $n;
+      for my $j (1 .. ($n + 1) / 3) {
+         $values[$j - 1] = $i - 1 if $i > 0;
+         $values[-$j] = $i + 1 if $i < $row1[-1];
+      }
+      push @row2, @values;
+   }
+
+   push @rows1, \@row1;
+   push @rows2, \@row2;
+}
+
+print "static const unsigned char color_level[8][32] = {\n";
+print "  {" . join(", ", @$_) . "},\n" for @rows2;
+print "  {" . join(", ", @$_) . "},\n" for @rows1;
+print "}\n";
