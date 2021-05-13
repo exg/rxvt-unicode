@@ -47,7 +47,7 @@ COMMON_DAEMON = rxvtdaemon.o
 RXVT_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)$(EXEEXT)
 RXVTC_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)c$(EXEEXT)
 RXVTD_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)d$(EXEEXT)
-RCLOCK_BINNAME=$(DESTDIR)$(bindir)/$(RXVTNAME)clock$(EXEEXT)
+RCLOCK_BINNAME=$(DESTDIR)$(bindir)/urclock$(EXEEXT)
 
 #
 # Distribution variables
@@ -86,7 +86,7 @@ tags: *.[Ch]
 TAGS: *.[Ch]
 	etags $(EXUBERANT_OPTS) *.[Ch]
 
-allbin: rxvt rxvtd rxvtc
+allbin: rxvt rxvtd rxvtc rclock
 
 alldoc:
 
@@ -133,6 +133,7 @@ install-bin: allbin
 	$(INSTALL_PROGRAM) rxvt  $(RXVT_BINNAME)
 	$(INSTALL_PROGRAM) rxvtc $(RXVTC_BINNAME)
 	$(INSTALL_PROGRAM) rxvtd $(RXVTD_BINNAME)
+	$(INSTALL_PROGRAM) rclock $(RCLOCK_BINNAME)
 
 install: install-bin install-perl
 
