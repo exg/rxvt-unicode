@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+# generated the color_level table used when finding a nearby color in src/command.C
+
 use strict;
 
 my @coeffs =
