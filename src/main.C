@@ -61,7 +61,7 @@ rxvt_t rxvt_current_term;
 static char curlocale[128], savelocale[128];
 
 bool
-rxvt_set_locale (const char *locale) NOTHROW
+rxvt_set_locale (const char *locale) noexcept
 {
   int size = strlen (locale) + 1;
 
@@ -77,14 +77,14 @@ rxvt_set_locale (const char *locale) NOTHROW
 }
 
 void
-rxvt_push_locale (const char *locale) NOTHROW
+rxvt_push_locale (const char *locale) noexcept
 {
   strcpy (savelocale, curlocale);
   rxvt_set_locale (locale);
 }
 
 void
-rxvt_pop_locale () NOTHROW
+rxvt_pop_locale () noexcept
 {
   rxvt_set_locale (savelocale);
 }
@@ -359,7 +359,7 @@ rxvt_term::destroy_cb (ev::idle &w, int revents)
 }
 
 void
-rxvt_term::set_option (uint8_t opt, bool set) NOTHROW
+rxvt_term::set_option (uint8_t opt, bool set) noexcept
 {
   if (!opt)
     return;

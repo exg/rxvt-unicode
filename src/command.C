@@ -2354,7 +2354,7 @@ rxvt_term::cmd_parse ()
 
 // read the next character
 wchar_t ecb_hot
-rxvt_term::next_char () NOTHROW
+rxvt_term::next_char () noexcept
 {
   while (cmdbuf_ptr < cmdbuf_endp)
     {
@@ -2390,7 +2390,7 @@ rxvt_term::next_char () NOTHROW
 
 // read the next octet
 uint32_t ecb_hot
-rxvt_term::next_octet () NOTHROW
+rxvt_term::next_octet () noexcept
 {
   return cmdbuf_ptr < cmdbuf_endp
          ? (unsigned char)*cmdbuf_ptr++
@@ -2400,7 +2400,7 @@ rxvt_term::next_octet () NOTHROW
 static class out_of_input out_of_input;
 
 wchar_t ecb_hot
-rxvt_term::cmd_getc () THROW ((class out_of_input))
+rxvt_term::cmd_getc ()
 {
   wchar_t c = next_char ();
 
@@ -2411,7 +2411,7 @@ rxvt_term::cmd_getc () THROW ((class out_of_input))
 }
 
 uint32_t ecb_hot
-rxvt_term::cmd_get8 () THROW ((class out_of_input))
+rxvt_term::cmd_get8 ()
 {
   uint32_t c = next_octet ();
 

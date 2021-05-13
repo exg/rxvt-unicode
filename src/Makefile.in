@@ -78,13 +78,11 @@ rclock: rclock.o
 
 #-------------------------------------------------------------------------
 
-#EXUBERANT_OPTS = -I NOTHROW -I THROW
-
 tags: *.[Ch]
-	ctags $(EXUBERANT_OPTS) *.[Ch]
+	ctags *.[Ch]
 
 TAGS: *.[Ch]
-	etags $(EXUBERANT_OPTS) *.[Ch]
+	etags *.[Ch]
 
 allbin: rxvt rxvtd rxvtc rclock
 

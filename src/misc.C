@@ -31,20 +31,12 @@
 // alas new/delete cannot be specified as inline in C++11 (see 17.6.4.6)
 void *
 operator new (size_t s)
-#if !ECB_CPP11
-  throw (std::bad_alloc)
-#endif
 {
   return rxvt_malloc (s);
 }
 
 void
-operator delete (void *p)
-#if ECB_CPP11
-  noexcept
-#else
-  throw ()
-#endif
+operator delete (void *p) noexcept
 {
   free (p);
 }
@@ -191,7 +183,7 @@ rxvt_utf8towcs (const char *str, int len)
 }
 
 const char *
-rxvt_basename (const char *str) NOTHROW
+rxvt_basename (const char *str) noexcept
 {
   const char *base = strrchr (str, '/');
 
@@ -202,7 +194,7 @@ rxvt_basename (const char *str) NOTHROW
  * Print an error message
  */
 void
-rxvt_vlog (const char *fmt, va_list arg_ptr) NOTHROW
+rxvt_vlog (const char *fmt, va_list arg_ptr) noexcept
 {
   char msg[1024];
 
@@ -215,7 +207,7 @@ rxvt_vlog (const char *fmt, va_list arg_ptr) NOTHROW
 }
 
 void
-rxvt_log (const char *fmt,...) NOTHROW
+rxvt_log (const char *fmt,...) noexcept
 {
   va_list arg_ptr;
 
@@ -228,7 +220,7 @@ rxvt_log (const char *fmt,...) NOTHROW
  * Print an error message
  */
 void
-rxvt_warn (const char *fmt,...) NOTHROW
+rxvt_warn (const char *fmt,...) noexcept
 {
   va_list arg_ptr;
 
@@ -240,7 +232,7 @@ rxvt_warn (const char *fmt,...) NOTHROW
 }
 
 void
-rxvt_fatal (const char *fmt,...) THROW ((class rxvt_failure_exception))
+rxvt_fatal (const char *fmt,...)
 {
   va_list arg_ptr;
 
@@ -254,7 +246,7 @@ rxvt_fatal (const char *fmt,...) THROW ((class rxvt_failure_exception))
 }
 
 void
-rxvt_exit_failure () THROW ((class rxvt_failure_exception))
+rxvt_exit_failure ()
 {
   static class rxvt_failure_exception rxvt_failure_exception;
   throw (rxvt_failure_exception);
@@ -264,7 +256,7 @@ rxvt_exit_failure () THROW ((class rxvt_failure_exception))
  * remove leading/trailing space in place.
  */
 char *
-rxvt_strtrim (char *str) NOTHROW
+rxvt_strtrim (char *str) noexcept
 {
   char *r, *s;
 
@@ -292,7 +284,7 @@ rxvt_strtrim (char *str) NOTHROW
  * trailing spaces from each entry.  Empty strings are properly returned
  */
 char **
-rxvt_strsplit (char delim, const char *str) NOTHROW
+rxvt_strsplit (char delim, const char *str) noexcept
 {
   int l, n;
   char *s, *t;

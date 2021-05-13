@@ -137,9 +137,9 @@ class out_of_input { };
  */
 // main.C
 #define SET_LOCALE(locale) rxvt_set_locale (locale)
-extern bool rxvt_set_locale (const char *locale) NOTHROW;
-extern void rxvt_push_locale (const char *locale) NOTHROW;
-extern void rxvt_pop_locale () NOTHROW;
+extern bool rxvt_set_locale (const char *locale) noexcept;
+extern void rxvt_push_locale (const char *locale) noexcept;
+extern void rxvt_pop_locale () noexcept;
 void rxvt_init ();
 
 // misc.C
@@ -148,24 +148,24 @@ wchar_t *        rxvt_mbstowcs                    (const char *str, int len = -1
 char *           rxvt_wcstoutf8                   (const wchar_t *str, int len = -1);
 wchar_t *        rxvt_utf8towcs                   (const char *str, int len = -1);
 
-const char *     rxvt_basename                    (const char *str) NOTHROW;
-void             rxvt_vlog                        (const char *fmt, va_list arg_ptr) NOTHROW;
-void             rxvt_log                         (const char *fmt,...) NOTHROW;
-void             rxvt_warn                        (const char *fmt,...) NOTHROW;
+const char *     rxvt_basename                    (const char *str) noexcept;
+void             rxvt_vlog                        (const char *fmt, va_list arg_ptr) noexcept;
+void             rxvt_log                         (const char *fmt,...) noexcept;
+void             rxvt_warn                        (const char *fmt,...) noexcept;
 ecb_noreturn ecb_cold
-void             rxvt_fatal                       (const char *fmt, ...) THROW ((class rxvt_failure_exception));
+void             rxvt_fatal                       (const char *fmt, ...);
 ecb_noreturn ecb_cold
-void             rxvt_exit_failure                () THROW ((class rxvt_failure_exception));
+void             rxvt_exit_failure                ();
 
 void *           rxvt_malloc                      (size_t size);
 void *           rxvt_calloc                      (size_t number, size_t size);
 void *           rxvt_realloc                     (void *ptr, size_t size);
 
-char *           rxvt_strtrim                     (char *str) NOTHROW;
-char **          rxvt_strsplit                    (char delim, const char *str) NOTHROW;
+char *           rxvt_strtrim                     (char *str) noexcept;
+char **          rxvt_strsplit                    (char delim, const char *str) noexcept;
 
 static inline void
-rxvt_free_strsplit (char **ptr) NOTHROW
+rxvt_free_strsplit (char **ptr) noexcept
 {
   free (ptr[0]);
   free (ptr);
@@ -1118,14 +1118,14 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 #if ENABLE_OVERLAY
   overlay_base ov;
 
-  void scr_swap_overlay () NOTHROW;
-  void scr_overlay_new (int x, int y, int w, int h) NOTHROW;
-  void scr_overlay_off () NOTHROW;
+  void scr_swap_overlay () noexcept;
+  void scr_overlay_new (int x, int y, int w, int h) noexcept;
+  void scr_overlay_off () noexcept;
   void scr_overlay_set (int x, int y,
                         text_t text,
-                        rend_t rend = OVERLAY_RSTYLE) NOTHROW;
-  void scr_overlay_set (int x, int y, const char *s) NOTHROW;
-  void scr_overlay_set (int x, int y, const wchar_t *s) NOTHROW;
+                        rend_t rend = OVERLAY_RSTYLE) noexcept;
+  void scr_overlay_set (int x, int y, const char *s) noexcept;
+  void scr_overlay_set (int x, int y, const wchar_t *s) noexcept;
 #endif
 
   vector<void *> allocated;           // free these memory blocks with free()
@@ -1176,7 +1176,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   long vt_emask, vt_emask_perl, vt_emask_xim, vt_emask_mouse;
 
-  void vt_select_input () const NOTHROW
+  void vt_select_input () const noexcept
   {
     XSelectInput (dpy, vt, vt_emask | vt_emask_perl | vt_emask_xim | vt_emask_mouse);
   }
@@ -1250,7 +1250,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void im_destroy ();
   void im_cb (); im_watcher im_ev;
   void im_set_size (XRectangle &size);
-  void im_set_position (XPoint &pos) NOTHROW;
+  void im_set_position (XPoint &pos) noexcept;
   void im_set_color (unsigned long &fg, unsigned long &bg);
   void im_set_preedit_area (XRectangle &preedit_rect, XRectangle &status_rect, const XRectangle &needed_rect);
 
@@ -1264,10 +1264,10 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void key_press (XKeyEvent &ev);
   void key_release (XKeyEvent &ev);
 
-  wchar_t next_char () NOTHROW;
-  wchar_t cmd_getc () THROW ((class out_of_input));
-  uint32_t next_octet () NOTHROW;
-  uint32_t cmd_get8 () THROW ((class out_of_input));
+  wchar_t next_char () noexcept;
+  wchar_t cmd_getc ();
+  uint32_t next_octet () noexcept;
+  uint32_t cmd_get8 ();
 
   void cmd_parse ();
   void mouse_report (XButtonEvent &ev);
@@ -1342,14 +1342,14 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 
   // screen.C
 
-  bool option (uint8_t opt) const NOTHROW
+  bool option (uint8_t opt) const noexcept
   {
     return options[opt >> 3] & (1 << (opt & 7));
   }
 
-  void set_option (uint8_t opt, bool set = true) NOTHROW;
+  void set_option (uint8_t opt, bool set = true) noexcept;
 
-  int fgcolor_of (rend_t r) const NOTHROW
+  int fgcolor_of (rend_t r) const noexcept
   {
     int base = GET_BASEFG (r);
 #ifndef NO_BRIGHTCOLOR
@@ -1363,7 +1363,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
     return base;
   }
 
-  int bgcolor_of (rend_t r) const NOTHROW
+  int bgcolor_of (rend_t r) const noexcept
   {
     int base = GET_BASEBG (r);
 #ifndef NO_BRIGHTCOLOR
@@ -1378,90 +1378,90 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   }
 
   // modifies first argument(!)
-  void tt_paste (char *data, unsigned int len) NOTHROW;
-  void paste (char *data, unsigned int len) NOTHROW;
-  void scr_alloc () NOTHROW;
-  void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs) const NOTHROW;
-  void scr_blank_screen_mem (line_t &l, rend_t efs) const NOTHROW;
-  void scr_kill_char (line_t &l, int col) const NOTHROW;
+  void tt_paste (char *data, unsigned int len) noexcept;
+  void paste (char *data, unsigned int len) noexcept;
+  void scr_alloc () noexcept;
+  void scr_blank_line (line_t &l, unsigned int col, unsigned int width, rend_t efs) const noexcept;
+  void scr_blank_screen_mem (line_t &l, rend_t efs) const noexcept;
+  void scr_kill_char (line_t &l, int col) const noexcept;
   void scr_set_char_rend (line_t &l, int col, rend_t rend);
-  int scr_scroll_text (int row1, int row2, int count) NOTHROW;
+  int scr_scroll_text (int row1, int row2, int count) noexcept;
   void copy_line (line_t &dst, line_t &src);
   void scr_reset ();
-  void scr_release () NOTHROW;
-  void scr_clear (bool really = false) NOTHROW;
-  void scr_refresh () NOTHROW;
-  bool scr_refresh_rend (rend_t mask, rend_t value) NOTHROW;
-  void scr_erase_screen (int mode) NOTHROW;
+  void scr_release () noexcept;
+  void scr_clear (bool really = false) noexcept;
+  void scr_refresh () noexcept;
+  bool scr_refresh_rend (rend_t mask, rend_t value) noexcept;
+  void scr_erase_screen (int mode) noexcept;
 #if ENABLE_FRILLS
-  void scr_erase_savelines () NOTHROW;
-  void scr_backindex () NOTHROW;
-  void scr_forwardindex () NOTHROW;
+  void scr_erase_savelines () noexcept;
+  void scr_backindex () noexcept;
+  void scr_forwardindex () noexcept;
 #endif
-  void scr_touch (bool refresh) NOTHROW;
-  void scr_expose (int x, int y, int width, int height, bool refresh) NOTHROW;
-  void scr_recolor (bool refresh = true) NOTHROW;
-  void scr_remap_chars () NOTHROW;
-  void scr_remap_chars (line_t &l) NOTHROW;
+  void scr_touch (bool refresh) noexcept;
+  void scr_expose (int x, int y, int width, int height, bool refresh) noexcept;
+  void scr_recolor (bool refresh = true) noexcept;
+  void scr_remap_chars () noexcept;
+  void scr_remap_chars (line_t &l) noexcept;
 
   enum cursor_mode { SAVE, RESTORE };
 
   void scr_poweron ();
-  void scr_soft_reset () NOTHROW;
-  void scr_cursor (cursor_mode mode) NOTHROW;
-  void scr_do_wrap () NOTHROW;
-  void scr_swap_screen () NOTHROW;
+  void scr_soft_reset () noexcept;
+  void scr_cursor (cursor_mode mode) noexcept;
+  void scr_do_wrap () noexcept;
+  void scr_swap_screen () noexcept;
   void scr_change_screen (int scrn);
-  void scr_color (unsigned int color, int fgbg) NOTHROW;
-  void scr_rendition (int set, int style) NOTHROW;
-  void scr_add_lines (const wchar_t *str, int len, int minlines = 0) NOTHROW;
-  void scr_backspace () NOTHROW;
-  void scr_tab (int count, bool ht = false) NOTHROW;
-  void scr_gotorc (int row, int col, int relative) NOTHROW;
-  void scr_index (enum page_dirn direction) NOTHROW;
-  void scr_erase_line (int mode) NOTHROW;
-  void scr_E () NOTHROW;
-  void scr_insdel_lines (int count, int insdel) NOTHROW;
-  void scr_insdel_chars (int count, int insdel) NOTHROW;
-  void scr_scroll_region (int top, int bot) NOTHROW;
-  void scr_cursor_visible (int mode) NOTHROW;
-  void scr_autowrap (int mode) NOTHROW;
-  void scr_relative_origin (int mode) NOTHROW;
-  void scr_insert_mode (int mode) NOTHROW;
-  void scr_set_tab (int mode) NOTHROW;
-  void scr_rvideo_mode (bool on) NOTHROW;
-  void scr_report_position () NOTHROW;
-  void set_font_style () NOTHROW;
-  void scr_charset_choose (int set) NOTHROW;
-  void scr_charset_set (int set, unsigned int ch) NOTHROW;
-  void scr_move_to (int y, int len) NOTHROW;
-  bool scr_page (int nlines) NOTHROW;
-  bool scr_page (enum page_dirn direction, int nlines) NOTHROW
+  void scr_color (unsigned int color, int fgbg) noexcept;
+  void scr_rendition (int set, int style) noexcept;
+  void scr_add_lines (const wchar_t *str, int len, int minlines = 0) noexcept;
+  void scr_backspace () noexcept;
+  void scr_tab (int count, bool ht = false) noexcept;
+  void scr_gotorc (int row, int col, int relative) noexcept;
+  void scr_index (enum page_dirn direction) noexcept;
+  void scr_erase_line (int mode) noexcept;
+  void scr_E () noexcept;
+  void scr_insdel_lines (int count, int insdel) noexcept;
+  void scr_insdel_chars (int count, int insdel) noexcept;
+  void scr_scroll_region (int top, int bot) noexcept;
+  void scr_cursor_visible (int mode) noexcept;
+  void scr_autowrap (int mode) noexcept;
+  void scr_relative_origin (int mode) noexcept;
+  void scr_insert_mode (int mode) noexcept;
+  void scr_set_tab (int mode) noexcept;
+  void scr_rvideo_mode (bool on) noexcept;
+  void scr_report_position () noexcept;
+  void set_font_style () noexcept;
+  void scr_charset_choose (int set) noexcept;
+  void scr_charset_set (int set, unsigned int ch) noexcept;
+  void scr_move_to (int y, int len) noexcept;
+  bool scr_page (int nlines) noexcept;
+  bool scr_page (enum page_dirn direction, int nlines) noexcept
   {
     return scr_page (direction * nlines);
   }
-  bool scr_changeview (int new_view_start) NOTHROW;
-  void scr_bell () NOTHROW;
-  void scr_printscreen (int fullhist) NOTHROW;
-  void scr_xor_rect (int beg_row, int beg_col, int end_row, int end_col, rend_t rstyle1, rend_t rstyle2) NOTHROW;
-  void scr_xor_span (int beg_row, int beg_col, int end_row, int end_col, rend_t rstyle) NOTHROW;
-  void scr_reverse_selection () NOTHROW;
-  void scr_dump (int fd) NOTHROW;
+  bool scr_changeview (int new_view_start) noexcept;
+  void scr_bell () noexcept;
+  void scr_printscreen (int fullhist) noexcept;
+  void scr_xor_rect (int beg_row, int beg_col, int end_row, int end_col, rend_t rstyle1, rend_t rstyle2) noexcept;
+  void scr_xor_span (int beg_row, int beg_col, int end_row, int end_col, rend_t rstyle) noexcept;
+  void scr_reverse_selection () noexcept;
+  void scr_dump (int fd) noexcept;
 
-  void selection_check (int check_more) NOTHROW;
-  void selection_changed () NOTHROW; /* sets want_refresh, corrects coordinates */
-  void selection_request (Time tm, int selnum = Sel_Primary) NOTHROW;
-  void selection_clear (bool clipboard = false) NOTHROW;
+  void selection_check (int check_more) noexcept;
+  void selection_changed () noexcept; /* sets want_refresh, corrects coordinates */
+  void selection_request (Time tm, int selnum = Sel_Primary) noexcept;
+  void selection_clear (bool clipboard = false) noexcept;
   void selection_make (Time tm);
-  bool selection_grab (Time tm, bool clipboard = false) NOTHROW;
-  void selection_start_colrow (int col, int row) NOTHROW;
-  void selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, row_col_t *ret) NOTHROW;
-  void selection_extend_colrow (int32_t col, int32_t row, int button3, int buttonpress, int clickchange) NOTHROW;
-  void selection_remove_trailing_spaces () NOTHROW;
-  void selection_send (const XSelectionRequestEvent &rq) NOTHROW;
-  void selection_click (int clicks, int x, int y) NOTHROW;
-  void selection_extend (int x, int y, int flag) NOTHROW;
-  void selection_rotate (int x, int y) NOTHROW;
+  bool selection_grab (Time tm, bool clipboard = false) noexcept;
+  void selection_start_colrow (int col, int row) noexcept;
+  void selection_delimit_word (enum page_dirn dirn, const row_col_t *mark, row_col_t *ret) noexcept;
+  void selection_extend_colrow (int32_t col, int32_t row, int button3, int buttonpress, int clickchange) noexcept;
+  void selection_remove_trailing_spaces () noexcept;
+  void selection_send (const XSelectionRequestEvent &rq) noexcept;
+  void selection_click (int clicks, int x, int y) noexcept;
+  void selection_extend (int x, int y, int flag) noexcept;
+  void selection_rotate (int x, int y) noexcept;
 
   // xdefaults.C
   void rxvt_usage (int type);

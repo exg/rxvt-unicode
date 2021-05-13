@@ -11,15 +11,6 @@
 
 #include "emman.h"
 
-// increases code size unless -fno-enforce-eh-specs
-#if __GNUC__
-# define NOTHROW
-# define THROW(x)
-#else
-# define NOTHROW  throw()
-# define THROW(x) throw x
-#endif
-
 // various utility functions
 template<typename T, typename U> static inline void min_it (T &a, U b) { a = a < (T)b ? a : (T)b; }
 template<typename T, typename U> static inline void max_it (T &a, U b) { a = a > (T)b ? a : (T)b; }
