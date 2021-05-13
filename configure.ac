@@ -5,7 +5,7 @@ dnl#
 AC_INIT
 AC_PREREQ(2.71)
 AC_CONFIG_SRCDIR([src/feature.h])
-AC_CONFIG_HEADER(config.h:config.h.in)
+AC_CONFIG_HEADERS(config.h:config.h.in)
 
 AC_CANONICAL_HOST
 
@@ -28,9 +28,7 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_INSTALL
 
-AC_AIX
-AC_GNU_SOURCE
-AC_ISC_POSIX
+AC_USE_SYSTEM_EXTENSIONS
 AC_LANG(C++)
 
 if test "$ac_prog_cxx_stdcxx" != cxx11; then
