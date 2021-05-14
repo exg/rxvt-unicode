@@ -44,7 +44,7 @@ TODO: confirm-paste should be the default
 TODO: xterm-osc does not autoload background
 TODO: think about daemon delaying urxvt client exit.
 
-9.25
+9.25 Fri May 14 15:51:36 CEST 2021
 	- for the 17.5th anniversary, and because many distributions seem to
           remove rxvt in favour of urxvt, this release resurrects rclock as
           urclock.
