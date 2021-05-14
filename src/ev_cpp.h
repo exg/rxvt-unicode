@@ -7,7 +7,6 @@
 #define EV_USE_PORT 1
 //#define EV_USE_LINUXAIO 1
 //#define EV_USE_IOURING 1
-#define EV_USE_IOURING 1
 //#define EV_USE_TIMERFD 0
 #define EV_PREPARE_ENABLE 1
 #define EV_IDLE_ENABLE 1

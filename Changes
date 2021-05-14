@@ -44,6 +44,10 @@ TODO: confirm-paste should be the default
 TODO: xterm-osc does not autoload background
 TODO: think about daemon delaying urxvt client exit.
 
+9.26 Fri May 14 19:14:14 CEST 2021
+	- ev_iouring.c was wrongly required during compilation, and wrongly
+          not packaged.
+
 9.25 Fri May 14 15:51:36 CEST 2021
 	- for the 17.5th anniversary, and because many distributions seem to
           remove rxvt in favour of urxvt, this release resurrects rclock as
