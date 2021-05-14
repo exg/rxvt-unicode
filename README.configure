@@ -173,8 +173,10 @@ CONFIGURE OPTIONS
           compile in built-in block graphics
           skip builtin block graphics (-sbg)
           separate highlight colour (-highlightColor, -highlightTextColor)
-          extended mouse reporting modes (1005 and 1015).
+          focus reporting mode (1004).
+          extended mouse reporting modes (1005, 1006 and 1015).
           visual selection via -visual and -depth.
+          systemd socket activation
 
         It also enables some non-essential features otherwise disabled, such
         as:

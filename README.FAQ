@@ -70,6 +70,28 @@ RXVT-UNICODE/URXVT FREQUENTLY ASKED QUESTIONS
     re-run the command. Subsequent invocations of the script will re-use the
     existing daemon.
 
+    Another option is to use systemd socket-based activation (see
+    systemd.socket(5)). Here is an example of a service unit file and of a
+    socket unit file for the default socket path:
+
+    urxvtd.service
+          [Unit]
+          Description=urxvt terminal daemon
+          Requires=urxvtd.socket
+
+          [Service]
+          ExecStart=/usr/bin/urxvtd -o
+
+    urxvtd.socket
+          [Unit]
+          Description=urxvt terminal daemon socket
+
+          [Socket]
+          ListenStream=%h/.urxvt/urxvtd-%H
+
+          [Install]
+          WantedBy=sockets.target
+
    How do I distinguish whether I'm running rxvt-unicode or a regular
 xterm? I need this to decide about setting colours etc.
     The original rxvt and rxvt-unicode always export the variable
@@ -620,7 +642,7 @@ xterm? I need this to decide about setting colours etc.
     certainly not *typical*, but what's typical...
 
        URxvt.cutchars: "()*,<>[]{}|'
-       URxvt.print-pipe: cat >/tmp/xxx
+       URxvt.print-pipe: cat >/some/path
 
     These are just for testing stuff.
 
