@@ -731,8 +731,8 @@ sub invoke {
       }
 
       for (
+         @{ delete $TERM->{perl_ext_3} },
          (grep $_, map { split /,/, $TERM->resource ("perl_ext_$_") } 1, 2),
-         @{ delete $TERM->{perl_ext_3} }
       ) {
          if ($_ eq "default") {
 
