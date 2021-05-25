@@ -45,7 +45,7 @@ TODO: xterm-osc does not autoload background
 TODO: think about daemon delaying urxvt client exit.
 
 	- allow perl-ext and perl-ext-common to override autoloaded extensions.
-          this allwos tabbed to disable itself in subtabs, avoiding recursive
+          this allows tabbed to disable itself in subtabs, avoiding recursive
           loading.
 
 9.26 Fri May 14 19:14:14 CEST 2021
@@ -66,7 +66,7 @@ TODO: think about daemon delaying urxvt client exit.
 	  extension, and perl is thus required for bg image support. No
 	  configuration change is needed: urxvt autoloads the background
 	  ext if any bg image resource/option is present (for OSC sequences to
-          work you need to enable it explicity). The old bg image
+          work you need to enable it explicitly). The old bg image
 	  resources are also now deprecated; users are encouraged to
 	  switch to the new bg image interface (see man urxvt-background).
         - confirm-paste now checks for any ctlchars, not just newlines.

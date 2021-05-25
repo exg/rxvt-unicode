@@ -845,9 +845,9 @@ rxvt_enumerate_helper (
 
   if (*quarks == NULLQUARK) return False;
 
-  // if the quark list starts with a tighly bound quark, we skip it,
-  // as it is the exactly matched the prefix. Otherwise, it matched because
-  // it started with "*", in which case we assuime the prefix is part
+  // if the quark list starts with a tightly bound quark, we skip it,
+  // as it exactly matched the prefix. Otherwise, it matched because
+  // it started with "*", in which case we assume the prefix is part
   // of the "*".
   if (*bindings == XrmBindTightly)
     {
@@ -871,10 +871,10 @@ rxvt_enumerate_helper (
 
   char *pattern;
   if (quarks[1] == NULLQUARK)
-    pattern = XrmQuarkToString (quarks[0]); // single component, fats path
+    pattern = XrmQuarkToString (quarks[0]); // single component, fast path
   else
     {
-      // multiple components, slow path - should be rare, to don't optimize for speed
+      // multiple components, slow path - should be rare, don't optimize for speed
       int size = 0;
 
       for (int i = 0; quarks[i] != NULLQUARK; ++i)
