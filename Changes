@@ -59,7 +59,7 @@ TODO: think about daemon delaying urxvt client exit.
 	- add support for systemd socket-based activation - debian bug #917105,
 	  freebsd bug #234276.
 	- do not destruct perl on exit anymore: this might fail for a variety of
-          reasons, and takes unneccessary time.
+          reasons, and takes unnecessary time.
         - remove any macros from urxvtperl manpage(s), should fix debian
           bug 858385.
 	- the old bg image resources are now provided by the background
