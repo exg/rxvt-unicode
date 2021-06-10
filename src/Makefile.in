@@ -89,7 +89,7 @@ allbin: rxvt rxvtd rxvtc rclock
 alldoc:
 
 clean:
-	rm -f rxvt rxvtc rxvtd perlxsi.c rxvtperl.C manlst mantmp
+	rm -f rxvt rxvtc rxvtd rclock perlxsi.c rxvtperl.C manlst mantmp
 	rm -f *.o
 
 distclean: clean
