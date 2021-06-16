@@ -51,7 +51,7 @@ TODO: compose chars should be rendered "in one go" for xft. maybe. possibly.
 	- allow perl-ext and perl-ext-common to override autoloaded extensions.
           this allows tabbed to disable itself in subtabs, avoiding recursive
           loading.
-	- update precompose table to uinicode 13.0.
+	- update precompose table to unicode 13.0.
         - update charset conversion tables to perl 5.32 (this only affected
           cs_koi8_u_from_unicode).
 
