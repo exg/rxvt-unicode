@@ -476,6 +476,15 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
             case NOCHAR:
               break;
 
+            /*
+             * If the base font does not support variation selectors, treat them as ZWC.
+             * a point could be made to do this for all wcwidth == 0 characters, but I
+             * decided against that until more data is available.
+             */
+            case 0xfe00: case 0xfe01: case 0xfe02: case 0xfe03: case 0xfe04: case 0xfe05: case 0xfe06: case 0xfe07:
+            case 0xfe08: case 0xfe09: case 0xfe0a: case 0xfe0b: case 0xfe0c: case 0xfe0d: case 0xfe0e: case 0xfe0f:
+              break;
+
             default:
               XDrawRectangle (disp, d, gc, x + 2, y + 2,
                               fwidth - 4, term->fheight - 4);

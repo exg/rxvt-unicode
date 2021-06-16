@@ -44,6 +44,10 @@ TODO: confirm-paste should be the default
 TODO: xterm-osc does not autoload background
 TODO: think about daemon delaying urxvt client exit.
 
+TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
+TODO: compose chars should be rendered "in one go" for xft. maybe. possibly.
+	- do not render variation selectors in the default font as boxes, treat
+          them as zero-width characters.
 	- allow perl-ext and perl-ext-common to override autoloaded extensions.
           this allows tabbed to disable itself in subtabs, avoiding recursive
           loading.
