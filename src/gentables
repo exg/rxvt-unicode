@@ -2,6 +2,8 @@
 
 # the generated tables mostly have NOT been checked so far!
 
+# apt install libencode-hanextra-perl libencode-jis2k-perl
+
 use v5.8.2;
 use utf8;
 use Encode;

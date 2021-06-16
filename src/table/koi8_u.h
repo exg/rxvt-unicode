@@ -39,7 +39,7 @@ static const uint8_t koi8_u_f_9472[] = {
 
 static uint32_t cs_koi8_u_from_unicode (unicode_t unicode) {
     if (unicode <= 0x007f) return unicode;
-    if (unicode == 0x2022) return 0x0095;
+    if (unicode == 0x2219) return 0x0095;
     if (unicode == 0x221a) return 0x0096;
     if (unicode == 0x2248) return 0x0097;
     if (unicode == 0x2264) return 0x0098;
