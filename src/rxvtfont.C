@@ -1738,10 +1738,10 @@ rxvt_fontset::find_font_idx (unicode_t unicode)
 
   unicode_t hi = unicode >> 8;
 
-  if (hi < fmap.size ()
-      && fmap[hi]
-      && (*fmap[hi])[unicode & 0xff] != 0xff)
-    return (*fmap[hi])[unicode & 0xff];
+  if (hi < fmap.size ())
+    if (pagemap *pm = fmap[hi])
+      if ((*pm)[unicode & 0xff] != 0xff)
+        return (*pm)[unicode & 0xff];
 
   unsigned int i;
 
