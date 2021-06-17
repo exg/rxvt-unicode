@@ -1366,6 +1366,7 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   careful = false;
 
 #if ENABLE_COMBINING && !UNICODE_3
+  // handle non-BMP characters when our storage uses 16 bit
   if (ecb_expect_false (IS_COMPOSE (unicode)))
     if (compose_char *cc = rxvt_composite[unicode])
       if (cc->c2 == NOCHAR)
@@ -1434,6 +1435,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
       FcChar32 fc = *text++; len--;
 
 #if ENABLE_COMBINING && !UNICODE_3
+      // handle non-BMP characters when our storage uses 16 bit
       if (ecb_expect_false (IS_COMPOSE (fc)))
         if (compose_char *cc = rxvt_composite[fc]) // should always be true, but better be safe than sorry
           fc = cc->c1; // c2 must be NOCHAR, as has_char handles it that way
