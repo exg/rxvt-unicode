@@ -1319,12 +1319,8 @@ rxvt_font_xft::load (const rxvt_fontprop &prop, bool force_prop)
 
       if (!width)
         {
-          rxvt_warn ("unable to calculate font width for '%s', ignoring.\n", name);
-
-          XftFontClose (disp, f);
-          f = 0;
-
-          success = false;
+          rxvt_warn ("unable to calculate font width for '%s', using max_advance_width.\n", name);
+          width = f->max_advance_width;
           break;
         }
 

@@ -47,6 +47,10 @@ TODO: think about daemon delaying urxvt client exit.
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
 TODO: compose chars should be rendered "in one go" for xft. maybe. possibly.
 TODO: disbale bracketed paste mode option, too amny prorgams abuse it
+	- if urxvt cannot detect a good estimate for font width (because a font does
+          not contain laitn characters at all for example), it will now fall
+          back to xft's max_advance_width, which works well with soem fonts. It
+          currently will warn about this.
 	- do not render variation selectors in the default font as boxes, treat
           them as zero-width characters.
         - unicode characters outside of the BMP can now be rendered even
