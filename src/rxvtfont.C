@@ -1375,6 +1375,11 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   if (!XftCharExists (term->dpy, f, unicode))
     return false;
 
+  // some fonts claim they can render private use chars and then
+  // render them as boxes.
+  if (ecb_expect_false (IS_COMPOSE (unicode)))
+    return false;
+
   if (!prop || prop->width == rxvt_fontprop::unset)
     return true;
 
