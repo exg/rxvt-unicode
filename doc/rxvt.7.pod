@@ -2402,18 +2402,18 @@ set up the input for people using dead keys or compose keys.
 
 =item --enable-unicode3 (default: off)
 
-Recommended to stay off unless you really need non-BMP characters.
+Recommended to stay off unless you really need a lot of non-BMP
+characters.
 
-Enable direct support for displaying unicode codepoints above
-65535 (the basic multilingual page). This increases storage
-requirements per character from 2 to 4 bytes. X11 fonts do not yet
-support these extra characters, but Xft does.
+Enable support for direct storage of unicode characters above 65535
+(the basic multilingual page). This increases storage requirements per
+character from 2 to 4 bytes. X11 fonts do not yet support these extra
+characters, but Xft does.
 
-Please note that rxvt-unicode can store unicode code points >65535
-even without this flag, but the number of such characters is
-limited to a few thousand (shared with combining characters,
-see next switch), and right now rxvt-unicode cannot display them
-(input/output and cut&paste still work, though).
+Please note that rxvt-unicode can store and display unicode characters
+above 65535 even without this flag, but the number of such characters is
+limited to a few thousand (shared with combining characters, see next
+switch).
 
 =item --enable-combining (default: on)
 

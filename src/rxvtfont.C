@@ -315,8 +315,8 @@ struct rxvt_font_default : rxvt_font
       return true;
 #endif
 
-    if (IS_COMPOSE (unicode))
-      return true;
+    // we do not check for IS_COMPOSE here, as this would
+    // rob other fonts from taking over.
 
     switch (unicode)
       {
@@ -444,7 +444,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
         ;
 #endif
 #if ENABLE_COMBINING
-      else if (IS_COMPOSE (t) && rxvt_composite[t])
+      else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {
           min_it (width, 2); // we only support wcwidth up to 2
 
@@ -1369,6 +1369,13 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
 {
   careful = false;
 
+#if ENABLE_COMBINING && !UNICODE_3
+  if (ecb_expect_false (IS_COMPOSE (unicode)))
+    if (compose_char *cc = rxvt_composite[unicode])
+      if (cc->c2 == NOCHAR)
+        unicode = cc->c1;
+#endif
+
   if (!XftCharExists (term->dpy, f, unicode))
     return false;
 
@@ -1424,6 +1431,12 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
     {
       int cwidth = term->fwidth;
       FcChar32 fc = *text++; len--;
+
+#if ENABLE_COMBINING && !UNICODE_3
+      if (ecb_expect_false (IS_COMPOSE (fc)))
+        if (compose_char *cc = rxvt_composite[fc]) // should always be true, but better be safe than sorry
+          fc = cc->c1; // c2 must be NOCHAR, as has_char handles it that way
+#endif
 
       while (len && *text == NOCHAR)
         text++, len--, cwidth += term->fwidth;
@@ -1719,7 +1732,8 @@ rxvt_fontset::find_font (const char *name) const
 int
 rxvt_fontset::find_font_idx (unicode_t unicode)
 {
-  if (unicode >= 1<<20)
+  // this limits fmap size. it has to accomodate COMPOSE_HI when UNICODE_3
+  if (unicode > 0x1fffff)
     return 0;
 
   unicode_t hi = unicode >> 8;
@@ -1761,6 +1775,11 @@ rxvt_fontset::find_font_idx (unicode_t unicode)
     next_font:
       if (i == fonts.size () - 1)
         {
+          // compose characters are handled by the default font, unless another font takes over
+          // we do not go via the fallback list for speed reasons.
+          if (IS_COMPOSE (unicode))
+            return 0;
+
           if (fallback->name)
             {
               // search through the fallback list

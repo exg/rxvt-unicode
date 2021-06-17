@@ -771,8 +771,8 @@ struct mbstate
 #define UNICODE_MASK 0x1fffffUL
 
 #if UNICODE_3
-# define COMPOSE_LO 0x40000000UL
-# define COMPOSE_HI 0x400fffffUL
+# define COMPOSE_LO 0x110000UL
+# define COMPOSE_HI 0x1fffffUL
 # define IS_COMPOSE(n) ((int32_t)(n) >= COMPOSE_LO)
 #else
 # if ENABLE_PERL
