@@ -1351,7 +1351,7 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   if (!prop || prop->width == rxvt_fontprop::unset)
     return true;
 
-  // but we check against the whoile sequence bounding box
+  // but we check against the whole sequence bounding box
 
   // check character against base font bounding box
   FcChar32 ch = unicode;
