@@ -102,6 +102,15 @@ struct rxvt_fontset
     return min<int> ((fontCount << 1) | 1, find_font_idx (unicode));
   }
 
+  // find the font containing ' ' - we always assume this is font 1, as
+  // every font should contain space, and font 1 is our base font.
+  // pango assumes this, so it must be correct!
+  int
+  find_space_font ()
+  {
+    return 1 << 1;
+  }
+
 private:
   rxvt_term *term;
   rxvt_fontprop prop;
