@@ -34,7 +34,6 @@ struct rxvt_font
   char *name;
   codeset cs;
   bool loaded; // whether we tried loading it before (not whether it's loaded)
-  bool can_compose; // whether the font composes glyphs itself or not, should be a class method, but.. speed....
 
   // managed by the font object
   int ascent, descent,

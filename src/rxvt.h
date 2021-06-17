@@ -801,10 +801,10 @@ struct compose_char
   { }
 };
 
-class rxvt_composite_vec
+struct rxvt_composite_vec
 {
   vector<compose_char> v;
-public:
+
   text_t compose (unicode_t c1, unicode_t c2 = NOCHAR);
   template<typename T> int expand (unicode_t c, T *r);
   int expand (unicode_t c) { return expand (c, (text_t *)0); }
@@ -818,6 +818,65 @@ public:
 
 extern class rxvt_composite_vec rxvt_composite;
 #endif
+
+// expand the sequence into a static array
+// works even without ENABLE_COMBINING
+template<typename T>
+struct rxvt_compose_expand_static
+{
+#if ENABLE_COMBINING
+  // we arbitrarily limit the maximum number of compose sequences
+  // so we can store them in a static array on the stack.
+  enum { max_size = 48 };
+
+  T chrs[max_size];
+
+  // expand sequence and return start ptr
+  // guarantees at least one output
+  // get the length with length () on that ptr
+  T *operator ()(unicode_t c)
+  {
+    T *cur = chrs + max_size;
+
+    while (ecb_expect_false (IS_COMPOSE (c)))
+      if (ecb_expect_true (c - COMPOSE_LO < rxvt_composite.v.size ()))
+        {
+          compose_char *cc = &rxvt_composite.v [c - COMPOSE_LO];
+
+          if (cc->c2 != NOCHAR)
+            {
+              cur -= cur > chrs; *cur = cc->c2;
+            }
+
+          c = cc->c1;
+        }
+       else
+         c = NOCHAR;
+
+    cur -= cur > chrs; *cur = c;
+
+    return cur;
+  }
+
+  int length (T *first)
+  {
+    return chrs + max_size - first;
+  }
+#else
+  T chr;
+
+  T *operator ()(text_t c);
+  {
+    chr = c;
+    return &chr;
+  }
+
+  int length (T *first)
+  {
+    return 1;
+  }
+#endif
+};
 
 /****************************************************************************/
 

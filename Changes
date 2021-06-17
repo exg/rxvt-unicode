@@ -55,6 +55,9 @@ TODO: disbale bracketed paste mode option, too amny prorgams abuse it
           them as zero-width characters.
         - unicode characters outside of the BMP can now be rendered even
           without --enable-unicode3, when using xft fonts.
+        - urxvt now passes full combining character sequences to xft,
+          increasing the chance of it doing something useful with it, such
+          as correctly applying variant selectors.
 	- allow perl-ext and perl-ext-common to override autoloaded extensions.
           this allows tabbed to disable itself in subtabs, avoiding recursive
           loading.

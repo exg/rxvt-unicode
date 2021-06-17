@@ -214,7 +214,7 @@ enc_xchar2b (const text_t *text, uint32_t len, codeset cs, bool &zero)
 /////////////////////////////////////////////////////////////////////////////
 
 rxvt_font::rxvt_font ()
-: name(0), width(rxvt_fontprop::unset), height(rxvt_fontprop::unset), can_compose(false)
+: name(0), width(rxvt_fontprop::unset), height(rxvt_fontprop::unset)
 {
 }
 
@@ -447,29 +447,6 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
       else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
         {
           min_it (width, 2); // we only support wcwidth up to 2
-
-          #if NOT_YET
-          vector<text_t> chrs;
-          chrs.reserve (rxvt_composite.expand (t));
-          rxvt_composite.expand (t, &chrs[0]);
-
-          while (!chrs.empty ())
-            {
-              rxvt_font *f1 = fs->find_font_idx (chrs[0])
-
-              int i = 0;
-              while (i < chrs.size () - 1
-                     && f1->can_combine
-                     && f1->has-char (chrs[i + 1], careful)
-                     && !careful
-                ++i;
-
-              (*fs)[f1]->draw (d, x, y, &chrs[0], width, fg, bg);
-              chrs.erase (&chrs[0], &chrs[i]);
-            }
-          #endif
-
-          #if 1
           text_t chrs[2];
           chrs [1] = NOCHAR;
 
@@ -489,7 +466,6 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 
               f2->draw (d, x, y, chrs, width, fg, Color_none);
             }
-          #endif
         }
 #endif
       else
@@ -1165,7 +1141,6 @@ struct rxvt_font_xft : rxvt_font
 {
   rxvt_font_xft ()
   {
-    can_compose = true;
     f = 0;
   }
 
@@ -1365,32 +1340,26 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
 {
   careful = false;
 
-#if ENABLE_COMBINING && !UNICODE_3
-  // handle non-BMP characters when our storage uses 16 bit
-  if (ecb_expect_false (IS_COMPOSE (unicode)))
-    if (compose_char *cc = rxvt_composite[unicode])
-      if (cc->c2 == NOCHAR)
-        unicode = cc->c1;
-#endif
+  rxvt_compose_expand_static<FcChar32> exp;
+  FcChar32 *chrs = exp (unicode);
+  int nchrs = exp.length (chrs);
 
-  if (!XftCharExists (term->dpy, f, unicode))
-    return false;
-
-  // some fonts claim they can render private use chars and then
-  // render them as boxes.
-  if (ecb_expect_false (IS_COMPOSE (unicode)))
+  // we handle the sequence if the first char is available
+  if (!XftCharExists (term->dpy, f, chrs [0]))
     return false;
 
   if (!prop || prop->width == rxvt_fontprop::unset)
     return true;
 
+  // but we check against the whoile sequence bounding box
+
   // check character against base font bounding box
   FcChar32 ch = unicode;
   XGlyphInfo g;
-  XftTextExtents32 (term->dpy, f, &ch, 1, &g);
+  XftTextExtents32 (term->dpy, f, chrs, nchrs, &g);
 
   int w = g.width - g.x;
-  int wcw = max (WCWIDTH (unicode), 1);
+  int wcw = max (WCWIDTH (chrs [0]), 1);
 
   careful = g.x > 0 || w > prop->width * wcw;
 
@@ -1410,8 +1379,9 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                      int fg, int bg)
 {
   XGlyphInfo extents;
-  XftGlyphSpec *enc = rxvt_temp_buf<XftGlyphSpec> (len);
-  XftGlyphSpec *ep = enc;
+  //XftGlyphSpec *enc = rxvt_temp_buf<XftGlyphSpec> (len);//D
+  //XftGlyphSpec *ep = enc;//D
+  static vector<XftGlyphSpec> enc; enc.resize (0); // static to avoid malloc, still slow
 
   dTermDisplay;
   dTermGC;
@@ -1432,31 +1402,36 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   while (len)
     {
       int cwidth = term->fwidth;
-      FcChar32 fc = *text++; len--;
 
-#if ENABLE_COMBINING && !UNICODE_3
-      // handle non-BMP characters when our storage uses 16 bit
-      if (ecb_expect_false (IS_COMPOSE (fc)))
-        if (compose_char *cc = rxvt_composite[fc]) // should always be true, but better be safe than sorry
-          fc = cc->c1; // c2 must be NOCHAR, as has_char handles it that way
-#endif
+      rxvt_compose_expand_static<FcChar32> exp;
+      FcChar32 *chrs = exp (*text++); len--;
+      int nchrs = exp.length (chrs);
 
       while (len && *text == NOCHAR)
         text++, len--, cwidth += term->fwidth;
 
-      if (fc != ' ') // skip spaces
+      if (chrs [0] != ' ') // skip spaces
         {
-          FT_UInt glyph = XftCharIndex (disp, f, fc);
-          XftGlyphExtents (disp, f, &glyph, 1, &extents);
+          FT_UInt glyphs [rxvt_compose_expand_static<FcChar32>::max_size];
 
-          ep->glyph = glyph;
-          ep->x = x_ + (cwidth - extents.xOff >> 1);
-          ep->y = y_ + ascent;
+          for (int i = 0; i < nchrs; ++i)
+            glyphs [i] = XftCharIndex (disp, f, chrs [i]);
+
+          XftGlyphExtents (disp, f, glyphs, nchrs, &extents);
+
+          XftGlyphSpec ep;
+
+          ep.x = x_ + (cwidth - extents.xOff >> 1);
+          ep.y = y_ + ascent;
 
           if (extents.xOff == 0)
-            ep->x = x_ + cwidth;
+            ep.x = x_ + cwidth;
 
-          ep++;
+          for (int i = 0; i < nchrs; ++i)
+            {
+              ep.glyph = glyphs [i];
+              enc.push_back (ep);
+            }
         }
 
       x_ += cwidth;
@@ -1464,7 +1439,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
   if (buffered)
     {
-      if (ep != enc)
+      if (!enc.empty ())
         {
           rxvt_drawable &d2 = d.screen->scratch_drawable (w, h);
 
@@ -1520,7 +1495,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 #endif
             XftDrawRect (d2, &term->pix_colors[bg >= 0 ? bg : Color_bg].c, 0, 0, w, h);
 
-          XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);
+          XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, &enc[0], enc.size ());
           XCopyArea (disp, d2, d, gc, 0, 0, w, h, x, y);
         }
       else
@@ -1529,7 +1504,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   else
     {
       clear_rect (d, x, y, w, h, bg);
-      XftDrawGlyphSpec (d, &term->pix_colors[fg].c, f, enc, ep - enc);
+      XftDrawGlyphSpec (d, &term->pix_colors[fg].c, f, &enc[0], enc.size ());
     }
 }
 
