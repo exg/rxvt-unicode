@@ -170,7 +170,7 @@ rxvt_term::iso14755_51 (unicode_t ch, rend_t r, int x, int y, int y2)
 # if ENABLE_COMBINING
   if (IS_COMPOSE (ch))
     {
-      len = rxvt_composite.expand (ch, 0);
+      len = rxvt_composite.expand (ch);
       alloc = chr = new wchar_t[len];
       rxvt_composite.expand (ch, chr);
     }

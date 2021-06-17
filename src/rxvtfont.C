@@ -214,7 +214,7 @@ enc_xchar2b (const text_t *text, uint32_t len, codeset cs, bool &zero)
 /////////////////////////////////////////////////////////////////////////////
 
 rxvt_font::rxvt_font ()
-: name(0), width(rxvt_fontprop::unset), height(rxvt_fontprop::unset)
+: name(0), width(rxvt_fontprop::unset), height(rxvt_fontprop::unset), can_compose(false)
 {
 }
 
@@ -347,15 +347,15 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 
   while (len)
     {
-#if ENABLE_COMBINING
-      compose_char *cc;
-#endif
       const text_t *tp = text;
       text_t t  = *tp;
 
       while (++text, --len && *text == NOCHAR)
         ;
 
+#if ENABLE_COMBINING
+      compose_char *cc;
+#endif
       int width = text - tp;
       int fwidth = term->fwidth * width;
 
@@ -444,10 +444,32 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
         ;
 #endif
 #if ENABLE_COMBINING
-      else if (IS_COMPOSE (t) && (cc = rxvt_composite[t]))
+      else if (IS_COMPOSE (t) && rxvt_composite[t])
         {
           min_it (width, 2); // we only support wcwidth up to 2
 
+          #if NOT_YET
+          vector<text_t> chrs;
+          chrs.reserve (rxvt_composite.expand (t));
+          rxvt_composite.expand (t, &chrs[0]);
+
+          while (!chrs.empty ())
+            {
+              rxvt_font *f1 = fs->find_font_idx (chrs[0])
+
+              int i = 0;
+              while (i < chrs.size () - 1
+                     && f1->can_combine
+                     && f1->has-char (chrs[i + 1], careful)
+                     && !careful
+                ++i;
+
+              (*fs)[f1]->draw (d, x, y, &chrs[0], width, fg, bg);
+              chrs.erase (&chrs[0], &chrs[i]);
+            }
+          #endif
+
+          #if 1
           text_t chrs[2];
           chrs [1] = NOCHAR;
 
@@ -467,6 +489,7 @@ rxvt_font_default::draw (rxvt_drawable &d, int x, int y,
 
               f2->draw (d, x, y, chrs, width, fg, Color_none);
             }
+          #endif
         }
 #endif
       else
@@ -1142,6 +1165,7 @@ struct rxvt_font_xft : rxvt_font
 {
   rxvt_font_xft ()
   {
+    can_compose = true;
     f = 0;
   }
 

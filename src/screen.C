@@ -2852,7 +2852,7 @@ rxvt_term::selection_make (Time tm)
 #if ENABLE_COMBINING
           else if (IS_COMPOSE (*t))
             {
-              int len = rxvt_composite.expand (*t, 0);
+              int len = rxvt_composite.expand (*t);
 
               extra -= (len - 1);
 

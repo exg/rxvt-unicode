@@ -1791,7 +1791,7 @@ rxvt_term::special_decode (SV *text)
           if (*s == NOCHAR)
             ;
           else if (IS_COMPOSE (*s))
-            dlen += rxvt_composite.expand (*s, 0);
+            dlen += rxvt_composite.expand (*s);
           else
             dlen++;
 

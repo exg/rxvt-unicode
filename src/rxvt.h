@@ -806,7 +806,8 @@ class rxvt_composite_vec
   vector<compose_char> v;
 public:
   text_t compose (unicode_t c1, unicode_t c2 = NOCHAR);
-  int expand (unicode_t c, wchar_t *r);
+  template<typename T> int expand (unicode_t c, T *r);
+  int expand (unicode_t c) { return expand (c, (text_t *)0); }
   compose_char *operator [](text_t c)
   {
     return c >= COMPOSE_LO && c < COMPOSE_LO + v.size ()

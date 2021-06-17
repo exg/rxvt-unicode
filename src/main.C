@@ -126,7 +126,8 @@ text_t rxvt_composite_vec::compose (unicode_t c1, unicode_t c2)
   return v.size () - 1 + COMPOSE_LO;
 }
 
-int rxvt_composite_vec::expand (unicode_t c, wchar_t *r)
+template<typename T>
+int rxvt_composite_vec::expand (unicode_t c, T *r)
 {
   compose_char *cc = (*this)[c];
 
@@ -147,8 +148,10 @@ int rxvt_composite_vec::expand (unicode_t c, wchar_t *r)
     }
 
   return len;
-
 }
+
+template int rxvt_composite_vec::expand<text_t>  (unicode_t c, text_t *);
+template int rxvt_composite_vec::expand<wchar_t> (unicode_t c, wchar_t *);
 #endif
 
 rxvt_term::rxvt_term ()
