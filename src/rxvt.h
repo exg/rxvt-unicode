@@ -793,7 +793,7 @@ struct compose_char
 {
   // c1 can be any chaarcter != NOCHAR, including another compose character
   // c2 must always be a zero-width character or NOCHAR, in case
-  // this just extends beyondthe BMP.
+  // this just extends beyond the BMP.
   unicode_t c1, c2;
 
   compose_char (unicode_t c1, unicode_t c2)
