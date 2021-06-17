@@ -47,7 +47,8 @@
 #include "rxvtdaemon.h"
 #include "libptytty.h"
 
-struct server : rxvt_connection {
+struct server : rxvt_connection
+{
   log_callback log_cb;
   getfd_callback getfd_cb;
 
@@ -70,7 +71,8 @@ struct server : rxvt_connection {
   void err (const char *format = 0, ...);
 };
 
-struct unix_listener {
+struct unix_listener
+{
   int fd;
 
   void accept_cb (ev::io &w, int revents); ev::io accept_ev;
