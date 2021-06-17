@@ -3021,7 +3021,7 @@ rxvt_term::process_csi_seq ()
                 tt_printf ("%-.250s\012", rs[Rs_display_name]);
               break;
             case 8:			/* unofficial extension */
-              process_xterm_seq (XTerm_title, RESNAME "-" VERSION, CHAR_ST);
+              process_xterm_seq (XTerm_title, (char *)RESNAME "-" VERSION, CHAR_ST); // char * cast verified
               break;
           }
         break;
