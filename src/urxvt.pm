@@ -737,7 +737,7 @@ sub invoke {
          if ($_ eq "default") {
 
             $ext_arg{$_} = []
-               for qw(selection option-popup selection-popup readline searchable-scrollback);
+               for qw(selection option-popup selection-popup readline searchable-scrollback confirm-paste);
 
             for ($TERM->_keysym_resources) {
                next if /^(?:string|command|builtin|builtin-string|perl)/;
