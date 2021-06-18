@@ -821,13 +821,11 @@ extern class rxvt_composite_vec rxvt_composite;
 
 // expand the sequence into a static array
 // works even without ENABLE_COMBINING
-template<typename T>
+template<typename T, int max_size_ = 48>
 struct rxvt_compose_expand_static
 {
 #if ENABLE_COMBINING
-  // we arbitrarily limit the maximum number of compose sequences
-  // so we can store them in a static array on the stack.
-  enum { max_size = 48 };
+  enum { max_size = max_size_ };
 
   T chrs[max_size];
 
