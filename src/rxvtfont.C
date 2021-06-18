@@ -1384,9 +1384,8 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                      const text_t *text, int len,
                      int fg, int bg)
 {
-  //XftGlyphSpec *enc = rxvt_temp_buf<XftGlyphSpec> (len);//D
-  //XftGlyphSpec *ep = enc;//D
-  static vector<XftGlyphSpec> enc; enc.resize (0); // static to avoid malloc, still slow
+  XftGlyphSpec *enc = rxvt_temp_buf<XftGlyphSpec> (len);
+  XftGlyphSpec *ep = enc;
 
   dTermDisplay;
   dTermGC;
@@ -1440,14 +1439,13 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           XGlyphInfo extents;
           XftGlyphExtents (disp, f, &glyph, 1, &extents);
 
-          XftGlyphSpec ep;
-          ep.glyph = glyph;
-          ep.x = x_;
-          ep.y = y_ + ascent;
+          ep->glyph = glyph;
+          ep->x = x_;
+          ep->y = y_ + ascent;
 
           // the xft font cell might differ from the terminal font cell,
           // in which we use the average between the two
-          ep.x += cwidth - extents.xOff >> 1;
+          ep->x += cwidth - extents.xOff >> 1;
 
           // xft/freetype represent combining characters as characters with zero
           // width rendered over the previous character with some fonts, while
@@ -1456,9 +1454,9 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           // we handle the first two cases by keying off on xOff being 0
           // for zero-width chars. normally, we would add extents.xOff
           // of the base chaarcter here, but we don't have that, so we use cwidth.
-          ep.x += extents.xOff ? 0 : cwidth;
+          ep->x += extents.xOff ? 0 : cwidth;
 
-          enc.push_back (ep);
+          ++ep;
         }
 
       x_ += cwidth;
@@ -1466,7 +1464,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
   if (buffered)
     {
-      if (!enc.empty ())
+      if (ep != enc)
         {
           rxvt_drawable &d2 = d.screen->scratch_drawable (w, h);
 
@@ -1522,7 +1520,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 #endif
             XftDrawRect (d2, &term->pix_colors[bg >= 0 ? bg : Color_bg].c, 0, 0, w, h);
 
-          XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, &enc[0], enc.size ());
+          XftDrawGlyphSpec (d2, &term->pix_colors[fg].c, f, enc, ep - enc);
           XCopyArea (disp, d2, d, gc, 0, 0, w, h, x, y);
         }
       else
@@ -1531,7 +1529,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   else
     {
       clear_rect (d, x, y, w, h, bg);
-      XftDrawGlyphSpec (d, &term->pix_colors[fg].c, f, &enc[0], enc.size ());
+      XftDrawGlyphSpec (d, &term->pix_colors[fg].c, f, enc, ep - enc);
     }
 }
 
