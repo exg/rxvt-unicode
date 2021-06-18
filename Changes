@@ -42,11 +42,12 @@ TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, 
 
 TODO: xterm-osc does not autoload background
 TODO: think about daemon delaying urxvt client exit.
+IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
-TODO: compose chars should be rendered "in one go" for xft. maybe. possibly.
 TODO: disbale bracketed paste mode option, too amny prorgams abuse it
-	- enable confirm-paste extzensions by default, can be disabled by e.g.
+TODO: undo multi combining char renering for xft for the time being
+	- enable confirm-paste extension by default, can be disabled by e.g.
           URxvt.perl-ext: -confirm-paste
 	- if urxvt cannot detect a good estimate for font width (because a font does
           not contain laitn characters at all for example), it will now fall
@@ -54,11 +55,17 @@ TODO: disbale bracketed paste mode option, too amny prorgams abuse it
           currently will warn about this.
 	- do not render variation selectors in the default font as boxes, treat
           them as zero-width characters.
-        - unicode characters outside of the BMP can now be rendered even
-          without --enable-unicode3, when using xft fonts.
-        - urxvt now passes full combining character sequences to xft,
-          increasing the chance of it doing something useful with it, such
-          as correctly applying variant selectors.
+        - change combining character architecture to allow fonts to handle
+          combining sequences on their own. This could allow future renderers
+          to be more intelligent about these sequences.
+        - use the previous enhancement to allow unicode characters outside of the
+          BMP to be rendered even without --enable-unicode3, as long as an
+          xft with the character is configured.
+          It's recommended to stay with disabled unicode3 even more now.
+        - freetype/xft have been verified to return nonsensical offsets for
+          combining characters. urxvt tries to compensate to some extent,
+          but diacritics will be slightly off in many cases, and far off in
+          some cases (e.g. input mono).
 	- allow perl-ext and perl-ext-common to override autoloaded extensions.
           this allows tabbed to disable itself in subtabs, avoiding recursive
           loading.

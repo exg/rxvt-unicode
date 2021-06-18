@@ -1414,7 +1414,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
       if (chrs [0] != ' ') // skip spaces
         {
-          #if 0
+          #if 1
           FT_UInt glyphs [decltype (exp)::max_size];
 
           for (int i = 0; i < nchrs; ++i)
@@ -1424,28 +1424,32 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
             {
               XGlyphInfo ep;
               XftGlyphExtents (disp, f, glyphs+i, 1, &ep);
-              printf ("gs %x g %x + %d,%d o %d,%d wh %d,%d\n", chrs[i],glyphs[i],ep.x,ep.y,ep.xOff,ep.yOff,ep.width,ep.height);
+              printf ("gs %4x g %4x + %3d,%3d o %3d,%3d wh %3d,%3d\n", chrs[i],glyphs[i],ep.x,ep.y,ep.xOff,ep.yOff,ep.width,ep.height);
             }
           #endif
 
-          for (int i = 0; i < nchrs; ++i)
+          FT_UInt glyph = XftCharIndex (disp, f, chrs [0]);
+          XGlyphInfo extents0;
+          XftGlyphExtents (disp, f, &glyph, 1, &extents0);
+
+          int cx = x_ + (cwidth - extents0.xOff >> 1);
+          int cy = y_ + ascent;
+
+          XftGlyphSpec ep;
+          ep.glyph = glyph;
+          ep.x = cx + (extents0.xOff ? 0 : extents0.xOff);
+          ep.y = cy;
+
+          enc.push_back (ep);
+
+          for (int i = 1; ecb_expect_false (i < nchrs); ++i)
             {
               FT_UInt glyph = XftCharIndex (disp, f, chrs [i]);
               XGlyphInfo extents;
               XftGlyphExtents (disp, f, &glyph, 1, &extents);
 
-              XftGlyphSpec ep;
-
-              int cx = x_ + (cwidth - extents.xOff >> 1);
-              int cy = y_ + ascent;
-
-              // lone combining char
-              if (extents.xOff == 0)
-                cx = x_ + cwidth;
-
               ep.glyph = glyph;
-              ep.x = cx + extents.x;
-              ep.y = cy;
+              ep.x = cx + (extents.xOff ? 0 : extents0.xOff);
 
               enc.push_back (ep);
             }
