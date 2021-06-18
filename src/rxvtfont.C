@@ -1344,31 +1344,34 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   FcChar32 *chrs = exp (unicode);
   int nchrs = exp.length (chrs);
 
-  // we handle the sequence if the first char is available
-  if (!XftCharExists (term->dpy, f, chrs [0]))
-    return false;
+  // allm chars in sequence must be available
+  for (int i = 0; i < nchrs; ++i)
+    if (!XftCharExists (term->dpy, f, chrs [i]))
+      return false;
 
   if (!prop || prop->width == rxvt_fontprop::unset)
     return true;
 
-  // but we check against the whole sequence bounding box
-
-  // check character against base font bounding box
-  FcChar32 ch = unicode;
-  XGlyphInfo g;
-  XftTextExtents32 (term->dpy, f, chrs, nchrs, &g);
-
-  int w = g.width - g.x;
   int wcw = max (WCWIDTH (chrs [0]), 1);
 
-  careful = g.x > 0 || w > prop->width * wcw;
+  // we check against all glyph sizes. this is probably wrong,
+  // due to the way ->draw positions these glyphs.
+  for (int i = 0; i < nchrs; ++i)
+    {
+      XGlyphInfo g;
+      XftTextExtents32 (term->dpy, f, chrs + i, 1, &g);
 
-  if (careful && !OVERLAP_OK (w, wcw, prop))
-    return false;
+      int w = g.width - g.x;
 
-  // this weeds out _totally_ broken fonts, or glyphs
-  if (!OVERLAP_OK (g.xOff, wcw, prop))
-    return false;
+      careful = g.x > 0 || w > prop->width * wcw;
+
+      if (careful && !OVERLAP_OK (w, wcw, prop))
+        return false;
+
+      // this weeds out _totally_ broken fonts, or glyphs
+      if (!OVERLAP_OK (g.xOff, wcw, prop))
+        return false;
+    }
 
   return true;
 }
@@ -1378,7 +1381,6 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
                      const text_t *text, int len,
                      int fg, int bg)
 {
-  XGlyphInfo extents;
   //XftGlyphSpec *enc = rxvt_temp_buf<XftGlyphSpec> (len);//D
   //XftGlyphSpec *ep = enc;//D
   static vector<XftGlyphSpec> enc; enc.resize (0); // static to avoid malloc, still slow
@@ -1412,24 +1414,39 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
       if (chrs [0] != ' ') // skip spaces
         {
-          FT_UInt glyphs [rxvt_compose_expand_static<FcChar32>::max_size];
+          #if 0
+          FT_UInt glyphs [decltype (exp)::max_size];
 
           for (int i = 0; i < nchrs; ++i)
             glyphs [i] = XftCharIndex (disp, f, chrs [i]);
 
-          XftGlyphExtents (disp, f, glyphs, nchrs, &extents);
-
-          XftGlyphSpec ep;
-
-          ep.x = x_ + (cwidth - extents.xOff >> 1);
-          ep.y = y_ + ascent;
-
-          if (extents.xOff == 0)
-            ep.x = x_ + cwidth;
+          for (int i = 0; i < nchrs; ++i)
+            {
+              XGlyphInfo ep;
+              XftGlyphExtents (disp, f, glyphs+i, 1, &ep);
+              printf ("gs %x g %x + %d,%d o %d,%d wh %d,%d\n", chrs[i],glyphs[i],ep.x,ep.y,ep.xOff,ep.yOff,ep.width,ep.height);
+            }
+          #endif
 
           for (int i = 0; i < nchrs; ++i)
             {
-              ep.glyph = glyphs [i];
+              FT_UInt glyph = XftCharIndex (disp, f, chrs [i]);
+              XGlyphInfo extents;
+              XftGlyphExtents (disp, f, &glyph, 1, &extents);
+
+              XftGlyphSpec ep;
+
+              int cx = x_ + (cwidth - extents.xOff >> 1);
+              int cy = y_ + ascent;
+
+              // lone combining char
+              if (extents.xOff == 0)
+                cx = x_ + cwidth;
+
+              ep.glyph = glyph;
+              ep.x = cx + extents.x;
+              ep.y = cy;
+
               enc.push_back (ep);
             }
         }
