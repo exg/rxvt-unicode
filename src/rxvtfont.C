@@ -1340,38 +1340,41 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
 {
   careful = false;
 
-  rxvt_compose_expand_static<FcChar32> exp;
-  FcChar32 *chrs = exp (unicode);
-  int nchrs = exp.length (chrs);
-
-  // allm chars in sequence must be available
-  for (int i = 0; i < nchrs; ++i)
-    if (!XftCharExists (term->dpy, f, chrs [i]))
+  // handle non-bmp chars when text_t is 16 bit
+#if ENABLE_COMBINING && !UNICODE_3
+  if (ecb_expect_false (IS_COMPOSE (unicode)))
+    if (compose_char *cc = rxvt_composite [unicode])
+      if (cc->c2 == NOCHAR)
+        unicode = cc->c1;
+      else
+        return false;
+    else
       return false;
+#endif
+
+  FcChar32 chr = unicode;
+
+  if (!XftCharExists (term->dpy, f, chr))
+    return false;
 
   if (!prop || prop->width == rxvt_fontprop::unset)
     return true;
 
-  int wcw = max (WCWIDTH (chrs [0]), 1);
+  int wcw = max (WCWIDTH (chr), 1);
 
-  // we check against all glyph sizes. this is probably wrong,
-  // due to the way ->draw positions these glyphs.
-  for (int i = 0; i < nchrs; ++i)
-    {
-      XGlyphInfo g;
-      XftTextExtents32 (term->dpy, f, chrs + i, 1, &g);
+  XGlyphInfo g;
+  XftTextExtents32 (term->dpy, f, &chr, 1, &g);
 
-      int w = g.width - g.x;
+  int w = g.width - g.x;
 
-      careful = g.x > 0 || w > prop->width * wcw;
+  careful = g.x > 0 || w > prop->width * wcw;
 
-      if (careful && !OVERLAP_OK (w, wcw, prop))
-        return false;
+  if (careful && !OVERLAP_OK (w, wcw, prop))
+    return false;
 
-      // this weeds out _totally_ broken fonts, or glyphs
-      if (!OVERLAP_OK (g.xOff, wcw, prop))
-        return false;
-    }
+  // this weeds out _totally_ broken fonts, or glyphs
+  if (!OVERLAP_OK (g.xOff, wcw, prop))
+    return false;
 
   return true;
 }
@@ -1404,17 +1407,22 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
   while (len)
     {
       int cwidth = term->fwidth;
+      FcChar32 chr = *text++; len--;
 
-      rxvt_compose_expand_static<FcChar32> exp;
-      FcChar32 *chrs = exp (*text++); len--;
-      int nchrs = exp.length (chrs);
+      // handle non-bmp chars when text_t is 16 bit
+      #if ENABLE_COMBINING && !UNICODE_3
+        if (ecb_expect_false (IS_COMPOSE (chr)))
+          if (compose_char *cc = rxvt_composite [chr])
+            if (cc->c2 == NOCHAR)
+              chr = cc->c1;
+      #endif
 
       while (len && *text == NOCHAR)
         text++, len--, cwidth += term->fwidth;
 
-      if (chrs [0] != ' ') // skip spaces
+      if (chr != ' ') // skip spaces
         {
-          #if 1
+          #if 0
           FT_UInt glyphs [decltype (exp)::max_size];
 
           for (int i = 0; i < nchrs; ++i)
@@ -1428,31 +1436,29 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
             }
           #endif
 
-          FT_UInt glyph = XftCharIndex (disp, f, chrs [0]);
-          XGlyphInfo extents0;
-          XftGlyphExtents (disp, f, &glyph, 1, &extents0);
-
-          int cx = x_ + (cwidth - extents0.xOff >> 1);
-          int cy = y_ + ascent;
+          FT_UInt glyph = XftCharIndex (disp, f, chr);
+          XGlyphInfo extents;
+          XftGlyphExtents (disp, f, &glyph, 1, &extents);
 
           XftGlyphSpec ep;
           ep.glyph = glyph;
-          ep.x = cx + (extents0.xOff ? 0 : extents0.xOff);
-          ep.y = cy;
+          ep.x = x_;
+          ep.y = y_ + ascent;
+
+          // the xft font cell might differ from the terminal font cell,
+          // in which we use the average between the two
+          ep.x += cwidth - extents.xOff >> 1;
+
+          // xft/freetype represent combining characters as characters with zero
+          // width rendered over the previous character with some fonts, while
+          // in other fonts, they are considered normal characters, while yet
+          // in other fonts, they are shifted all over the place.
+          // we handle the first two cases by keying off on xOff being 0
+          // for zero-width chars. normally, we would add extents.xOff
+          // of the base chaarcter here, but we don't have that, so we use cwidth.
+          ep.x += extents.xOff ? 0 : cwidth;
 
           enc.push_back (ep);
-
-          for (int i = 1; ecb_expect_false (i < nchrs); ++i)
-            {
-              FT_UInt glyph = XftCharIndex (disp, f, chrs [i]);
-              XGlyphInfo extents;
-              XftGlyphExtents (disp, f, &glyph, 1, &extents);
-
-              ep.glyph = glyph;
-              ep.x = cx + (extents.xOff ? 0 : extents0.xOff);
-
-              enc.push_back (ep);
-            }
         }
 
       x_ += cwidth;
