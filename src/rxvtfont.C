@@ -1439,8 +1439,6 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           XGlyphInfo extents;
           XftGlyphExtents (disp, f, &glyph, 1, &extents);
 
-          int xOff = extents.xOff ? extents.xOff : cwidth;
-
           ep->glyph = glyph;
           ep->x = x_;
           ep->y = y_ + ascent;
