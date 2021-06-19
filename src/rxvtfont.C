@@ -1447,7 +1447,6 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
           // the xft font cell might differ from the terminal font cell,
           // in which case we use the average between the two.
-          if (extents.xOff)
           ep->x += extents.xOff ? cwidth - extents.xOff >> 1 : 0;
 
           // xft/freetype represent combining characters as characters with zero
