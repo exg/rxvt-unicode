@@ -51,7 +51,7 @@ TODO: undo multi combining char renering for xft for the time being
           URxvt.perl-ext: -confirm-paste
 	- if urxvt cannot detect a good estimate for font width (because a font does
           not contain laitn characters at all for example), it will now fall
-          back to xft's max_advance_width, which works well with soem fonts. It
+          back to xft's max_advance_width, which works well with some fonts. It
           currently will warn about this.
 	- do not render variation selectors in the default font as boxes, treat
           them as zero-width characters.

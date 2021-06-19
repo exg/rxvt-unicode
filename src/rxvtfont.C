@@ -1735,7 +1735,7 @@ rxvt_fontset::find_font (const char *name) const
 int
 rxvt_fontset::find_font_idx (unicode_t unicode)
 {
-  // this limits fmap size. it has to accomodate COMPOSE_HI when UNICODE_3
+  // this limits fmap size. it has to accommodate COMPOSE_HI when UNICODE_3
   if (unicode > 0x1fffff)
     return 0;
 

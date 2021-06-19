@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-confirm-paste - ask for confirmation before pasting cntrol characters
+confirm-paste - ask for confirmation before pasting control characters
 
 =head1 DESCRIPTION
 
@@ -10,7 +10,7 @@ Displays a confirmation dialog when a paste containing control characters
 is detected.
 
 This is mostly meant as a defense-in-depth mechanism to protect against
-the common webbrowser bug of you selecting some text but the browser
+the common web browser bug of you selecting some text but the browser
 pasting a completely different text, which has some attack potential.
 
 It can also be useful to prevent you from accidentally pasting large

@@ -791,7 +791,7 @@ struct mbstate
 // not fitting in the BMP.
 struct compose_char
 {
-  // c1 can be any chaarcter != NOCHAR, including another compose character
+  // c1 can be any character != NOCHAR, including another compose character
   // c2 must always be a zero-width character or NOCHAR, in case
   // this just extends beyond the BMP.
   unicode_t c1, c2;
