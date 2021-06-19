@@ -819,6 +819,7 @@ struct rxvt_composite_vec
 extern class rxvt_composite_vec rxvt_composite;
 #endif
 
+#if 0
 // expand the sequence into a static array
 // works even without ENABLE_COMBINING
 template<typename T, int max_size_ = 48>
@@ -875,6 +876,7 @@ struct rxvt_compose_expand_static
   }
 #endif
 };
+#endif
 
 /****************************************************************************/
 

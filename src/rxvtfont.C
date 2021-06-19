@@ -1408,19 +1408,19 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
       int cwidth = term->fwidth;
       FcChar32 chr = *text++; len--;
 
-      // handle non-bmp chars when text_t is 16 bit
-      #if ENABLE_COMBINING && !UNICODE_3
-        if (ecb_expect_false (IS_COMPOSE (chr)))
-          if (compose_char *cc = rxvt_composite [chr])
-            if (cc->c2 == NOCHAR)
-              chr = cc->c1;
-      #endif
-
       while (len && *text == NOCHAR)
         text++, len--, cwidth += term->fwidth;
 
       if (chr != ' ') // skip spaces
         {
+          // handle non-bmp chars when text_t is 16 bit
+          #if ENABLE_COMBINING && !UNICODE_3
+            if (ecb_expect_false (IS_COMPOSE (chr)))
+              if (compose_char *cc = rxvt_composite [chr])
+                if (cc->c2 == NOCHAR)
+                  chr = cc->c1;
+          #endif
+
           #if 0
           FT_UInt glyphs [decltype (exp)::max_size];
 
@@ -1439,13 +1439,16 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           XGlyphInfo extents;
           XftGlyphExtents (disp, f, &glyph, 1, &extents);
 
+          int xOff = extents.xOff ? extents.xOff : cwidth;
+
           ep->glyph = glyph;
           ep->x = x_;
           ep->y = y_ + ascent;
 
           // the xft font cell might differ from the terminal font cell,
           // in which case we use the average between the two.
-          ep->x += cwidth - extents.xOff >> 1;
+          if (extents.xOff)
+          ep->x += extents.xOff ? cwidth - extents.xOff >> 1 : 0;
 
           // xft/freetype represent combining characters as characters with zero
           // width rendered over the previous character with some fonts, while
