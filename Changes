@@ -46,11 +46,12 @@ IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
 TODO: disbale bracketed paste mode option, too amny prorgams abuse it
-TODO: undo multi combining char renering for xft for the time being
+TODO: fontset caching per display?
+TODO: xOff caching. for ascii only? fr basefont only?
 	- enable confirm-paste extension by default, can be disabled by e.g.
           URxvt.perl-ext: -confirm-paste
 	- if urxvt cannot detect a good estimate for font width (because a font does
-          not contain laitn characters at all for example), it will now fall
+          not contain latin characters at all for example), it will now fall
           back to xft's max_advance_width, which works well with some fonts. It
           currently will warn about this.
 	- do not render variation selectors in the default font as boxes, treat
