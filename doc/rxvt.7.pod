@@ -31,7 +31,7 @@ L<http://pod.tst.eu/http://cvs.schmorp.de/rxvt-unicode/doc/rxvt.1.pod>.
 
 =head3 My question isn't answered here, can I ask a human?
 
-Before sending me mail, you could go to IRC: C<irc.freenode.net>,
+Before sending me mail, you could go to IRC: C<irc.libera.chat>,
 channel C<#rxvt-unicode> has some rxvt-unicode enthusiasts that might be
 interested in learning about new and exciting problems (but not FAQs :).
 
