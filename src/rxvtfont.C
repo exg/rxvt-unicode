@@ -136,10 +136,10 @@ static const struct rxvt_fallback_font {
 
   //{ CS_UNICODE,      "-*-unifont-*-*-*-*-*-*-*-*-c-*-iso10646-1"   }, // this gem of a font has actual dotted circles within the combining character glyphs.
 #if XFT
-  { CS_UNICODE,      "xft:Bitstream Vera Sans Mono:antialias=false:autohint=true" },
-  { CS_UNICODE,      "xft:Courier New:antialias=false:autohint=true"              },
-  { CS_UNICODE,      "xft:Andale Mono:antialias=false:autohint=false"             },
-  { CS_UNICODE,      "xft:Arial Unicode MS:antialias=false:autohint=false"        },
+  { CS_UNICODE,      "xft:DejaVu Sans Mono:antialias=false:autohint=true"  },
+  { CS_UNICODE,      "xft:Courier New:antialias=false:autohint=true"       },
+  { CS_UNICODE,      "xft:Andale Mono:antialias=false:autohint=false"      },
+  { CS_UNICODE,      "xft:Arial Unicode MS:antialias=false:autohint=false" },
 
   // FreeMono is usually uglier than x fonts, so try after the others
   { CS_UNICODE,      "xft:FreeMono:autohint=true"                  },
