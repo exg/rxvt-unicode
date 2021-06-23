@@ -48,6 +48,9 @@ TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa co
 TODO: disbale bracketed paste mode option, too amny prorgams abuse it
 TODO: fontset caching per display?
 TODO: xOff caching. for ascii only? fr basefont only?
+	- allow URxvt*keysym to match again. The fatc that it was ignored
+          is considered a regression due in the way we checked for keysym
+          resources.
 	- enable confirm-paste extension by default, can be disabled by e.g.
           URxvt.perl-ext: -confirm-paste
 	- if urxvt cannot detect a good estimate for font width (because a font does

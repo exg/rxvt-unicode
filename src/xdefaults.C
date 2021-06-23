@@ -862,10 +862,7 @@ rxvt_enumerate_helper (
   // own iteration function, but this ought to be less bloated
   if (data->specific)
     {
-      if (*bindings != XrmBindTightly)
-        return False;
-
-      ++quarks, ++bindings; // skip if this is a fixed prefix, rather than a *-match
+      ++quarks, ++bindings;
       if (*quarks == NULLQUARK) return False;
     }
 
