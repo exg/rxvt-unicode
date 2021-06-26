@@ -207,10 +207,6 @@ void server::read_cb (ev::io &w, int revents)
               {
                 term->init (argv, envv);
               }
-            catch (const class rxvt_failure_exception &e)
-              {
-                success = false;
-              }
             catch (const std::exception &e)
               {
                 log_msg (e.what());

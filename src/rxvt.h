@@ -125,7 +125,15 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 /****************************************************************************/
 
 // exception thrown on fatal (per-instance) errors
-class rxvt_failure_exception { };
+class rxvt_failure_exception : public std::exception
+{
+public:
+  const char *
+  what () const noexcept override
+  {
+    return "";
+  }
+};
 
 // exception thrown when the command parser runs out of input data
 class out_of_input { };
