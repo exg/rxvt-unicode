@@ -211,6 +211,11 @@ void server::read_cb (ev::io &w, int revents)
               {
                 success = false;
               }
+            catch (const std::exception &e)
+              {
+                log_msg (e.what());
+                success = false;
+              }
 
             term->log_hook = 0;
 
@@ -276,7 +281,15 @@ static int get_listen_fds ()
 int
 main (int argc, char *argv[])
 {
-  ptytty::init ();
+  try
+    {
+      ptytty::init ();
+    }
+  catch (const std::exception &e)
+    {
+      fputs (e.what (), stderr);
+      return EXIT_FAILURE;
+    }
 
   static char opt_fork, opt_opendisplay, opt_quiet;
 #if ENABLE_PERL
