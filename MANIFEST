@@ -41,6 +41,7 @@ doc/extensions.pod.top
 doc/extensions.pod.bot
 
 src/ecb.h
+src/estl.h
 
 src/.cvsignore
 src/Makefile.in
