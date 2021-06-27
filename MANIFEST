@@ -40,6 +40,8 @@ doc/rxvtd.1.man.in
 doc/extensions.pod.top
 doc/extensions.pod.bot
 
+src/ecb.h
+
 src/.cvsignore
 src/Makefile.in
 src/callback.h
@@ -177,7 +179,7 @@ src/perl/tabbed
 src/perl/urxvt-popup
 src/perl/xim-onthespot
 
-libev/Changes
+libev/LICENSE
 libev/ev.h
 libev/ev++.h
 libev/ev.c
