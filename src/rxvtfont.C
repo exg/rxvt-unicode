@@ -1144,7 +1144,7 @@ struct rxvt_font_xft : rxvt_font
   // expecting terminals to deal mostly with these characters
   // we also assume the xoff always fits into uint8_t,
   // which is questionable, but let's see...
-  // also, it is uncomfortably bug, due toit he uints.
+  // also, it is uncomfortably big, due to the uints.
   enum { char_cache_min = 0x20, char_cache_max = 0x7e };
   uint8_t xoff_cache  [char_cache_max - char_cache_min + 1];
   FT_UInt glyph_cache [char_cache_max - char_cache_min + 1];
