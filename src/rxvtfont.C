@@ -1139,6 +1139,17 @@ rxvt_font_x11::draw (rxvt_drawable &d, int x, int y,
 
 struct rxvt_font_xft : rxvt_font
 {
+#if XFT_CHAR_CACHE
+  // we cache the qascii range xoffsets in the name of speed,
+  // expecting terminals to deal mostly with these characters
+  // we also assume the xoff always fits into uint8_t,
+  // which is questionable, but let's see...
+  // also, it is uncomfortably bug, due toit he uints.
+  enum { char_cache_min = 0x20, char_cache_max = 0x7e };
+  uint8_t xoff_cache  [char_cache_max - char_cache_min + 1];
+  FT_UInt glyph_cache [char_cache_max - char_cache_min + 1];
+#endif
+
   rxvt_font_xft ()
   {
     f = 0;
@@ -1332,6 +1343,19 @@ rxvt_font_xft::load (const rxvt_fontprop &prop, bool force_prop)
     }
 #endif
 
+#if XFT_CHAR_CACHE
+  // populate char cache
+  for (FcChar16 ch = char_cache_min; ch <= char_cache_max; ++ch)
+    {
+      FT_UInt glyph = XftCharIndex (disp, f, ch);
+      glyph_cache [ch - char_cache_min] = glyph;
+
+      XGlyphInfo g;
+      XftGlyphExtents (disp, f, &glyph, 1, &g);
+      xoff_cache [ch - char_cache_min] = g.xOff;
+    }
+#endif
+
   return success;
 }
 
@@ -1435,9 +1459,23 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
             }
           #endif
 
-          FT_UInt glyph = XftCharIndex (disp, f, chr);
-          XGlyphInfo extents;
-          XftGlyphExtents (disp, f, &glyph, 1, &extents);
+          FT_UInt glyph;
+          int xOff;
+
+          #if XFT_CHAR_CACHE
+          if (ecb_expect_true (IN_RANGE_INC (chr, char_cache_min, char_cache_max)))
+            {
+              glyph = glyph_cache [chr - char_cache_min];
+              xOff  = xoff_cache  [chr - char_cache_min];
+            }
+          else
+          #endif
+            {
+              glyph = XftCharIndex (disp, f, chr);
+              XGlyphInfo extents;
+              XftGlyphExtents (disp, f, &glyph, 1, &extents);
+              xOff = extents.xOff;
+            }
 
           ep->glyph = glyph;
           ep->x = x_;
@@ -1445,7 +1483,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
 
           // the xft font cell might differ from the terminal font cell,
           // in which case we use the average between the two.
-          ep->x += extents.xOff ? cwidth - extents.xOff >> 1 : 0;
+          ep->x += xOff ? cwidth - xOff >> 1 : 0;
 
           // xft/freetype represent combining characters as characters with zero
           // width rendered over the previous character with some fonts, while
@@ -1454,7 +1492,7 @@ rxvt_font_xft::draw (rxvt_drawable &d, int x, int y,
           // we handle the first two cases by keying off on xOff being 0
           // for zero-width chars. normally, we would add extents.xOff
           // of the base character here, but we don't have that, so we use cwidth.
-          ep->x += extents.xOff ? 0 : cwidth;
+          ep->x += xOff ? 0 : cwidth;
 
           ++ep;
         }
