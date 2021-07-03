@@ -410,7 +410,7 @@ the end of the logical line only. resource B<tripleclickwords>.
 
 =item B<-dpb>|B<+dpb>
 
-Compile frills: Disables (or enables) emitting bracketed paste mode
+Compile frills: Disable (or enable) emitting bracketed paste mode
 sequences (default enabled). Bracketed paste mode allows programs
 to detect when something is pasted. Since more and more programs
 abuse this, these sequences can be disabled. The command sequences to
@@ -1035,11 +1035,11 @@ the end of the logical line only; option B<-tcw>.
 
 =item B<disablePasteBrackets:> I<boolean>
 
-Prevents emission of paste bracket sequences; option B<-dpb>.
+Prevent emission of paste bracket sequences; option B<-dpb>.
 
 =item B<insecure:> I<boolean>
 
-Enables "insecure" mode. Rxvt-unicode offers some escape sequences that
+Enable "insecure" mode. Rxvt-unicode offers some escape sequences that
 echo arbitrary strings like the icon name or the locale. This could be
 abused if somebody gets 8-bit-clean access to your display, whether
 through a mail client displaying mail bodies unfiltered or through
