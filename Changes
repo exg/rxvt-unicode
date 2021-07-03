@@ -57,7 +57,8 @@ TODO: clean up the resource vs. long option mess, especially in the manpage.
         - new option/resource -dpb/disablePasteBrackets, which can be used to
           disable bracketed paste mode sequences, as more and more programs
           abuse these sequences (typically in the name of security, but these
-          sequences are not improving security).
+          sequences are not improving security). Also, bracketed paste mode
+          is now under frills.
 	- enable confirm-paste extension by default, can be disabled by e.g.
           URxvt.perl-ext: -confirm-paste
 	- if urxvt cannot detect a good estimate for font width (because a font does
