@@ -1286,7 +1286,7 @@ source file F</src/optinc.h> to see the actual list:
  pointerBlank reverseVideo scrollBar scrollBar_floating scrollBar_right
  scrollTtyKeypress scrollTtyOutput scrollWithBuffer secondaryScreen
  secondaryScroll skipBuiltinGlyphs skipScroll transparent tripleclickwords
- urgentOnBell utmpInhibit visualBell
+ urgentOnBell utmpInhibit visualBell disablePasteBrackets
 
 =item $value = $term->resource ($name[, $newval])
 
@@ -1322,7 +1322,7 @@ to see the actual list:
   scrollTtyKeypress scrollTtyOutput scrollWithBuffer scrollstyle
   secondaryScreen secondaryScroll shade skipBuiltinGlyphs skipScroll
   term_name title transient_for transparent tripleclickwords urgentOnBell
-  utmpInhibit visualBell
+  utmpInhibit visualBell rewrapMode disablePasteBrackets
 
 =cut
 

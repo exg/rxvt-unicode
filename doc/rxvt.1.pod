@@ -408,6 +408,16 @@ button. Only effective when the original (non-perl) selection code is
 in-use. Instead of selecting a full line it will extend the selection to
 the end of the logical line only. resource B<tripleclickwords>.
 
+=item B<-dpb>|B<+dpb>
+
+Compile frills: Disables (or enabled) emitting bracketed paste mode
+sequences (default enabled). Bracketed paste mode allows programs
+to detect when something is pasted. Since more and more programs
+abuse this, these sequences can be disabled. The command sequences to
+enable and query paste mode will still work, but the actual bracket
+sequences will no longer be omitted. You can also toggle this from the
+ctrl-middle-mouse-button menu; resource B<disablePAsteBrackets>.
+
 =item B<-insecure>
 
 Enable "insecure" mode, which currently enables most of the escape
@@ -429,6 +439,14 @@ B<secondaryScreen>.
 
 Turn on/off secondary screen scroll (default enabled); resource
 B<secondaryScroll>.
+
+=item B<-rm> I<mode>
+
+Compile I<frills>: Sets long line rewrapping behaviour on window resizes
+to one of B<auto> (the default), B<always> or B<never>. The latter two
+modes do the obvious, B<auto> rewraps (acts like B<always>) if scrollback
+is non-empty, and wings lines (acts like B<never>) otherwise; resource
+B<rewrapMode>.
 
 =item B<-hold>|B<+hold>
 
@@ -1015,6 +1033,10 @@ Change the meaning of triple-click selection with the left mouse
 button. Instead of selecting a full line it will extend the selection to
 the end of the logical line only; option B<-tcw>.
 
+=item B<disablePasteBrackets:> I<boolean>
+
+Prevents emission of paste bracket sequences; option B<-dpb>.
+
 =item B<insecure:> I<boolean>
 
 Enables "insecure" mode. Rxvt-unicode offers some escape sequences that
@@ -1044,6 +1066,11 @@ in the entry on B<keysym> following.
 =item B<secondaryScreen:> I<boolean>
 
 Turn on/off secondary screen (default enabled).
+
+=item B<rewrapMode:> I<mode>
+
+Sets long line rewrap behaviour on window resize to one of B<auto>
+(default), B<always> or B<never>.
 
 =item B<secondaryScroll:> I<boolean>
 

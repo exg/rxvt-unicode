@@ -45,12 +45,19 @@ TODO: think about daemon delaying urxvt client exit.
 IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
-TODO: disbale bracketed paste mode option, too amny prorgams abuse it
 TODO: fontset caching per display?
 TODO: xOff caching. for ascii only? fr basefont only?
-	- allow URxvt*keysym to match again. The fatc that it was ignored
+TODO: image loading osc does not autoload background ext
+TODO: clean up the resource vs. long option mess, especially in the manpage.
+	- allow URxvt*keysym to match again. The fact that it was ignored
           is considered a regression due in the way we checked for keysym
           resources.
+        - new option/resource -rm/rewrapMode, which sets the line rewrap
+          mode to auto, never or always.
+        - new option/resource -dpb/disablePasteBrackets, which can be used to
+          disable bracketed paste mode sequences, as more and more programs
+          abuse these sequences (typically in the name of security, but these
+          sequences are not improving security).
 	- enable confirm-paste extension by default, can be disabled by e.g.
           URxvt.perl-ext: -confirm-paste
 	- if urxvt cannot detect a good estimate for font width (because a font does

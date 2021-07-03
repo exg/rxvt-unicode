@@ -1102,6 +1102,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
                   bypass_keystate:1,
 #if ENABLE_FRILLS
                   urgency_hint:1,
+                  rewrap_always:1,
+                  rewrap_never:1,
 #endif
 #if CURSOR_BLINK
                   hidden_cursor:1,

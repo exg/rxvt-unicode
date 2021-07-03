@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2021-05-14" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2021-06-27" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -169,7 +169,7 @@ The main manual page for @@RXVT_NAME@@ itself is available at
 \fIMy question isn't answered here, can I ask a human?\fR
 .IX Subsection "My question isn't answered here, can I ask a human?"
 .PP
-Before sending me mail, you could go to \s-1IRC:\s0 \f(CW\*(C`irc.freenode.net\*(C'\fR,
+Before sending me mail, you could go to \s-1IRC:\s0 \f(CW\*(C`irc.libera.chat\*(C'\fR,
 channel \f(CW\*(C`#rxvt\-unicode\*(C'\fR has some rxvt-unicode enthusiasts that might be
 interested in learning about new and exciting problems (but not FAQs :).
 .PP
@@ -2592,18 +2592,18 @@ alternative input methods (e.g. kinput2) and will also correctly
 set up the input for people using dead keys or compose keys.
 .IP "\-\-enable\-unicode3 (default: off)" 4
 .IX Item "--enable-unicode3 (default: off)"
-Recommended to stay off unless you really need non-BMP characters.
+Recommended to stay off unless you really need a lot of non-BMP
+characters.
 .Sp
-Enable direct support for displaying unicode codepoints above
-65535 (the basic multilingual page). This increases storage
-requirements per character from 2 to 4 bytes. X11 fonts do not yet
-support these extra characters, but Xft does.
+Enable support for direct storage of unicode characters above 65535
+(the basic multilingual page). This increases storage requirements per
+character from 2 to 4 bytes. X11 fonts do not yet support these extra
+characters, but Xft does.
 .Sp
-Please note that rxvt-unicode can store unicode code points >65535
-even without this flag, but the number of such characters is
-limited to a few thousand (shared with combining characters,
-see next switch), and right now rxvt-unicode cannot display them
-(input/output and cut&paste still work, though).
+Please note that rxvt-unicode can store and display unicode characters
+above 65535 even without this flag, but the number of such characters is
+limited to a few thousand (shared with combining characters, see next
+switch).
 .IP "\-\-enable\-combining (default: on)" 4
 .IX Item "--enable-combining (default: on)"
 Enable automatic composition of combining characters into

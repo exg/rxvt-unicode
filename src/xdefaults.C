@@ -136,6 +136,7 @@ optList[] = {
               BOOL (Rs_mouseWheelScrollPage, "mouseWheelScrollPage", NULL, Opt_mouseWheelScrollPage, 0, NULL),
 #endif
 #if ENABLE_FRILLS
+              BOOL (Rs_disablePasteBrackets, "disablePasteBrackets", "dpb", Opt_disablePasteBrackets, 0, "do not emit bracketed paste mode sequences"),
               BOOL (Rs_tripleclickwords, "tripleclickwords", "tcw", Opt_tripleclickwords, 0, "triple click word selection"),
               BOOL (Rs_insecure, "insecure", "insecure", Opt_insecure, 0, "enable possibly insecure escape sequences"),
               BOOL (Rs_cursorUnderline, "cursorUnderline", "uc", Opt_cursorUnderline, 0, "underline cursor"),
@@ -256,6 +257,9 @@ optList[] = {
 #ifndef NO_SECONDARY_SCREEN
               BOOL (Rs_secondaryScreen, "secondaryScreen", "ssc", Opt_secondaryScreen, 0, "enable secondary screen"),
               BOOL (Rs_secondaryScroll, "secondaryScroll", "ssr", Opt_secondaryScroll, 0, "enable secondary screen scroll"),
+#endif
+#if ENABLE_FRILLS
+              STRG (Rs_rewrapMode, "rewrapMode", "rm", "string", "rewrap mode (auto, always, never)"),
 #endif
 #if ENABLE_PERL
               RSTRG (Rs_perl_lib, "perl-lib", "string"), //, "colon-separated directories with extension scripts"),TODO

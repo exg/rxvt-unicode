@@ -2548,6 +2548,8 @@ in combination with other switches) is:
   extended mouse reporting modes (1005, 1006 and 1015).
   visual selection via -visual and -depth.
   systemd socket activation
+  selectable rewrapmode
+  bracketed paste mode
 
 It also enables some non-essential features otherwise disabled, such as:
 

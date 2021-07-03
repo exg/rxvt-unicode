@@ -306,7 +306,7 @@ rxvt_term::scr_reset ()
       int pend = MOD (term_start + top_row  , prev_total_rows);
       int q    = total_rows; // rewrapped row
 
-      if (top_row)
+      if ((rewrap_always || top_row) && !rewrap_never)
         {
           // Re-wrap lines. This is rather ugly, possibly because I am too dumb
           // to come up with a lean and mean algorithm.
@@ -2716,13 +2716,17 @@ rxvt_term::tt_paste (char *data, unsigned int len) noexcept
     if (data[i] == C0_LF)
       data[i] = C0_CR;
 
-  if (priv_modes & PrivMode_BracketPaste)
+  #if ENABLE_FRILLS
+  if ((priv_modes & PrivMode_BracketPaste) && !option (Opt_disablePasteBrackets))
     tt_printf ("\x1b[200~");
+  #endif
 
   tt_write (data, len);
 
-  if (priv_modes & PrivMode_BracketPaste)
+  #if ENABLE_FRILLS
+  if ((priv_modes & PrivMode_BracketPaste) && !option (Opt_disablePasteBrackets))
     tt_printf ("\x1b[201~");
+  #endif
 }
 
 void

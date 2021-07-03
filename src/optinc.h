@@ -14,7 +14,6 @@
  def(scrollTtyOutput)
  def(scrollTtyKeypress)
  def(transparent)
- def(tripleclickwords)
  def(scrollWithBuffer)
  def(jumpScroll)
  def(skipScroll)
@@ -30,14 +29,17 @@
  def(pastableTabs)
  def(cursorUnderline)
 #if ENABLE_FRILLS
- def(insecure)   // insecure esc sequences
+ def(tripleclickwords)
+ def(disablePasteBrackets)
  def(borderLess) // mwm borderless hints
+#endif
+#if ENABLE_FRILLS
+ def(insecure)   // insecure esc sequences
  def(hold)       // hold window open after exit
  def(override_redirect)
  def(urgentOnBell)
 #else
  nodef(insecure)
- nodef(borderLess)
  nodef(hold)
  nodef(override_redirect)
  nodef(urgentOnBell)

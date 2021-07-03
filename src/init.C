@@ -697,8 +697,19 @@ rxvt_term::init_resources (int argc, const char *const *argv)
   if (rs[Rs_lineSpace] && (i = atoi (rs[Rs_lineSpace])) >= 0)
     lineSpace = min (i, std::numeric_limits<int16_t>::max ());
 
-  if (rs[Rs_letterSpace])
-    letterSpace = atoi (rs[Rs_letterSpace]);
+  if (const char *v = rs[Rs_letterSpace])
+    letterSpace = atoi (v);
+
+  rewrap_always = rewrap_never = 0;
+  if (const char *v = rs[Rs_rewrapMode])
+    if (!strcmp (v, "never"))
+      rewrap_never = 1;
+    else if (!strcmp (v, "always"))
+      rewrap_always = 1;
+    else if (!strcmp (v, "auto"))
+      /* nop **/;
+    else
+      rxvt_warn ("invalid rewrapMode, must be auto, always or never.\n");
 #endif
 
 #ifdef POINTER_BLANK
