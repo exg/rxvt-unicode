@@ -77,6 +77,8 @@ TODO: clean up the resource vs. long option mess, especially in the manpage.
           combining characters. urxvt tries to compensate to some extent,
           but diacritics will be slightly off in many cases, and far off in
           some cases (e.g. input mono).
+        - when checking for overlap/careful handling, take non-basefont
+          character shifts into account.
 	- allow perl-ext and perl-ext-common to override autoloaded extensions.
           this allows tabbed to disable itself in subtabs, avoiding recursive
           loading.

@@ -1389,9 +1389,15 @@ rxvt_font_xft::has_char (unicode_t unicode, const rxvt_fontprop *prop, bool &car
   XGlyphInfo g;
   XftTextExtents32 (term->dpy, f, &chr, 1, &g);
 
+  int cwidth = prop->width * wcw;
+
+  // use same adjustments as in ->draw, see there
+  g.x += g.xOff ? cwidth - g.xOff >> 1 : 0;
+  g.x += g.xOff ? 0 : cwidth;
+
   int w = g.width - g.x;
 
-  careful = g.x > 0 || w > prop->width * wcw;
+  careful = g.x > 0 || w > cwidth;
 
   if (careful && !OVERLAP_OK (w, wcw, prop))
     return false;
