@@ -410,13 +410,13 @@ the end of the logical line only. resource B<tripleclickwords>.
 
 =item B<-dpb>|B<+dpb>
 
-Compile frills: Disables (or enabled) emitting bracketed paste mode
+Compile frills: Disables (or enables) emitting bracketed paste mode
 sequences (default enabled). Bracketed paste mode allows programs
 to detect when something is pasted. Since more and more programs
 abuse this, these sequences can be disabled. The command sequences to
 enable and query paste mode will still work, but the actual bracket
-sequences will no longer be omitted. You can also toggle this from the
-ctrl-middle-mouse-button menu; resource B<disablePAsteBrackets>.
+sequences will no longer be emitted. You can also toggle this from the
+ctrl-middle-mouse-button menu; resource B<disablePasteBrackets>.
 
 =item B<-insecure>
 
