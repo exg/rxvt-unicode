@@ -61,6 +61,9 @@ TODO: clean up the resource vs. long option mess, especially in the manpage.
           is now under frills.
 	- enable confirm-paste extension by default, can be disabled by e.g.
           URxvt.perl-ext: -confirm-paste
+	- eval scroll actions now scroll to the bottom when scrolling down and
+	  there are less lines to scroll than the ones requested (patch by
+	  Stephen Talley).
 	- if urxvt cannot detect a good estimate for font width (because a font does
           not contain latin characters at all for example), it will now fall
           back to xft's max_advance_width, which works well with some fonts. It
