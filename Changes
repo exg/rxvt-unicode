@@ -49,9 +49,10 @@ TODO: fontset caching per display?
 TODO: xOff caching. for ascii only? fr basefont only?
 TODO: image loading osc does not autoload background ext
 TODO: clean up the resource vs. long option mess, especially in the manpage.
-	- allow URxvt*keysym to match again. The fact that it was ignored
-          is considered a regression due in the way we checked for keysym
-          resources.
+        - Key bindings specified with the -keysym option or with resources of
+          the form URxvt*keysym work again. Such resources, as opposed to
+          resources of the form URxvt.keysym, were not officially allowed but
+          accepted, so ignoring them is considered a regression.
         - new option/resource -rm/rewrapMode, which sets the line rewrap
           mode to auto, never or always.
         - new option/resource -dpb/disablePasteBrackets, which can be used to
