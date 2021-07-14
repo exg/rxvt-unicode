@@ -59,8 +59,10 @@ TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa co
           is now under frills.
 	- enable confirm-paste extension by default, can be disabled by e.g.
           URxvt.perl-ext: -confirm-paste
+	- The view_start perl method now scrolls to the bottom also when the
+	  argument is greater than 0.
 	- eval scroll actions now scroll to the bottom when scrolling down and
-	  there are less lines to scroll than the ones requested (patch by
+	  there are less lines to scroll than the ones requested (reported by
 	  Stephen Talley).
 	- if urxvt cannot detect a good estimate for font width (because a font does
           not contain latin characters at all for example), it will now fall

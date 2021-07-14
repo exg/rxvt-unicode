@@ -1724,9 +1724,10 @@ Example:
 
 =item $view_start = $term->view_start ([$newvalue])
 
-Returns the row number of the topmost displayed line. Maximum value is
-C<0>, which displays the normal terminal contents. Lower values scroll
-this many lines into the scrollback buffer.
+Returns the row number of the topmost displayed line and changes it,
+if an argument is given. Values greater than or equal to C<0> display
+the terminal contents. Lower values scroll this many lines into the
+scrollback buffer.
 
 =item $term->want_refresh
 

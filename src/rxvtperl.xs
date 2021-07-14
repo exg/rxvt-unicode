@@ -1569,9 +1569,8 @@ rxvt_term::view_start (int newval = 1)
 	CODE:
 {
         RETVAL = THIS->view_start;
-
-        if (newval <= 0)
-          THIS->scr_changeview (max (newval, THIS->top_row));
+        if (items > 1)
+          THIS->scr_changeview (newval);
 }
         OUTPUT:
 	RETVAL

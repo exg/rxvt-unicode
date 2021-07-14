@@ -43,22 +43,22 @@ Scroll up or down by C<$count> lines or pages.
 
 sub scroll_up ($) {
     my $lines = $_[0];
-    $self->view_start (List::Util::min 0, $self->view_start - $lines);
+    $self->view_start ($self->view_start - $lines);
 }
 
 sub scroll_up_pages ($) {
     my $lines = $_[0] * ($self->nrow - 1);
-    $self->view_start (List::Util::min 0, $self->view_start - $lines);
+    $self->view_start ($self->view_start - $lines);
 }
 
 sub scroll_down ($) {
     my $lines = $_[0];
-    $self->view_start (List::Util::min 0, $self->view_start + $lines);
+    $self->view_start ($self->view_start + $lines);
 }
 
 sub scroll_down_pages ($) {
     my $lines = $_[0] * ($self->nrow - 1);
-    $self->view_start (List::Util::min 0, $self->view_start + $lines);
+    $self->view_start ($self->view_start + $lines);
 }
 
 =item scroll_to_top

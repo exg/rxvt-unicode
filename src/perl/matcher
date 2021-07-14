@@ -425,7 +425,7 @@ sub select_search {
          $self->{matches} = \@matches;
          $self->{cur_row} = $row;
          $self->{id} = $dir < 0 ? @{ $self->{matches} } - 1 : 0;
-         $self->view_start (List::Util::min 0, $row - ($self->nrow >> 1));
+         $self->view_start ($row - ($self->nrow >> 1));
          $self->want_refresh;
          return 1;
       }
