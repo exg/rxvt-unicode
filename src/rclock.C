@@ -36,7 +36,8 @@
 
 #include <dirent.h>
 
-#include <X11/Intrinsic.h>      /* Xlib, Xutil, Xresource, Xfuncproto */
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 #define APL_CLASS	"Clock"
 #define APL_NAME	"rclock"
@@ -197,7 +198,7 @@ static mywindow_t Clock = { None, 80, 80 };     /* parent window */
 #define bgColor 1
 static const char *rs_color[2] = { FG_COLOR_NAME, BG_COLOR_NAME };
 
-static Pixel PixColors[2];
+static unsigned long PixColors[2];
 static const char *rs_geometry = NULL;
 
 #ifdef ICONWIN
