@@ -1564,7 +1564,7 @@ rxvt_term::rstyle (U32 new_rstyle = THIS->rstyle)
 	RETVAL
 
 int
-rxvt_term::view_start (int newval = 1)
+rxvt_term::view_start (int newval = 0)
 	PROTOTYPE: $;$
 	CODE:
 {
