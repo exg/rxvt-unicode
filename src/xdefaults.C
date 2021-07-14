@@ -237,7 +237,7 @@ optList[] = {
               STRG (Rs_letterSpace, "letterSpace", "letsp", "number", "letter spacing adjustment"),
 #endif
 #ifdef BUILTIN_GLYPHS
-              BOOL (Rs_skipBuiltinGlyphs, "skipBuiltinGlyphs", "sbg", Opt_skipBuiltinGlyphs, 0, "using font glyphs instead of internal glyphs"),
+              BOOL (Rs_skipBuiltinGlyphs, "skipBuiltinGlyphs", "sbg", Opt_skipBuiltinGlyphs, 0, "use of font glyphs instead of internal glyphs"),
 #endif
 #ifdef POINTER_BLANK
               RSTRG (Rs_pointerBlankDelay, "pointerBlankDelay", "number"),

@@ -39,16 +39,18 @@ TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
 TODO: üpixel droppins idenrasm,ll,scrollup
 TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, in xterm/vt102, but not in rxvt
+TODO: clean up the resource vs. long option mess, especially in the manpage.
 
 TODO: xterm-osc does not autoload background
 TODO: think about daemon delaying urxvt client exit.
 IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
-TODO: fontset caching per display?
-TODO: xOff caching. for ascii only? fr basefont only?
 TODO: image loading osc does not autoload background ext
 TODO: clean up the resource vs. long option mess, especially in the manpage.
+	- allow URxvt*keysym to match again. The fact that it was ignored
+          is considered a regression due in the way we checked for keysym
+          resources.
         - Key bindings specified with the -keysym option or with resources of
           the form URxvt*keysym work again. Such resources, as opposed to
           resources of the form URxvt.keysym, were not officially allowed but
