@@ -306,17 +306,14 @@ static XSizeHints szHint = {
 };
 
 /* subroutine declarations */
-static void geometry2sizehint (mywindow_t * /* win */ ,
-                               const char * /* geom */ );
-static void Create_Windows (int /* argc */ ,
-                            char * /* argv */ []);
+static void geometry2sizehint (mywindow_t *win, const char *geom);
+static void Create_Windows (int argc, char *argv[]);
 static void getXevent ();
-static void print_error (const char * /* fmt */ , ...);
+static void print_error (const char *fmt, ...);
 
-static void Draw_Window (mywindow_t * /* this_win */ ,
-                         int /* full_redraw */ );
+static void Draw_Window (mywindow_t *this_win, int full_redraw);
 static void Reminder ();
-static void Next_Reminder (int /* update_only */ );
+static void Next_Reminder (int update_only);
 
 /* Arguments for Next_Reminder() */
 #define REPLACE 0
@@ -638,7 +635,7 @@ Abort:
  * translate geometry string to appropriate sizehint
  */
 static void
-geometry2sizehint (mywindow_t * win, const char *geom)
+geometry2sizehint (mywindow_t *win, const char *geom)
 {
   int x, y, flags;
   unsigned int width, height;
@@ -772,7 +769,11 @@ Create_Windows (int argc, char *argv[])
 static time_t
 mk_time (struct tm *tmval)
 {
-  return (tmval->tm_min + 60 * (tmval->tm_hour + 24 * (tmval->tm_mday + 31 * ((tmval->tm_mon + 1) + 12 * tmval->tm_year))));
+  return (tmval->tm_min
+          + 60 * (tmval->tm_hour
+                  + 24 * (tmval->tm_mday
+                          + 31 * ((tmval->tm_mon + 1)
+                                  + 12 * tmval->tm_year))));
 }
 
 #ifdef MAIL
@@ -813,7 +814,7 @@ MailAvailable ()
  * Provide reminder if needed.
  *----------------------------------------------------------------------*/
 static void
-Draw_Window (mywindow_t * W, int full_redraw)
+Draw_Window (mywindow_t *W, int full_redraw)
 {
   static int savedDay = -1;
 
