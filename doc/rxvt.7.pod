@@ -2450,23 +2450,6 @@ Use the given class as default application class
 when reading resources. Specify --with-res-class=Rxvt to replace
 rxvt.
 
-=item --enable-utmp (default: on)
-
-Write user and tty to utmp file (used by programs like F<w>) at
-start of rxvt execution and delete information when rxvt exits.
-
-=item --enable-wtmp (default: on)
-
-Write user and tty to wtmp file (used by programs like F<last>) at
-start of rxvt execution and write logout when rxvt exits.  This
-option requires --enable-utmp to also be specified.
-
-=item --enable-lastlog (default: on)
-
-Write user and tty to lastlog file (used by programs like
-F<lastlogin>) at start of rxvt execution.  This option requires
---enable-utmp to also be specified.
-
 =item --enable-pixbuf (default: on)
 
 Add support for GDK-PixBuf to be used for background images.

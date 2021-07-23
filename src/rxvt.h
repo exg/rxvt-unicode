@@ -26,6 +26,8 @@
 // stdlib.h might provide it
 #endif
 
+#include <libptytty.h>
+
 // we assume that Xlib.h defines XPointer, and it does since at least 1994...
 
 extern "C" {
@@ -90,7 +92,6 @@ typedef  int32_t tlen_t_; // specifically for use in the line_t structure
 #include "rxvtimg.h"
 #include "scrollbar.h"
 #include "ev_cpp.h"
-#include "libptytty.h"
 
 #include "rxvtperl.h"
 

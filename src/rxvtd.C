@@ -43,9 +43,10 @@
 
 #include <errno.h>
 
+#include <libptytty.h>
+
 #include "rxvt.h"
 #include "rxvtdaemon.h"
-#include "libptytty.h"
 
 struct server : rxvt_connection
 {

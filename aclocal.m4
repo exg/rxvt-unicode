@@ -1,5 +1,3 @@
-m4_include([libptytty/ptytty.m4])
-
 dnl maybe import pkg.m4 and use PKG_CHECK_MODULES in place of this macro
 AC_DEFUN([RXVT_CHECK_MODULES],
 [

@@ -436,6 +436,13 @@ AC_PATH_XTRA
 
 AC_PATH_TOOL(PKG_CONFIG, pkg-config, no)
 
+RXVT_CHECK_MODULES([PTYTTY], [libptytty], [:], [
+  AC_MSG_ERROR([unable to find libptytty])
+])
+
+AC_SUBST(PTYTTY_CFLAGS)
+AC_SUBST(PTYTTY_LIBS)
+
 image_lib=none
 
 PIXBUF_CFLAGS=
@@ -515,8 +522,6 @@ dnl# CHECKING FOR LIBRARY FUNCTIONS
 dnl# --------------------------------------------------------------------------
 AC_CHECK_FUNCS(unsetenv)
 
-UTMP_CHECK
-
 dnl# --------------------------------------------------------------------------
 
 dnl# --------------------------------------------------------------------------
@@ -574,12 +579,6 @@ AC_CACHE_CHECK(for working nl_langinfo, rxvt_cv_func_nl_langinfo,
 if test x$rxvt_cv_func_nl_langinfo = xyes; then
   AC_DEFINE(HAVE_NL_LANGINFO, 1, Define if nl_langinfo(CODESET) works)
 fi
-
-SCM_RIGHTS_CHECK
-
-PTY_CHECK
-
-TTY_GROUP_CHECK
 
 dnl# --------------------------------------------------------------------------
 dnl# now add and remove other stuff

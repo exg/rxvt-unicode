@@ -50,7 +50,6 @@ src/command.C
 src/command.h
 src/encoding.C
 src/encoding.h
-src/fdpass_wrapper.C
 src/feature.h
 src/hookinc.h
 src/init.C
@@ -62,7 +61,6 @@ src/keyboard.h
 src/main.C
 src/misc.C
 src/optinc.h
-src/ptytty_wrapper.C
 src/rxvtutil.C
 src/rxvtutil.h
 src/rxvttoolkit.C
@@ -90,18 +88,6 @@ src/version.h
 src/xdefaults.C
 src/emman.h
 src/emman.c
-
-libptytty/Changes
-libptytty/ptytty.m4
-libptytty/src/libptytty.h
-libptytty/src/ptytty_conf.h
-libptytty/src/ptytty.h
-libptytty/src/ptytty.C
-libptytty/src/proxy.C
-libptytty/src/logging.C
-libptytty/src/fdpass.C
-libptytty/src/estl.h
-libptytty/src/ecb.h
 
 src/gentables
 src/gencompose

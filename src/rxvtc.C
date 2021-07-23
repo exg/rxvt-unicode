@@ -30,8 +30,9 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
+#include <libptytty.h>
+
 #include "rxvtdaemon.h"
-#include "libptytty.h"
 
 #define STATUS_SUCCESS           0
 #define STATUS_FAILURE           1
