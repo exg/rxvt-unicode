@@ -60,17 +60,11 @@
 /* Define to 1 if you have the <fontconfig/fontconfig.h> header file. */
 #undef HAVE_FONTCONFIG_FONTCONFIG_H
 
-/* Define to 1 if you have the `getpt' function. */
-#undef HAVE_GETPT
-
 /* Define to 1 if you have the `inotify_init' function. */
 #undef HAVE_INOTIFY_INIT
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
-
-/* Define to 1 if you have the `isastream' function. */
-#undef HAVE_ISASTREAM
 
 /* Define to 1 if linux/fs.h defined kernel_rwf_t */
 #undef HAVE_KERNEL_RWF_T
@@ -78,14 +72,8 @@
 /* Define to 1 if you have the `kqueue' function. */
 #undef HAVE_KQUEUE
 
-/* Define to 1 if you have the <lastlog.h> header file. */
-#undef HAVE_LASTLOG_H
-
 /* Define to 1 if you have the `rt' library (-lrt). */
 #undef HAVE_LIBRT
-
-/* Define to 1 if you have the <libutil.h> header file. */
-#undef HAVE_LIBUTIL_H
 
 /* Define to 1 if you have the <linux/aio_abi.h> header file. */
 #undef HAVE_LINUX_AIO_ABI_H
@@ -102,9 +90,6 @@
 /* Define if nl_langinfo(CODESET) works */
 #undef HAVE_NL_LANGINFO
 
-/* "" */
-#undef HAVE_OPENPTY
-
 /* Define if you want to use gdk-pixbuf for image processing */
 #undef HAVE_PIXBUF
 
@@ -120,29 +105,8 @@
 /* Define to 1 if you have the <port.h> header file. */
 #undef HAVE_PORT_H
 
-/* Define to 1 if you have the `posix_openpt' function. */
-#undef HAVE_POSIX_OPENPT
-
-/* Define to 1 if you have the <pty.h> header file. */
-#undef HAVE_PTY_H
-
-/* Define to 1 if you have the `revoke' function. */
-#undef HAVE_REVOKE
-
 /* Define to 1 if you have the `select' function. */
 #undef HAVE_SELECT
-
-/* Define to 1 if you have the `seteuid' function. */
-#undef HAVE_SETEUID
-
-/* Define to 1 if you have the `setresuid' function. */
-#undef HAVE_SETRESUID
-
-/* Define to 1 if you have the `setreuid' function. */
-#undef HAVE_SETREUID
-
-/* Define to 1 if you have the `setuid' function. */
-#undef HAVE_SETUID
 
 /* Define to 1 if you have the `signalfd' function. */
 #undef HAVE_SIGNALFD
@@ -164,21 +128,6 @@
 
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
-
-/* Define to 1 if you have the <stropts.h> header file. */
-#undef HAVE_STROPTS_H
-
-/* Define to 1 if the system has the type `struct lastlog'. */
-#undef HAVE_STRUCT_LASTLOG
-
-/* Define to 1 if the system has the type `struct lastlogx'. */
-#undef HAVE_STRUCT_LASTLOGX
-
-/* Define to 1 if the system has the type `struct utmp'. */
-#undef HAVE_STRUCT_UTMP
-
-/* Define to 1 if the system has the type `struct utmpx'. */
-#undef HAVE_STRUCT_UTMPX
 
 /* Define to 1 if you have the <sys/byteorder.h> header file. */
 #undef HAVE_SYS_BYTEORDER_H
@@ -222,39 +171,8 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define if sys/socket.h defines the necessary macros/functions for file
-   handle passing */
-#undef HAVE_UNIX_FDPASS
-
 /* Define to 1 if you have the `unsetenv' function. */
 #undef HAVE_UNSETENV
-
-/* Define to 1 if you have the `updlastlogx' function. */
-#undef HAVE_UPDLASTLOGX
-
-/* Define to 1 if you have the `updwtmp' function. */
-#undef HAVE_UPDWTMP
-
-/* Define to 1 if you have the `updwtmpx' function. */
-#undef HAVE_UPDWTMPX
-
-/* Define to 1 if you have the <util.h> header file. */
-#undef HAVE_UTIL_H
-
-/* Define to 1 if you have the <utmpx.h> header file. */
-#undef HAVE_UTMPX_H
-
-/* Define if struct utmpx contains ut_host */
-#undef HAVE_UTMPX_HOST
-
-/* Define to 1 if you have the <utmp.h> header file. */
-#undef HAVE_UTMP_H
-
-/* Define if struct utmp contains ut_host */
-#undef HAVE_UTMP_HOST
-
-/* Define if struct utmp contains ut_pid */
-#undef HAVE_UTMP_PID
 
 /* Define to 1 if you have the <wchar.h> header file. */
 #undef HAVE_WCHAR_H
@@ -271,14 +189,8 @@
 /* Define if setlocale (defined to Xsetlocale) works */
 #undef HAVE_XSETLOCALE
 
-/* Define to 1 if you have the `_getpty' function. */
-#undef HAVE__GETPTY
-
 /* Define if you want ISO 14755 extended support */
 #undef ISO_14755
-
-/* Define if you want to have lastlog support when utmp/utmpx is enabled */
-#undef LASTLOG_SUPPORT
 
 /* Define to have CTRL cause wheel events to accelerate scrolling. Release
    CTRL to halt scrolling */
@@ -337,21 +249,6 @@
 /* Define if you want to hide the pointer while typing */
 #undef POINTER_BLANK
 
-/* Define to a fallback location of lastlogx */
-#undef PT_LASTLOGX_FILE
-
-/* Define to a fallback location of lastlog */
-#undef PT_LASTLOG_FILE
-
-/* Define to a fallback location of utmp */
-#undef PT_UTMP_FILE
-
-/* Define to a fallback location of wtmpx */
-#undef PT_WTMPX_FILE
-
-/* Define to a fallback location of wtmp */
-#undef PT_WTMP_FILE
-
 /* Resource class */
 #undef RESCLASS
 
@@ -388,14 +285,8 @@
 /* Define if you want blinking text support */
 #undef TEXT_BLINK
 
-/* "" */
-#undef TTY_GID_SUPPORT
-
 /* Define if you want to represent unicode characters outside plane 0 */
 #undef UNICODE_3
-
-/* "" */
-#undef UNIX98_PTY
 
 /* Define if you want 256-color support */
 #undef USE_256_COLORS
@@ -492,12 +383,6 @@
    for multibyte characters input */
 #undef USE_XIM
 
-/* Define if you want to have utmp/utmpx support */
-#undef UTMP_SUPPORT
-
-/* Define if you want to have wtmp support when utmp/utmpx is enabled */
-#undef WTMP_SUPPORT
-
 /* Define to enable xft support */
 #undef XFT
 
@@ -520,13 +405,6 @@
    <pthread.h>, or <semaphore.h> is not used. If the typedef were allowed, the
    #define below would cause a syntax error. */
 #undef _UINT32_T
-
-/* Enable declarations of msg_control and msg_controllen on Solaris */
-#undef _XOPEN_SOURCE
-
-/* Enable declarations in utmp.h on Solaris when the XPG4v2 namespace is
-   active */
-#undef __EXTENSIONS__
 
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef gid_t
