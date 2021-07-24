@@ -1289,15 +1289,24 @@ extensions. It is still supported, but should not be used anymore.
 Comma-separated list(s) of perl extension scripts (default: C<default>) to
 use in this terminal instance; option B<-pe>.
 
-Extension names can be prefixed with a C<-> sign to prohibit using
-them. This can be useful to selectively disable some extensions loaded
-by default, or specified via the C<perl-ext-common> resource. For
-example, C<default,-selection> will use all the default extensions except
-C<selection>.
+Extension names can be prefixed with a C<-> sign to remove them again, in
+case they had been specified earlier. This can be useful to selectively
+disable some extensions loaded by default, or specified via the
+C<perl-ext-common> resource. For example, C<default,-selection> will use
+all the default extensions except C<selection>.
+
+To prohibit autoloading of extensions, you can prefix them with C</>,
+which will make urxvt refuse to automatically load them (this can be
+overriden, however, by specifying the extension name again without a
+prefix, though). This does not prohibit extensions themselves loading
+other extensions. For example, C<default,/background> will keep the
+C<background> extension from being loaded when a background OSC sequence
+is received.
 
 The default set includes the C<selection>, C<option-popup>,
-C<selection-popup>, C<readline> and C<searchable-scrollback>
-extensions, and extensions which are mentioned in B<keysym> resources.
+C<selection-popup>, C<readline>, C<searchable-scrollback> and
+C<confirm-paste> extensions, as well as any extensions which are mentioned
+in B<keysym> resources.
 
 Any extension such that a corresponding resource is given on the
 command line is automatically appended to B<perl-ext>.
