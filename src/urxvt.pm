@@ -825,8 +825,6 @@ sub invoke {
       warn $@ if $@;
    }
 
-   $retval = undef;
-
    if ($htype == HOOK_OSC_SEQ) {
       if (my $exts = delete $TERM->{meta}{autoload_osc}{$_[0]}) {
          $TERM->autoload_extension ($_->[0]) for @$exts;
@@ -836,6 +834,8 @@ sub invoke {
          $TERM->autoload_extension ($_->[0]) for @$exts;
       }
    }
+
+   $retval = undef;
 
    if (my $cb = $TERM->{_hook}[$htype]) {
       verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $TERM, @_) . ")"
