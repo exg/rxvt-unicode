@@ -100,10 +100,10 @@ TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa co
           almost everywhere.
         - shave off over 1K of code size from urclock by replacing the sine table
           with a slightly less accurate fixed point approximation.
-        - do not specify< indentation with =over in pod, this is no longer
+        - do not specify indentation with =over in pod, this is no longer
           needed with semi-modern pod tools and gives the formatter more
           stylistic freedom.
-        - background extension did not set thre "size-sensitive" flag
+        - background extension did not set the "size-sensitive" flag
           when repeat mode wasn't normal.
         - extensions are now subjected to "use strict 'subs'".
 
