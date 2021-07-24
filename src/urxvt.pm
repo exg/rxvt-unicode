@@ -6,16 +6,16 @@ urxvtperl - rxvt-unicode's embedded perl interpreter
 
 =head1 SYNOPSIS
 
-   # create a file grab_test in $HOME:
+   # create a file grab_test in some directory:
 
    sub on_sel_grab {
       warn "you selected ", $_[0]->selection;
       ()
    }
 
-   # start a urxvt using it:
+   # start a urxvt instance using it:
 
-   urxvt --perl-lib $HOME -pe grab_test
+   urxvt --perl-lib path/to/somedirectory -pe grab_test
 
 =head1 DESCRIPTION
 
