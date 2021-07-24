@@ -86,7 +86,7 @@ Orange'.
 
 The following options are available:
 
-=over 4
+=over
 
 =item B<-help>, B<--help>
 
@@ -571,7 +571,7 @@ settings. The following resources are supported (you might want to
 check the @@RXVT_NAME@@perl(3) manpage for additional settings by perl
 extensions not documented here):
 
-=over 4
+=over
 
 =item B<depth:> I<bitdepth>
 
@@ -1159,7 +1159,7 @@ prefixed with C<string:>).
 The following action prefixes are known - extensions can provide
 additional prefixes:
 
-=over 4
+=over
 
 =item string:STRING
 
@@ -1397,7 +1397,7 @@ respectively.
 The behaviour of text selection and insertion/pasting mechanism is similar
 to I<xterm>(1).
 
-=over 4
+=over
 
 =item B<Selecting>:
 
@@ -1454,7 +1454,7 @@ first part is available if rxvt-unicode has been compiled with
 C<--enable-frills>, the rest is available when rxvt-unicode was compiled
 with C<--enable-iso14755>.
 
-=over 4
+=over
 
 =item * 5.1: Basic method
 
@@ -1644,7 +1644,7 @@ extension.
 
 B<@@RXVT_NAME@@> sets and/or uses the following environment variables:
 
-=over 4
+=over
 
 =item B<TERM>
 
@@ -1725,7 +1725,7 @@ If set and accessible, gives the name of a X resource file to be loaded by
 
 =head1 FILES
 
-=over 4
+=over
 
 =item B</usr/lib/X11/rgb.txt>
 
@@ -1740,7 +1740,7 @@ Colour names.
 
 =head1 CURRENT PROJECT COORDINATOR
 
-=over 4
+=over
 
 =item Project Coordinator
 
@@ -1752,7 +1752,7 @@ L<http://software.schmorp.de/pkg/rxvt-unicode.html>
 
 =head1 AUTHORS
 
-=over 4
+=over
 
 =item John Bovey
 

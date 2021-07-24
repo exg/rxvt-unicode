@@ -48,7 +48,7 @@ All environment variables of the current process will be made available
 to the new instance, and will be interpreted as if B<@@RXVT_NAME@@> were
 started directly.
 
-=over 4
+=over
 
 =item B<RXVT_SOCKET>
 

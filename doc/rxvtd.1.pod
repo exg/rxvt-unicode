@@ -32,7 +32,7 @@ B<@@RXVT_NAME@@d> instance including all windows it has opened.
 B<@@RXVT_NAME@@d> currently understands a few options only. Bundling of
 options is not yet supported.
 
-=over 4
+=over
 
 =item B<-q>, B<--quiet>
 
@@ -96,7 +96,7 @@ B<@@RXVT_NAME@@d> is killed.
 
 =head1 ENVIRONMENT
 
-=over 4
+=over
 
 =item B<RXVT_SOCKET>
 

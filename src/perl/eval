@@ -27,7 +27,7 @@ users' convenience, as they implement basic actions:
 
 our ($self);
 
-=over 4
+=over
 
 =item scroll_up $count
 

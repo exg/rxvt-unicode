@@ -18,7 +18,7 @@ suspended and a regex is displayed at the bottom of the screen.
 Inputting characters appends them to the regex and continues incremental
 search. In addition, the following bindings are recognized:
 
-=over 4
+=over
 
 =item C<BackSpace>
 

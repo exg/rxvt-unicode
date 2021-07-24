@@ -261,7 +261,7 @@ C<load> it can reuse that in-memory copy.
 
 =head2 COMMAND LINE SWITCHES
 
-=over 4
+=over
 
 =item --background-expr perl-expression
 
@@ -312,7 +312,7 @@ These functions provide an image, by loading it from disk, grabbing it
 from the root screen or by simply generating it. They are used as starting
 points to get an image you can play with.
 
-=over 4
+=over
 
 =item load $path
 
@@ -441,7 +441,7 @@ images.
 The following operators modify the tiling mode of an image, that is, the
 way that pixels outside the image area are painted when the image is used.
 
-=over 4
+=over
 
 =item tile $img
 
@@ -526,7 +526,7 @@ varies. Most of them make your expression sensitive to some events, for
 example using C<TW> (terminal width) means your expression is evaluated
 again when the terminal is resized.
 
-=over 4
+=over
 
 =item TX
 
@@ -629,7 +629,7 @@ Like C<again>, but also returns an increasing counter value, starting at
 
 The following operators modify the shape, size or position of the image.
 
-=over 4
+=over
 
 =item clip $img
 
@@ -826,7 +826,7 @@ Example: rotate the image by 90 degrees around its center.
 
 The following operators change the pixels of the image.
 
-=over 4
+=over
 
 =item tint $color, $img
 
@@ -1001,7 +1001,7 @@ Example: do the right thing when focus fading is requested.
 Anything that didn't fit any of the other categories, even after applying
 force and closing our eyes.
 
-=over 4
+=over
 
 =item keep { ... }
 
@@ -1044,7 +1044,7 @@ B<deprecated> and will be removed in future versions.
 
 =head2 OPTIONS AND RESOURCES
 
-=over 4
+=over
 
 =item B<-pixmap> I<file[;oplist]>
 
@@ -1056,7 +1056,7 @@ Note that you may need to quote the C<;> character when using the
 command line option, as C<;> is usually a metacharacter in shells.
 Supported operations are:
 
-=over 4
+=over
 
 =item B<WxH+X+Y>
 
@@ -1083,7 +1083,7 @@ The default scale and position setting is C<100x100+50+50>.
 Alternatively, a predefined set of templates can be used to achieve
 the most common setups:
 
-=over 4
+=over
 
 =item B<style=tiled>
 
@@ -1158,7 +1158,7 @@ extension. One way to achieve that is to use the C<--background-expr ''>
 command line argument or by specifying an empty C<URxvt.background.expr:>>
 resource.
 
-=over 4
+=over
 
 =item B<< C<ESC ] 705 ; Pt ST> >> Change transparent background tint colour to B<< C<Pt> >>.
 
@@ -1166,7 +1166,7 @@ resource.
 parameters: the value of B<< C<Pt> >> can be one of the following
 commands:
 
-=over 4
+=over
 
 =item B<< C<?> >>
 

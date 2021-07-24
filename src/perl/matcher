@@ -39,7 +39,7 @@ iterate over the matches using the keyboard and either activate them
 or copy them to the clipboard. While the mode is active, normal terminal
 input/output is suspended and the following bindings are recognized:
 
-=over 4
+=over
 
 =item C<Up>
 

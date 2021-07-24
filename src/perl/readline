@@ -14,7 +14,7 @@ for programs that correctly support wide characters).
 
 To avoid too many false positives, this is only done when:
 
-=over 4
+=over
 
 =item - the tty is in ICANON state.
 

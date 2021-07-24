@@ -110,7 +110,7 @@ Another option is to use systemd socket-based activation (see
 systemd.socket(5)). Here is an example of a service unit file and of a
 socket unit file for the default socket path:
 
-=over 4
+=over
 
 =item urxvtd.service
 
@@ -1083,7 +1083,7 @@ Try a search engine, as this is slightly different for every input method server
 
 Here is a checklist:
 
-=over 4
+=over
 
 =item - Make sure your locale I<and> the imLocale are supported on your OS.
 
@@ -1242,7 +1242,7 @@ arbitrary sequences to the terminal.
 
 =head2 Definitions
 
-=over 4
+=over
 
 =item B<< C<c> >>
 
@@ -1270,7 +1270,7 @@ A text parameter composed of printable characters.
 
 =head2 Values
 
-=over 4
+=over
 
 =item B<< C<ENQ> >>
 
@@ -1323,7 +1323,7 @@ Space Character
 
 =head2 Escape Sequences
 
-=over 4
+=over
 
 =item B<< C<ESC # 8> >>
 
@@ -1431,7 +1431,7 @@ X<CSI>
 
 =head2 CSI (Command Sequence Introducer) Sequences
 
-=over 4
+=over
 
 =item B<< C<ESC [ Ps @> >>
 
@@ -1594,7 +1594,7 @@ Printing. See also the C<print-pipe> resource.
 
 Reset Mode (RM)
 
-=over 4
+=over
 
 =item B<< C<Ps = 4> >>
 
@@ -1731,7 +1731,7 @@ X<PrivateModes>
 
 =head2 DEC Private Modes
 
-=over 4
+=over
 
 =item B<< C<ESC [ ? Pm h> >>
 
@@ -1753,7 +1753,7 @@ Save DEC Private Mode Values.
 
 Toggle DEC Private Mode Values (rxvt extension). I<where>
 
-=over 4
+=over
 
 =item B<< C<Pm = 1> >> (DECCKM)
 
@@ -2082,7 +2082,7 @@ X<XTerm>
 
 =head2 XTerm Operating System Commands
 
-=over 4
+=over
 
 =item B<< C<ESC ] Ps;Pt ST> >>
 
@@ -2139,7 +2139,7 @@ When mouse reporting is enabled and none of the extended mouse modes
 (1005, 1006, 1015) is active, urxvt sends the following sequence on a
 mouse event:
 
-=over 4
+=over
 
 =item B<< C<< ESC [ M <b> <x> <y> >> >>
 
@@ -2147,7 +2147,7 @@ mouse event:
 
 The lower 2 bits of B<< C<< <b> >> >> indicate the button:
 
-=over 4
+=over
 
 =item Button = B<< C<< (<b> - SPACE) & 3 >> >>
 
@@ -2165,7 +2165,7 @@ The lower 2 bits of B<< C<< <b> >> >> indicate the button:
 The upper bits of B<< C<< <b> >> >> indicate the modifiers when the
 button was pressed and are added together (X11 mouse report only):
 
-=over 4
+=over
 
 =item State = B<< C<< (<b> - SPACE) & ~3 >> >>
 
@@ -2185,7 +2185,7 @@ button was pressed and are added together (X11 mouse report only):
 C<x> and C<y> encode the coordinates (1|1 is the upper left corner,
 just as with cursor positioning):
 
-=over 4
+=over
 
 =item Col = B<< C<< <x> - SPACE >> >>
 
@@ -2209,7 +2209,7 @@ semi-obvious reasons.
 
 If mode 1005 is active, urxvt sends the sequence
 
-=over 4
+=over
 
 =item B<< C<< ESC [ M <b> <x> <y> >> >>
 
@@ -2223,7 +2223,7 @@ locales and should therefore be avoided.
 
 If mode 1006 is active, urxvt sends the following sequences:
 
-=over 4
+=over
 
 =item B<< C<< ESC [ < <b>;<x>;<y> M >> >>
 
@@ -2250,7 +2250,7 @@ Example: Shift-Button-1 press at top row, column 80.
 
 If mode 1015 is active, urxvt sends the sequence
 
-=over 4
+=over
 
 =item B<< C<< ESC [ <b>;<x>;<y> M >> >>
 
@@ -2348,7 +2348,7 @@ work, so it can be fixed. Marc Lehmann <rxvt@schmorp.de>.
 
 All
 
-=over 4
+=over
 
 =item --enable-everything
 

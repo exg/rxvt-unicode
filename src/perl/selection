@@ -43,7 +43,7 @@ interesting uses, such as parsing a line from beginning to end.
 
 This extension also offers the following actions:
 
-=over 4
+=over
 
 =item rot13
 

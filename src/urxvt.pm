@@ -72,7 +72,7 @@ terminal is destroyed.
 Argument names also often indicate the type of a parameter. Here are some
 hints on what they mean:
 
-=over 4
+=over
 
 =item $text
 
@@ -123,7 +123,7 @@ their resources or command line parameters are used.
 
 Currently, it recognises only one such comment:
 
-=over 4
+=over
 
 =item #:META:RESOURCE:name:type:desc
 
@@ -150,7 +150,7 @@ relevant action might not be carried out by the C++ code.
 
 I<< When in doubt, return a false value (preferably C<()>). >>
 
-=over 4
+=over
 
 =item on_init $term
 
@@ -424,7 +424,7 @@ our $NOCHAR = chr 0xffff;
 
 =head2 Variables in the C<urxvt> Package
 
-=over 4
+=over
 
 =item $urxvt::LIBDIR
 
@@ -464,7 +464,7 @@ but before other extensions. Gets cleared just like C<@TERM_INIT>.
 
 =head2 Functions in the C<urxvt> Package
 
-=over 4
+=over
 
 =item urxvt::fatal $errormessage
 
@@ -543,7 +543,7 @@ never just create a bitset, you should always modify an existing one,
 as they contain important information required for correct operation of
 rxvt-unicode.
 
-=over 4
+=over
 
 =item $rend = urxvt::DEFAULT_RSTYLE
 
@@ -860,7 +860,7 @@ The methods (And data members) documented below can be called on extension
 objects, in addition to call methods documented for the <urxvt::term>
 class.
 
-=over 4
+=over
 
 =item $urxvt_term = $self->{term}
 
@@ -1111,7 +1111,7 @@ package urxvt::term;
 
 =head2 The C<urxvt::term> Class
 
-=over 4
+=over
 
 =cut
 
@@ -1479,7 +1479,7 @@ as long as the perl object is referenced.
 
 The methods currently supported on C<urxvt::overlay> objects are:
 
-=over 4
+=over
 
 =item $overlay->set ($x, $y, $text[, $rend])
 
@@ -1795,7 +1795,7 @@ Create and return a new C<urxvt::line> object that stores information
 about the logical line that row C<$row_number> is part of. It supports the
 following methods:
 
-=over 4
+=over
 
 =item $text = $line->t ([$new_text])
 
@@ -1985,7 +1985,7 @@ package urxvt::popup;
 
 =head2 The C<urxvt::popup> Class
 
-=over 4
+=over
 
 =cut
 
@@ -2131,7 +2131,7 @@ fractional number of seconds since the epoch. Example:
                           sprintf "%2d:%02d:%02d", (localtime urxvt::NOW)[2,1,0]);
                     });
 
-=over 4
+=over
 
 =item $timer = new urxvt::timer
 
@@ -2190,7 +2190,7 @@ This class implements io watchers/events. Example:
                  });
 
 
-=over 4
+=over
 
 =item $iow = new urxvt::iow
 
@@ -2227,7 +2227,7 @@ This class implements idle watchers, that get called automatically when
 the process is idle. They should return as fast as possible, after doing
 some useful work.
 
-=over 4
+=over
 
 =item $iw = new urxvt::iw
 
@@ -2262,7 +2262,7 @@ process exits, after which they stop automatically.
                        ...
                     });
 
-=over 4
+=over
 
 =item $pw = new urxvt::pw
 
@@ -2289,7 +2289,7 @@ Stop the watcher.
 This variable controls the verbosity level of the perl extension. Higher
 numbers indicate more verbose output.
 
-=over 4
+=over
 
 =item == 0 - fatal messages
 
