@@ -122,7 +122,7 @@ terminal is created and are typically used to autoload extensions when
 their resources or command line parameters are used.
 
 Currently, it recognises these comments below. Individual components are
-separated by cololns (C<:>), and shoudl not contain colons themselves -
+separated by colons (C<:>), and should not contain colons themselves -
 there is also currently no escaping mechanism provided for this.
 
 =over
@@ -136,7 +136,7 @@ or C<string>, and C<desc> is the resource description.
 The extension will be autoloaded when this resource is specified or used
 as a command line parameter.
 
-Example: matcher provides the C<matcher.launcher> ressource by having this
+Example: matcher provides the C<matcher.launcher> resource by having this
 comment:
 
    #:META:RESOURCE:%.launcher:string:default launcher command
@@ -156,7 +156,7 @@ This will cause the extension to be autoloaded when the OSC sequence is
 used for the first time.
 
 Note that autoloading carries some extra responsibilities with it:
-although the terminal cnanot really protect itself against malicious
+although the terminal cannot really protect itself against malicious
 sources of command sequences, therefore relying on the programs running
 I<inside> to sanitize data that they output, it is very common for
 programs to emit command sequences from untrusted sources.
@@ -1204,7 +1204,7 @@ sub register_package {
    }
 }
 
-# map extension name to filesyystem path
+# map extension name to filesystem path
 sub extension_path {
    (grep -f $_, map "$_/$_[1]", $_[0]->perl_libdirs)[0]
 }
@@ -2003,7 +2003,7 @@ C<< $term->ROW_t >> for details.
 
 =item $string = $term->special_decode $text
 
-Converts rxvt-unicodes text representation into a perl string. See
+Converts rxvt-unicode's text representation into a perl string. See
 C<< $term->ROW_t >> for details.
 
 =item $success = $term->grab_button ($button, $modifiermask[, $window = $term->vt])
