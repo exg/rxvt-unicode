@@ -22,8 +22,8 @@ urxvtperl - rxvt-unicode's embedded perl interpreter
 Every time a terminal object gets created, extension scripts specified via
 the C<perl> resource are loaded and associated with it.
 
-Scripts are compiled in a 'use strict "vars"' and 'use utf8' environment, and
-thus must be encoded as UTF-8.
+Scripts are compiled in a 'use strict qw(vars subs)' and 'use utf8'
+environment, and thus must be encoded as UTF-8.
 
 Each script will only ever be loaded once, even in urxvtd, where
 scripts will be shared (but not enabled) for all terminals.
@@ -121,7 +121,9 @@ different types of metadata. These comments are scanned whenever a
 terminal is created and are typically used to autoload extensions when
 their resources or command line parameters are used.
 
-Currently, it recognises only one such comment:
+Currently, it recognises these comments below. Individual components are
+separated by cololns (C<:>), and shoudl not contain colons themselves -
+there is also currently no escaping mechanism provided for this.
 
 =over
 
@@ -133,6 +135,51 @@ or C<string>, and C<desc> is the resource description.
 
 The extension will be autoloaded when this resource is specified or used
 as a command line parameter.
+
+Example: matcher provides the C<matcher.launcher> ressource by having this
+comment:
+
+   #:META:RESOURCE:%.launcher:string:default launcher command
+
+Example: load this extension when the C<-tr> command line option or
+resource name is used.
+
+   #:META:RESOURCE:tr:boolean:set root pixmap as background
+
+=item #:META:OSC:number:desc
+
+The OSC comment specifies an OSC sequence, where C<number> is the
+numerical OSC code and C<desc> is a short description that is currently
+unused.
+
+This will cause the extension to be autoloaded when the OSC sequence is
+used for the first time.
+
+Note that autoloading carries some extra responsibilities with it:
+although the terminal cnanot really protect itself against malicious
+sources of command sequences, therefore relying on the programs running
+I<inside> to sanitize data that they output, it is very common for
+programs to emit command sequences from untrusted sources.
+
+While this means that extensions should, as a defense-in-depth mechanism,
+always consider whether OSC sequences are safe, autoloading automatically
+exposes any autoloaded extension in all terminal windows, so extra care
+should be taken.
+
+Example: the background extension registers OSC C<20> like this:
+
+   #:META:OSC:20:change/query background image
+
+=item #:META:OSC_PERL:prefix:desc
+
+The same as the OSC comment, but for the Perl OSC sequence (C<777>). The
+C<prefix> should be unique among extensions, of course, which is most
+easily arranged by using the extension name, although this is not
+required.
+
+Example: the overlay-osc extension registers its Perl OSC like this:
+
+   #:META:OSC_PERL:overlay:man overlay-osc
 
 =back
 
@@ -242,12 +289,12 @@ C<on_osc_seq_perl> should be used for new behaviour.
 
 =item on_osc_seq_perl $term, $args, $resp
 
-Called whenever the B<ESC ] 777 ; string ST> command sequence (OSC =
-operating system command) is processed. Cursor position and other state
-information is up-to-date when this happens. For interoperability, the
-string should start with the extension name (sans -osc) and a semicolon,
-to distinguish it from commands for other extensions, and this might be
-enforced in the future.
+Called whenever the B<ESC ] 777 ; prefix ; string ST> command sequence
+(OSC = operating system command) is processed. Cursor position and other
+state information is up-to-date when this happens. For interoperability,
+the argument should start with the extension name (sans -osc) or some
+other suitable prefix, and a semicolon, to distinguish it from commands
+for other extensions.
 
 For example, C<overlay-osc> uses this:
 
@@ -402,7 +449,7 @@ Called on receipt of a bell character.
 package urxvt;
 
 use utf8;
-use strict 'vars';
+use strict qw(vars subs);
 use Carp ();
 use Scalar::Util ();
 use List::Util ();
@@ -668,7 +715,7 @@ sub usage {
    }
 }
 
-my $verbosity = $ENV{URXVT_PERL_VERBOSITY};
+my $verbosity = $ENV{URXVT_PERL_VERBOSITY} // 2;
 
 sub verbose {
    my ($level, $msg) = @_;
@@ -695,7 +742,7 @@ sub extension_package($) {
          or die "$path: $!";
 
       my $source =
-         "package $pkg; use strict 'vars'; use utf8; no warnings 'utf8';\n"
+         "package $pkg; use strict qw(vars subs); use utf8; no warnings 'utf8';\n"
          . "#line 1 \"$path\"\n{\n"
          . (do { local $/; <$fh> })
          . "\n};\n1";
@@ -715,8 +762,6 @@ sub invoke {
    my $htype = shift;
 
    if ($htype == HOOK_INIT) {
-      my @dirs = $TERM->perl_libdirs;
-
       $TERM->scan_extensions;
 
       my %ext_arg;
@@ -748,24 +793,31 @@ sub invoke {
                $ext_arg{$ext} = [];
             }
 
-         } elsif (/^-(.*)$/) {
+         } elsif (/^-(.*)$/) { # remove from set
             delete $ext_arg{$1};
 
-         } elsif (/^([^<]+)<(.*)>$/) {
-            push @{ $ext_arg{$1} }, $2;
+         } elsif (/^\/(.*)$/) { # prohibit loading
+            undef $TERM->{ext_prohibit}{$1};
+
+         } elsif (/^([^<]+)(?:<(.*)>)?$/) { # add to set, clear prohibit status
+            delete $TERM->{ext_prohibit}{$1};
+            push @{ $ext_arg{$1} }, defined $2 ? $2 : ();
 
          } else {
-            $ext_arg{$_} ||= [];
+            verbose 2, "cannot parse extension specification '$_', ignoring.";
          }
       }
 
-      for my $ext (sort keys %ext_arg) {
-         my @files = grep -f $_, map "$_/$ext", @dirs;
+      $TERM->set_should_invoke (HOOK_OSC_SEQ     , +1) if $TERM->{meta}{autoload_osc};
+      $TERM->set_should_invoke (HOOK_OSC_SEQ_PERL, +1) if $TERM->{meta}{autoload_osc_perl};
 
-         if (@files) {
-            $TERM->register_package (extension_package $files[0], $ext_arg{$ext});
+      for my $ext (sort keys %ext_arg) {
+         my $path = $TERM->extension_path ($ext);
+
+         if (defined $path) {
+            $TERM->autoload_extension ($ext, $ext_arg{$ext});
          } else {
-            warn "perl extension '$ext' not found in perl library search path\n";
+            verbose 2, "perl extension '$ext' not found in perl library search path";
          }
       }
 
@@ -774,6 +826,16 @@ sub invoke {
    }
 
    $retval = undef;
+
+   if ($htype == HOOK_OSC_SEQ) {
+      if (my $exts = delete $TERM->{meta}{autoload_osc}{$_[0]}) {
+         $TERM->autoload_extension ($_->[0]) for @$exts;
+      }
+   } elsif ($htype == HOOK_OSC_SEQ_PERL) {
+      if ($_[0] =~ /^([^;]+)/ and (my $exts = delete $TERM->{meta}{autoload_osc_perl}{$1})) {
+         $TERM->autoload_extension ($_->[0]) for @$exts;
+      }
+   }
 
    if (my $cb = $TERM->{_hook}[$htype]) {
       verbose 10, "$HOOKNAME[$htype] (" . (join ", ", $TERM, @_) . ")"
@@ -1142,6 +1204,30 @@ sub register_package {
    }
 }
 
+# map extension name to filesyystem path
+sub extension_path {
+   (grep -f $_, map "$_/$_[1]", $_[0]->perl_libdirs)[0]
+}
+
+# load an extension by name
+sub load_extension_file {
+   my ($self, $path, $argv) = @_;
+
+   $self->register_package (urxvt::extension_package $path, $argv);
+}
+
+# autoload an extension unless loading it is prohibited
+sub autoload_extension {
+   my ($self, $name, $argv) = @_;
+
+   return if exists $self->{ext_prohibit}{$name};
+
+   my $path = $self->extension_path ($name)
+      // return urxvt::verbose 2, "perl extension '$name' not found in perl library search path (during autoload)";
+
+   $self->load_extension_file ($path, $argv);
+}
+
 sub perl_libdirs {
    map { split /:/ }
       $_[0]->resource ("perl_lib"),
@@ -1159,7 +1245,7 @@ sub scan_extensions {
    my @urxvtdirs = perl_libdirs $self;
 #   my @cpandirs = grep -d, map "$_/URxvt/Ext", @INC;
 
-   $self->{meta} = \my %meta;
+   $self->{meta} = \my %allmeta;
 
    # first gather extensions
 
@@ -1182,7 +1268,7 @@ sub scan_extensions {
          $ext =~ s/\.uext$// or $core
             or next;
 
-         my %ext = (dir => $dir);
+         my %meta = (dir => $dir);
 
          while (<$fh>) {
             if (/^#:META:(?:X_)?RESOURCE:(.*)/) {
@@ -1191,16 +1277,24 @@ sub scan_extensions {
                if ($pattern =~ /[^a-zA-Z0-9\-\.]/) {
                   warn "$dir/$ext: meta resource '$pattern' contains illegal characters (not alphanumeric nor . nor *)\n";
                } else {
-                  $ext{resource}{$pattern} = [$ext, $type, $desc];
+                  $meta{resource}{$pattern} = [$ext, $type, $desc];
                }
+
+            } elsif (/^#:META:OSC:([0-9]+):(.*)/) {
+               push @{$allmeta{autoload_osc}{$1}}, [$ext, $2];
+
+            } elsif (/^#:META:OSC_PERL:([^:]+):(.*)/) {
+               push @{$allmeta{autoload_osc_perl}{$1}}, [$ext, $2];
+
             } elsif (/^\s*(?:#|$)/) {
                # skip other comments and empty lines
+
             } else {
                last; # stop parsing on first non-empty non-comment line
             }
          }
 
-         $meta{ext}{$ext} = \%ext;
+         $allmeta{ext}{$ext} = \%meta;
       }
    };
 
@@ -1209,9 +1303,9 @@ sub scan_extensions {
 
    # and now merge resources
 
-   $meta{resource} = \my %resource;
+   $allmeta{resource} = \my %resource;
 
-   while (my ($k, $v) = each %{ $meta{ext} }) {
+   while (my ($k, $v) = each %{ $allmeta{ext} }) {
       #TODO: should check for extensions overriding each other
       %resource = (%resource, %{ $v->{resource} });
    }
@@ -2291,7 +2385,9 @@ numbers indicate more verbose output.
 
 =over
 
-=item == 0 - fatal messages
+=item == 0 - fatal messages only
+
+=item >= 2 - general warnings (default level)
 
 =item >= 3 - script loading and management
 

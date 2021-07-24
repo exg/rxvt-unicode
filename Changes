@@ -46,6 +46,8 @@ TODO: think about daemon delaying urxvt client exit.
 IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
+	- enable confirm-paste extension by default, can be disabled by e.g.
+          URxvt.perl-ext: -confirm-paste
         - Key bindings specified with the -keysym option or with resources of
           the form URxvt*keysym work again. Such resources, as opposed to
           resources of the form URxvt.keysym, were not officially allowed but
@@ -57,13 +59,6 @@ TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa co
           abuse these sequences (typically in the name of security, but these
           sequences are not improving security). Also, bracketed paste mode
           is now under frills.
-	- enable confirm-paste extension by default, can be disabled by e.g.
-          URxvt.perl-ext: -confirm-paste
-	- The view_start perl method now scrolls to the bottom also when the
-	  argument is greater than 0.
-	- eval scroll actions now scroll to the bottom when scrolling down and
-	  there are less lines to scroll than the ones requested (reported by
-	  Stephen Talley).
 	- if urxvt cannot detect a good estimate for font width (because a font does
           not contain latin characters at all for example), it will now fall
           back to xft's max_advance_width, which works well with some fonts. It
@@ -83,6 +78,16 @@ TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa co
           some cases (e.g. input mono).
         - when checking for overlap/careful handling, take non-basefont
           character shifts into account.
+        - extensions can now request autoloading on OSC and Perl OSC sequences,
+          implement this for the background, clipboard-osc and overlay-osc
+          extensions.
+        - the background extension will now be autoloaded when the OSC 20 or 705
+          sequence is received.
+	- The view_start perl method now scrolls to the bottom also when the
+	  argument is greater than 0.
+	- eval scroll actions now scroll to the bottom when scrolling down and
+	  there are less lines to scroll than the ones requested (reported by
+	  Stephen Talley).
 	- allow perl-ext and perl-ext-common to override autoloaded extensions.
           this allows tabbed to disable itself in subtabs, avoiding recursive
           loading.
@@ -98,6 +103,9 @@ TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa co
         - do not specify< indentation with =over in pod, this is no longer
           needed with semi-modern pod tools and gives the formatter more
           stylistic freedom.
+        - background extension did not set thre "size-sensitive" flag
+          when repeat mode wasn't normal.
+        - extensions are now subjected to "use strict 'subs'".
 
 9.26 Fri May 14 19:14:14 CEST 2021
 	- ev_iouring.c was wrongly required during compilation, and wrongly

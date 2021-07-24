@@ -1,5 +1,7 @@
 #! perl
 
+#:META:OSC_PERL:clipboard:man clipboard-osc
+
 =head1 NAME
 
 clipboard-osc - implement the clipboard operating system command sequence

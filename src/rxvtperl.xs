@@ -823,6 +823,8 @@ BOOT:
     const_iv (HOOK_INIT),
     const_iv (HOOK_DESTROY),
     const_iv (HOOK_ACTION),
+    const_iv (HOOK_OSC_SEQ),
+    const_iv (HOOK_OSC_SEQ_PERL),
 
     const_iv (NUM_RESOURCES),
     const_iv (DEFAULT_RSTYLE),
