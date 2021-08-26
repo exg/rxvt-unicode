@@ -1265,6 +1265,16 @@ rxvt_font_xft::load (const rxvt_fontprop &prop, bool force_prop)
 
       FT_Face face = XftLockFace (f);
 
+      // fuck me plenty: XftLockFace can actually return 0. try not to crash.
+      // we also assume blindly that if the first lock succeeeds, then subsequent
+      // locks will also succeed.
+      if (!face)
+        {
+          XftFontClose (disp, f);
+          success = false;
+          break;
+        }
+
       ascent  = (face->size->metrics.ascender + 63) >> 6;
       descent = (-face->size->metrics.descender + 63) >> 6;
       height  = max (ascent + descent, (face->size->metrics.height + 63) >> 6);

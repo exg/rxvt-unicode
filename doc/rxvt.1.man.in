@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2021-05-14" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2021-07-28" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -487,6 +487,15 @@ Change the meaning of triple-click selection with the left mouse
 button. Only effective when the original (non-perl) selection code is
 in-use. Instead of selecting a full line it will extend the selection to
 the end of the logical line only. resource \fBtripleclickwords\fR.
+.IP "\fB\-dpb\fR|\fB+dpb\fR" 4
+.IX Item "-dpb|+dpb"
+Compile frills: Disable (or enable) emitting bracketed paste mode
+sequences (default enabled). Bracketed paste mode allows programs
+to detect when something is pasted. Since more and more programs
+abuse this, these sequences can be disabled. The command sequences to
+enable and query paste mode will still work, but the actual bracket
+sequences will no longer be emitted. You can also toggle this from the
+ctrl-middle-mouse-button menu; resource \fBdisablePasteBrackets\fR.
 .IP "\fB\-insecure\fR" 4
 .IX Item "-insecure"
 Enable \*(L"insecure\*(R" mode, which currently enables most of the escape
@@ -505,6 +514,13 @@ Turn on/off secondary screen (default enabled); resource
 .IX Item "-ssr|+ssr"
 Turn on/off secondary screen scroll (default enabled); resource
 \&\fBsecondaryScroll\fR.
+.IP "\fB\-rm\fR \fImode\fR" 4
+.IX Item "-rm mode"
+Compile \fIfrills\fR: Sets long line rewrapping behaviour on window resizes
+to one of \fBauto\fR (the default), \fBalways\fR or \fBnever\fR. The latter two
+modes do the obvious, \fBauto\fR rewraps (acts like \fBalways\fR) if scrollback
+is non-empty, and wings lines (acts like \fBnever\fR) otherwise; resource
+\&\fBrewrapMode\fR.
 .IP "\fB\-hold\fR|\fB+hold\fR" 4
 .IX Item "-hold|+hold"
 Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
@@ -1024,9 +1040,12 @@ option \fB\-imfont\fR.
 Change the meaning of triple-click selection with the left mouse
 button. Instead of selecting a full line it will extend the selection to
 the end of the logical line only; option \fB\-tcw\fR.
+.IP "\fBdisablePasteBrackets:\fR \fIboolean\fR" 4
+.IX Item "disablePasteBrackets: boolean"
+Prevent emission of paste bracket sequences; option \fB\-dpb\fR.
 .IP "\fBinsecure:\fR \fIboolean\fR" 4
 .IX Item "insecure: boolean"
-Enables \*(L"insecure\*(R" mode. Rxvt-unicode offers some escape sequences that
+Enable \*(L"insecure\*(R" mode. Rxvt-unicode offers some escape sequences that
 echo arbitrary strings like the icon name or the locale. This could be
 abused if somebody gets 8\-bit\-clean access to your display, whether
 through a mail client displaying mail bodies unfiltered or through
@@ -1050,6 +1069,10 @@ in the entry on \fBkeysym\fR following.
 .IP "\fBsecondaryScreen:\fR \fIboolean\fR" 4
 .IX Item "secondaryScreen: boolean"
 Turn on/off secondary screen (default enabled).
+.IP "\fBrewrapMode:\fR \fImode\fR" 4
+.IX Item "rewrapMode: mode"
+Sets long line rewrap behaviour on window resize to one of \fBauto\fR
+(default), \fBalways\fR or \fBnever\fR.
 .IP "\fBsecondaryScroll:\fR \fIboolean\fR" 4
 .IX Item "secondaryScroll: boolean"
 Turn on/off secondary screen scroll (default enabled). If this
@@ -1279,15 +1302,24 @@ extensions. It is still supported, but should not be used anymore.
 Comma-separated list(s) of perl extension scripts (default: \f(CW\*(C`default\*(C'\fR) to
 use in this terminal instance; option \fB\-pe\fR.
 .Sp
-Extension names can be prefixed with a \f(CW\*(C`\-\*(C'\fR sign to prohibit using
-them. This can be useful to selectively disable some extensions loaded
-by default, or specified via the \f(CW\*(C`perl\-ext\-common\*(C'\fR resource. For
-example, \f(CW\*(C`default,\-selection\*(C'\fR will use all the default extensions except
-\&\f(CW\*(C`selection\*(C'\fR.
+Extension names can be prefixed with a \f(CW\*(C`\-\*(C'\fR sign to remove them again, in
+case they had been specified earlier. This can be useful to selectively
+disable some extensions loaded by default, or specified via the
+\&\f(CW\*(C`perl\-ext\-common\*(C'\fR resource. For example, \f(CW\*(C`default,\-selection\*(C'\fR will use
+all the default extensions except \f(CW\*(C`selection\*(C'\fR.
+.Sp
+To prohibit autoloading of extensions, you can prefix them with \f(CW\*(C`/\*(C'\fR,
+which will make urxvt refuse to automatically load them (this can be
+overriden, however, by specifying the extension name again without a
+prefix, though). This does not prohibit extensions themselves loading
+other extensions. For example, \f(CW\*(C`default,/background\*(C'\fR will keep the
+\&\f(CW\*(C`background\*(C'\fR extension from being loaded when a background \s-1OSC\s0 sequence
+is received.
 .Sp
 The default set includes the \f(CW\*(C`selection\*(C'\fR, \f(CW\*(C`option\-popup\*(C'\fR,
-\&\f(CW\*(C`selection\-popup\*(C'\fR, \f(CW\*(C`readline\*(C'\fR and \f(CW\*(C`searchable\-scrollback\*(C'\fR
-extensions, and extensions which are mentioned in \fBkeysym\fR resources.
+\&\f(CW\*(C`selection\-popup\*(C'\fR, \f(CW\*(C`readline\*(C'\fR, \f(CW\*(C`searchable\-scrollback\*(C'\fR and
+\&\f(CW\*(C`confirm\-paste\*(C'\fR extensions, as well as any extensions which are mentioned
+in \fBkeysym\fR resources.
 .Sp
 Any extension such that a corresponding resource is given on the
 command line is automatically appended to \fBperl-ext\fR.

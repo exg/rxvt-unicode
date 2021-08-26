@@ -92,20 +92,6 @@ CONFIGURE OPTIONS
         Use the given class as default application class when reading
         resources. Specify --with-res-class=Rxvt to replace rxvt.
 
-    --enable-utmp (default: on)
-        Write user and tty to utmp file (used by programs like w) at start
-        of rxvt execution and delete information when rxvt exits.
-
-    --enable-wtmp (default: on)
-        Write user and tty to wtmp file (used by programs like last) at
-        start of rxvt execution and write logout when rxvt exits. This
-        option requires --enable-utmp to also be specified.
-
-    --enable-lastlog (default: on)
-        Write user and tty to lastlog file (used by programs like lastlogin)
-        at start of rxvt execution. This option requires --enable-utmp to
-        also be specified.
-
     --enable-pixbuf (default: on)
         Add support for GDK-PixBuf to be used for background images. It adds
         support for many file formats including JPG, PNG, TIFF, GIF, XPM,
@@ -177,6 +163,8 @@ CONFIGURE OPTIONS
           extended mouse reporting modes (1005, 1006 and 1015).
           visual selection via -visual and -depth.
           systemd socket activation
+          selectable rewrapmode
+          bracketed paste mode
 
         It also enables some non-essential features otherwise disabled, such
         as:

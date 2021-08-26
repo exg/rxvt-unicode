@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2021-06-27" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2021-07-28" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -2332,7 +2332,7 @@ Ps = 12	Change colour of text cursor foreground to Pt
 Ps = 13	Change colour of mouse foreground to Pt
 Ps = 17	Change background colour of highlight characters to Pt
 Ps = 19	Change foreground colour of highlight characters to Pt
-Ps = 20	Change background image to Pt (see the urxvt-background) extension documentation)
+Ps = 20	Change background image to Pt (see the urxvt-background extension documentation)
 Ps = 39	Change default foreground colour to Pt. [deprecated, use 10]
 Ps = 46	Change Log File to Pt unimplemented
 Ps = 49	Change default background colour to Pt. [deprecated, use 11]
@@ -2341,7 +2341,7 @@ Ps = 55	Log all scrollback buffer and all of screen to Pt [disabled]
 Ps = 701	Change current locale to Pt, or, if Pt is ?, return the current locale (insecure mode, Compile frills).
 Ps = 702	Request version if Pt is ?, returning rxvt-unicode, the resource name, the major and minor version numbers, e.g. ESC ] 702 ; rxvt-unicode ; urxvt ; 7 ; 4 ST.
 Ps = 704	Change colour of italic characters to Pt
-Ps = 705	Change background tint color to Pt (see the urxvt-background) extension documentation)
+Ps = 705	Change background tint color to Pt (see the urxvt-background extension documentation)
 Ps = 706	Change colour of bold characters to Pt
 Ps = 707	Change colour of underlined characters to Pt
 Ps = 708	Change colour of the border to Pt
@@ -2351,7 +2351,7 @@ Ps = 712	Set italic fontset to Pt. Similar to Ps = 50 (Compile styles).
 Ps = 713	Set bold-italic fontset to Pt. Similar to Ps = 50 (Compile styles).
 Ps = 720	Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).
 Ps = 721	Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).
-Ps = 777	Call the perl extension with the given string, which should be of the form extension:parameters (Compile perl).
+Ps = 777	Call the perl extension with the given string, which should be of the form extension;parameters (Compile perl).
 .TE
 .PP
 
@@ -2635,20 +2635,6 @@ reading resources. Specify \-\-with\-res\-name=rxvt to replace rxvt.
 Use the given class as default application class
 when reading resources. Specify \-\-with\-res\-class=Rxvt to replace
 rxvt.
-.IP "\-\-enable\-utmp (default: on)" 4
-.IX Item "--enable-utmp (default: on)"
-Write user and tty to utmp file (used by programs like \fIw\fR) at
-start of rxvt execution and delete information when rxvt exits.
-.IP "\-\-enable\-wtmp (default: on)" 4
-.IX Item "--enable-wtmp (default: on)"
-Write user and tty to wtmp file (used by programs like \fIlast\fR) at
-start of rxvt execution and write logout when rxvt exits.  This
-option requires \-\-enable\-utmp to also be specified.
-.IP "\-\-enable\-lastlog (default: on)" 4
-.IX Item "--enable-lastlog (default: on)"
-Write user and tty to lastlog file (used by programs like
-\&\fIlastlogin\fR) at start of rxvt execution.  This option requires
-\&\-\-enable\-utmp to also be specified.
 .IP "\-\-enable\-pixbuf (default: on)" 4
 .IX Item "--enable-pixbuf (default: on)"
 Add support for GDK-PixBuf to be used for background images.
@@ -2720,6 +2706,8 @@ in combination with other switches) is:
 \&  extended mouse reporting modes (1005, 1006 and 1015).
 \&  visual selection via \-visual and \-depth.
 \&  systemd socket activation
+\&  selectable rewrapmode
+\&  bracketed paste mode
 .Ve
 .Sp
 It also enables some non-essential features otherwise disabled, such as:

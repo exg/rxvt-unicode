@@ -175,7 +175,7 @@ encoding.o: table/viscii.h table/jis0201_1976_0.h table/jis0208_1990_0.h
 encoding.o: table/jis0212_1990_0.h table/jis0213_1.h table/jis0213_2.h
 encoding.o: table/compose.h table/category.h
 ev_cpp.o: ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h ../libev/ev.c
-ev_cpp.o: ../libev/ev_vars.h ../libev/ev_kqueue.c ../libev/ev_select.c
+ev_cpp.o: ../libev/ev_vars.h ../libev/ev_epoll.c ../libev/ev_select.c
 init.o: ../config.h rxvt.h feature.h ecb.h encoding.h rxvtutil.h estl.h
 init.o: emman.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h ../libev/ev++.h
 init.o: ../libev/ev.h callback.h rxvtimg.h scrollbar.h rxvtperl.h hookinc.h
@@ -192,6 +192,7 @@ misc.o: ../config.h rxvt.h feature.h ecb.h encoding.h rxvtutil.h estl.h
 misc.o: emman.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h ../libev/ev++.h
 misc.o: ../libev/ev.h callback.h rxvtimg.h scrollbar.h rxvtperl.h hookinc.h
 misc.o: rsinc.h optinc.h
+rclock.o: ecb.h
 rxvt.o: ../config.h rxvt.h feature.h ecb.h encoding.h rxvtutil.h estl.h
 rxvt.o: emman.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h ../libev/ev++.h
 rxvt.o: ../libev/ev.h callback.h rxvtimg.h scrollbar.h rxvtperl.h hookinc.h
@@ -210,6 +211,11 @@ rxvtimg.o: ../config.h rxvt.h feature.h ecb.h encoding.h rxvtutil.h estl.h
 rxvtimg.o: emman.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h
 rxvtimg.o: ../libev/ev++.h ../libev/ev.h callback.h rxvtimg.h scrollbar.h
 rxvtimg.o: rxvtperl.h hookinc.h rsinc.h optinc.h
+rxvtperl.o: ../config.h ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h
+rxvtperl.o: rxvt.h feature.h ecb.h encoding.h rxvtutil.h estl.h emman.h
+rxvtperl.o: rxvtfont.h rxvttoolkit.h callback.h rxvtimg.h scrollbar.h
+rxvtperl.o: rxvtperl.h hookinc.h rsinc.h optinc.h keyboard.h perlxsi.c
+rxvtperl.o: iom_perl.h
 rxvttoolkit.o: ../config.h rxvt.h feature.h ecb.h encoding.h rxvtutil.h
 rxvttoolkit.o: estl.h emman.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h
 rxvttoolkit.o: ../libev/ev++.h ../libev/ev.h callback.h rxvtimg.h scrollbar.h
@@ -248,4 +254,5 @@ xdefaults.o: rxvtperl.h hookinc.h rsinc.h optinc.h version.h keyboard.h
 rxvtperl.o: ../config.h ev_cpp.h ../config.h ../libev/ev++.h ../libev/ev.h
 rxvtperl.o: rxvt.h feature.h ecb.h encoding.h rxvtutil.h estl.h emman.h
 rxvtperl.o: rxvtfont.h rxvttoolkit.h callback.h rxvtimg.h scrollbar.h
-rxvtperl.o: rxvtperl.h hookinc.h rsinc.h optinc.h keyboard.h iom_perl.h
+rxvtperl.o: rxvtperl.h hookinc.h rsinc.h optinc.h keyboard.h perlxsi.c
+rxvtperl.o: iom_perl.h
