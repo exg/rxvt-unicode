@@ -2625,12 +2625,14 @@ C<rxvt>.
 
 =item --with-term=NAME (default: rxvt-unicode)
 
-Change the environmental variable for the terminal to NAME.
+Sets the default C<TERM> value that @@RXVT_NAME@@ sets. The default is
+either C<rxvt-unicode> or C<rxvt-unicode-256color>, as appropriate.
 
 =item --with-terminfo=PATH
 
-Change the environmental variable for the path to the terminfo tree to
-PATH.
+If set, @@RXVT_NAME@@ will set the environment variable C<TERMINFO> to
+the given PATH, which cna be sueful as a last resort if installing the
+temrinfo entries system-wide is not possible.
 
 =item --with-x
 
