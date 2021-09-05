@@ -98,7 +98,8 @@ install: all
 	$(INSTALL_DATA) rxvtc.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME)c.$(man1ext)
 	$(INSTALL_DATA) rxvtd.1.man $(DESTDIR)$(man1dir)/$(RXVTNAME)d.$(man1ext)
 	$(INSTALL_DATA) rxvt.7.man  $(DESTDIR)$(man7dir)/$(RXVTNAME).$(man7ext)
-	@TIC@ $(srcdir)/etc/rxvt-unicode.terminfo
+	@TIC@ -x $(srcdir)/etc/rxvt-unicode.terminfo || \
+           @TIC@ $(srcdir)/etc/rxvt-unicode.terminfo
 
 distdepend: alldoc
 

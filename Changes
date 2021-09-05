@@ -100,6 +100,8 @@ TODO: rclock date overwrite
           font rendering.
         - replace bitstream vera by dejavu sans, as it has replaced the former
           almost everywhere.
+        - urxvt will now try tic -x first and only fall back to tic without -x
+          when tic -x fails.
         - shave off over 1K of code size from urclock by replacing the sine table
           with a slightly less accurate fixed point approximation.
         - do not specify indentation with =over in pod, this is no longer
