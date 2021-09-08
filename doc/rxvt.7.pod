@@ -2631,8 +2631,8 @@ either C<rxvt-unicode> or C<rxvt-unicode-256color>, as appropriate.
 =item --with-terminfo=PATH
 
 If set, @@RXVT_NAME@@ will set the environment variable C<TERMINFO> to
-the given PATH, which cna be sueful as a last resort if installing the
-temrinfo entries system-wide is not possible.
+the given PATH, which can be useful as a last resort if installing the
+terminfo entries system-wide is not possible.
 
 =item --with-x
 
