@@ -1324,7 +1324,7 @@ sub recalculate {
    $arg_self->{next_refresh} = urxvt::NOW + $MIN_INTERVAL;
 
    unless ($arg_self->has_render) {
-      warn "background extension needs RENDER extension 0.10 or higher, ignoring background-expr.\n";
+      warn "background extension needs RENDER extension 0.11 or higher, ignoring background-expr.\n";
       return;
    }
 
