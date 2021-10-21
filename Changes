@@ -61,6 +61,8 @@ TODO: rclock date overwrite
           abuse these sequences (typically in the name of security, but these
           sequences are not improving security). Also, bracketed paste mode
           is now under frills.
+        - confirm-paste wrongly considered brackets as ctrlchars (patch by
+          Jakub Wilk, debian bug #995244).
 	- if urxvt cannot detect a good estimate for font width (because a font does
           not contain latin characters at all for example), it will now fall
           back to xft's max_advance_width, which works well with some fonts. It
