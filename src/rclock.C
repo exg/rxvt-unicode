@@ -186,7 +186,7 @@ Sin (int32_t arg)
 {
   int32_t x = (arg - 360) * 16384 / 360;
 
-  int c, x2, y;
+  int c, y;
   static const int qN = 13, qA = 12, B = 19900, C = 3516;
 
   c = x << (30 - qN);              // Semi-circle info into carry.
