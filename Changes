@@ -41,13 +41,13 @@ TODO: üpixel droppins idenrasm,ll,scrollup
 TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, in xterm/vt102, but not in rxvt
 TODO: clean up the resource vs. long option mess, especially in the manpage.
 
-TODO: osc 20 does not autoload background ext
 TODO: think about daemon delaying urxvt client exit.
 IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
 TODO: match default regex does not match https://猫.移动/tmp/, but it does match if you special_decode the lines first. special_encode of the regex does not and would probably be the better solution -> investigate.
 
 TODO: rclock date overwrite
+	- libptytty is now an external dependency.
 	- enable confirm-paste extension by default, can be disabled by e.g.
           URxvt.perl-ext: -confirm-paste
         - Key bindings specified with the -keysym option or with resources of
