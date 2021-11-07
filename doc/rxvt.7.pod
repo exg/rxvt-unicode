@@ -1739,6 +1739,10 @@ DEC Private Mode Set (DECSET)
 
 DEC Private Mode Reset (DECRST)
 
+=item B<< C<ESC [ ? Pm $ p> >>
+
+DEC Private Mode Request (DECRQM)
+
 =item B<< C<ESC [ ? Pm r> >>
 
 Restore previously saved DEC Private Mode Values.
@@ -1749,7 +1753,11 @@ Save DEC Private Mode Values.
 
 =item B<< C<ESC [ ? Pm t> >>
 
-Toggle DEC Private Mode Values (rxvt extension). I<where>
+Toggle DEC Private Mode Values (rxvt extension).
+
+=back
+
+where
 
 =over
 
@@ -2071,8 +2079,6 @@ Unlike XTerm, coordinates larger than 2015 will work fine.
 	B<< C<l> >>	Disable bracketed paste mode
 
 =end table
-
-=back
 
 =back
 
