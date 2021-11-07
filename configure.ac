@@ -7,13 +7,9 @@ AC_PREREQ(2.71)
 AC_CONFIG_SRCDIR([src/feature.h])
 AC_CONFIG_HEADERS(config.h:config.h.in)
 
-AC_CANONICAL_HOST
-
 dnl RXVT version
-changequote(, )dnl
 VERSION=`sed -n -e 's/^.* VERSION.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
 DATE=`sed -n -e 's/^.* DATE.*"\(.*\)"$/\1/p' ${srcdir}/src/version.h`
-changequote([, ])dnl
 AC_SUBST(VERSION)dnl
 AC_SUBST(DATE)dnl
 
@@ -115,7 +111,6 @@ AC_ARG_ENABLE(everything,
        support_fading=no
        support_keepscrolling=no
        support_selectionscrolling=no
-       support_lastlog=no
        support_mousewheel=no
        support_mouseslipwheel=no
        support_text_blink=no
@@ -123,8 +118,6 @@ AC_ARG_ENABLE(everything,
        support_scroll_rxvt=no
        support_scroll_next=no
        support_scroll_xterm=no
-       support_utmp=no
-       support_wtmp=no
        support_xim=no
        support_pixbuf=no
        support_startup_notification=no
@@ -143,7 +136,6 @@ AC_ARG_ENABLE(everything,
        support_fading=yes
        support_keepscrolling=yes
        support_selectionscrolling=yes
-       support_lastlog=yes
        support_mousewheel=yes
        support_mouseslipwheel=yes
        support_text_blink=yes
@@ -151,8 +143,6 @@ AC_ARG_ENABLE(everything,
        support_scroll_rxvt=yes
        support_scroll_next=yes
        support_scroll_xterm=yes
-       support_utmp=yes
-       support_wtmp=yes
        support_xim=yes
        support_pixbuf=yes
        support_startup_notification=yes

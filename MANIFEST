@@ -7,8 +7,6 @@ README.configure
 README.FAQ
 configure
 configure.ac
-config.sub
-config.guess
 aclocal.m4
 autogen.sh
 config.h.in
