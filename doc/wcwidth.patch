@@ -1,21 +1,21 @@
 diff --git a/src/Makefile.in b/src/Makefile.in
-index defe61d..cbbacd1 100644
+index d374ae83..08a26e65 100644
 --- a/src/Makefile.in
 +++ b/src/Makefile.in
-@@ -35,7 +35,7 @@ COMMON = \
+@@ -40,7 +40,7 @@ COMMON = \
  	screen.o scrollbar.o scrollbar-next.o scrollbar-rxvt.o \
  	scrollbar-xterm.o scrollbar-plain.o xdefaults.o encoding.o \
  	rxvttoolkit.o rxvtutil.o keyboard.o rxvtimg.o \
--	ev_cpp.o fdpass_wrapper.o ptytty_wrapper.o @PERL_O@
-+	ev_cpp.o fdpass_wrapper.o ptytty_wrapper.o wcwidth.o @PERL_O@
+-	ev_cpp.o @PERL_O@
++	ev_cpp.o @PERL_O@ wcwidth.o
  
  COMMON_DAEMON = rxvtdaemon.o
  
 diff --git a/src/rxvt.h b/src/rxvt.h
-index 5be4391..152bf64 100644
+index 043b7c18..5bcfdb01 100644
 --- a/src/rxvt.h
 +++ b/src/rxvt.h
-@@ -706,6 +706,12 @@ typedef struct _mwmhints
+@@ -652,6 +652,12 @@ typedef struct _mwmhints
  // speed hack, copy some member variable into a local variable of the same name
  #define dLocal(type,name)       type const name = this->name
  
@@ -30,7 +30,7 @@ index 5be4391..152bf64 100644
  #define WCWIDTH(c)		(IN_RANGE_INC (c, 0x20, 0x7e) ? 1 : wcwidth (c))
 diff --git a/src/wcwidth.C b/src/wcwidth.C
 new file mode 100644
-index 0000000..c3d90a6
+index 00000000..c3d90a6a
 --- /dev/null
 +++ b/src/wcwidth.C
 @@ -0,0 +1,218 @@
