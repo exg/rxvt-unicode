@@ -153,7 +153,7 @@ Here's a silly example file that shows some of the permissible constructs:
 
    # daily/weekly reminders
 
-   08:15 mtwrf *      Good Morning!\\nRead News?; rxvt -e News
+   08:15 mtwrf *      Good Morning!\\nRead News?; urxvt -e News
    12:00 mtwrf *      Lunch Time!
    17:00 mtwrf *      Go Home
    23:00 mtwrf *      Still Here? Go to bed
