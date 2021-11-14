@@ -942,12 +942,12 @@ Draw_Window (mywindow_t *W, int full_redraw)
                         XTextWidth (Xfont, beg, (end - beg))) / 2, 10 + Xfont->ascent + FontHeight () * lines, beg, (end - beg));
         }
 
-      XDrawString (Xdisplay, msgButton.Dismiss, Xrvgc, (msgButton.width - XTextWidth (Xfont, "Done", 4)) / 2, Xfont->ascent + 2, "Done", 4);
+      XDrawString (Xdisplay, msgButton.Dismiss, Xrvgc, (msgButton.width - XTextWidth (Xfont, "Done" , 4)) / 2, Xfont->ascent + 2, "Done", 4);
 
-      XDrawString (Xdisplay, msgButton.Defer, Xrvgc, (msgButton.width - XTextWidth (Xfont, "Defer", 5)) / 2, Xfont->ascent + 2, "Defer", 5);
+      XDrawString (Xdisplay, msgButton.Defer  , Xrvgc, (msgButton.width - XTextWidth (Xfont, "Defer", 5)) / 2, Xfont->ascent + 2, "Defer", 5);
 
 # ifndef NO_REMINDER_EXEC
-      XDrawString (Xdisplay, msgButton.Start, Xrvgc, (msgButton.width - XTextWidth (Xfont, "Start", 5)) / 2, Xfont->ascent + 2, "Start", 5);
+      XDrawString (Xdisplay, msgButton.Start  , Xrvgc, (msgButton.width - XTextWidth (Xfont, "Start", 5)) / 2, Xfont->ascent + 2, "Start", 5);
 
       if (strlen (execPrgm) > 1)
         XMapWindow (Xdisplay, msgButton.Start);
