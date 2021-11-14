@@ -942,7 +942,7 @@ Draw_Window (mywindow_t *W, int full_redraw)
                         XTextWidth (Xfont, beg, (end - beg))) / 2, 10 + Xfont->ascent + FontHeight () * lines, beg, (end - beg));
         }
 
-      XDrawString (Xdisplay, msgButton.Dismiss, Xrvgc, (msgButton.width - XTextWidth (Xfont, "Done" , 4)) / 2, Xfont->ascent + 2, "Done", 4);
+      XDrawString (Xdisplay, msgButton.Dismiss, Xrvgc, (msgButton.width - XTextWidth (Xfont, "Done" , 4)) / 2, Xfont->ascent + 2, "Done" , 4);
 
       XDrawString (Xdisplay, msgButton.Defer  , Xrvgc, (msgButton.width - XTextWidth (Xfont, "Defer", 5)) / 2, Xfont->ascent + 2, "Defer", 5);
 
