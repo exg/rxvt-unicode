@@ -206,11 +206,9 @@ Rob Nation <nation@rocket.sanders.lockheed.com>
 
 Modifications by mj olesen <olesen@me.QueensU.CA>
 
-Modifications by Marc Lehmann <urclock@schmorp.de>
+Modifications by Marc A. Lehmann <urclock@schmorp.de>
 
 Modifications by Emanuele Giaquinta <emanuele.giaquinta@gmail.com>
 
-=head1 Current Maintainer
-
-Same as the current rxvt-unicode maintainer(s).
+Currently maintained as part of the rxvt-unicode package.
 
