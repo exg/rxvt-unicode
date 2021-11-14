@@ -212,7 +212,7 @@ xterm? I need this to decide about setting colours etc.
     Here are four ways to get transparency. Do read the manpage and option
     descriptions for the programs mentioned and rxvt-unicode. Really, do it!
 
-    1. Use transparent mode:
+    1. Use pseudo-transparency:
 
        Esetroot wallpaper.jpg
        urxvt -tr -tint red -sh 40
@@ -237,10 +237,8 @@ xterm? I need this to decide about setting colours etc.
        urxvt -depth 32 -fg grey90 -bg rgba:0000/0000/4444/cccc
 
     This requires XFT support, and the support of your X-server. If that
-    doesn't work for you, blame Xorg and Keith Packard. ARGB visuals aren't
-    there yet, no matter what they claim. Rxvt-Unicode contains the
-    necessary bugfixes and workarounds for Xft and Xlib to make it work, but
-    that doesn't mean that your WM has the required kludges in place.
+    doesn't work for you, find a working composite manager or window
+    manager, both are required to support ARGB visuals for client windows.
 
     4. Use xcompmgr and let it do the job:
 
