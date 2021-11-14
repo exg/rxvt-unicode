@@ -840,6 +840,9 @@ Draw_Window (mywindow_t *W, int full_redraw)
 #ifdef REMINDERS
   static int lastUpdateTime = -10;
 #endif
+#ifdef DATE_ON_CLOCK_FACE
+  static char clockdate[10];
+#endif
 
 #ifdef MAIL
   static time_t mailTime = 0;
@@ -910,8 +913,16 @@ Draw_Window (mywindow_t *W, int full_redraw)
       strftime (str, sizeof (str), "%a %h %d", tmval);
       XStoreName (Xdisplay, Clock.win, str);
       XSetIconName (Xdisplay, Clock.win, str);
+
+#if defined(REMINDERS) && defined(DATE_ON_CLOCK_FACE)
+      if (show_date)
+        {
+          strftime (clockdate, sizeof (clockdate), "%d", tmval);
+          full_redraw = 1;
+        }
     }
 
+#endif
   if (full_redraw)
     XClearWindow (Xdisplay, W->win);
 
@@ -1033,19 +1044,12 @@ Draw_Window (mywindow_t *W, int full_redraw)
    * Draw the date in the lower half of the clock window.
    * The code is enclosed in REMINDERS because it uses the same
    * font as the reminders code.
-   * I believe this should be drawn always so it does not get
-   * "swept away" by the minute hand.
    */
 #if defined(REMINDERS) && defined(DATE_ON_CLOCK_FACE)
   if (show_date)
-    {
-      char date[10];
-
-      strftime (date, sizeof (date), "%d", tmval);
-      XDrawString (Xdisplay, W->win, X_gc,
-                   ctr_x - XTextWidth (Xfont, date, strlen (date)) / 2,
-                   ctr_y + FontHeight () + (ctr_y - FontHeight ()) / 2, date, strlen (date));
-    }
+    XDrawString (Xdisplay, W->win, X_gc,
+                 ctr_x - XTextWidth (Xfont, clockdate, strlen (clockdate)) / 2,
+                 ctr_y + FontHeight () + (ctr_y - FontHeight ()) / 2, clockdate, strlen (clockdate));
 #endif
 
   if (full_redraw)

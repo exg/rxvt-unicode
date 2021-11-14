@@ -46,7 +46,6 @@ IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
 TODO: match default regex does not match https://猫.移动/tmp/, but it does match if you special_decode the lines first. special_encode of the regex does not and would probably be the better solution -> investigate.
 
-TODO: rclock date overwrite
 	- libptytty is now an external dependency.
 	- enable confirm-paste extension by default, can be disabled by e.g.
           URxvt.perl-ext: -confirm-paste
@@ -105,6 +104,8 @@ TODO: rclock date overwrite
           almost everywhere.
         - urxvt will now try tic -x first and only fall back to tic without -x
           when tic -x fails.
+        - fix urclock not erasing the old date on the clock face, causing
+          overdraw, plus a host of other small fixes and improvements.
         - shave off over 1K of code size from urclock by replacing the sine table
           with a slightly less accurate fixed point approximation.
         - do not specify indentation with =over in pod, this is no longer
