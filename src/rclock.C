@@ -41,6 +41,8 @@
 
 #include "ecb.h"
 
+#include "version.h"
+
 #define APL_CLASS	"Clock"
 #define APL_NAME	"rclock"
 #define MSG_CLASS	"Appointment"
@@ -51,8 +53,6 @@
 # define EXIT_SUCCESS	0
 # define EXIT_FAILURE	1
 #endif
-
-#define VERSION "TODO: fetch from urxvt somehow"
 
 /*--------------------------------*-C-*---------------------------------*
  * Compile-time configuration.
@@ -358,7 +358,7 @@ usage ()
     {"#geom", "icon window geometry"}
   };
 
-  fprintf (stderr, "\nUsage v" VERSION ":\n  " APL_NAME " [options]\n\n" "where options include:\n");
+  fprintf (stderr, "\nUsage for urclock version " VERSION "\n\n  urclock [options]\n\n" "where options include:\n");
 
   for (i = 0; i < (int)optList_size (); i++)
     fprintf (stderr, "    %-29s%s\n", optList[i].opt, optList[i].desc);
@@ -1041,8 +1041,6 @@ Draw_Window (mywindow_t *W, int full_redraw)
     {
       char date[10];
 
-      currentTime = time (NULL) + adjustTime;   /* get the current time */
-      tmval = localtime (&currentTime);
       strftime (date, sizeof (date), "%d", tmval);
       XDrawString (Xdisplay, W->win, X_gc,
                    ctr_x - XTextWidth (Xfont, date, strlen (date)) / 2,
