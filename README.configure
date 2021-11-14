@@ -246,11 +246,13 @@ CONFIGURE OPTIONS
         "urxvtd" etc.). Specify "--with-name=rxvt" to replace with "rxvt".
 
     --with-term=NAME (default: rxvt-unicode)
-        Change the environmental variable for the terminal to NAME.
+        Sets the default "TERM" value that rxvt sets. The default is either
+        "rxvt-unicode" or "rxvt-unicode-256color", as appropriate.
 
     --with-terminfo=PATH
-        Change the environmental variable for the path to the terminfo tree
-        to PATH.
+        If set, rxvt will set the environment variable "TERMINFO" to the
+        given PATH, which can be useful as a last resort if installing the
+        terminfo entries system-wide is not possible.
 
     --with-x
         Use the X Window System (pretty much default, eh?).
