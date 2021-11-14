@@ -189,6 +189,17 @@ reading the B<~/.rclock> file. Each reminder must be a single line not
 exceeding 255 characters. Reminder windows are sometimes not redrawn (left
 blank) when raised or uncovered.
 
+=head1 HISTORY
+
+When "unicodifying" rxvt to urxvt-unicode, other programs than rxvt were
+dropped, as they would be identical to their rxvt counterparts, and
+therefore could still be installed independently by installing rxvt.
+
+Since distributions have started dropping rxvt (and thus rclock), the
+rclock program has been added to the rxvt-unicode package under the name
+urclock. It should be functionally identical to rxvt's rclock program,
+including using the same configuration file name.
+
 =head1 AUTHORS
 
 Rob Nation <nation@rocket.sanders.lockheed.com>
