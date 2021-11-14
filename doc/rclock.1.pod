@@ -1,0 +1,205 @@
+=head1 NAME
+
+urclock (oUR CLOCK) -- clock and appointment reminder for X11
+
+=head1 SYNOPSIS
+
+   urclock [options]
+
+=head1 DESCRIPTION
+
+B<urclock> -- version B<@@RXVT_VERSION@@> -- is an analog clock
+for X intended as an I<xclock>(1) replacement that conserves memory and has
+extra features: B<urclock> enters reverse video if there is mail waiting; an
+appointment reminder is also builtin.
+
+=head2 OPTIONS
+
+The options supported by B<urclock>:
+
+=over
+
+=item B<-display> I<displayname>
+
+Attempt to open a window on the named X display. In the absence of this
+option, the display specified by the C<DISPLAY> environment variable is used.
+
+=item B<-geometry> I<geom>
+
+Create the window with the specified X window
+geometry [default C<80x80>].
+
+=item B<-bg> I<color>
+
+Window background color [default C<white>].
+
+=item B<-fg> I<color>
+
+Window foreground color [default C<black>].
+
+=item B<-fn> I<fontname>
+
+Select font
+used for reminders [default C<7x14>].
+
+=item B<-nodate>
+
+Do not display today's date on the face of the clock.
+
+=item B<-iconic>
+
+Start iconified, if supported by the window manager.
+
+=item B<-adjust> I<ddhhmm>
+
+Adjust the clock by +/- I<ddhhmm> (I<dd> = days, I<hh> = hours, I<mm> =
+minutes) to fix an incorrect clock without being root or for working in
+another time-zone.
+
+=item B<-update> I<n>
+
+Update clock face every I<n> seconds [default C<30>]. If I<n>=1, a seconds
+hand is displayed.
+
+=item B<-mail> I<n>
+
+Check for new mail every I<n> seconds [default C<60>]. The actual interval
+is a multiple of the clock update interval.
+
+=item B<-mailfile> I<mailfile>
+
+Override environmental variable C<MAIL> with I<mailfile> as location for
+mail.
+
+=item B<-mailspawn> I<cmd>
+
+Execute I<cmd> when the face of the clock is clicked by the mouse button.
+
+=item B<#>I<geom>
+
+Specify the preferred icon window size [default C<65x65>].
+
+=back
+
+Some of these options may not be available based on how urclock was
+compiled. Run B<urclock -help> to determine which features are available.
+
+=head1 X RESOURCES
+
+No X resources are used -- only command-line options.
+
+=head1 TITLES AND ICONS
+
+The window and icon titles are set to the day of the week and the
+date. The date is also displayed on the lower half of the clock unless the
+B<-nodate> option is specified. The icon window is "active" and will show
+the time, if supported by the window manager.
+
+=head1 REMINDERS
+
+The B<~/.rclock> file (note: I<not> B<~/.urclock>) lists the messages
+to display and/or the programs to run at specified times and dates. At
+the specified time, B<urclock> will pop-up a window in the center of
+the screen to display the message or will simply run the scheduled
+program. B<urclock> will read the B<~/.rclock> file at startup, and every
+10 minutes (to look for changes) and after a message window has been
+dismissed (to find the next appointment).
+
+An entry in B<~/.rclock> may be one of two formats (blank and comment
+lines will be ignored):
+
+B<hh:mm  [dd]  MM/DD/YY message[; program]>
+
+or
+
+B<[hh:mm  [dd]  MM/DD/YY [message]]; program>
+
+B<hh> - hour (0-23; * = current)
+
+B<mm> - minute (0-59; * = 0)
+
+B<dd> - days-of-week (some/all/none of umtwrfs; * = all)
+
+B<MM> - month (1-12; * = current)
+
+B<DD> - day of month (1-31; * = current)
+
+B<YY> - year (0-99 or 1900-????; * = current)
+
+B<message> - message to display
+
+B<program> - program to execute
+
+The days-of-the-week use the following abbreviations:
+B<u>=Sunday, B<m>=Monday, B<t>=Tuesday, B<w>=Wednesday, B<r>=Thursday, B<f>=Friday, B<s>=Saturday,
+B<*>=all.
+
+If B<message> is empty and B<program> has been specified, it is executed
+without a dialog box. If time/date are also not specified, B<program>
+is executed on start-up. Note B<message> may contain escape values (\n:
+newline, \;: semicolon).
+
+Here's a silly example file that shows some of the permissible constructs:
+
+   # ~/.rclock - My appointment file
+
+   # startup functions
+   ; xsetroot -solid Black &
+
+   # cron functions
+
+   10:00; xsetroot -solid Grey25 &
+   14:00; xsetroot -solid Grey75 &
+
+   # daily/weekly reminders
+
+   08:15 mtwrf *      Good Morning!\\nRead News?; rxvt -e News
+   12:00 mtwrf *      Lunch Time!
+   17:00 mtwrf *      Go Home
+   23:00 mtwrf *      Still Here? Go to bed
+   08:10 twrf  *      Did you do your time card yesterday?
+   15:00 f     *      Friday, do your time card early!
+   16:00 mtwr  *      Do your time card
+   16:30 mtwrf *      Did you do your time card?
+   *:00  us    *      It's the weekend, why are you here?
+   8:15  f     */13/* Friday the 13th! Careful!
+   8:15  *     4/1/*  fkrkrmfismsmkd...dkdfk
+   8:16  *     4/1/*  April Fools!
+
+   # birthdays/anniversaries
+
+   16:00    05/21/*   Pam's Birthday (next week)
+   16:00    05/24/*   Pam's Birthday (in a few days)
+
+   # once-of appointments
+
+   08:30    03/15/94    Dentist appointment
+   08:30    03/15/1999  Dentist appointment
+   08:30    03/15/2004  Dentist appointment
+
+=head1 ENVIRONMENT
+
+B<urclock> uses the environment variable B<MAIL> to determine the location
+of the user's mail spool file unless the B<-mailfile> option is specified.
+
+=head1 BUGS
+
+B<urclock> is not very smart about dealing with errors encountered while
+reading the B<~/.rclock> file. Each reminder must be a single line not
+exceeding 255 characters. Reminder windows are sometimes not redrawn (left
+blank) when raised or uncovered.
+
+=head1 AUTHORS
+
+Rob Nation <nation@rocket.sanders.lockheed.com>
+
+Modifications by mj olesen <olesen@me.QueensU.CA>
+
+Modifications by Marc Lehmann <urclock@schmorp.de>
+
+Modifications by Emanuele Giaquinta <emanuele.giaquinta@gmail.com>
+
+=head1 Current Maintainer
+
+Same as the current rxvt-unicode maintainer(s).
+
