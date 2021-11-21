@@ -45,7 +45,7 @@ TODO: think about daemon delaying urxvt client exit.
 IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
 
-TODO: match default regex does not match https://猫.移动/tmp/ => document special encoding and possibly rewrite the regex.
+9.29
 	- libptytty is now an external dependency.
 	- enable confirm-paste extension by default, can be disabled by e.g.
           URxvt.perl-ext: -confirm-paste
@@ -90,6 +90,9 @@ TODO: match default regex does not match https://猫.移动/tmp/ => document spe
         - added OSC 776 sequence to return character cell width, height and font
           ascent, which is useful when using urxvt as slave to calculate window
           size form or to row/column count.
+        - matcher extension documentation now points out some requirements for
+          regular expressions. the default url matching regex will now try
+          to match IRLs in addition to URLs.
 	- The view_start perl method now scrolls to the bottom also when the
 	  argument is greater than 0.
 	- eval scroll actions now scroll to the bottom when scrolling down and
