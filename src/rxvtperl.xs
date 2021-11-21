@@ -531,7 +531,7 @@ ungrab (rxvt_term *THIS)
 }
 
 bool
-rxvt_perl_interp::invoke (rxvt_term *term, hook_type htype, ...)
+rxvt_perl_interp::invoke (rxvt_term *term, int htype, ...)
 {
   if (!perl || !term->perl.self)
     return false;

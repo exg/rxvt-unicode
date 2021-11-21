@@ -58,7 +58,7 @@ struct rxvt_perl_interp
   void init ();
   void init (rxvt_term *term);
   void eval (const char *str);
-  bool invoke (rxvt_term *term, hook_type htype, ...);
+  bool invoke (rxvt_term *term, int htype, ...);
   void line_update (rxvt_term *term);
   void selection_finish (rxvt_selection *sel, char *data, unsigned int len);
   void usage (rxvt_term *term, int type);
