@@ -93,9 +93,9 @@ Example: use a custom configuration.
 my $url =
    qr{
       (?:https?://|ftp://|news://|mailto:|file://|\bwww\.)
-      [\w\-\@;\/?:&=%\$.+!*\x27,~#]*
+      [\w\-\@;\/?:&=%\$.+!*\x27,~#$urxvt::NOCHAR]*
       (
-         \([\w\-\@;\/?:&=%\$.+!*\x27,~#]*\)| # Allow a pair of matched parentheses
+         \([\w\-\@;\/?:&=%\$.+!*\x27,~#$urxvt::NOCHAR]*\)| # Allow a pair of matched parentheses
          [\w\-\@;\/?:&=%\$+*~]  # exclude some trailing characters (heuristic)
       )+
    }x;
@@ -253,9 +253,7 @@ sub on_start {
 
    my @defaults = ($url);
    my @matchers;
-   for (my $idx = 0; defined (my $res = $self->my_resource ("pattern.$idx") || $defaults[$idx]); $idx++) {
-      $res = $self->locale_decode ($res);
-      utf8::encode $res;
+   for (my $idx = 0; defined (my $res = $self->locale_decode ($self->my_resource ("pattern.$idx")) || $defaults[$idx]); $idx++) {
       my $launcher = $self->my_resource ("launcher.$idx");
       $launcher =~ s/\$&|\$\{&\}/\${0}/g if $launcher;
       my $rend = $self->parse_rend($self->my_resource ("rend.$idx"));
