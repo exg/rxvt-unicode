@@ -88,6 +88,36 @@ Example: use a custom configuration.
     URxvt.matcher.pattern.2:  \\B(/\\S+?):(\\d+)(?=:|$)
     URxvt.matcher.launcher.2: gvim +$2 $1
 
+=head2 Regex encoding/wide character matching
+
+Urxvt stores all text as unicode, in a special encoding that uses
+one character/code point per column. For various reasons, the regular
+expressions are matched directly against this encoding, which means there are a few things
+you need to keep in mind:
+
+=over
+
+=item X resources/command line arguments are locale-encoded
+
+The regexes taken from the command line or resources will be converted
+from locale encoding to unicode. This can change the number of code points
+per character.
+
+=item Wide characters are column-padded with C<$urxvt::NOCHAR>
+
+Wide characters (such as kanji and sometimes tabs) are padded with
+a special character value (C<$urxvt::NOCHAR>). That means that
+constructs such as C<\w> or C<.> will only match part of a character, as
+C<$urxvt::NOCHAR> is not matched by C<\w> and both only match the first
+"column" of a wide character.
+
+That means you have to incorporate C<$urxvt::NOCHAR> into parts of regexes
+that may match wide characters. For example, to match C<\w+> you might
+want to use C<[\w$urxvt::NOCHAR]+> instead, and to match a single character
+(C<.>) you might want to use C<.$urxvt::NOCHAR*> instead.
+
+=back
+
 =cut
 
 my $url =
