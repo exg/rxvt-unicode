@@ -519,7 +519,8 @@ struct rxvt_font_overflow : rxvt_font
   bool load (const rxvt_fontprop &prop, bool force_prop)
   {
     width = 1; height = 1;
-    ascent = 1; descent = 0;
+    ascent = 1;
+    descent = (*fs)[2]->descent;
 
     set_name (strdup ("built-in rendition overflow font"));
 
