@@ -1627,11 +1627,13 @@ accounts for wide and combining characters.
 
 =item $octets = $term->locale_encode ($string)
 
-Convert the given text string into the corresponding locale encoding.
+Convert the given text string into the corresponding locale
+encoding. Returns C<undef> if C<$string> is C<undef>.
 
 =item $string = $term->locale_decode ($octets)
 
-Convert the given locale-encoded octets into a perl string.
+Convert the given locale-encoded octets into a perl string. Returns
+C<undef> if C<$octets> is C<undef>.
 
 =item $term->scr_xor_span ($beg_row, $beg_col, $end_row, $end_col[, $rstyle])
 

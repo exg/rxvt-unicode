@@ -1376,6 +1376,9 @@ SV *
 rxvt_term::locale_encode (SV *str)
 	CODE:
 {
+	if (!SvOK (str))
+          XSRETURN_UNDEF;
+
         wchar_t *wstr = sv2wcs (str);
 
 	rxvt_push_locale (THIS->locale);
@@ -1394,6 +1397,9 @@ SV *
 rxvt_term::locale_decode (SV *octets)
 	CODE:
 {
+	if (!SvOK (octets))
+          XSRETURN_UNDEF;
+
 	STRLEN len;
         char *data = SvPVbyte (octets, len);
 
