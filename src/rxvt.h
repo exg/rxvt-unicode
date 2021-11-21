@@ -452,6 +452,7 @@ enum {
   URxvt_view_up          = 720,
   URxvt_view_down        = 721,
 
+  URxvt_cellinfo         = 776,     // returns font cell width, height etc.
   URxvt_perl             = 777,     // for use by perl extensions, starts with "extension-name;"
 };
 

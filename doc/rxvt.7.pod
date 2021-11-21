@@ -2129,6 +2129,7 @@ this requires insecure mode to be enabled for most of these.
 	B<< C<Ps = 713> >>	Set bold-italic fontset to B<< C<Pt> >>. Similar to C<Ps = 50> (Compile styles).
 	B<< C<Ps = 720> >>	Move viewing window up by B<< C<Pt> >> lines, or clear scrollback buffer if C<Pt = 0> (Compile frills).
 	B<< C<Ps = 721> >>	Move viewing window down by B<< C<Pt> >> lines, or clear scrollback buffer if C<Pt = 0> (Compile frills).
+	B<< C<Ps = 776> >>	Returns info about the character cell size, replies with C<ESC ] 776 ; cell-width ; cell-height ; font-ascent ST>.
 	B<< C<Ps = 777> >>	Call the perl extension with the given string, which should be of the form C<extension;parameters> (Compile perl).
 
 =end table

@@ -27,7 +27,7 @@
  * Copyright (c) 2001      Marius Gedminas
  *				- Ctrl/Mod4+Tab works like Meta+Tab (options)
  * Copyright (c) 2003      Rob McMullen <robm@flipturn.org>
- * Copyright (c) 2003-2014 Marc Lehmann <schmorp@schmorp.de>
+ * Copyright (c) 2003-2021 Marc Lehmann <schmorp@schmorp.de>
  * Copyright (c) 2007,2015 Emanuele Giaquinta <e.giaquinta@glauco.it>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -3597,6 +3597,13 @@ rxvt_term::process_xterm_seq (int op, char *str, char resp)
           tt_printf ("\33]%d;rxvt-unicode;%-.20s;%c;%c%c",
                      op,
                      rs[Rs_name], VERSION[0], VERSION[2],
+                     resp);
+        break;
+
+      case URxvt_cellinfo:
+        if (query)
+          tt_printf ("\33]%d;%d;%d;%d%c", saveop,
+                     fwidth, fheight, fbase,
                      resp);
         break;
 

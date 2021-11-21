@@ -87,6 +87,9 @@ TODO: match default regex does not match https://猫.移动/tmp/ => document spe
           extensions.
         - the background extension will now be autoloaded when the OSC 20 or 705
           sequence is received.
+        - added OSC 776 sequence to return character cell width, height and font
+          ascent, which is useful when using urxvt as slave to calculate window
+          size form or to row/column count.
 	- The view_start perl method now scrolls to the bottom also when the
 	  argument is greater than 0.
 	- eval scroll actions now scroll to the bottom when scrolling down and
