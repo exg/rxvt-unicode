@@ -545,7 +545,7 @@ B<@@RXVT_NAME@@> can still be remote controlled with it:
 
    socketpair my $URXVT, my $slave, Socket::AF_UNIX, Socket::SOCK_STREAM, Socket::PF_UNSPEC;
    fcntl $slave, Fcntl::F_SETFD, 0;
-   system "exec @@RXVT_NAME|| -pty-fd " . (fileno $slave) . " &";
+   system "exec @@RXVT_NAME@@ -pty-fd " . (fileno $slave) . " &";
    close $slave;
 
    syswrite $URXVT, "Type a secret password: ";
