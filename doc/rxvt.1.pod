@@ -550,7 +550,7 @@ B<@@RXVT_NAME@@> can still be remote controlled with it:
 
    syswrite $URXVT, "Type a secret password: ";
    my $secret = do { local $/ = "\r"; <$URXVT> };
-   print "No so secret anymore: $secret\n";
+   print "Not so secret anymore: $secret\n";
 
 =item B<-pe> I<string>
 
