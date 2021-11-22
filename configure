@@ -5086,7 +5086,15 @@ fi
 if test x$GXX = xyes; then
   if test $support_warnings = yes; then
     save_CXXFLAGS="$CXXFLAGS"
-    CXXFLAGS="$CXXFLAGS -Wall -Wno-sign-compare -Wno-reorder -Wno-unused-value"
+    for warning in \
+      -Wall \
+      -Wno-parentheses \
+      -Wno-reorder \
+      -Wno-sign-compare \
+      -Wno-unused-value \
+      ; do
+      CXXFLAGS="$CXXFLAGS $warning"
+    done
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 

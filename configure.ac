@@ -176,7 +176,15 @@ AC_ARG_ENABLE(warnings,
 if test x$GXX = xyes; then
   if test $support_warnings = yes; then
     save_CXXFLAGS="$CXXFLAGS"
-    CXXFLAGS="$CXXFLAGS -Wall -Wno-sign-compare -Wno-reorder -Wno-unused-value"
+    for warning in \
+      -Wall \
+      -Wno-parentheses \
+      -Wno-reorder \
+      -Wno-sign-compare \
+      -Wno-unused-value \
+      ; do
+      CXXFLAGS="$CXXFLAGS $warning"
+    done
     AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[])], [], [CXXFLAGS="$save_CXXFLAGS"])
   else
     CXXFLAGS="$CXXFLAGS -w"
