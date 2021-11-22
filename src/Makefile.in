@@ -192,7 +192,7 @@ misc.o: ../config.h rxvt.h feature.h ecb.h encoding.h rxvtutil.h estl.h
 misc.o: emman.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h ../libev/ev++.h
 misc.o: ../libev/ev.h callback.h rxvtimg.h scrollbar.h rxvtperl.h hookinc.h
 misc.o: rsinc.h optinc.h
-rclock.o: ecb.h
+rclock.o: ecb.h version.h
 rxvt.o: ../config.h rxvt.h feature.h ecb.h encoding.h rxvtutil.h estl.h
 rxvt.o: emman.h rxvtfont.h rxvttoolkit.h ev_cpp.h ../config.h ../libev/ev++.h
 rxvt.o: ../libev/ev.h callback.h rxvtimg.h scrollbar.h rxvtperl.h hookinc.h

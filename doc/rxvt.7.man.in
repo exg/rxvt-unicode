@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2021-11-14" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2021-11-22" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -2351,6 +2351,7 @@ Ps = 712	Set italic fontset to Pt. Similar to Ps = 50 (Compile styles).
 Ps = 713	Set bold-italic fontset to Pt. Similar to Ps = 50 (Compile styles).
 Ps = 720	Move viewing window up by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).
 Ps = 721	Move viewing window down by Pt lines, or clear scrollback buffer if Pt = 0 (Compile frills).
+Ps = 776	(urxvt 9.29) Returns info about the character cell size, replies with ESC ] 776 ; cell-width ; cell-height ; font-ascent ST
 Ps = 777	Call the perl extension with the given string, which should be of the form extension;parameters (Compile perl).
 .TE
 .PP

@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2021-11-14" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2021-11-22" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -272,7 +272,7 @@ Here's a silly example file that shows some of the permissible constructs:
 \&
 \&   # daily/weekly reminders
 \&
-\&   08:15 mtwrf *      Good Morning!\e\enRead News?; rxvt \-e News
+\&   08:15 mtwrf *      Good Morning!\e\enRead News?; urxvt \-e News
 \&   12:00 mtwrf *      Lunch Time!
 \&   17:00 mtwrf *      Go Home
 \&   23:00 mtwrf *      Still Here? Go to bed
@@ -306,15 +306,24 @@ of the user's mail spool file unless the \fB\-mailfile\fR option is specified.
 reading the \fB~/.rclock\fR file. Each reminder must be a single line not
 exceeding 255 characters. Reminder windows are sometimes not redrawn (left
 blank) when raised or uncovered.
+.SH "HISTORY"
+.IX Header "HISTORY"
+When \*(L"unicodifying\*(R" rxvt to urxvt-unicode, other programs than rxvt were
+dropped, as they would be identical to their rxvt counterparts, and
+therefore could still be installed independently by installing rxvt.
+.PP
+Since distributions have started dropping rxvt (and thus rclock), the
+rclock program has been added to the rxvt-unicode package under the name
+urclock. It should be functionally identical to rxvt's rclock program,
+including using the same configuration file name.
 .SH "AUTHORS"
 .IX Header "AUTHORS"
 Rob Nation <nation@rocket.sanders.lockheed.com>
 .PP
 Modifications by mj olesen <olesen@me.QueensU.CA>
 .PP
-Modifications by Marc Lehmann <urclock@schmorp.de>
+Modifications by Marc A. Lehmann <urclock@schmorp.de>
 .PP
 Modifications by Emanuele Giaquinta <emanuele.giaquinta@gmail.com>
-.SH "Current Maintainer"
-.IX Header "Current Maintainer"
-Same as the current rxvt-unicode maintainer(s).
+.PP
+Currently maintained as part of the rxvt-unicode package.
