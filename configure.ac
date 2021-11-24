@@ -27,10 +27,6 @@ AC_PROG_INSTALL
 AC_USE_SYSTEM_EXTENSIONS
 AC_LANG(C++)
 
-if test "$ac_prog_cxx_stdcxx" != cxx11; then
-  AC_MSG_ERROR([the compiler does not support C++11])
-fi
-
 LINKER="$CXX"
 dnl check whether we can link with gcc -lsupc++
 if test x$GCC = xyes && test x$GXX = xyes; then

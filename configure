@@ -4729,10 +4729,6 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
-if test "$ac_prog_cxx_stdcxx" != cxx11; then
-  as_fn_error $? "the compiler does not support C++11" "$LINENO" 5
-fi
-
 LINKER="$CXX"
 if test x$GCC = xyes && test x$GXX = xyes; then
       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for working libsupc++" >&5
