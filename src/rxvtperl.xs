@@ -1147,7 +1147,7 @@ SET_CUSTOM (int rend, int new_value)
 	CODE:
 {
         if (!IN_RANGE_EXC (new_value, 0, RS_customCount))
-          croak ("custom value out of range, must be 0..%d", RS_customCount - 1);
+          croak ("custom value out of range, must be 0..%lu", RS_customCount - 1);
 
         RETVAL = (rend & ~RS_customMask)
                | ((new_value << RS_customShift) & RS_customMask);
