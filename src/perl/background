@@ -1537,34 +1537,6 @@ sub old_bg_expr {
    $expr
 }
 
-sub on_osc_seq {
-   my ($self, $op, $arg) = @_;
-
-   $self->{bg_opts} or return;
-
-   $op =~ /^(?:20|705)$/ or return;
-
-   if ($op eq "20") {
-      if ($arg eq "?") {
-         my $h_scale = $self->{bg_opts}->{h_scale};
-         my $v_scale = $self->{bg_opts}->{v_scale};
-         my $h_align = $self->{bg_opts}->{h_align};
-         my $v_align = $self->{bg_opts}->{v_align};
-         $self->cmd_parse ("\033]2;[${h_scale}x${v_scale}+${h_align}+${v_align}]\007");
-      } else {
-         $self->old_bg_opts ($arg);
-         my $expr = $self->old_bg_expr;
-         $self->set_expr (parse_expr $expr) if $expr;
-      }
-   } elsif ($op eq "705") {
-      $self->{bg_opts}->{tint} = $arg;
-      my $expr = $self->old_bg_expr;
-      $self->set_expr (parse_expr $expr) if $expr;
-   }
-
-   1
-}
-
 sub find_resource {
    my ($self, $res, $opt) = @_;
 
@@ -1574,7 +1546,7 @@ sub find_resource {
    $v
 }
 
-sub on_start {
+sub parse_bgopts {
    my ($self) = @_;
 
    my $expr = $self->x_resource ("%.expr");
@@ -1596,7 +1568,43 @@ sub on_start {
    $self->{border} = $self->x_resource_boolean ("%.border");
 
    $MIN_INTERVAL = $self->x_resource ("%.interval");
+}
+
+sub on_start {
+   my ($self) = @_;
+
+   $self->parse_bgopts;
 
    ()
+}
+
+sub on_osc_seq {
+   my ($self, $op, $arg) = @_;
+
+   $op eq "20" or $op eq "706"
+      or return;
+
+   $self->{bg_opts}
+      or $self->parse_bgopts;
+
+   if ($op eq "20") {
+      if ($arg eq "?") {
+         my $h_scale = $self->{bg_opts}{h_scale};
+         my $v_scale = $self->{bg_opts}{v_scale};
+         my $h_align = $self->{bg_opts}{h_align};
+         my $v_align = $self->{bg_opts}{v_align};
+         $self->cmd_parse ("\033]2;[${h_scale}x${v_scale}+${h_align}+${v_align}]\007");
+      } else {
+         $self->old_bg_opts ($arg);
+         my $expr = $self->old_bg_expr;
+         $self->set_expr (parse_expr $expr) if $expr;
+      }
+   } elsif ($op eq "705") {
+      $self->{bg_opts}{tint} = $arg;
+      my $expr = $self->old_bg_expr;
+      $self->set_expr (parse_expr $expr) if $expr;
+   }
+
+   1
 }
 

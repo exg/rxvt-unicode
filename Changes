@@ -44,6 +44,12 @@ TODO: think about daemon delaying urxvt client exit.
 IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
 
+TODO: rxvt -pe background; printf "\e]20;test\7" # calls register_package 3 times instead of once
+	- the bakground extension did not initialise properly when automatically
+          loaded via the OSC.
+	- new "on_attach" hook type implemented, to initialise late-loading
+          extensions.
+
 9.29 Mon 22 Nov 2021 18:07:14 CET
 	- libptytty (http://dist.schmorp.de/libptytty/) is now a required
           external dependency.

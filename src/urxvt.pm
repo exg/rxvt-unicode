@@ -199,6 +199,18 @@ I<< When in doubt, return a false value (preferably C<()>). >>
 
 =over
 
+=item on_attach $term
+
+Called when an extension package is attached to a running terminal
+instance. Must return true in all cases, and runs with the same
+limitations as C<on_init>.
+
+Unlike C<on_init> or C<on_start>, this is called when the extension is
+attached to a terminal, regardless of whether the extension is loaded
+before or after the terminal is started. Extensions that need to do
+something before they work can do it in this callback, as opposed to e.g.
+C<on_init>, which might not be called.
+
 =item on_init $term
 
 Called after a new terminal object has been initialized, but before
@@ -1182,6 +1194,8 @@ package urxvt::term;
 sub register_package {
    my ($self, $pkg, $argv) = @_;
 
+   return if $self->{_pkg}{$pkg};
+
    no strict 'refs';
 
    urxvt::verbose 6, "register package $pkg to $self";
@@ -1201,6 +1215,11 @@ sub register_package {
       if (my $ref = $pkg->can ("on_" . lc $name)) {
          $proxy->enable ($name => $ref);
       }
+   }
+
+   if (my $attach_hook = $pkg->can ("on_attach")) {
+      $attach_hook->($proxy)
+         or urxvt::verbose 1, "$pkg->on_attach returned false, extension failed to attach";
    }
 }
 
