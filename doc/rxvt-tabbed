@@ -133,7 +133,7 @@ $notebook->signal_connect_after (switch_page => sub {
 $window->set_default_size (700, 400);
 $window->show_all;
 
-# ugly, but gdk_window_filters are ot available in perl
+# ugly, but gdk_window_filters are not available in perl
 
 Gtk2::Gdk::Event->handler_set (sub {
    my ($event) = @_;
