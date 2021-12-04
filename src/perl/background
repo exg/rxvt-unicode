@@ -58,8 +58,8 @@ is behind the text, replacing the normal background colour.
 It does so by evaluating a Perl expression that I<calculates> the image on
 the fly, for example, by grabbing the root background or loading a file.
 
-While the full power of Perl is available, the operators have been design
-to be as simple as possible.
+While the full power of Perl is available, the operators have been
+designed to be as simple as possible.
 
 For example, to load an image and scale it to the window size, you would
 use:

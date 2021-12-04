@@ -44,6 +44,7 @@ TODO: think about daemon delaying urxvt client exit.
 IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
 
+TODO: configurable fps setting
 9.30 Sat 27 Nov 2021 21:07:09 CET
 	- the background extension did not initialise properly when automatically
           loaded via the OSC.
