@@ -1314,7 +1314,7 @@ all the default extensions except C<selection>.
 
 To prohibit autoloading of extensions, you can prefix them with C</>,
 which will make urxvt refuse to automatically load them (this can be
-overriden, however, by specifying the extension name again without a
+overridden, however, by specifying the extension name again without a
 prefix, though). This does not prohibit extensions themselves loading
 other extensions. For example, C<default,/background> will keep the
 C<background> extension from being loaded when a background OSC sequence
