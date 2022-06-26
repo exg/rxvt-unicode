@@ -3336,15 +3336,22 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b, unsi
 
   /* we allow one of the 6 closest neighbouring colours */
   /* to replace the current color, if they not used recently */
-  static const signed char dxyz[][3] = {
+  #if 0
+  static const unsigned char dxyz[][3] = {
     0, 0, 0,
     0, 0, 4,
-    0, 4, 0,
-    4, 0, 0,
     0, 4, 4,
     4, 4, 0,
     4, 0, 4,
+    0, 4, 0,
+    4, 0, 0,
   };
+  #else
+  // silly compressed verlapping triplets version of above
+  static const unsigned char dxyz[] = {
+    0, 0, 0, 4, 4, 0, 4, 0, 0,
+  };
+  #endif
 
   static const unsigned char color_level[8][32] = {
     // neighbour index
@@ -3361,11 +3368,11 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b, unsi
 
   unsigned int idx;
 
-  for (int n = 0; n < ecb_array_length (dxyz); ++n)
+  for (int n = 0; n < ecb_array_length (dxyz) - 2; ++n)
     {
-      unsigned int idx_r = color_level[  Red_levels - dxyz[n][0]][r / 8];
-      unsigned int idx_g = color_level[Green_levels - dxyz[n][1]][g / 8];
-      unsigned int idx_b = color_level[ Blue_levels - dxyz[n][2]][b / 8];
+      unsigned int idx_r = color_level[  Red_levels - dxyz[n + 0]][r / 8];
+      unsigned int idx_g = color_level[Green_levels - dxyz[n + 1]][g / 8];
+      unsigned int idx_b = color_level[ Blue_levels - dxyz[n + 2]][b / 8];
       unsigned int index = colorcube_index (idx_r, idx_g, idx_b);
 
       if (n == 0)
@@ -3385,8 +3392,8 @@ rxvt_term::map_rgb24_color (unsigned int r, unsigned int g, unsigned int b, unsi
         }
 
       // like (rgb24_seqno[idx] > rgb24_seqno[index])
-      // but also handles wrap around values good enough
-      if ((uint16_t)(rgb24_seqno[idx] - rgb24_seqno[index]) < 0x7fff)
+      // but also handles wrap around values well enough
+      if ((uint16_t)(rgb24_seqno[idx] - rgb24_seqno[index]) < 0x8000)
         idx = index;
     }
 
