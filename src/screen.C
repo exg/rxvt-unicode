@@ -389,6 +389,10 @@ rxvt_term::scr_reset ()
               scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
             }
           while (p != pend && q > 0);
+
+          // make sure all terminal lines exist
+          while (top_row > 0)
+            scr_blank_screen_mem (ROW (--top_row), DEFAULT_RSTYLE);
         }
       else
 #endif
@@ -402,19 +406,18 @@ rxvt_term::scr_reset ()
               copy_line (row_buf [q], prev_row_buf [p]);
             }
           while (p != pend);
+
+          screen.cur.row += nrow - prev_nrow;
         }
 
       term_start = total_rows - nrow;
       top_row = q - term_start;
 
-      // make sure all terminal lines exist
-      while (top_row > 0)
-        scr_blank_screen_mem (ROW (--top_row), DEFAULT_RSTYLE);
-
       clamp_it (screen.cur.row, 0, nrow - 1);
       clamp_it (screen.cur.col, 0, ncol - 1);
     }
 
+  // ensure drawn_buf, swap_buf and terminal rows are all initialized
   for (int row = nrow; row--; )
     {
       if (!ROW       (row).valid ()) scr_blank_screen_mem (ROW       (row), DEFAULT_RSTYLE);
