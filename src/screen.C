@@ -293,6 +293,7 @@ rxvt_term::scr_reset ()
 
       int common_col = min (prev_ncol, ncol);
 
+      // resize swap_buf, blank drawn_buf
       for (int row = min (nrow, prev_nrow); row--; )
         {
           scr_blank_screen_mem (drawn_buf [row], DEFAULT_RSTYLE);
@@ -306,6 +307,7 @@ rxvt_term::scr_reset ()
       int pend = MOD (term_start + top_row  , prev_total_rows);
       int q    = total_rows; // rewrapped row
 
+#if ENABLE_FRILLS
       if ((rewrap_always || top_row) && !rewrap_never)
         {
           // Re-wrap lines. This is rather ugly, possibly because I am too dumb
@@ -332,11 +334,11 @@ rxvt_term::scr_reset ()
 
               int qlines = max (0, (llen - 1) / ncol) + 1;
 
-              // drop partial lines completely
-              if (q < qlines)
-                break;
-
               q -= qlines;
+
+              // drop partial lines completely
+              if (q < 0)
+                break;
 
               int lofs = 0;
               line_t *qline;
@@ -387,31 +389,27 @@ rxvt_term::scr_reset ()
               scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
             }
           while (p != pend && q > 0);
-
-          term_start = total_rows - nrow;
-          top_row = q - term_start;
-
-          // make sure all terminal lines exist
-          while (top_row > 0)
-            scr_blank_screen_mem (ROW (--top_row), DEFAULT_RSTYLE);
         }
       else
+#endif
         {
-          // if no scrollback exists (yet), wing, instead of wrap
-
-          for (int row = min (nrow, prev_nrow); row--; )
+          // wing, instead of wrap
+          do
             {
-              line_t &src = prev_row_buf [MOD (term_start + row, prev_total_rows)];
-              line_t &dst = row_buf [row];
+              p = MOD (p - 1, prev_total_rows);
+              q--;
 
-              copy_line (dst, src);
+              copy_line (row_buf [q], prev_row_buf [p]);
             }
-
-          for (int row = prev_nrow; row < nrow; row++)
-            scr_blank_screen_mem (row_buf [row], DEFAULT_RSTYLE);
-
-          term_start = 0;
+          while (p != pend);
         }
+
+      term_start = total_rows - nrow;
+      top_row = q - term_start;
+
+      // make sure all terminal lines exist
+      while (top_row > 0)
+        scr_blank_screen_mem (ROW (--top_row), DEFAULT_RSTYLE);
 
       clamp_it (screen.cur.row, 0, nrow - 1);
       clamp_it (screen.cur.col, 0, ncol - 1);

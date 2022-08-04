@@ -73,6 +73,7 @@ TODO:
 
 	- the background extension no longer requires off focus fading support
           to be compiled in.
+        - fix compiling without frills, and fix rewrapMode: never.
 
 9.30 Sat 27 Nov 2021 21:07:09 CET
 	- the background extension did not initialise properly when automatically
