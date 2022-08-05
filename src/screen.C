@@ -390,6 +390,8 @@ rxvt_term::scr_reset ()
             }
           while (p != pend && q > 0);
 
+          top_row = q - term_start;
+
           // make sure all terminal lines exist
           while (top_row > 0)
             scr_blank_screen_mem (ROW (--top_row), DEFAULT_RSTYLE);
@@ -411,7 +413,6 @@ rxvt_term::scr_reset ()
         }
 
       term_start = total_rows - nrow;
-      top_row = q - term_start;
 
       clamp_it (screen.cur.row, 0, nrow - 1);
       clamp_it (screen.cur.col, 0, ncol - 1);
