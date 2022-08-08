@@ -334,11 +334,11 @@ rxvt_term::scr_reset ()
 
               int qlines = max (0, (llen - 1) / ncol) + 1;
 
-              q -= qlines;
-
               // drop partial lines completely
-              if (q < 0)
+              if (q < qlines)
                 break;
+
+              q -= qlines;
 
               int lofs = 0;
               line_t *qline;
