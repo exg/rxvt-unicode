@@ -388,7 +388,7 @@ rxvt_term::scr_reset ()
               qline->is_longer (0);
               scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
             }
-          while (p != pend);
+          while (p != pend && q > 0);
 
           term_start = total_rows - nrow;
           top_row = q - term_start;
