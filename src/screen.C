@@ -404,7 +404,6 @@ rxvt_term::scr_reset ()
               copy_line (row_buf [q], prev_row_buf [p]);
             }
           while (p != pend && q > 0);
-
         }
 
       term_start = total_rows - nrow;
