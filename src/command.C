@@ -3414,19 +3414,21 @@ rxvt_term::process_color_seq (int report, int color, const char *str, char resp)
 {
   if (str[0] == '?' && !str[1])
     {
-      if (!IN_RANGE_INC (color, minCOLOR, maxTermCOLOR))
-        return;
-
       rgba c;
       pix_colors_focused[color].get (c);
-      color -= minCOLOR;
+      char rgba_str[32];
 
 #if XFT
       if (c.a != rgba::MAX_CC)
-        tt_printf ("\033]%d;%d;rgba:%04x/%04x/%04x/%04x%c", report, color, c.r, c.g, c.b, c.a, resp);
+        snprintf (rgba_str, sizeof (rgba_str), "rgba:%04x/%04x/%04x/%04x", c.r, c.g, c.b, c.a);
       else
 #endif
-        tt_printf ("\033]%d;%d;rgb:%04x/%04x/%04x%c", report, color, c.r, c.g, c.b, resp);
+        snprintf (rgba_str, sizeof (rgba_str), "rgb:%04x/%04x/%04x", c.r, c.g, c.b);
+
+      if (IN_RANGE_INC (color, minCOLOR, maxTermCOLOR))
+        tt_printf ("\033]%d;%d;%s%c", report, color - minCOLOR, rgba_str, resp);
+      else
+        tt_printf ("\033]%d;%s%c", report, rgba_str, resp);
     }
   else
     set_window_color (color, str);
