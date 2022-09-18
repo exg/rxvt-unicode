@@ -73,7 +73,10 @@ TODO:
 
 	- the background extension no longer requires off focus fading support
           to be compiled in.
-        - fix compiling without frills, and fix rewrapMode: never.
+        - fix compiling without frills.
+        - fix rewrapMode: never.
+        - fix regression that caused urxvt to no longer emit responses
+          to OSC color queries other than OSC 4 ones.
 
 9.30 Sat 27 Nov 2021 21:07:09 CET
 	- the background extension did not initialise properly when automatically
