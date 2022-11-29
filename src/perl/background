@@ -1452,7 +1452,7 @@ sub old_bg_opts {
 # helper function, quote string as perl without allowing
 # any code execution or other shenanigans.
 sub q0 {
-   "qq\x00\Q$_\E\x00"
+   "qq\x00\Q$_[0]\E\x00"
 }
 
 sub old_bg_expr {
