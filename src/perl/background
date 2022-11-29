@@ -1454,7 +1454,7 @@ sub old_bg_opts {
 # support binary NULs in string.
 sub q0 {
    (my $str = shift) =~ s/\x00//g; # make sure there really aren't any embedded NULs
-   "q\x00$str\x00"
+   "q\x00\Q$str\E\x00"
 }
 
 sub old_bg_expr {
