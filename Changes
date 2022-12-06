@@ -45,7 +45,6 @@ IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
 
 TODO: ❤️ configurable fps setting
-TODO: backgreound ext needs --enable-fading for just Color_fade, either eval { urxvt::Color_fade } // urxvt::Color_bg or eval || die
 TODO: rclock horribly time-biased
 TODO: rclock iso mode?
 
@@ -77,6 +76,7 @@ TODO:
         - fix rewrapMode: never.
         - fix regression that caused urxvt to no longer emit responses
           to OSC color queries other than OSC 4 ones.
+        - fix regression that caused urxvt to no longer process OSC 705.
 
 9.30 Sat 27 Nov 2021 21:07:09 CET
 	- the background extension did not initialise properly when automatically
