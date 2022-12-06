@@ -1579,7 +1579,7 @@ sub on_start {
 sub on_osc_seq {
    my ($self, $op, $arg) = @_;
 
-   $op eq "20" or $op eq "706"
+   $op eq "20" or $op eq "705"
       or return;
 
    $self->{bg_opts}
