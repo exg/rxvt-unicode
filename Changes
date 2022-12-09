@@ -70,6 +70,10 @@ TODO:
 03:40:44 <schmorp> ok, thats fine
 03:40:40 <BlueFish> avestasabayemoghadam@gmail.com
 
+	- implement a fix for CVE-2022-4170 (reported and analyzed by David Leadbeater).
+          While present in version 9.30, it should not be exploitable. It is exploitable
+          in versions 9.25 and 9.26, at least, and allows anybody controlling terminal
+          input to execute arbitrary code in the urxvt process.
 	- the background extension no longer requires off focus fading support
           to be compiled in.
         - fix compiling without frills.
@@ -77,6 +81,8 @@ TODO:
         - fix regression that caused urxvt to no longer emit responses
           to OSC color queries other than OSC 4 ones.
         - fix regression that caused urxvt to no longer process OSC 705.
+        - exec_async (used e.g. by the matcher extension to spawn processes) now
+          sets the URXVT_EXT_WINDOWID variable to the window id opf the terminal.
 
 9.30 Sat 27 Nov 2021 21:07:09 CET
 	- the background extension did not initialise properly when automatically
@@ -268,6 +274,7 @@ TODO:
 	- a key combination bound to 'matcher:select' can now be used
 	  to cycle through the matches in matcher.
         - change perl integer accessors (->width et al.) into mutators.
+        - this version has ben verified to work with perl 5.8.3.
 
 9.21 Wed Dec 31 14:50:03 CET 2014
 	- the "moa redraw 8-bit british vintage colour management" release.

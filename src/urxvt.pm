@@ -1366,6 +1366,10 @@ Works like the combination of the C<fork>/C<exec> builtins, which executes
 the user environment before exec'ing the command (e.g. C<PATH>) and should
 be preferred over explicit calls to C<exec> or C<system>.
 
+It also sets the C<URXVT_EXT_WINDOWID> environment variable to the window
+ID of the terminal (C<< $self->parent >>), similar to the C<WINDOWID>
+variable set for the process spawned inside the terminal.
+
 Returns the pid of the subprocess or C<undef> on error.
 
 =cut
@@ -1378,7 +1382,10 @@ sub exec_async {
    return $pid
       if !defined $pid or $pid;
 
-   %ENV = %{ $self->env };
+   %ENV = (
+      %{ $self->env },
+      URXVT_EXT_WINDOWID => $self->parent,
+   );
 
    exec @_;
    urxvt::_exit 255;

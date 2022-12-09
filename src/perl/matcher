@@ -21,7 +21,7 @@ matching a certain pattern and make it clickable. When clicked with the
 mouse button specified in the C<matcher.button> resource (default 2, or
 middle), the program specified in the C<matcher.launcher> resource
 (default, the C<url-launcher> resource, C<sensible-browser>) will be started
-with the matched text as first argument.  The default configuration is
+with the matched text as first argument. The default configuration is
 suitable for matching URLs and launching a web browser, like the
 former "mark-urls" extension.
 
@@ -31,7 +31,7 @@ with numbered patterns, in a manner similar to the "selection" extension.
 The launcher can also be overridden on a per-pattern basis.
 
 It is possible to activate the most recently seen match or a list of matches
-from the keyboard.  Simply bind a keysym to "matcher:last" or
+from the keyboard. Simply bind a keysym to "matcher:last" or
 "matcher:list" as seen in the example below.
 
 The C<matcher:select> action enables a mode in which it is possible to
@@ -225,16 +225,19 @@ sub most_recent {
    my ($self) = shift;
    my $row = $self->nrow - 1;
    my @exec;
+
    while ($row >= $self->top_row) {
       my $line = $self->line ($row);
-      @exec = $self->command_for($row);
-      last if(@exec);
+      @exec = $self->command_for ($row);
+      last if @exec;
 
       $row = $line->beg - 1;
    }
-   if(@exec) {
+
+   if (@exec) {
       return $self->exec_async (@exec);
    }
+
    ()
 }
 
@@ -343,15 +346,18 @@ sub find_matches {
          my @end = @+;
          my @exec;
 
-         if (!defined($off) || ($-[0] <= $off && $+[0] >= $off)) {
+         if (!(defined $off) || ($-[0] <= $off && $+[0] >= $off)) {
             if ($launcher !~ /\$/) {
                @exec = ($launcher, $match);
             } else {
                # It'd be nice to just access a list like ($&,$1,$2...),
                # but alas, m//g behaves differently in list context.
-               @exec = map { s/\$(\d+)|\$\{(\d+)\}/
-                  substr $text, $begin[$1 || $2], $end[$1 || $2] - $begin[$1 || $2]
-                  /egx; $_ } split /\s+/, $launcher;
+               @exec = map {
+                     s{\$(\d+)|\$\{(\d+)\}}{
+                        substr $text, $begin[$1 || $2], $end[$1 || $2] - $begin[$1 || $2]
+                     }egx;
+                     $_
+                  } split /\s+/, $launcher;
             }
 
             push @matches, [ $line->coord_of ($begin[0]), $line->coord_of ($end[0]), $match, @exec ];
@@ -359,7 +365,7 @@ sub find_matches {
       }
    }
 
-   @matches;
+   @matches
 }
 
 sub command_for {
@@ -376,8 +382,11 @@ sub command_for {
 
 sub on_button_press {
    my ($self, $event) = @_;
-   if($self->valid_button($event)
-      && (my @exec = $self->command_for($event->{row},$event->{col}))) {
+
+   if (
+      $self->valid_button ($event)
+      && (my @exec = $self->command_for ($event->{row}, $event->{col}))
+   ) {
       $self->{row} = $event->{row};
       $self->{col} = $event->{col};
       $self->{cmd} = \@exec;
@@ -400,12 +409,13 @@ sub on_button_release {
 
    return if !defined $row;
 
-   if($row == $event->{row} && abs($col-$event->{col}) < 2
-      && join("\x00", @$cmd) eq join("\x00", $self->command_for($row,$col))) {
-      if($self->valid_button($event)) {
-
+   if (
+      $row == $event->{row}
+      && (abs $col-$event->{col}) < 2
+      && (join "\x00", @$cmd) eq (join "\x00", $self->command_for ($row, $col))
+   ) {
+      if ($self->valid_button ($event)) {
          $self->exec_async (@$cmd);
-
       }
    }
 
