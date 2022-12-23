@@ -7,7 +7,9 @@ confirm-paste - ask for confirmation before pasting control characters
 =head1 DESCRIPTION
 
 Displays a confirmation dialog when a paste containing control characters
-is detected.
+is detected. The user can choose C<y> to either paste a sanitized variant
+where all control characters are removed, C<p> to paste the string
+unmodified or C<n> to drop the paste request completely.
 
 This is mostly meant as a defense-in-depth mechanism to protect against
 the common web browser bug of you selecting some text but the browser
@@ -15,6 +17,19 @@ pasting a completely different text, which has some attack potential.
 
 It can also be useful to prevent you from accidentally pasting large
 amounts of text.
+
+=head2 DETAILS
+
+If a string containing unicode control characters (specifically U+0000 ..
+U+001F currrently) is pasted into the terminal, this extension will ask
+whether it should be pasted. Strings without control characters get pasted
+without prompt.
+
+When a sanitized version is pasted (choice C<y>), then contiguous
+sequences of those control characters will be replaced by a single spaces.
+
+The exact detection and sanitization algorithm is subject to change in
+future versions.
 
 =cut
 
@@ -32,7 +47,7 @@ sub on_tt_paste {
       or return;
 
    $self->{paste} = \$str;
-   $self->msg ("Pasting $count control characters, continue? (y/n)");
+   $self->msg ("Pasting $count control characters, continue? (y/p/n)");
 
    my $preview = substr $self->locale_decode ($str), 0, $self->ncol;
    $preview =~ s/\n/\\n/g;
@@ -55,12 +70,21 @@ sub leave {
 sub key_press {
    my ($self, $event, $keysym, $string) =  @_;
 
+   my $paste = delete $self->{paste};
+
    if ($keysym == 121) { # y
-      $self->tt_paste (${$self->{paste}});
+      my $paste = $$paste;
+      $paste =~ s/[\x00-\x1f]+/ /g;
+      $self->tt_paste ($paste);
+      $self->leave;
+   } elsif ($keysym == 112) { # p
+      $self->tt_paste ($$paste);
       $self->leave;
    } elsif ($keysym == 110) { # n
       $self->leave;
    }
+
+   $self->{paste} = $paste;
 
    1
 }
