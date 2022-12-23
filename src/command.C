@@ -1018,7 +1018,7 @@ void
 rxvt_term::refresh_check ()
 {
   if (want_refresh && !flush_ev.is_active ())
-    flush_ev.start (1. / 60.); // refresh at max. 60 Hz normally
+    flush_ev.start ();
 
   display->flush ();
 }

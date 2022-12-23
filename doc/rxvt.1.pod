@@ -130,6 +130,11 @@ Turn on/off jump scrolling (allow multiple lines per refresh); resource B<jumpSc
 
 Turn on/off skip scrolling (allow multiple screens per refresh); resource B<skipScroll>.
 
+=item B<-fps> I<number>
+
+Compile I<frills>: Set the refresh interval (in frames per second or
+negative seconds); resource B<refreshRate>.
+
 =item B<-fade> I<number>
 
 Fade the text by the given percentage when focus is lost. Small values
@@ -698,6 +703,17 @@ option B<-ss>.
 B<False>: specify that everything is to be displayed, even
 if the refresh is too fast for the human eye to read anything (or the
 monitor to display anything); option B<+ss>.
+
+=item B<refreshRate:> I<number>
+
+Compile I<frills>: When positive, sets the maximum refreshes per second
+(the default is C<60>). When zero or negative, sets the minimum interval
+between refreshes, negated. That is, positive numbers limit the number
+of refreshes per second to that number, similar to a fps limiter in
+games. Zero or negative numbers get negated and directly set the minimum
+interval between refreshs, that is, C<10> and C<-0.1> both specify the
+same refresh interval (likewise C<50> and C<0.02>). Fractional values are
+supported; option B<-fps>.
 
 =item B<fading:> I<number>
 

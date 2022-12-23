@@ -44,7 +44,6 @@ TODO: think about daemon delaying urxvt client exit.
 IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
 
-TODO: ❤️ configurable fps setting
 TODO: rclock horribly time-biased
 TODO: rclock iso mode?
 
@@ -83,6 +82,9 @@ TODO:
         - fix regression that caused urxvt to no longer process OSC 705.
         - exec_async (used e.g. by the matcher extension to spawn processes) now
           sets the URXVT_EXT_WINDOWID variable to the window id opf the terminal.
+        - implement -fps option/refreshRate resource to change the default 60 Hz
+          maximum refresh limiter. I always wanted an fps option, but had to
+          wait for a user requesting it.
 
 9.30 Sat 27 Nov 2021 21:07:09 CET
 	- the background extension did not initialise properly when automatically

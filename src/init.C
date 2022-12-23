@@ -848,6 +848,23 @@ rxvt_term::init2 (int argc, const char *const *argv)
   keyboard->register_done ();
 #endif
 
+  {
+    ev_tstamp interval = 1. / 60.;
+
+#if ENABLE_FRILLS
+    if (rs[Rs_refreshRate])
+      {
+        interval = atof (rs[Rs_refreshRate]);
+        if (interval <= 0.)
+          interval = -interval;
+        else
+          interval = 1. / interval;
+      }
+#endif
+
+    flush_ev.set (interval, interval);
+  }
+
   if (const char *path = rs[Rs_chdir])
     if (*path) // ignored if empty
       {

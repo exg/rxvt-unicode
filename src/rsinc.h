@@ -72,6 +72,7 @@
   def (letterSpace)
   def (cursorUnderline)
   def (urgentOnBell)
+  def (refreshRate)
 #endif
 #if BUILTIN_GLYPHS
   def (skipBuiltinGlyphs)
