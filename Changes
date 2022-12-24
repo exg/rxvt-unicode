@@ -37,7 +37,7 @@ TODO: warn with a graphical message when env has been modified
 TODO: c&c perl socket via daemon-ext mechanism
 TODO: simplify extension metainfo cache, cache on disk
 TODO: URxvt::Ext::Name installs urxvt ext name and provides pod/manpage for URxvt::Ext::Name
-TODO: üpixel droppins idenrasm,ll,scrollup
+TODO: pixel droppins idenrasm,ll,scrollup
 TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, in xterm/vt102, but not in rxvt
 TODO: clean up the resource vs. long option mess, especially in the manpage.
 TODO: think about daemon delaying urxvt client exit.
@@ -47,7 +47,7 @@ TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa co
 TODO: rclock horribly time-biased
 TODO: rclock iso mode?
 
-TODO: printf "\e[4:3m" - "undercurl" - should probbaly be interpüreted as underline, rather than \e[43m
+TODO: printf "\e[4:3m" - "undercurl" - should probbaly be interpreted as underline, rather than \e[43m
 TODO: click through mode / https://shallowsky.com/blog/2017/Apr/06/
 
 TODO:
@@ -75,11 +75,17 @@ TODO:
           input to execute arbitrary code in the urxvt process.
 	- the background extension no longer requires off focus fading support
           to be compiled in.
+        - the confirm-paste extension now offers a choice betwene pasting the original
+          or a sanitized version, and also frees up memory used to store the paste text
+          immediately.
         - fix compiling without frills.
         - fix rewrapMode: never.
         - fix regression that caused urxvt to no longer emit responses
           to OSC color queries other than OSC 4 ones.
         - fix regression that caused urxvt to no longer process OSC 705.
+        - restore CENTURY to be 1900 to "improve" year parsing in urclock (or at
+          least go back to the old interpretation) (based on an analysis
+          by Tommy Pettersson).
         - exec_async (used e.g. by the matcher extension to spawn processes) now
           sets the URXVT_EXT_WINDOWID variable to the window id opf the terminal.
         - implement -fps option/refreshRate resource to change the default 60 Hz

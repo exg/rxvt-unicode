@@ -130,7 +130,7 @@
  * #define ADJUST_TIME
  *	to add -adjust command-line option
  *
- * #define CENTURY	2000
+ * #define CENTURY	1900
  *	to set the base century for 2 digit year short-hand
  *----------------------------------------------------------------------*/
 #define	CLOCKUPDATE	30
@@ -139,7 +139,7 @@
 #define DEFER_TIME	3
 #define ADJUST_TIME
 
-#define CENTURY		2000 /* TODO: verify */
+#define CENTURY		1900
 
 /*----------------------------------------------------------------------*
  * #define FONT_NAME	"7x14"
