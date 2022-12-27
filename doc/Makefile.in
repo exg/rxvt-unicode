@@ -83,7 +83,7 @@ alldocclean:
 	rm -f $(srcdir)/etc/rxvt-unicode.termcap
 
 clean:
-	rm -f rxvt.1.man rxvt.7.man rxvtc.1.man rxvtd.1.man
+	rm -f rxvt.1.man rxvt.7.man rxvtc.1.man rxvtd.1.man rclock.1.man
 
 distclean: clean
 	rm -f Makefile
