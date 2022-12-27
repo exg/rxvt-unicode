@@ -87,7 +87,7 @@ TODO:
           least go back to the old interpretation) (based on an analysis
           by Tommy Pettersson).
         - exec_async (used e.g. by the matcher extension to spawn processes) now
-          sets the URXVT_EXT_WINDOWID variable to the window id opf the terminal.
+          sets the URXVT_EXT_WINDOWID variable to the window id of the terminal.
         - implement -fps option/refreshRate resource to change the default 60 Hz
           maximum refresh limiter. I always wanted an fps option, but had to
           wait for a user requesting it.
