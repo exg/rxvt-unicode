@@ -52,8 +52,8 @@ TODO: click through mode / https://shallowsky.com/blog/2017/Apr/06/
 
 	- implement a fix for CVE-2022-4170 (reported and analyzed by David Leadbeater).
           While present in version 9.30, it should not be exploitable. It is exploitable
-          in versions 9.25 and 9.26, at least, and allows anybody controlling terminal
-          input to execute arbitrary code in the urxvt process.
+          in versions 9.25 and 9.26, at least, and allows anybody controlling output to
+          the terminal to execute arbitrary code in the urxvt process.
 	- the background extension no longer requires off focus fading support
           to be compiled in.
         - the confirm-paste extension now offers a choice betwene pasting the original
