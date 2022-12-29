@@ -50,25 +50,6 @@ TODO: rclock iso mode?
 TODO: printf "\e[4:3m" - "undercurl" - should probbaly be interpreted as underline, rather than \e[43m
 TODO: click through mode / https://shallowsky.com/blog/2017/Apr/06/
 
-TODO:
-03:32:26 <BlueFish> Hi. I think I found a bug in special_encode in rxvtperl.xs
-03:33:37 <BlueFish> special_encode('لا') or any other string that contains 'لا' returns a disturbed string
-03:33:40 <schmorp> hi BlueFish 
-03:34:10 <schmorp> whats a disturbed string?
-03:34:25 <BlueFish> for example سلام becomes ملام
-03:35:05 <BlueFish> see this issue: https://github.com/mkamensky/Text-Bidi/issues/10 I was trying to fix it 
-                    and after playing around for a while found out that special_encode is causing the problem
-03:35:36 <schmorp> does this happen when you compile without --enable-combining (or with --disable-combining)?
-03:37:40 <BlueFish> I don't know the one that I installed from my distro repository has this flag or not. Is 
-                    there anyway to check?
-03:38:49 <schmorp> rxvt --help will output a options: line at the top, whioch will list "combining"
-03:39:10 <schmorp> anyway, I don't think i will understand this at my current tiredness level, I'll have a 
-                   look when I have time
-03:39:26 <schmorp> are you usually around on this network, so I coulöd ask you in cas eI have questions?
-03:40:25 <BlueFish> yes combining is enabled. No I don't check IRC that much. You can reach me via email
-03:40:44 <schmorp> ok, thats fine
-03:40:40 <BlueFish> avestasabayemoghadam@gmail.com
-
 	- implement a fix for CVE-2022-4170 (reported and analyzed by David Leadbeater).
           While present in version 9.30, it should not be exploitable. It is exploitable
           in versions 9.25 and 9.26, at least, and allows anybody controlling terminal
