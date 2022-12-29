@@ -2023,13 +2023,13 @@ sub urxvt::line::coord_of {
    )
 }
 
-=item $text = $term->special_encode $string
+=item $text = $term->special_encode ($string)
 
 Converts a perl string into the special encoding used by rxvt-unicode,
 where one character corresponds to one screen cell. See
 C<< $term->ROW_t >> for details.
 
-=item $string = $term->special_decode $text
+=item $string = $term->special_decode ($text)
 
 Converts rxvt-unicode's text representation into a perl string. See
 C<< $term->ROW_t >> for details.
