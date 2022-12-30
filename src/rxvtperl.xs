@@ -865,6 +865,7 @@ BOOT:
     const_iv (NRS_COLORS),
     const_iv (TOTAL_COLORS),
 
+    const_iv (None),
     const_iv (CurrentTime),
     const_iv (ShiftMask),
     const_iv (LockMask),
@@ -1214,6 +1215,41 @@ _delete_selection_request (IV req_)
         av_pop (av);
 
         delete req;
+
+Region
+XCreateRegion ()
+
+int
+XUnionRectWithRegion (int x, int y, int w, int h, Region src, Region dst)
+	CODE:
+        XRectangle rect;
+        rect.x      = x;
+        rect.y      = y;
+        rect.width  = w;
+        rect.height = h;
+        RETVAL = XUnionRectWithRegion (&rect, src, dst);
+        OUTPUT: RETVAL
+
+int
+XIntersectRegion (Region src1, Region src2, Region res)
+
+int
+XUnionRegion (Region src1, Region src2, Region res)
+
+int
+XSubtractRegion (Region src1, Region src2, Region res)
+
+int
+XXorRegion (Region src1, Region src2, Region res)
+
+int
+XOffsetRegion (Region r, int dx, int dy)
+
+int
+XShrinkRegion (Region r, int dx, int dy)
+
+int
+XDestroyRegion (Region r)
 
 MODULE = urxvt             PACKAGE = urxvt::term
 
@@ -2224,41 +2260,6 @@ XGetAtomName (rxvt_term *term, Atom atom)
 void
 XDeleteProperty (rxvt_term *term, Window window, Atom property)
 	C_ARGS: term->dpy, window, property
-
-Region
-XCreateRegion ()
-
-int
-XUnionRectWithRegion (int x, int y, int w, int h, Region src, Region dst)
-	CODE:
-        XRectangle rect;
-        rect.x      = x;
-        rect.y      = y;
-        rect.width  = w;
-        rect.height = h;
-        RETVAL = XUnionRectWithRegion (&rect, src, dst);
-        OUTPUT: RETVAL
-
-int
-XIntersectRegion (Region src1, Region src2, Region res)
-
-int
-XUnionRegion (Region src1, Region src2, Region res)
-
-int
-XSubtractRegion (Region src1, Region src2, Region res)
-
-int
-XXorRegion (Region src1, Region src2, Region res)
-
-int
-XOffsetRegion (Region r, int dx, int dy)
-
-int
-XShrinkRegion (Region r, int dx, int dy)
-
-int
-XDestroyRegion (Region r)
 
 void
 rxvt_term::XShapeQueryVersion ()

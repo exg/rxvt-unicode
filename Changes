@@ -73,6 +73,7 @@ http://mika.l3ib.org/tmp/71f1ab72a741eeee7c84933f35436341.txt
         - implement -fps option/refreshRate resource to change the default 60 Hz
           maximum refresh limiter. I always wanted an fps option, but had to
           wait for a user requesting it.
+        - new clickthrough extension.
         - perl now also requires Xext.
         - X region and shape extension functionality has been exposed to perl
           extensions.

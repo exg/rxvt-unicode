@@ -1,0 +1,107 @@
+#! perl
+
+#:META:RESOURCE:clickthrough:string:clickthrough disable/off/on
+
+=head1 NAME
+
+clickthrough - make window "transparent" with respect to input events
+
+=head1 DESCRIPTION
+
+This extension can toggle the terminal window between "normal" and
+"clickthrough" states. In the latter state, inoput events such as clicks
+will go "through" the window, as if it weren't there. This cna be used to
+put a (preferably partially transparent) window in front of other windows
+and let clicks and other events go through the underlying window.
+
+See L<https://shallowsky.com/blog/2017/Apr/06/> for an example.
+
+This extension is loaded automatically when the C<-clickthrough mode>
+command line argument is given, and operates in one of three modes:
+
+=over
+
+=item C<disable> (the default)
+
+In this mode, everything works normally andf the OSC sequence is not
+active.
+
+=item C<on>
+
+In this mode, events go through the window, and this can be toggled via an
+OSC sequence.
+
+=item C<off>
+
+In this mode, events act normally, but this can be toggled via an OSC
+sequence.
+
+=back
+
+=head2 OSC SEQUENCE
+
+When enabled, the OSC sequence C<< 777;clickthroughI<mode> >> can be used
+to change the clickthrough mode. Example, switch it on, and then switch it
+off again:
+
+   printf '\033]777;clickthrough:on\007'
+   printf '\033]777;clickthrough:off\007'
+
+=head2 BUGS
+
+For this to work as expected, your window manager needs to support shaped
+windows fully, but most only have partial support. The only window manager
+known that handles this correctly is openbox 3.7 (and partially 3.6).
+
+A workaround is to also use C<-override-redirect>.
+
+In addition, input shapes don't seem to be well supported in Xorg,
+which sometimes doe snot egenerate the necessary events for window
+managers. This is currenty being worked around in this extension by
+re-setting the input shape after every map event.
+
+=cut
+
+sub on_start {
+   my ($self) = @_;
+
+   my $mode = $self->x_resource ("clickthrough");
+
+   if ($mode eq "on" or $mode eq "off") {
+      my ($major, $minor) = $self->XShapeQueryVersion;
+
+      if ($major < 1 or ($major == 1 && $minor < 1)) {
+         warn "clickthrough cannot be enabled since the shape extension is missing or too old\n";
+         return;
+      }
+
+      my $set_mode = sub {
+         if ($mode eq "on") {
+            my $reg = urxvt::XCreateRegion;
+            $self->XShapeCombineRegion ($self->parent, urxvt::ShapeInput, 0, 0, $reg, urxvt::ShapeSet);
+            urxvt::XDestroyRegion ($reg);
+         } elsif ($mode eq "off") {
+            $self->XShapeCombineMask ($self->parent, urxvt::ShapeInput, 0, 0, urxvt::None, urxvt::ShapeSet);
+         }
+      };
+
+      $set_mode->();
+
+      $self->{on_osc_seq_perl} = $self->on (osc_seq_perl => sub {
+         my ($self, $osc, $resp) = @_;
+
+         if ($osc =~ /^clickthrough:(on|off)\z/) {
+            $mode = $1;
+            $set_mode->();
+         }
+      });
+
+      # at least my x-server does not send a ShapeNotify event to the window manager
+      # for input shapes unless the window is mapped. Works for bounding shapes, so
+      # this is likely an X bug, which we work maround by setting the mask on every map
+      #$self->{on_map_notify}  = $self->on (map_notify => $set_mode);
+   }
+
+   ()
+}
+
