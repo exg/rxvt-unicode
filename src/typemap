@@ -1,10 +1,10 @@
 overlay *		OVERLAY
 
 Time			T_UV
-XID			T_U32
+XID			T_UV
 Atom			T_UV
-Window			T_U32
-Pixmap			T_U32
+Window			T_UV
+Pixmap			T_UV
 Region			T_UV
 rxvt_img::nv		T_NV
 
