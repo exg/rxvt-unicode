@@ -32,7 +32,14 @@
 #include <stddef.h>
 #include <stdarg.h>
 
-#include "unistd.h"
+#include <unistd.h>
+
+#include <X11/extensions/shape.h>
+
+// support old includes (https://bugs.freedesktop.org/show_bug.cgi?id=2799, https://lists.x.org/archives/xorg-arch/2005-March/000004.html)
+#ifndef ShapeInput
+# define ShapeInput 2
+#endif
 
 #include "ev_cpp.h"
 #include "rxvt.h"
@@ -849,9 +856,9 @@ BOOT:
     // TODO: should support all colour constants, create colorinc.h &c
     const_iv (Color_fg),
     const_iv (Color_bg),
-#if OFF_FOCUS_FADING
+#   if OFF_FOCUS_FADING
     const_iv (Color_fade),
-#endif
+#   endif
     const_iv (Color_pointer_fg),
     const_iv (Color_pointer_bg),
     const_iv (Color_border),
@@ -938,6 +945,19 @@ BOOT:
     const_iv (ColormapNotify),
     const_iv (ClientMessage),
     const_iv (MappingNotify),
+
+    // shape extension
+    const_iv (ShapeSet),
+    const_iv (ShapeUnion),
+    const_iv (ShapeIntersect),
+    const_iv (ShapeSubtract),
+    const_iv (ShapeInvert),
+
+    const_iv (ShapeBounding),
+    const_iv (ShapeClip),
+    const_iv (ShapeInput),
+
+    // XIM
 #   if ENABLE_XIM_ONTHESPOT
     const_iv (XIMReverse),
     const_iv (XIMUnderline),
@@ -948,7 +968,8 @@ BOOT:
     const_iv (XIMVisibleToForward),
     const_iv (XIMVisibleToBackword),
     const_iv (XIMVisibleToCenter),
-#if XRENDER
+#   endif
+#   if XRENDER
     const_iv (PictStandardARGB32),
     const_iv (PictStandardRGB24),
     const_iv (PictStandardA8),
@@ -1014,7 +1035,7 @@ BOOT:
     const_iv (PictOpHSLSaturation),
     const_iv (PictOpHSLColor),
     const_iv (PictOpHSLLuminosity),
-#endif
+#   endif
 #   if 0
     const_iv (XIMForwardChar),
     const_iv (XIMBackwardChar),
@@ -1028,7 +1049,6 @@ BOOT:
     const_iv (XIMLineEnd),
     const_iv (XIMAbsolutePosition),
     const_iv (XIMDontChange),
-#   endif
 #   endif
 
     /* DEC private modes */
@@ -2204,6 +2224,64 @@ XGetAtomName (rxvt_term *term, Atom atom)
 void
 XDeleteProperty (rxvt_term *term, Window window, Atom property)
 	C_ARGS: term->dpy, window, property
+
+Region
+XCreateRegion ()
+
+int
+XUnionRectWithRegion (int x, int y, int w, int h, Region src, Region dst)
+	CODE:
+        XRectangle rect;
+        rect.x      = x;
+        rect.y      = y;
+        rect.width  = w;
+        rect.height = h;
+        RETVAL = XUnionRectWithRegion (&rect, src, dst);
+        OUTPUT: RETVAL
+
+int
+XIntersectRegion (Region src1, Region src2, Region res)
+
+int
+XUnionRegion (Region src1, Region src2, Region res)
+
+int
+XSubtractRegion (Region src1, Region src2, Region res)
+
+int
+XXorRegion (Region src1, Region src2, Region res)
+
+int
+XOffsetRegion (Region r, int dx, int dy)
+
+int
+XShrinkRegion (Region r, int dx, int dy)
+
+int
+XDestroyRegion (Region r)
+
+void
+rxvt_term::XShapeQueryVersion ()
+	PPCODE:
+        int major, minor;
+        EXTEND (SP, 2);
+        if (XShapeQueryVersion (THIS->display->dpy, &major, &minor))
+          {
+            PUSHs (sv_2mortal (newSViv (major)));
+            PUSHs (sv_2mortal (newSViv (minor)));
+          }
+
+void
+XShapeCombineRegion (rxvt_term *term, Window dest, int destKind, int xOff, int yOff, Region r, int op)
+	C_ARGS: term->display->dpy, dest, destKind, xOff, yOff, r, op
+
+void
+XShapeCombineMask (rxvt_term *term, XID dest, int destKind, int xOff, int yOff, Pixmap src, int op)
+	C_ARGS: term->display->dpy, dest, destKind, xOff, yOff, src, op
+
+void
+XShapeCombineShape (rxvt_term *term, XID dest, int destKind, int xOff, int yOff, Pixmap src, int srcKind, int op)
+	C_ARGS: term->display->dpy, dest, destKind, xOff, yOff, src, srcKind, op
 
 Window
 rxvt_term::DefaultRootWindow ()

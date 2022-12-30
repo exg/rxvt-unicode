@@ -48,7 +48,8 @@ TODO: rclock horribly time-biased
 TODO: rclock iso mode?
 
 TODO: printf "\e[4:3m" - "undercurl" - should probbaly be interpreted as underline, rather than \e[43m
-TODO: click through mode / https://shallowsky.com/blog/2017/Apr/06/
+TODO: click through mode / https://shallowsky.com/blog/2017/Apr/06/ http://ue.tst.eu/72ab4421e31ef231c111e02706fff7bb.txt
+http://mika.l3ib.org/tmp/71f1ab72a741eeee7c84933f35436341.txt
 
 	- implement a fix for CVE-2022-4170 (reported and analyzed by David Leadbeater).
           While present in version 9.30, it should not be exploitable. It is exploitable
@@ -72,6 +73,10 @@ TODO: click through mode / https://shallowsky.com/blog/2017/Apr/06/
         - implement -fps option/refreshRate resource to change the default 60 Hz
           maximum refresh limiter. I always wanted an fps option, but had to
           wait for a user requesting it.
+        - perl now also requires Xext.
+        - X region and shape extension functionality has been exposed to perl
+          extensions.
+        - RENDER extension no longer depends on ENABLE_XIM_ONTHESPOT.
 
 9.30 Sat 27 Nov 2021 21:07:09 CET
 	- the background extension did not initialise properly when automatically

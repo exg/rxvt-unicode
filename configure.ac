@@ -720,7 +720,7 @@ if test x$support_perl = xyes; then
      save_CXXFLAGS="$CXXFLAGS"
      save_LIBS="$LIBS"
      CXXFLAGS="$CXXFLAGS `$PERL -MExtUtils::Embed -e ccopts`"
-     LIBS="$LIBS `$PERL -MExtUtils::Embed -e ldopts`"
+     LIBS="$LIBS -lXext `$PERL -MExtUtils::Embed -e ldopts`"
      AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <EXTERN.h>
 #include <perl.h>
@@ -739,6 +739,7 @@ if test x$support_perl = xyes; then
         PERLFLAGS="`$PERL -MExtUtils::Embed -e ccopts`"
         PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
         PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
+        LIBS="$LIBS -lXext"
      else
         AC_MSG_ERROR([no, unable to link])
      fi

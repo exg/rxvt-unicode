@@ -7839,7 +7839,7 @@ printf %s "checking for $PERL suitability... " >&6; }
      save_CXXFLAGS="$CXXFLAGS"
      save_LIBS="$LIBS"
      CXXFLAGS="$CXXFLAGS `$PERL -MExtUtils::Embed -e ccopts`"
-     LIBS="$LIBS `$PERL -MExtUtils::Embed -e ldopts`"
+     LIBS="$LIBS -lXext `$PERL -MExtUtils::Embed -e ldopts`"
      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -7879,6 +7879,7 @@ printf "%s\n" "#define ENABLE_PERL 1" >>confdefs.h
         PERLFLAGS="`$PERL -MExtUtils::Embed -e ccopts`"
         PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
         PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
+        LIBS="$LIBS -lXext"
      else
         as_fn_error $? "no, unable to link" "$LINENO" 5
      fi
