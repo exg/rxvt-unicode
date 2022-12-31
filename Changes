@@ -42,14 +42,11 @@ TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, 
 TODO: clean up the resource vs. long option mess, especially in the manpage.
 TODO: think about daemon delaying urxvt client exit.
 IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
-TODO: https://github.com/bbidulock/icewm/issues/492 urxvt wrongfully(?) needa configurenotify after mapwindow? also, black border?
 
 TODO: rclock horribly time-biased
 TODO: rclock iso mode?
 
 TODO: printf "\e[4:3m" - "undercurl" - should probbaly be interpreted as underline, rather than \e[43m
-TODO: click through mode / https://shallowsky.com/blog/2017/Apr/06/ http://ue.tst.eu/72ab4421e31ef231c111e02706fff7bb.txt
-http://mika.l3ib.org/tmp/71f1ab72a741eeee7c84933f35436341.txt
 
 	- implement a fix for CVE-2022-4170 (reported and analyzed by David Leadbeater).
           While present in version 9.30, it should not be exploitable. It is exploitable
