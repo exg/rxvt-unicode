@@ -9,8 +9,8 @@ clickthrough - make window "transparent" with respect to input events
 =head1 DESCRIPTION
 
 This extension can toggle the terminal window between "normal" and
-"clickthrough" states. In the latter state, inoput events such as clicks
-will go "through" the window, as if it weren't there. This cna be used to
+"clickthrough" states. In the latter state, input events such as clicks
+will go "through" the window, as if it weren't there. This can be used to
 put a (preferably partially transparent) window in front of other windows
 and let clicks and other events go through the underlying window.
 
@@ -23,7 +23,7 @@ command line argument is given, and operates in one of three modes:
 
 =item C<disable> (the default)
 
-In this mode, everything works normally andf the OSC sequence is not
+In this mode, everything works normally and the OSC sequence is not
 active.
 
 =item C<on>
@@ -56,8 +56,8 @@ known that handles this correctly is openbox 3.7 (and partially 3.6).
 A workaround is to also use C<-override-redirect>.
 
 In addition, input shapes don't seem to be well supported in Xorg,
-which sometimes doe snot egenerate the necessary events for window
-managers. This is currenty being worked around in this extension by
+which sometimes does not generate the necessary events for window
+managers. This is currently being worked around in this extension by
 re-setting the input shape after every map event.
 
 =cut
@@ -98,7 +98,7 @@ sub on_start {
 
       # at least my x-server does not send a ShapeNotify event to the window manager
       # for input shapes unless the window is mapped. Works for bounding shapes, so
-      # this is likely an X bug, which we work maround by setting the mask on every map
+      # this is likely an X bug, which we work around by setting the mask on every map
       #$self->{on_map_notify}  = $self->on (map_notify => $set_mode);
    }
 
