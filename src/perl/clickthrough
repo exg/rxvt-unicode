@@ -6,6 +6,11 @@
 
 clickthrough - make window "transparent" with respect to input events
 
+=head1 SYNOPSIS
+
+   # create a transparent non-interactable overlay
+   urxvt -override-redirect -depth 32 -bg "[0]black" -clickthrough on -e top
+
 =head1 DESCRIPTION
 
 This extension can toggle the terminal window between "normal" and
