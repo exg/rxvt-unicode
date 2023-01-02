@@ -6846,8 +6846,8 @@ fi
 
 
 
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for libptytty" >&5
-printf %s "checking for libptytty... " >&6; }
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for libptytty (via pkg-config)" >&5
+printf %s "checking for libptytty (via pkg-config)... " >&6; }
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists libptytty; then
     PTYTTY_CFLAGS="`$PKG_CONFIG --cflags libptytty`"
     PTYTTY_LIBS="`$PKG_CONFIG --libs libptytty`"
@@ -6874,8 +6874,8 @@ PIXBUF_LIBS=
 
 if test x$support_pixbuf = xyes; then
 
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for gdk-pixbuf-2.0" >&5
-printf %s "checking for gdk-pixbuf-2.0... " >&6; }
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for gdk-pixbuf-2.0 (via pkg-config)" >&5
+printf %s "checking for gdk-pixbuf-2.0 (via pkg-config)... " >&6; }
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists gdk-pixbuf-2.0; then
     PIXBUF_CFLAGS="`$PKG_CONFIG --cflags gdk-pixbuf-2.0`"
     PIXBUF_LIBS="`$PKG_CONFIG --libs gdk-pixbuf-2.0`"
@@ -6904,8 +6904,8 @@ STARTUP_NOTIFICATION_LIBS=
 
 if test x$support_startup_notification = xyes; then
 
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for libstartup-notification-1.0" >&5
-printf %s "checking for libstartup-notification-1.0... " >&6; }
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for libstartup-notification-1.0 (via pkg-config)" >&5
+printf %s "checking for libstartup-notification-1.0 (via pkg-config)... " >&6; }
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists libstartup-notification-1.0; then
     STARTUP_NOTIFICATION_CFLAGS="`$PKG_CONFIG --cflags libstartup-notification-1.0`"
     STARTUP_NOTIFICATION_LIBS="`$PKG_CONFIG --libs libstartup-notification-1.0`"
@@ -6930,8 +6930,8 @@ fi
 
 if test x$support_frills = xyes; then
 
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for xmu" >&5
-printf %s "checking for xmu... " >&6; }
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for xmu (via pkg-config)" >&5
+printf %s "checking for xmu (via pkg-config)... " >&6; }
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists xmu; then
     XMU_CFLAGS="`$PKG_CONFIG --cflags xmu`"
     XMU_LIBS="`$PKG_CONFIG --libs xmu`"
@@ -7465,8 +7465,8 @@ fi
 if test x$support_xft = xyes || test x$support_image = xyes; then
   rxvt_have_xrender=no
 
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for xrender" >&5
-printf %s "checking for xrender... " >&6; }
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for xrender (via pkg-config)" >&5
+printf %s "checking for xrender (via pkg-config)... " >&6; }
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists xrender; then
     XRENDER_CFLAGS="`$PKG_CONFIG --cflags xrender`"
     XRENDER_LIBS="`$PKG_CONFIG --libs xrender`"
@@ -7508,8 +7508,8 @@ fi
 
 if test x$support_xft = xyes && test x$rxvt_have_xrender = xyes; then
 
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for fontconfig xft" >&5
-printf %s "checking for fontconfig xft... " >&6; }
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for fontconfig xft (via pkg-config)" >&5
+printf %s "checking for fontconfig xft (via pkg-config)... " >&6; }
   if test $PKG_CONFIG != no && $PKG_CONFIG --exists fontconfig xft; then
     XFT_CFLAGS="`$PKG_CONFIG --cflags fontconfig xft`"
     XFT_LIBS="`$PKG_CONFIG --libs fontconfig xft`"
@@ -7832,6 +7832,28 @@ fi
 
 
 
+
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for xext (via pkg-config)" >&5
+printf %s "checking for xext (via pkg-config)... " >&6; }
+  if test $PKG_CONFIG != no && $PKG_CONFIG --exists xext; then
+    XEXT_CFLAGS="`$PKG_CONFIG --cflags xext`"
+    XEXT_LIBS="`$PKG_CONFIG --libs xext`"
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: ok" >&5
+printf "%s\n" "ok" >&6; }
+    :
+  else
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+    as_fn_error $? "unable to find xext, required for perl" "$LINENO" 5
+
+  fi
+
+
+  X_LIBS="$XEXT_LIBS $X_LIBS"
+  CPPFLAGS="$CPPFLAGS $XEXT_CFLAGS"
+
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $PERL suitability" >&5
 printf %s "checking for $PERL suitability... " >&6; }
   if $PERL -MExtUtils::Embed -e "use v5.8" >/dev/null 2>/dev/null; then
@@ -7839,7 +7861,7 @@ printf %s "checking for $PERL suitability... " >&6; }
      save_CXXFLAGS="$CXXFLAGS"
      save_LIBS="$LIBS"
      CXXFLAGS="$CXXFLAGS `$PERL -MExtUtils::Embed -e ccopts`"
-     LIBS="$LIBS -lXext `$PERL -MExtUtils::Embed -e ldopts`"
+     LIBS="$LIBS `$PERL -MExtUtils::Embed -e ldopts`"
      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -7879,7 +7901,6 @@ printf "%s\n" "#define ENABLE_PERL 1" >>confdefs.h
         PERLFLAGS="`$PERL -MExtUtils::Embed -e ccopts`"
         PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
         PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
-        LIBS="$LIBS -lXext"
      else
         as_fn_error $? "no, unable to link" "$LINENO" 5
      fi

@@ -714,13 +714,20 @@ IF_PERL=\#
 if test x$support_perl = xyes; then
   AC_PATH_PROG(PERL, perl5, perl)
 
+  RXVT_CHECK_MODULES([XEXT], [xext], [:], [
+    AC_MSG_ERROR([unable to find xext, required for perl])
+  ])
+
+  X_LIBS="$XEXT_LIBS $X_LIBS"
+  CPPFLAGS="$CPPFLAGS $XEXT_CFLAGS"
+
   AC_MSG_CHECKING(for $PERL suitability)
   if $PERL -MExtUtils::Embed -e "use v5.8" >/dev/null 2>/dev/null; then
 
      save_CXXFLAGS="$CXXFLAGS"
      save_LIBS="$LIBS"
      CXXFLAGS="$CXXFLAGS `$PERL -MExtUtils::Embed -e ccopts`"
-     LIBS="$LIBS -lXext `$PERL -MExtUtils::Embed -e ldopts`"
+     LIBS="$LIBS `$PERL -MExtUtils::Embed -e ldopts`"
      AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <EXTERN.h>
 #include <perl.h>
@@ -739,7 +746,6 @@ if test x$support_perl = xyes; then
         PERLFLAGS="`$PERL -MExtUtils::Embed -e ccopts`"
         PERLLIB="`$PERL -MExtUtils::Embed -e ldopts`"
         PERLPRIVLIBEXP="`$PERL -MConfig -e 'print $Config{privlibexp}'`"
-        LIBS="$LIBS -lXext"
      else
         AC_MSG_ERROR([no, unable to link])
      fi

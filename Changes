@@ -47,7 +47,6 @@ TODO: rclock horribly time-biased
 TODO: rclock iso mode?
 
 TODO: printf "\e[4:3m" - "undercurl" - should probbaly be interpreted as underline, rather than \e[43m
-TODO: pkg-config to find Xext
 
 	- implement a fix for CVE-2022-4170 (reported and analyzed by David Leadbeater).
           While present in version 9.30, it should not be exploitable. It is exploitable
