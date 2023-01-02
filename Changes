@@ -42,10 +42,8 @@ TODO: cuu/cud and probably others default to 1 when arg is 0, not just missing, 
 TODO: clean up the resource vs. long option mess, especially in the manpage.
 TODO: think about daemon delaying urxvt client exit.
 IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
-
 TODO: rclock horribly time-biased
-TODO: rclock iso mode?
-
+TODO: rclock iso date mode?
 TODO: printf "\e[4:3m" - "undercurl" - should probbaly be interpreted as underline, rather than \e[43m
 
 9.31 Mon 02 Jan 2023 18:13:16 CET
