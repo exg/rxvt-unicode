@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 7"
-.TH @@RXVT_NAME@@ 7 "2021-11-22" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 7 "2023-01-02" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -1762,12 +1762,11 @@ Ps = 2	Clear All
 .IX Item "ESC [ Ps K"
 Erase in Line (\s-1EL\s0)
 .TS
-l l l l .
+l l .
 Ps = 0	Clear to Right (default)
 Ps = 1	Clear to Left
 Ps = 2	Clear All
-Ps = 3	Like Ps = 0, but is ignored when wrapped
-			(@@RXVT_NAME@@ extension)
+Ps = 3	Like Ps = 0, but is ignored when wrapped (@@RXVT_NAME@@ extension)
 .TE
 .ie n .IP "\fB\f(CB""ESC [ Ps L""\fB\fR" 4
 .el .IP "\fB\f(CBESC [ Ps L\fB\fR" 4

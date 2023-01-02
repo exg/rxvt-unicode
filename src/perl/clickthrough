@@ -56,7 +56,7 @@ off again:
 
 For this to work as expected, your window manager needs to support shaped
 windows fully, but most only have partial support. The only window manager
-known that handles this correctly is openbox 3.7 (and partially 3.6).
+known to handle this correctly is openbox 3.7.
 
 A workaround is to also use C<-override-redirect>.
 

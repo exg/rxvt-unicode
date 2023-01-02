@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "@@RXVT_NAME@@ 1"
-.TH @@RXVT_NAME@@ 1 "2021-11-22" "@@RXVT_VERSION@@" "RXVT-UNICODE"
+.TH @@RXVT_NAME@@ 1 "2023-01-02" "@@RXVT_VERSION@@" "RXVT-UNICODE"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -253,6 +253,10 @@ Turn on/off jump scrolling (allow multiple lines per refresh); resource \fBjumpS
 .IP "\fB\-ss\fR|\fB+ss\fR" 4
 .IX Item "-ss|+ss"
 Turn on/off skip scrolling (allow multiple screens per refresh); resource \fBskipScroll\fR.
+.IP "\fB\-fps\fR \fInumber\fR" 4
+.IX Item "-fps number"
+Compile \fIfrills\fR: Set the refresh interval (in frames per second or
+negative seconds); resource \fBrefreshRate\fR.
 .IP "\fB\-fade\fR \fInumber\fR" 4
 .IX Item "-fade number"
 Fade the text by the given percentage when focus is lost. Small values
@@ -754,6 +758,17 @@ option \fB\-ss\fR.
 \&\fBFalse\fR: specify that everything is to be displayed, even
 if the refresh is too fast for the human eye to read anything (or the
 monitor to display anything); option \fB+ss\fR.
+.IP "\fBrefreshRate:\fR \fInumber\fR" 4
+.IX Item "refreshRate: number"
+Compile \fIfrills\fR: When positive, sets the maximum refreshes per second
+(the default is \f(CW60\fR). When zero or negative, sets the minimum interval
+between refreshes, negated. That is, positive numbers limit the number
+of refreshes per second to that number, similar to a fps limiter in
+games. A negative number gets negated and directly sets the minimum
+interval between refreshes, that is, \f(CW10\fR and \f(CW\*(C`\-0.1\*(C'\fR both specify
+the same refresh interval (likewise \f(CW50\fR and \f(CW0.02\fR). Finally, zero
+makes @@RXVT_NAME@@ refresh as fast as possible. Fractional values are
+supported; option \fB\-fps\fR.
 .IP "\fBfading:\fR \fInumber\fR" 4
 .IX Item "fading: number"
 Fade the text by the given percentage when focus is lost; option \fB\-fade\fR.
@@ -1329,7 +1344,7 @@ all the default extensions except \f(CW\*(C`selection\*(C'\fR.
 .Sp
 To prohibit autoloading of extensions, you can prefix them with \f(CW\*(C`/\*(C'\fR,
 which will make urxvt refuse to automatically load them (this can be
-overriden, however, by specifying the extension name again without a
+overridden, however, by specifying the extension name again without a
 prefix, though). This does not prohibit extensions themselves loading
 other extensions. For example, \f(CW\*(C`default,/background\*(C'\fR will keep the
 \&\f(CW\*(C`background\*(C'\fR extension from being loaded when a background \s-1OSC\s0 sequence
