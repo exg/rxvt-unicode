@@ -46,6 +46,10 @@ TODO: rclock horribly time-biased
 TODO: rclock iso date mode?
 TODO: printf "\e[4:3m" - "undercurl" - should probbaly be interpreted as underline, rather than \e[43m
 
+TODO: nmeum reports that when the wm resizes urxvt while it opens, the prompt is now somewhere in the middle
+of the window, rather than near the top. this behaviour change wss part of the wrapmode fix, and should normally
+prevent from readline jumping around on resizes. running urxvt with the exact geometry that the wm will assign "fixed" this.
+https://github.com/exg/rxvt-unicode/commit/1eb2c326cb88ee7bae01e995a16829746bfe374e
 9.31 Mon 02 Jan 2023 18:13:16 CET
 	- implement a fix for CVE-2022-4170 (reported and analyzed by David Leadbeater).
           While present in version 9.30, it should not be exploitable. It is exploitable
@@ -53,7 +57,7 @@ TODO: printf "\e[4:3m" - "undercurl" - should probbaly be interpreted as underli
           the terminal to execute arbitrary code in the urxvt process.
 	- the background extension no longer requires off focus fading support
           to be compiled in.
-        - the confirm-paste extension now offers a choice betwene pasting the original
+        - the confirm-paste extension now offers a choice between pasting the original
           or a sanitized version, and also frees up memory used to store the paste text
           immediately.
         - fix compiling without frills.

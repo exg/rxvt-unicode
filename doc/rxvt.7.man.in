@@ -2574,8 +2574,9 @@ are always compiled in, which includes most 8\-bit character sets). These
 codeset tables are used for driving X11 core fonts, they are not required
 for Xft fonts, although having them compiled in lets rxvt-unicode choose
 replacement fonts more intelligently. Compiling them in will make your
-binary bigger (all of together cost about 700kB), but it doesn't increase
-memory usage unless you use a font requiring one of these encodings.
+binary bigger (all of them together cost about 700kB), but it doesn't
+increase memory usage unless you use a font requiring one of these
+encodings.
 .TS
 l l .
 all	all available codeset groups
