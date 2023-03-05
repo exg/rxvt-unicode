@@ -2198,7 +2198,7 @@ rxvt_term::XListProperties (Window window)
 
         EXTEND (SP, count);
         while (count--)
-          PUSHs (newSVuv ((U32)props [count]));
+          PUSHs (sv_2mortal (newSVuv ((U32)props [count])));
 
         XFree (props);
 }
@@ -2224,9 +2224,9 @@ rxvt_term::XGetWindowProperty (Window window, Atom property)
                          :                1;
 
             EXTEND (SP, 3);
-            PUSHs (newSVuv ((U32)type));
-            PUSHs (newSViv (format));
-            PUSHs (newSVpvn ((char *)prop, nitems * elemsize));
+            PUSHs (sv_2mortal (newSVuv ((U32)type)));
+            PUSHs (sv_2mortal (newSViv (format)));
+            PUSHs (sv_2mortal (newSVpvn ((char *)prop, nitems * elemsize)));
             XFree (prop);
           }
 }
@@ -2337,9 +2337,9 @@ rxvt_term::XTranslateCoordinates (Window src, Window dst, int x, int y)
         if (XTranslateCoordinates (THIS->dpy, src, dst, x, y, &dx, &dy, &child))
           {
             EXTEND (SP, 3);
-            PUSHs (newSViv (dx));
-            PUSHs (newSViv (dy));
-            PUSHs (newSVuv (child));
+            PUSHs (sv_2mortal (newSViv (dx)));
+            PUSHs (sv_2mortal (newSViv (dy)));
+            PUSHs (sv_2mortal (newSVuv (child)));
           }
 }
 
