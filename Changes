@@ -269,7 +269,7 @@ https://github.com/exg/rxvt-unicode/commit/1eb2c326cb88ee7bae01e995a16829746bfe3
 	- a key combination bound to 'matcher:select' can now be used
 	  to cycle through the matches in matcher.
         - change perl integer accessors (->width et al.) into mutators.
-        - this version has ben verified to work with perl 5.8.3.
+        - this version has been verified to work with perl 5.8.3.
 
 9.21 Wed Dec 31 14:50:03 CET 2014
 	- the "moa redraw 8-bit british vintage colour management" release.
