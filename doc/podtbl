@@ -18,9 +18,9 @@ sub htmlfcodes {
    my %tag = (
       I => "i",
       B => "b",
-      C => "tt",
+      C => "code",
       L => "i",    # broken
-      F => "tt",
+      F => "kbd",
       S => "nobr", # non-std
       X => "span", # broken
       Z => "span", # broken
