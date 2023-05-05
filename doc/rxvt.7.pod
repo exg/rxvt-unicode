@@ -2149,11 +2149,11 @@ mouse event:
 
 =back
 
-The lower 2 bits of B<< C<< <b> >> >> indicate the button:
+Bits 0, 1, 6 and 7 of B<< C<< <b> >> >> indicate the button:
 
 =over
 
-=item Button = B<< C<< (<b> - SPACE) & 3 >> >>
+=item Button = B<< C<< (<b> - SPACE) & c3 >> >>
 
 =begin table
 
@@ -2161,17 +2161,25 @@ The lower 2 bits of B<< C<< <b> >> >> indicate the button:
 	1	Button2 pressed
 	2	Button3 pressed
 	3	button released (X11 mouse report)
+	64	Button4 pressed
+	65	Button5 pressed
+	66	Button6 pressed
+	67	Button7 pressed
+	128	Button8 pressed
+	129	Button9 pressed
+	130	Button10 pressed
+	131	Button11 pressed
 
 =end table
 
 =back
 
-The upper bits of B<< C<< <b> >> >> indicate the modifiers when the
+Bits 2, 3, 4 and 5 of B<< C<< <b> >> >> indicate the modifiers when the
 button was pressed and are added together (X11 mouse report only):
 
 =over
 
-=item State = B<< C<< (<b> - SPACE) & ~3 >> >>
+=item State = B<< C<< (<b> - SPACE) & 3c >> >>
 
 =begin table
 
@@ -2180,7 +2188,6 @@ button was pressed and are added together (X11 mouse report only):
 	16	Control
 	32	Motion Notify
 	32	Double Click I<(rxvt extension)>, disabled by default
-	64	Button1 is actually Button4, Button2 is actually Button5 etc.
 
 =end table
 
