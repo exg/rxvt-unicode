@@ -2149,11 +2149,11 @@ mouse event:
 
 =back
 
-The lower 2 bits of B<< C<< <b> >> >> indicate the button:
+Bits 0, 1, 6 and 7 of B<< C<< <b> >> >> encode the button:
 
 =over
 
-=item Button = B<< C<< (<b> - SPACE) & 3 >> >>
+=item Button = B<< C<< (<b> - SPACE) & 0xc3 >> >>
 
 =begin table
 
@@ -2161,28 +2161,38 @@ The lower 2 bits of B<< C<< <b> >> >> indicate the button:
 	1	Button2 pressed
 	2	Button3 pressed
 	3	button released (X11 mouse report)
+	64	Button4 pressed
+	65	Button5 pressed
+	66	Button6 pressed
+	67	Button7 pressed
+	128	Button8 pressed
+	129	Button9 pressed
+	130	Button10 pressed
+	131	Button11 pressed
 
 =end table
 
 =back
 
-The upper bits of B<< C<< <b> >> >> indicate the modifiers when the
-button was pressed and are added together (X11 mouse report only):
+Bits 2, 3 and 4 of B<< C<< <b> >> >> encode the modifiers when the
+button was pressed (X11 mouse report only):
 
 =over
 
-=item State = B<< C<< (<b> - SPACE) & ~3 >> >>
+=item Shift = B<< C<< (<b> - SPACE) & 4 >> >>
 
-=begin table
+=item Meta = B<< C<< (<b> - SPACE) & 8 >> >>
 
-	4	Shift
-	8	Meta
-	16	Control
-	32	Motion Notify
-	32	Double Click I<(rxvt extension)>, disabled by default
-	64	Button1 is actually Button4, Button2 is actually Button5 etc.
+=item Control = B<< C<< (<b> - SPACE) & 16 >> >>
 
-=end table
+=back
+
+Bit 5 of B<< C<< <b> >> >> is set for motion events or double clicks
+(rxvt extension, disabled by default):
+
+=over
+
+=item Motion = B<< C<< (<b> - SPACE) & 32 >> >>
 
 =back
 
@@ -2242,9 +2252,9 @@ button release
 where the parameters are provided as decimal numbers instead of
 octets and do not include an offset of 32.
 
-The lower 2 bits of C<b> encode the button number also on button
-release (instead of the value C<3>). The final character of the
-sequence (M or m) specifies the event type (press/motion or release).
+C<b> encodes the button number also on button release (instead of the
+value C<3>). The final character of the sequence (M or m) specifies
+the event type (press/motion or release).
 
 Example: Shift-Button-1 press at top row, column 80.
 
