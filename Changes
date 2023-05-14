@@ -50,6 +50,15 @@ TODO: nmeum reports that when the wm resizes urxvt while it opens, the prompt is
 of the window, rather than near the top. this behaviour change wss part of the wrapmode fix, and should normally
 prevent from readline jumping around on resizes. running urxvt with the exact geometry that the wm will assign "fixed" this.
 https://github.com/exg/rxvt-unicode/commit/1eb2c326cb88ee7bae01e995a16829746bfe374e
+
+        - fix reference counting of values returned by some perl bindings.
+        - fix OSC responses with 7-bit ST (reported by Stuart Henderson).
+        - change the encoding of buttons 8-11 in mouse reporting
+          sequences to match xterm's and enable reporting of release
+          events for them (patch by Pierre-Marc Fournier).
+        - clamp coordinates in mouse reporting sequences to the number
+          of rows and columns (patch by Nick Hanley).
+
 9.31 Mon 02 Jan 2023 18:13:16 CET
 	- implement a fix for CVE-2022-4170 (reported and analyzed by David Leadbeater).
           While present in version 9.30, it should not be exploitable. It is exploitable
