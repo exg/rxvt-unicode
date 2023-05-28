@@ -98,8 +98,9 @@ dnl# CHECKING COMMAND LINE OPTIONS
 dnl# --------------------------------------------------------------------------
 
 AC_ARG_ENABLE(everything,
-  [  --enable-everything     enable standard non-multichoice features
-                          NOTE: this option is order dependent],
+  [AS_HELP_STRING([--enable-everything],
+     [enable standard non-multichoice features
+      NOTE: this option is order dependent])],
   [
     if test x$enableval = xno; then
        support_frills=no
@@ -155,7 +156,8 @@ AC_ARG_ENABLE(everything,
 
 support_assertions=no
 AC_ARG_ENABLE(assert,
-  [  --enable-assert         enable assertions],
+  [AS_HELP_STRING([--enable-assert],
+     [enable assertions])],
   [if test x$enableval = xyes; then
     support_assertions=yes
   fi])
@@ -165,7 +167,8 @@ fi
 
 support_warnings=no
 AC_ARG_ENABLE(warnings,
-  [  --enable-warnings       turn on g++ warnings],
+  [AS_HELP_STRING([--enable-warnings],
+     [turn on g++ warnings])],
   [if test x$enableval = xyes; then
     support_warnings=yes
   fi])
@@ -189,7 +192,8 @@ fi
 
 support_256_color=no
 AC_ARG_ENABLE(256-color,
-  [  --enable-256-color      enable 256-color support],
+  [AS_HELP_STRING([--enable-256-color],
+     [enable 256-color support])],
   [if test x$enableval = xyes; then
     support_256_color=yes
   fi])
@@ -198,115 +202,134 @@ if test x$support_256_color = xyes; then
 fi
 
 AC_ARG_ENABLE(unicode3,
-  [  --enable-unicode3       use 21 instead of 16 bits to represent unicode characters],
+  [AS_HELP_STRING([--enable-unicode3],
+     [use 21 instead of 16 bits to represent unicode characters])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_unicode3=$enableval
   fi])
 
 AC_ARG_ENABLE(combining,
-  [  --enable-combining      enable composition of base and combining characters],
+  [AS_HELP_STRING([--enable-combining],
+     [enable composition of base and combining characters])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_combining=$enableval
   fi])
 
 AC_ARG_ENABLE(xft,
-  [  --enable-xft            enable xft support on systems that have it],
+  [AS_HELP_STRING([--enable-xft],
+     [enable xft support on systems that have it])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_xft=$enableval
   fi])
 
 AC_ARG_ENABLE(font-styles,
-  [  --enable-font-styles    enable bold and italic support],
+  [AS_HELP_STRING([--enable-font-styles],
+     [enable bold and italic support])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_styles=$enableval
   fi])
 
 AC_ARG_ENABLE(pixbuf,
-  [  --enable-pixbuf         enable integration with gdk-pixbuf for background images],
+  [AS_HELP_STRING([--enable-pixbuf],
+     [enable integration with gdk-pixbuf for background images])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_pixbuf=$enableval
   fi])
 
 AC_ARG_ENABLE(startup-notification,
-  [  --enable-startup-notification  enable freedesktop startup notification support],
+  [AS_HELP_STRING([--enable-startup-notification],
+     [enable freedesktop startup notification support])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_startup_notification=$enableval
   fi])
 
 AC_ARG_ENABLE(transparency,
-  [  --enable-transparency   enable transparent backgrounds],
+  [AS_HELP_STRING([--enable-transparency],
+     [enable transparent backgrounds])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_inheritpixmap=$enableval
   fi])
 
 AC_ARG_ENABLE(fading,
-  [  --enable-fading         enable colors fading when off focus],
+  [AS_HELP_STRING([--enable-fading],
+     [enable colors fading when off focus])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_fading=$enableval
   fi])
 
 AC_ARG_ENABLE(rxvt-scroll,
-  [  --enable-rxvt-scroll    enable rxvt style scrollbar],
+  [AS_HELP_STRING([--enable-rxvt-scroll],
+     [enable rxvt style scrollbar])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_scroll_rxvt=$enableval
   fi])
 
 AC_ARG_ENABLE(next-scroll,
-  [  --enable-next-scroll    enable NeXT style scrollbar],
+  [AS_HELP_STRING([--enable-next-scroll],
+     [enable NeXT style scrollbar])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_scroll_next=$enableval
   fi])
 
 AC_ARG_ENABLE(xterm-scroll,
-  [  --enable-xterm-scroll   enable Xterm style scrollbar],
+  [AS_HELP_STRING([--enable-xterm-scroll],
+     [enable Xterm style scrollbar])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_scroll_xterm=$enableval
   fi])
 
 AC_ARG_ENABLE(perl,
-  [  --enable-perl           enable embedded perl interpreter],
+  [AS_HELP_STRING([--enable-perl],
+     [enable embedded perl interpreter])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_perl=$enableval
   fi])
 
 AC_ARG_WITH(codesets,
-  [  --with-codesets=CS,...  compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)],
+  [AS_HELP_STRING([--with-codesets=CS,...],
+     [compile in additional codesets (jp,jp_ext,kr,zh,zh_ext,all)])],
   [codesets="$withval"])
 
 AC_ARG_ENABLE(xim,
-  [  --enable-xim            XIM (X Input Method) protocol support],
+  [AS_HELP_STRING([--enable-xim],
+     [XIM (X Input Method) protocol support])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_xim=$enableval
   fi])
 
 AC_ARG_ENABLE(backspace-key,
-  [  --disable-backspace-key disable handling of the backspace key],
+  [AS_HELP_STRING([--disable-backspace-key],
+     [disable handling of the backspace key])],
   [if test x$enableval = xno; then
     AC_DEFINE(NO_BACKSPACE_KEY, 1, Define if you don't want support for the backspace key)
   fi])
 
 AC_ARG_ENABLE(delete-key,
-  [  --disable-delete-key    disable handling of the delete key],
+  [AS_HELP_STRING([--disable-delete-key],
+     [disable handling of the delete key])],
   [if test x$enableval = xno; then
     AC_DEFINE(NO_DELETE_KEY, 1, Define if you don't want support for the (non-keypad) delete key)
   fi])
 
 support_resources=yes
 AC_ARG_ENABLE(resources,
-  [  --disable-resources     disable all resource checking],
+  [AS_HELP_STRING([--disable-resources],
+     [disable all resource checking])],
   [if test x$enableval = xno; then
     support_resources=no
   fi])
 
 AC_ARG_ENABLE(8bitctrls,
-  [  --enable-8bitctrls      enable 8 bit control sequences (not recommended)],
+  [AS_HELP_STRING([--enable-8bitctrls],
+     [enable 8 bit control sequences (not recommended)])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_8bitctrls=$enableval
   fi])
 
 RESFALLBACK=Rxvt
 AC_ARG_ENABLE(fallback,
-  [  --enable-fallback@<:@=CLASS@:>@ fall back on CLASS resources in addition to URxvt ones (default: Rxvt)],
+  [AS_HELP_STRING([--enable-fallback@<:@=CLASS@:>@],
+     [fall back on CLASS resources in addition to URxvt ones (default: Rxvt)])],
   [
    test x$enableval = xyes && enableval=Rxvt
    test x$enableval = xno  && enableval=
@@ -319,92 +342,107 @@ fi
 
 RESNAME=urxvt
 AC_ARG_WITH(res-name,
-  [  --with-res-name=NAME    use this as default resource name (default: urxvt)],
+  [AS_HELP_STRING([--with-res-name=NAME],
+     [set the default resource name (default: urxvt)])],
   [RESNAME="$withval"])
 AC_DEFINE_UNQUOTED(RESNAME,"$RESNAME", [Default resource name])
 
 RESCLASS=URxvt
 AC_ARG_WITH(res-class,
-  [  --with-res-class=CLASS  use this as the resource class (default: URxvt)],
+  [AS_HELP_STRING([--with-res-class=CLASS],
+     [set the resource class (default: URxvt)])],
   [RESCLASS="$withval"])
 AC_DEFINE_UNQUOTED(RESCLASS,"$RESCLASS", [Resource class])
 
 RXVTNAME=urxvt
 AC_ARG_WITH(name,
-  [  --with-name=NAME        set the basename for the installed binaries (default: urxvt)],
+  [AS_HELP_STRING([--with-name=NAME],
+     [set the basename for the installed binaries (default: urxvt)])],
   [RXVTNAME="$withval"])
 AC_DEFINE_UNQUOTED(RXVTNAME,"$RXVTNAME", [Binary base name])
 
 AC_SUBST(RXVTNAME)
 
 AC_ARG_ENABLE(swapscreen,
-  [  --disable-swapscreen    disable swap screen support],
+  [AS_HELP_STRING([--disable-swapscreen],
+     [disable swap screen support])],
   [if test x$enableval = xno; then
     AC_DEFINE(NO_SECONDARY_SCREEN, 1, Disable the secondary screen. Many programs use the secondary screen as their workplace)
   fi])
 
 AC_ARG_ENABLE(iso14755,
-  [  --enable-iso14755       enable support for extended ISO 14755 modes],
+  [AS_HELP_STRING([--enable-iso14755],
+     [enable support for extended ISO 14755 modes])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_iso14755=$enableval
   fi])
 
 AC_ARG_ENABLE(frills,
-  [  --enable-frills         enable support for rarely used features],
+  [AS_HELP_STRING([--enable-frills],
+     [enable support for rarely used features])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_frills=$enableval
   fi])
 
 AC_ARG_ENABLE(keepscrolling,
-  [  --enable-keepscrolling  enable continual scrolling on scrollbar arrow press],
+  [AS_HELP_STRING([--enable-keepscrolling],
+     [enable continual scrolling on scrollbar arrow press])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_keepscrolling=$enableval
   fi])
 
 AC_ARG_ENABLE(selectionscrolling,
-  [  --enable-selectionscrolling  enable scrolling during selections],
+  [AS_HELP_STRING([--enable-selectionscrolling],
+     [enable scrolling during selections])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_selectionscrolling=$enableval
   fi])
 
 AC_ARG_ENABLE(mousewheel,
-  [  --enable-mousewheel     enable scrolling via mouse wheel or buttons 4 & 5],
+  [AS_HELP_STRING([--enable-mousewheel],
+     [enable scrolling via mouse wheel or buttons 4 & 5])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_mousewheel=$enableval
   fi])
 
 AC_ARG_ENABLE(slipwheeling,
-  [  --enable-slipwheeling   enable slip wheel scrolling (requires --enable-mousewheel)],
+  [AS_HELP_STRING([--enable-slipwheeling],
+     [enable slip wheel scrolling (requires --enable-mousewheel)])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_mouseslipwheel=$enableval
   fi])
 
 AC_ARG_ENABLE(smart-resize,
-  [  --enable-smart-resize   enable smart growth/shrink behaviour],
+  [AS_HELP_STRING([--enable-smart-resize],
+     [enable smart growth/shrink behaviour])],
   [if test x$enableval = xyes; then
     AC_DEFINE(SMART_RESIZE, 1, Define to use "smart" resize behavior)
   fi])
 
 AC_ARG_ENABLE(text-blink,
-  [  --enable-text-blink     enable blinking text],
+  [AS_HELP_STRING([--enable-text-blink],
+     [enable blinking text])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_text_blink=$enableval
   fi])
 
 AC_ARG_ENABLE(pointer-blank,
-  [  --enable-pointer-blank  enable pointer blanking when typing or inactive],
+  [AS_HELP_STRING([--enable-pointer-blank],
+     [enable pointer blanking when typing or inactive])],
   [if test x$enableval = xyes -o x$enableval = xno; then
     support_pointer_blank=$enableval
   fi])
 
 AC_ARG_WITH(term,
-  [  --with-term=NAME        set the terminal to NAME (default: rxvt)],
+  [AS_HELP_STRING([--with-term=VALUE],
+     [set the value of the TERM environment variable (default: rxvt)])],
   [if test x$withval != x; then
     AC_DEFINE_UNQUOTED(TERMENV, "$withval",Set TERM to the value given by configure) term="$withval"
   fi])
 
 AC_ARG_WITH(terminfo,
-  [  --with-terminfo=PATH    set the path to the terminfo tree to PATH],
+  [AS_HELP_STRING([--with-terminfo=VALUE],
+     [set the value of the TERMINFO environment variable])],
   [if test x$withval != x; then
     AC_DEFINE_UNQUOTED(RXVT_TERMINFO, "$withval", Set TERMINFO value to the value given by configure) terminfo="$withval"
   fi])
