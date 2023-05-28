@@ -222,20 +222,17 @@ sub matchlist {
 }
 
 sub most_recent {
-   my ($self) = shift;
+   my ($self) = @_;
    my $row = $self->nrow - 1;
-   my @exec;
 
    while ($row >= $self->top_row) {
       my $line = $self->line ($row);
-      @exec = $self->command_for ($row);
-      last if @exec;
+      my @exec = $self->command_for ($row);
+      if (@exec) {
+         return $self->exec_async (@exec);
+      }
 
       $row = $line->beg - 1;
-   }
-
-   if (@exec) {
-      return $self->exec_async (@exec);
    }
 
    ()
