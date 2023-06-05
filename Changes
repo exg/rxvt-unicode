@@ -45,6 +45,18 @@ IDEA: use harfbuzz to render combining sequences, maybe also complex scripts
 TODO: rclock horribly time-biased
 TODO: rclock iso date mode?
 TODO: printf "\e[4:3m" - "undercurl" - should probbaly be interpreted as underline, rather than \e[43m
+TODO: feature where I can just click on (y/p/n) when prompted after pasting text to the terminal?
+
+TODO: 08:11:16 <dg> in some cases printf "\e]50;\a" can be a crash
+08:11:50 <dg> it seems to depend a bit on setup, two in a row maybe needed
+- what font dpes urxvtr flal back ion this case? why not fixed?
+07:28:56 <dg> schmorp: try printf '\e]50;\a\xe7\xaf\xad'
+07:29:15 <dg> i'm guessing the builtin font doesn't have that character (篭)
+07:29:40 <dg> on one machine with 9.30 that segfaults, with what looks like a null pointer deref
+07:29:58 <dg> on latest dev, but a different machine it hangs
+07:33:26 <dg> hmm, and on openbsd it doesn't even hang with that reduction, but the actual case the fuzzer 
+              found does hang
+07:34:02 <dg> curl -o - dg.cx/f12-afl-urxvt-id0-src517.txt
 
 TODO: nmeum reports that when the wm resizes urxvt while it opens, the prompt is now somewhere in the middle
 of the window, rather than near the top. this behaviour change wss part of the wrapmode fix, and should normally
@@ -58,6 +70,7 @@ https://github.com/exg/rxvt-unicode/commit/1eb2c326cb88ee7bae01e995a16829746bfe3
           events for them (patch by Pierre-Marc Fournier).
         - clamp coordinates in mouse reporting sequences to the number
           of rows and columns (patch by Nick Hanley).
+	- added Alt_L/ALt_R and updated some keys in iso 14755 5.2 mode.
 
 9.31 Mon 02 Jan 2023 18:13:16 CET
 	- implement a fix for CVE-2022-4170 (reported and analyzed by David Leadbeater).

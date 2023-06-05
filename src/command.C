@@ -86,8 +86,6 @@ static unsigned short iso14755_symtab[] = {
   XK_Down,		0x2193,
   XK_KP_Down,		0x2193,
   XK_Linefeed,		0x21b4,
-  XK_Return,		0x21b5,
-  XK_KP_Enter,		0x21b5,
 
   XK_Prior,		0x21de,
   XK_Next,		0x21df,
@@ -112,6 +110,9 @@ static unsigned short iso14755_symtab[] = {
   XK_Clear,		0x2327,
   XK_BackSpace,		0x232b,
   XK_Insert,		0x2380,
+  XK_KP_Enter,		0x2386,
+  XK_Alt_L,		0x2387,
+  XK_Alt_R,		0x2387,
   XK_Control_L,		0x2388,
   XK_Control_R,		0x2388,
   XK_Pause,		0x2389,
@@ -119,6 +120,7 @@ static unsigned short iso14755_symtab[] = {
   XK_Escape,		0x238b,
   XK_Undo,		0x238c,
   XK_Print,		0x2399,
+  XK_Return,		0x23ce,
 
   XK_space,		0x2423,
 
