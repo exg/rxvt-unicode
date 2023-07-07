@@ -71,6 +71,8 @@ https://github.com/exg/rxvt-unicode/commit/1eb2c326cb88ee7bae01e995a16829746bfe3
         - clamp coordinates in mouse reporting sequences to the number
           of rows and columns (patch by Nick Hanley).
 	- added Alt_L/ALt_R and updated some keys in iso 14755 5.2 mode.
+        - perl 5.38 does not handle empty locale names, use "C" instead
+          (patch by sxzzsf).
 
 9.31 Mon 02 Jan 2023 18:13:16 CET
 	- implement a fix for CVE-2022-4170 (reported and analyzed by David Leadbeater).
