@@ -78,7 +78,9 @@ sub key_press {
       $self->tt_paste ($paste);
       $self->leave;
    } elsif ($keysym == 112) { # p
-      $self->tt_paste ($$paste);
+      my $paste = $$paste;
+      $paste =~ s/[\x0d]/ /g;
+      $self->tt_paste ($paste);
       $self->leave;
    } elsif ($keysym == 110) { # n
       $self->leave;
