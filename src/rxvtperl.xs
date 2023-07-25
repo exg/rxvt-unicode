@@ -381,7 +381,7 @@ static PerlInterpreter *perl;
 
 #if 0 /* we are not a library anymore, so doing this is just not worth it */
 /*THINK/TODO: this has the side effect of, of course, not calling destructors. */
-/* but therse are not guaranteed anyway... */
+/* but these are not guaranteed anyway... */
 rxvt_perl_interp::~rxvt_perl_interp ()
 {
   if (perl)
