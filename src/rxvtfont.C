@@ -1267,7 +1267,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop, bool force_prop)
       FT_Face face = XftLockFace (f);
 
       // fuck me plenty: XftLockFace can actually return 0. try not to crash.
-      // we also assume blindly that if the first lock succeeeds, then subsequent
+      // we also assume blindly that if the first lock succeeds, then subsequent
       // locks will also succeed.
       if (!face)
         {
