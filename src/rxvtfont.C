@@ -154,10 +154,11 @@ static const struct rxvt_fallback_font {
 
 // these characters are used to guess the font height and width
 // pango uses a similar algorithm and doesn't trust the font either.
-static uint16_t extent_test_chars[] = {
+static uint32_t extent_test_chars[] = {
   '0', '1', '8', 'a', 'd', 'x', 'm', 'y', 'g', 'W', 'X', '\'', '_',
   0x00cd, 0x00d5, 0x0114, 0x0177, 0x0643,	// ÍÕĔŷﻙ
   0x304c, 0x672c,				// が本
+  0x1f600,                                      // 😀
 };
 
 #define dTermDisplay Display *disp = term->dpy
@@ -938,7 +939,7 @@ rxvt_font_x11::load (const rxvt_fontprop &prop, bool force_prop)
 
   width = 1;
 
-  for (uint16_t *t = extent_test_chars; t < extent_test_chars + ecb_array_length (extent_test_chars); t++)
+  for (uint32_t *t = extent_test_chars; t < extent_test_chars + ecb_array_length (extent_test_chars); t++)
     {
       if (FROM_UNICODE (cs, *t) == NOCHAR)
         continue;
@@ -1287,9 +1288,9 @@ rxvt_font_xft::load (const rxvt_fontprop &prop, bool force_prop)
 
       int glheight = height;
 
-      for (uint16_t *t = extent_test_chars; t < extent_test_chars + ecb_array_length (extent_test_chars); t++)
+      for (uint32_t *t = extent_test_chars; t < extent_test_chars + ecb_array_length (extent_test_chars); t++)
         {
-          FcChar16 ch = *t;
+          FcChar32 ch = *t;
 
           if (cs != CS_UNICODE
               && ch > 0x100
@@ -1302,7 +1303,7 @@ rxvt_font_xft::load (const rxvt_fontprop &prop, bool force_prop)
             continue;
 
           XGlyphInfo g;
-          XftTextExtents16 (disp, f, &ch, 1, &g);
+          XftTextExtents32 (disp, f, &ch, 1, &g);
 
           g.width -= g.x;
 
