@@ -608,7 +608,8 @@ rxvt_img::muladd (nv mul, nv add)
 {
   // STEP 1: double the image width, fill all odd columns with white (==1)
 
-  composer cc (this, new rxvt_img (d, format, 0, 0, w * 2, h, repeat));
+  rxvt_img *img = new rxvt_img (d, format, 0, 0, w * 2, h, repeat);
+  composer cc (this, img);
 
   // why the hell does XRenderSetPictureTransform want a writable matrix :(
   // that keeps us from just static const'ing this matrix.
@@ -639,7 +640,7 @@ rxvt_img::muladd (nv mul, nv add)
   // a 2x1 filter would obviously suffice, but given the total lack of specification
   // for xrender, I expect different xrender implementations to randomly diverge.
   // we also halve the image, and hope for the best (again, for lack of specs).
-  composer cc2 (cc.dstimg);
+  composer cc2 (img);
 
   XFixed kernel [] = {
     XDoubleToFixed (3), XDoubleToFixed (1),
@@ -657,6 +658,8 @@ rxvt_img::muladd (nv mul, nv add)
   XRenderSetPictureFilter (cc.dpy, cc2.src, FilterConvolution, kernel, ecb_array_length (kernel));
 
   XRenderComposite (cc.dpy, PictOpSrc, cc2.src, None, cc2.dst, 0, 0, 0, 0, 0, 0, w * 2, h);
+
+  delete img;
 
   return cc2;
 }
