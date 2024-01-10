@@ -63,6 +63,8 @@ of the window, rather than near the top. this behaviour change wss part of the w
 prevent from readline jumping around on resizes. running urxvt with the exact geometry that the wm will assign "fixed" this.
 https://github.com/exg/rxvt-unicode/commit/1eb2c326cb88ee7bae01e995a16829746bfe374e
 
+        - fix memory leak when a background expression uses the muladd
+          or focus_fade operators (reported by Erik-Jan).
         - fix reference counting of values returned by some perl bindings.
         - fix OSC responses with 7-bit ST (reported by Stuart Henderson).
         - change the encoding of buttons 8-11 in mouse reporting
