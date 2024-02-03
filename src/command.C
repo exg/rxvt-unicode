@@ -1298,13 +1298,18 @@ rxvt_term::mouse_report (XButtonEvent &ev)
       state += 32;
     }
 
-  button_number = MEvent.button - Button1;
-  if (button_number > 10)
-    return;
-  else if (button_number >= 7)
-    button_number += 128 - 7;
-  else if (button_number >= 3)
-    button_number += 64 - 3;
+  if (MEvent.button == AnyButton)
+    button_number = 3;
+  else
+    {
+      button_number = MEvent.button - Button1;
+      if (button_number > 10)
+        return;
+      else if (button_number >= 7)
+        button_number += 128 - 7;
+      else if (button_number >= 3)
+        button_number += 64 - 3;
+    }
 
   if (priv_modes & PrivMode_MouseX10)
     {
@@ -2171,6 +2176,7 @@ rxvt_term::button_release (XButtonEvent &ev)
 #else				/* MOUSE_REPORT_DOUBLECLICK */
           MEvent.button = ev.button;
           mouse_report (ev);
+          MEvent.button = AnyButton;
 #endif /* MOUSE_REPORT_DOUBLECLICK */
           return;
         }
