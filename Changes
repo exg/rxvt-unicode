@@ -67,6 +67,11 @@ https://github.com/exg/rxvt-unicode/commit/1eb2c326cb88ee7bae01e995a16829746bfe3
           or focus_fade operators (reported by Erik-Jan).
         - fix reference counting of values returned by some perl bindings.
         - fix OSC responses with 7-bit ST (reported by Stuart Henderson).
+        - fix mouse reporting of motion notify events to report 3 as
+          the button number when no button is pressed, same as xterm.
+          Previously urxvt reported the number of the last button
+          pressed or an invalid value, before the first button press
+          (reported by Uli Schlachter).
         - change the encoding of buttons 8-11 in mouse reporting
           sequences to match xterm's and enable reporting of release
           events for them (patch by Pierre-Marc Fournier).
