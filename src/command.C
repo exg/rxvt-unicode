@@ -3310,6 +3310,7 @@ rxvt_term::process_dcs_seq ()
 /*----------------------------------------------------------------------*/
 /*
  * process OPERATING SYSTEM COMMAND sequence `ESC ] Ps ; Pt (ST|BEL)'
+ * or `ESC ] Ps (ST|BEL)'
  */
 void
 rxvt_term::process_osc_seq ()
@@ -3320,14 +3321,17 @@ rxvt_term::process_osc_seq ()
   for (arg = 0; isdigit (ch); ch = cmd_getc ())
     arg = arg * 10 + (ch - '0');
 
-  if (ch == ';')
+  if (ch == ';' || ch == C0_BEL)
     {
       string_term st;
-      char *s = get_to_st (st);
+      char *s = nullptr;
+
+      if (ch == ';')
+          s = get_to_st (st);
+      process_xterm_seq (arg, s, st);
 
       if (s)
         {
-          process_xterm_seq (arg, s, st);
           free (s);
         }
     }
@@ -3462,19 +3466,17 @@ rxvt_term::process_color_seq (int report, int color, const char *str, string_ter
 }
 
 /*
- * XTerm escape sequences: ESC ] Ps;Pt (ST|BEL)
+ * XTerm escape sequences: ESC ] Ps;Pt (ST|BEL) and ESC ] Ps BEL
  */
 void
 rxvt_term::process_xterm_seq (int op, char *str, string_term &st)
 {
   int color;
   char *buf, *name;
-  bool query = str[0] == '?' && !str[1];
+  bool query = (str == NULL) ? false : str[0] == '?' && !str[1];
   int saveop = op;
 
   dLocal (Display *, dpy);
-
-  assert (str != NULL);
 
   if (HOOK_INVOKE ((this, HOOK_OSC_SEQ, DT_INT, op, DT_STR, str, DT_END)))
     return;
@@ -3551,13 +3553,22 @@ rxvt_term::process_xterm_seq (int op, char *str, string_term &st)
       case XTerm_Color00:
         process_color_seq (op, Color_fg, str, st);
         break;
+      case XTerm_Color00_reset:
+        set_window_color (Color_fg, rs[Rs_color + Color_fg_orig]);
+        break;
       case Rxvt_restoreBG:
       case XTerm_Color01:
         process_color_seq (op, Color_bg, str, st);
         break;
+      case XTerm_Color01_reset:
+        set_window_color (Color_bg, rs[Rs_color + Color_bg_orig]);
+        break;
 #ifndef NO_CURSORCOLOR
       case XTerm_Color_cursor:
         process_color_seq (op, Color_cursor, str, st);
+        break;
+      case XTerm_Color_cursor_reset:
+        set_window_color (Color_cursor, rs[Rs_color + Color_cursor_orig]);
         break;
 #endif
       case XTerm_Color_pointer_fg:

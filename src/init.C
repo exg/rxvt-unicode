@@ -777,9 +777,12 @@ rxvt_term::init_resources (int argc, const char *const *argv)
 
   /* convenient aliases for setting fg/bg to colors */
   color_aliases (Color_fg);
+  alias_color (Color_fg_orig, Color_fg);
   color_aliases (Color_bg);
+  alias_color (Color_bg_orig, Color_bg);
 #ifndef NO_CURSORCOLOR
   color_aliases (Color_cursor);
+  alias_color (Color_cursor_orig, Color_cursor);
   color_aliases (Color_cursor2);
 #endif /* NO_CURSORCOLOR */
   color_aliases (Color_pointer_fg);

@@ -428,6 +428,9 @@ enum {
   XTerm_Color_HTC        = 19,      // change actual 'Highlight' fg color
   XTerm_logfile          = 46,      // not implemented
   XTerm_font             = 50,
+  XTerm_Color00_reset    = 110,     // reset fg color
+  XTerm_Color01_reset    = 111,     // reset bg color
+  XTerm_Color_cursor_reset = 112,   // reset actual 'Cursor' color
 
   XTerm_konsole30        = 30,      // reserved for konsole
   XTerm_konsole31        = 31,      // reserved for konsole
@@ -509,6 +512,7 @@ enum colour_list {
                    RGB24_CUBE_SIZE - 1,
 #ifndef NO_CURSORCOLOR
   Color_cursor,
+  Color_cursor_orig,
   Color_cursor2,
 #endif
   Color_pointer_fg,
@@ -534,6 +538,8 @@ enum colour_list {
 #if OFF_FOCUS_FADING
   Color_fade,
 #endif
+  Color_fg_orig,
+  Color_bg_orig,
   NRS_COLORS,                 /* */
 #ifdef RXVT_SCROLLBAR
   Color_topShadow = NRS_COLORS,
