@@ -412,54 +412,58 @@ struct string_term
  * colour extensions by Christian W. Zuckschwerdt <zany@triq.net>
  */
 enum {
-  XTerm_name             =  0,
-  XTerm_iconName         =  1,
-  XTerm_title            =  2,
-  XTerm_property         =  3,      // change X property
-  XTerm_Color            =  4,      // change colors
-  XTerm_Color00          = 10,      // change fg color
-  XTerm_Color01          = 11,      // change bg color
-  XTerm_Color_cursor     = 12,      // change actual 'Cursor' color
-  XTerm_Color_pointer_fg = 13,      // change actual 'Pointer' fg color
-  XTerm_Color_pointer_bg = 14,      // change actual 'Pointer' bg color
-  XTerm_Color05          = 15,      // not implemented (tektronix fg)
-  XTerm_Color06          = 16,      // not implemented (tektronix bg)
-  XTerm_Color_HC         = 17,      // change actual 'Highlight' bg color
-  XTerm_Color_HTC        = 19,      // change actual 'Highlight' fg color
-  XTerm_logfile          = 46,      // not implemented
-  XTerm_font             = 50,
+  XTerm_name                =  0,
+  XTerm_iconName            =  1,
+  XTerm_title               =  2,
+  XTerm_property            =  3,      // change X property
+  XTerm_Color               =  4,      // change colors
+  XTerm_Color00             = 10,      // change fg color
+  XTerm_Color01             = 11,      // change bg color
+  XTerm_Color_cursor        = 12,      // change actual 'Cursor' color
+  XTerm_Color_pointer_fg    = 13,      // change actual 'Pointer' fg color
+  XTerm_Color_pointer_bg    = 14,      // change actual 'Pointer' bg color
+  XTerm_Color05             = 15,      // not implemented (tektronix fg)
+  XTerm_Color06             = 16,      // not implemented (tektronix bg)
+  XTerm_Color_HC            = 17,      // change actual 'Highlight' bg color
+  XTerm_Color_HTC           = 19,      // change actual 'Highlight' fg color
+  XTerm_logfile             = 46,      // not implemented
+  XTerm_font                = 50,
 
-  XTerm_konsole30        = 30,      // reserved for konsole
-  XTerm_konsole31        = 31,      // reserved for konsole
-  XTerm_emacs51          = 51,      // reserved for emacs shell
+  XTerm_konsole30           = 30,      // reserved for konsole
+  XTerm_konsole31           = 31,      // reserved for konsole
+  XTerm_emacs51             = 51,      // reserved for emacs shell
   /*
    * rxvt extensions of XTerm OSCs: ESC ] Ps;Pt (ST|BEL)
    */
 
   // deprecated
-  Rxvt_restoreFG         = 39,
-  Rxvt_restoreBG         = 49,
+  Rxvt_restoreFG            = 39,
+  Rxvt_restoreBG            = 49,
 
-  Rxvt_dumpscreen        = 55,      // dump scrollback and all of screen
+  Rxvt_dumpscreen           = 55,      // dump scrollback and all of screen
+                                       //
+  XTerm_RestoreColor00      = 110,     // restore fg color
+  XTerm_RestoreColor01      = 111,     // restore bg color
+  XTerm_RestoreColor_cursor = 112,     // restore cursor color
 
-  URxvt_locale           = 701,     // change locale
-  URxvt_version          = 702,     // request version
+  URxvt_locale              = 701,     // change locale
+  URxvt_version             = 702,     // request version
 
-  URxvt_Color_IT         = 704,     // change actual 'Italic' colour
-  URxvt_Color_BD         = 706,     // change actual 'Bold' color
-  URxvt_Color_UL         = 707,     // change actual 'Underline' color
-  URxvt_Color_border     = 708,
+  URxvt_Color_IT            = 704,     // change actual 'Italic' colour
+  URxvt_Color_BD            = 706,     // change actual 'Bold' color
+  URxvt_Color_UL            = 707,     // change actual 'Underline' color
+  URxvt_Color_border        = 708,
 
-  URxvt_font             = 710,
-  URxvt_boldFont         = 711,
-  URxvt_italicFont       = 712,
-  URxvt_boldItalicFont   = 713,
+  URxvt_font                = 710,
+  URxvt_boldFont            = 711,
+  URxvt_italicFont          = 712,
+  URxvt_boldItalicFont      = 713,
 
-  URxvt_view_up          = 720,
-  URxvt_view_down        = 721,
+  URxvt_view_up             = 720,
+  URxvt_view_down           = 721,
 
-  URxvt_cellinfo         = 776,     // returns font cell width, height etc.
-  URxvt_perl             = 777,     // for use by perl extensions, starts with "extension-name;"
+  URxvt_cellinfo            = 776,     // returns font cell width, height etc.
+  URxvt_perl                = 777,     // for use by perl extensions, starts with "extension-name;"
 };
 
 /* Words starting with `Color_' are colours.  Others are counts */
@@ -1228,6 +1232,8 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
 #endif
 
   const char     *rs[NUM_RESOURCES];
+  const char     *def_colors[NRS_COLORS];
+
   /* command input buffering */
   char           *cmdbuf_ptr, *cmdbuf_endp;
   char            cmdbuf_base[CBUFSIZ];
@@ -1417,6 +1423,7 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
   void set_window_color (int idx, const char *color);
   char *get_colorfgbg ();
   bool set_color (rxvt_color &color, const char *name);
+  const char *get_def_color(int idx);
   void alias_color (int dst, int src);
   void set_widthheight (unsigned int newwidth, unsigned int newheight);
   void get_window_origin (int &x, int &y);
