@@ -765,9 +765,12 @@ rxvt_term::init_resources (int argc, const char *const *argv)
     }
 #endif
 
-  for (i = 0; i < NRS_COLORS; i++)
+  for (i = 0; i < NRS_COLORS; i++) {
     if (!rs[Rs_color + i])
       rs[Rs_color + i] = def_colorName[i];
+
+    def_colors[i] = rs[Rs_color + i];
+  }
 
 #ifndef XTERM_REVERSE_VIDEO
   /* this is how we implement reverseVideo */

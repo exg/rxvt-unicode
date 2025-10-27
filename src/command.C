@@ -3315,22 +3315,22 @@ void
 rxvt_term::process_osc_seq ()
 {
   int arg;
+  string_term st;
+  char *s;
 
-  unicode_t ch = cmd_getc ();
-  for (arg = 0; isdigit (ch); ch = cmd_getc ())
-    arg = arg * 10 + (ch - '0');
+  s = get_to_st (st);
+  if (!s)
+    return;
 
-  if (ch == ';')
-    {
-      string_term st;
-      char *s = get_to_st (st);
+  char *ch = s;
+  for (arg = 0; isdigit (ch[0]); ch++)
+    arg = arg * 10 + (*ch - '0');
 
-      if (s)
-        {
-          process_xterm_seq (arg, s, st);
-          free (s);
-        }
-    }
+  if (*ch == ';')
+    ch++;
+
+  process_xterm_seq (arg, ch, st);
+  free (s);
 }
 
 static unsigned int
@@ -3479,6 +3479,13 @@ rxvt_term::process_xterm_seq (int op, char *str, string_term &st)
   if (HOOK_INVOKE ((this, HOOK_OSC_SEQ, DT_INT, op, DT_STR, str, DT_END)))
     return;
 
+  // These operations take no parameters and expect empty string.
+  if (strlen (str) == 0 &&
+      op != XTerm_RestoreColor00 &&
+      op != XTerm_RestoreColor01 &&
+      op != XTerm_RestoreColor_cursor)
+    return;
+
   switch (op)
     {
       case XTerm_name:
@@ -3549,14 +3556,17 @@ rxvt_term::process_xterm_seq (int op, char *str, string_term &st)
         break;
       case Rxvt_restoreFG:
       case XTerm_Color00:
+      case XTerm_RestoreColor00:
         process_color_seq (op, Color_fg, str, st);
         break;
       case Rxvt_restoreBG:
       case XTerm_Color01:
+      case XTerm_RestoreColor01:
         process_color_seq (op, Color_bg, str, st);
         break;
 #ifndef NO_CURSORCOLOR
       case XTerm_Color_cursor:
+      case XTerm_RestoreColor_cursor:
         process_color_seq (op, Color_cursor, str, st);
         break;
 #endif

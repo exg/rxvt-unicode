@@ -944,6 +944,8 @@ rxvt_term::set_window_color (int idx, const char *color)
 {
 #ifdef XTERM_COLOR_CHANGE
   if (color == NULL || *color == '\0')
+    color = get_def_color (idx);
+  if (!color)
     return;
 
   color = strdup (color);
@@ -1043,6 +1045,27 @@ rxvt_term::set_color (rxvt_color &color, const char *name)
 
   rxvt_warn ("can't get colour '%s', continuing without.\n", name);
   return false;
+}
+
+const char *
+rxvt_term::get_def_color(int idx)
+{
+  const char *color;
+
+  color = def_colors[idx];
+  if (!color) {
+    // If cursor colors are not defined, use fg/bg respectively.
+    switch (idx) {
+    case Color_cursor:
+      color = def_colors[Color_fg];
+      break;
+    case Color_cursor2:
+      color = def_colors[Color_bg];
+      break;
+    }
+  }
+
+  return color;
 }
 
 void
