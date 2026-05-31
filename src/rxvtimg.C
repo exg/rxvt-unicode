@@ -982,5 +982,62 @@ rxvt_img::filter (const char *name, int nparams, nv *params)
   return cc;
 }
 
+void
+rxvt_img::composite_onto (Picture dst_pic, int src_x, int src_y,
+                           int dst_x, int dst_y, int cw, int ch, int op)
+{
+  Display *dpy = d->dpy;
+
+  XRenderPictureAttributes pa;
+  pa.repeat = RepeatNone;
+  Picture src_pic = XRenderCreatePicture (dpy, pm, format, CPRepeat, &pa);
+
+  XRenderComposite (dpy, op,
+                    src_pic, None, dst_pic,
+                    src_x, src_y,
+                    0, 0,
+                    dst_x, dst_y,
+                    cw, ch);
+
+  XRenderFreePicture (dpy, src_pic);
+}
+
+void
+rxvt_img::clipped_composite_onto (Picture dst_pic, int dst_x, int dst_y,
+                                   int clip_w, int clip_h, int op)
+{
+  int src_x = 0, src_y = 0;
+  int draw_w = w, draw_h = h;
+
+  // Clip top edge
+  if (dst_y < 0)
+    {
+      src_y = -dst_y;
+      draw_h += dst_y;
+      dst_y = 0;
+    }
+
+  // Clip left edge
+  if (dst_x < 0)
+    {
+      src_x = -dst_x;
+      draw_w += dst_x;
+      dst_x = 0;
+    }
+
+  // Clip bottom edge
+  if (dst_y + draw_h > clip_h)
+    draw_h = clip_h - dst_y;
+
+  // Clip right edge
+  if (dst_x + draw_w > clip_w)
+    draw_w = clip_w - dst_x;
+
+  if (draw_w <= 0 || draw_h <= 0)
+    return;
+
+  composite_onto (dst_pic, src_x, src_y, dst_x, dst_y, draw_w, draw_h, op);
+}
+
 #endif
 

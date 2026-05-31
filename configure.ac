@@ -236,6 +236,13 @@ AC_ARG_ENABLE(pixbuf,
     support_pixbuf=$enableval
   fi])
 
+AC_ARG_ENABLE(images,
+  [AS_HELP_STRING([--enable-images],
+     [enable the display of images inside the terminal])],
+  [if test x$enableval = xyes -o x$enableval = xno; then
+    AC_DEFINE(HAVE_IMAGES, 1, Define if you want to display images inside urxvt)
+  fi])
+
 AC_ARG_ENABLE(startup-notification,
   [AS_HELP_STRING([--enable-startup-notification],
      [enable freedesktop startup notification support])],

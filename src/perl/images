@@ -1,0 +1,483 @@
+#! perl
+
+=head1 NAME
+
+images - in-terminal image display using line attributes
+
+=head1 SYNOPSIS
+
+   urxvt -pe images
+
+=head1 DESCRIPTION
+
+This extension implements in-terminal image display using OSC 21 escape
+sequences. Images are XImages (loaded through GdkPixbuf) composited over
+the character area. Each image is stored as a B<line attribute>, attached
+directly to the C<line_t> structure it belongs to. This means images
+automatically survive terminal resize and rewrapping because they move
+with their parent line.
+
+=head2 Architecture
+
+Unlike previous approaches that stored images at absolute buffer positions
+(which become invalid during resize/rewrap), this implementation:
+
+=over 4
+
+=item * Attaches images to lines via C<set_line_image()> XS binding
+
+=item * Images move with lines during C<scr_reset()> rewrapping
+
+=item * No position tracking or adjustment code needed
+
+=item * Rendering handled by C++ core via XRender compositing
+
+=back
+
+=head2 OSC 21 Format
+
+   printf '\33]21;<filename>;[flag[:<flag-options>];]...\007'
+
+Where C<< <filename> >> is an absolute pathname.
+
+=head2 Examples
+
+   # Simple display (with vertical padding)
+   printf '\33]21;/path/to/image.jpg\007'
+
+   # Scaled to 300x200
+   printf '\33]21;/path/to/image.jpg;dim:300x200\007'
+
+   # Inline display (no vertical padding, horizontal cursor advance)
+   printf '\33]21;/path/to/image.jpg;pad:novert\007'
+
+   # End-of-line positioning
+   printf '\33]21;/path/to/image.jpg;pos:eol\007'
+
+   # Scale width to 400px, preserve aspect ratio
+   printf '\33]21;/path/to/image.jpg;dim:scale:400x-1\007'
+
+   # Multiple inline images, then flush the accumulated padding
+   printf '\33]21;/path/a.jpg;pad:novert\007'
+   printf '\33]21;/path/b.jpg;pad:novert\007'
+   printf '\33]21;;flush\007'
+
+=head2 Flags
+
+Flags are separated by semicolons.  Each flag may carry colon-separated
+options (e.g. C<pad:novert:horiz>).
+
+=over 4
+
+=item B<pad> - Padding / cursor movement control
+
+"Padding" here refers to the area I<under> the image (i.e. cursor
+movement that reserves screen lines/columns so subsequent output does not
+overwrite the image), not a margin around it.
+
+Options (colon-separated after C<pad>):
+
+=over 4
+
+=item C<horiz> - Move the cursor horizontally by the image width in
+columns.  The cursor stays on the same line.
+
+=item C<vert> - Move the cursor vertically by the image height in rows.
+The next characters or images will not override the image either
+vertically or horizontally.  Unless C<horiz> is also set, C<vert> resets
+the cursor column to 0 (i.e. the cursor lands at the beginning of the
+next usable line).
+
+=item C<nohoriz> - Do not advance the cursor horizontally after
+displaying the image.
+
+=item C<novert> - Do not advance the cursor vertically.  This is the
+primary mechanism for displaying images B<inline>.
+
+=item C<nocum> - Disable cumulative vertical-padding accounting.  By
+default, when C<novert> is active the required vertical space is
+accumulated so that a later C<vert> image (or an explicit C<flush>)
+emits the correct number of newlines.  C<nocum> suppresses that
+accumulation.
+
+=back
+
+Defaults: C<vert> (vertical padding).  When C<novert> is given the
+effective default shifts to C<horiz> + C<nocum>.
+
+=item B<dim> - Image dimensions
+
+Options (colon-separated after C<dim>):
+
+=over 4
+
+=item C<scale> - Scale the image to the B<exact> width and height given.
+If exactly one of width or height is C<-1>, the image ratio is preserved
+automatically (equivalent to adding C<ratio>).
+
+=item C<size> - Scale the image B<down> to fit within at most I<W>xI<H>
+while always preserving the aspect ratio.  Both width and height must be
+positive.
+
+=item C<ratio> - Force aspect-ratio preservation (can be combined with
+C<scale>).
+
+=item I<W>xI<H> - Pixel dimensions, e.g. C<300x200>.  Parsed via
+C<sscanf("%dx%d")>.
+
+=back
+
+Defaults: no transformation.  When dimensions are supplied without an
+explicit mode keyword the default is C<scale> if one dimension is C<-1>,
+or C<size> if both are positive.
+
+=item B<pos> - Image positioning
+
+Options (colon-separated after C<pos>):
+
+=over 4
+
+=item C<rel> - Position is relative to the current cursor.
+
+=item C<abs> - Position is relative to the top-left corner of the
+visible terminal area.
+
+=item C<eol> - Place the image as close to the end of the line as
+possible.
+
+=item I<X>xI<Y> - Coordinate pair, e.g. C<10x5>.  Parsed via
+C<sscanf("%dx%d")>.
+
+=back
+
+Defaults: no coordinate-based positioning.  When only coordinates are
+given without a keyword the default is C<abs> if either coordinate is
+negative, C<rel> otherwise.
+
+B<Note:> When C<abs> or C<rel> positioning is active, all padding-related
+options are ignored and any cursor movement must be handled manually by
+the caller.  When C<eol> is used, padding options still apply.
+
+=item B<flush> - Flush queued vertical padding
+
+No options.  The filename field must be empty (or point to a non-existent
+file).  If cumulative vertical padding has been queued by preceding inline
+images (displayed with C<pad:novert>), the corresponding newlines are
+finally emitted.
+
+=item B<wrap> - Wrap-aware positioning (B<not yet implemented>)
+
+Intended behaviour: on resize-down an image would wrap if it cannot fit
+between its left edge and the right terminal border; with C<pos:eol>,
+resize-up would keep the image stuck to the right border.
+
+=back
+
+=cut
+
+# Image flags
+use constant {
+    IMG_NOFLAG  => 0,
+    IMG_HPAD    => 1,
+    IMG_VPAD    => 2,
+    IMG_CVPAD   => 4,
+    IMG_SCALED  => 8,
+    IMG_SIZED   => 16,
+    IMG_RATIO   => 32,
+    IMG_FLOW    => 64,
+    IMG_RPOS    => 128,
+    IMG_POS     => 256,
+    IMG_EOL     => 512,
+    IMG_WRAP    => 1024,
+    IMG_FLUSH   => 2048,
+};
+
+sub on_init {
+    my ($self) = @_;
+
+    # Cumulative vertical padding for inline images on the same line
+    $self->{cumulative_vpad} = 0;
+
+    1
+}
+
+# Handle OSC 21 sequences
+sub on_osc_seq {
+    my ($self, $op, $args, $resp) = @_;
+
+    return unless $op == 21;
+
+    my ($filename, $flags, $sw, $sh, $x, $y) = $self->parse_params($args);
+
+    # Handle flush command (no filename)
+    if ($flags & IMG_FLUSH) {
+        $self->flush_vpad();
+        return 1;
+    }
+
+    return unless $filename && -f $filename;
+
+    # Load and scale the image using rxvt_img API
+    my $img_obj = $self->load_image($filename, $flags, $sw, $sh);
+    return unless $img_obj;
+
+    my $img_w = $img_obj->w;
+    my $img_h = $img_obj->h;
+
+    # Get current cursor position BEFORE any scrolling
+    my ($cur_row, $cur_col) = $self->screen_cur();
+
+    # Calculate column for image placement
+    my $img_col = $cur_col;
+    my $target_row = $cur_row;  # screen-relative row
+
+    if ($flags & IMG_EOL) {
+        # End-of-line: place at right edge (dynamically adjusted at render time)
+        my $img_width_cols = int(($img_w + $self->fwidth - 1) / $self->fwidth);
+        $img_col = $self->ncol - $img_width_cols;
+    }
+    elsif ($flags & IMG_POS) {
+        # Absolute positioning
+        $img_col = $x;
+        $target_row = $y;
+    }
+    elsif ($flags & IMG_RPOS) {
+        # Relative positioning
+        $img_col = $cur_col + $x;
+        $target_row = $cur_row + $y;
+    }
+
+    # Clamp target_row to valid range
+    if ($target_row < $self->top_row) {
+        $target_row = $self->top_row;
+    }
+    if ($target_row >= $self->nrow) {
+        $target_row = $self->nrow - 1;
+    }
+
+    # Attach image BEFORE cursor movement/scrolling.
+    # When the cursor is at the bottom of the screen and we VPAD (scroll),
+    # the target line scrolls up. If we attach after scrolling, the image
+    # ends up on a different (wrong) line. By attaching first, the image
+    # is on the correct line and moves with it during the scroll.
+    $self->set_line_image($target_row, $img_obj, $img_col, $flags);
+
+    # Handle cursor movement AFTER attaching image.
+    # For VPAD mode, this scrolls the screen down to make room below the image.
+    # The image (now a line attribute) will scroll with its parent line.
+    $self->handle_cursor_movement($flags, $img_w, $img_h);
+
+    1
+}
+
+# Parse OSC 21 parameters
+sub parse_params {
+    my ($self, $string) = @_;
+
+    my $flags = IMG_HPAD | IMG_CVPAD | IMG_VPAD;
+    my ($sw, $sh) = (0, -2);
+    my ($x, $y) = (0, 0);
+
+    my @parts = split /;/, $string;
+    my $filename = shift @parts;
+
+    foreach my $part (@parts) {
+        if ($part =~ /^pad/) {
+            my (undef, @opts) = split /:/, $part;
+            foreach my $opt (@opts) {
+                if    ($opt eq 'horiz')   { $flags |= IMG_HPAD }
+                elsif ($opt eq 'vert')    { $flags |= IMG_VPAD }
+                elsif ($opt eq 'nohoriz') { $flags &= ~(IMG_HPAD | IMG_CVPAD) }
+                elsif ($opt eq 'novert')  { $flags &= ~IMG_VPAD }
+                elsif ($opt eq 'nocum')   { $flags &= ~IMG_CVPAD }
+            }
+        }
+        elsif ($part =~ /^dim/) {
+            my (undef, @opts) = split /:/, $part;
+            foreach my $opt (@opts) {
+                if    ($opt eq 'scale') { $flags |= IMG_SCALED; $flags &= ~IMG_SIZED }
+                elsif ($opt eq 'size')  { $flags |= IMG_SIZED;  $flags &= ~IMG_SCALED }
+                elsif ($opt eq 'ratio') { $flags |= IMG_RATIO }
+                elsif ($opt =~ /^(-?\d+)x(-?\d+)$/) { ($sw, $sh) = ($1, $2) }
+            }
+        }
+        elsif ($part =~ /^pos/) {
+            my (undef, @opts) = split /:/, $part;
+            foreach my $opt (@opts) {
+                if    ($opt eq 'rel') { $flags |= IMG_RPOS }
+                elsif ($opt eq 'abs') { $flags |= IMG_POS }
+                elsif ($opt eq 'eol') { $flags |= IMG_EOL }
+                elsif ($opt =~ /^(-?\d+)x(-?\d+)$/) { ($x, $y) = ($1, $2) }
+            }
+        }
+        elsif ($part eq 'wrap')  { $flags |= IMG_WRAP }
+        elsif ($part eq 'flush') { $flags |= IMG_FLUSH }
+    }
+
+    # Post-parsing adjustments
+    if (!($flags & IMG_POS) && !($flags & IMG_RPOS) && ($x | $y)) {
+        $flags |= (($x < 0 || $y < 0) ? IMG_RPOS : IMG_POS);
+    }
+
+    if (($sw < $sh ? $sw : $sh) < -1) {
+        $flags &= ~(IMG_SIZED | IMG_SCALED);
+    }
+    elsif (!($flags & IMG_SIZED) && !($flags & IMG_SCALED)) {
+        $flags |= (($sw < 0 || $sh < 0) ? IMG_SCALED : IMG_SIZED);
+    }
+
+    if ($flags & IMG_EOL) {
+        $flags &= ~(IMG_POS | IMG_RPOS);
+    }
+
+    if (($flags & IMG_SCALED) && (($sw == -1) != ($sh == -1))) {
+        $flags |= IMG_RATIO;
+    }
+
+    if (($flags & IMG_POS) || ($flags & IMG_RPOS)) {
+        $flags &= ~(IMG_HPAD | IMG_VPAD | IMG_CVPAD);
+    }
+
+    if ($flags & IMG_VPAD) {
+        $flags &= ~IMG_HPAD;
+    }
+
+    return ($filename, $flags, $sw, $sh, $x, $y);
+}
+
+# Load and optionally scale an image using rxvt_img API
+sub load_image {
+    my ($self, $filename, $flags, $sw, $sh) = @_;
+
+    my $img = eval { $self->new_img_from_file($filename) };
+    return unless $img;
+
+    if ($flags & IMG_SIZED) {
+        if ($sw > 0 && $sh > 0) {
+            my $scaled = $img->scale($sw, $sh);
+            $img = $scaled if $scaled;
+        }
+    }
+    elsif ($flags & IMG_SCALED) {
+        if ($flags & IMG_RATIO) {
+            my $orig_w = $img->w;
+            my $orig_h = $img->h;
+
+            if ($sw < 0 && $sh >= 0) {
+                $sw = int($orig_w * $sh / $orig_h);
+            } elsif ($sh < 0 && $sw >= 0) {
+                $sh = int($orig_h * $sw / $orig_w);
+            }
+        }
+
+        if ($sw > 0 && $sh > 0) {
+            my $scaled = $img->scale($sw, $sh);
+            $img = $scaled if $scaled;
+        }
+    }
+
+    return $img;
+}
+
+# Handle cursor movement after image placement
+sub handle_cursor_movement {
+    my ($self, $flags, $img_w, $img_h) = @_;
+
+    my $img_width_cols = int(($img_w + $self->fwidth - 1) / $self->fwidth);
+    my $img_height_rows = int(($img_h + $self->fheight - 1) / $self->fheight);
+
+    # Don't move cursor for absolute/relative positioning
+    return if $flags & (IMG_POS | IMG_RPOS);
+
+    # Update cumulative vertical padding
+    if ($flags & IMG_CVPAD) {
+        $self->{cumulative_vpad} = $img_height_rows
+            if $img_height_rows > $self->{cumulative_vpad};
+    }
+
+    # HPAD: move cursor right by image width in columns
+    if ($flags & IMG_HPAD) {
+        my ($row, $col) = $self->screen_cur();
+        $col += $img_width_cols;
+        if ($col >= $self->ncol) {
+            $col = 0;
+            $row++;
+        }
+        $self->screen_cur($row, $col);
+        return;
+    }
+
+    # VPAD: scroll screen up to make room below image
+    if ($flags & IMG_VPAD) {
+        my $newlines = $img_height_rows;
+
+        if ($self->{cumulative_vpad} > 0) {
+            $newlines = $self->{cumulative_vpad};
+        }
+
+        # Use cmd_parse to feed newlines through VT100 state machine
+        # (scr_index is not exposed to Perl)
+        $self->cmd_parse("\n" x $newlines) if $newlines > 0;
+
+        my ($row, $col) = $self->screen_cur();
+        $self->screen_cur($row, 0);
+
+        $self->{cumulative_vpad} = 0;
+    }
+}
+
+# Flush cumulative vertical padding
+sub flush_vpad {
+    my ($self) = @_;
+
+    if ($self->{cumulative_vpad} > 0) {
+        my $newlines = $self->{cumulative_vpad};
+        $self->cmd_parse("\n" x $newlines) if $newlines > 0;
+        my ($row, $col) = $self->screen_cur();
+        $self->screen_cur($row, 0);
+        $self->{cumulative_vpad} = 0;
+    }
+}
+
+# Handle window resize - set flag so on_reset knows not to clear images.
+# on_size_change fires BEFORE scr_reset() (which triggers HOOK_RESET).
+# The C++ core preserves images through copy_line()/rewrap; we just need
+# to avoid destroying them in on_reset.
+sub on_size_change {
+    my ($self, $new_width, $new_height) = @_;
+
+    # Mark that the upcoming on_reset is resize-triggered, not terminal-reset
+    $self->{in_resize} = 1;
+
+    $self->want_refresh();
+
+    1
+}
+
+# HOOK_RESET fires on BOTH terminal reset (ESC c) AND window resize (scr_reset).
+# We must NOT clear images on resize - the C++ core has already preserved them
+# through copy_line()/rewrap. Only clear on explicit terminal reset.
+# Unfortunately HOOK_RESET doesn't distinguish the two cases, so we track
+# resize state via on_size_change (which fires BEFORE scr_reset on resize).
+sub on_reset {
+    my ($self) = @_;
+
+    if ($self->{in_resize}) {
+        # This is a resize-triggered reset - DO NOT clear images.
+        # The C++ core already preserved images via copy_line/rewrap.
+        $self->{in_resize} = 0;
+    } else {
+        # This is an explicit terminal reset: clear all images.
+        for my $row ($self->top_row .. $self->nrow - 1) {
+            if ($self->has_line_image($row)) {
+                $self->clear_line_image($row);
+            }
+        }
+    }
+
+    $self->{cumulative_vpad} = 0;
+
+    1
+}
+
+1

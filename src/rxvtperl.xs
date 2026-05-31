@@ -1796,6 +1796,65 @@ rxvt_term::ROW_is_longer (int row_number, int new_is_longer = -1)
         OUTPUT:
         RETVAL
 
+#if HAVE_IMAGES
+
+void
+rxvt_term::set_line_image (int row_number, rxvt_img *img, int col = 0, int flags = 0)
+	CODE:
+{
+        if (!IN_RANGE_EXC (row_number, THIS->top_row, THIS->nrow))
+          croak ("set_line_image: row %d out of range (%d..%d)", row_number, THIS->top_row, THIS->nrow - 1);
+
+        line_t &l = ROW(row_number);
+
+        // Create a new line_image_t and clone the rxvt_img (we take ownership of the clone)
+        line_image_t *li = new line_image_t;
+        li->img    = img->clone ();
+        li->col    = col;
+        li->flags  = flags;
+        li->width  = img->w;
+        li->height = img->h;
+        li->next   = 0;
+
+        // Append to the line's image chain (supports multiple images per line)
+        l.append_image (li);
+
+        // Schedule expose so the image gets painted on next refresh
+        THIS->line_images_need_expose = 2;
+        THIS->want_refresh = 1;
+        THIS->refresh_check ();
+}
+
+void
+rxvt_term::clear_line_image (int row_number)
+	CODE:
+{
+        if (!IN_RANGE_EXC (row_number, THIS->top_row, THIS->nrow))
+          croak ("clear_line_image: row %d out of range", row_number);
+
+        line_t &l = ROW(row_number);
+        l.clear_image ();
+
+        THIS->line_images_need_expose = 2;
+        THIS->want_refresh = 1;
+        THIS->refresh_check ();
+}
+
+bool
+rxvt_term::has_line_image (int row_number)
+	CODE:
+{
+        if (!IN_RANGE_EXC (row_number, THIS->top_row, THIS->nrow))
+          XSRETURN_EMPTY;
+
+        line_t &l = ROW(row_number);
+        RETVAL = l.has_image ();
+}
+	OUTPUT:
+        RETVAL
+
+#endif
+
 SV *
 rxvt_term::special_encode (SV *string)
 	CODE:

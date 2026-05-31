@@ -598,6 +598,10 @@ rxvt_term::init_vars ()
   set_option (Opt_iso14755);
   set_option (Opt_iso14755_52);
   set_option (Opt_buffered);
+
+#if HAVE_IMAGES
+  line_images_need_expose = 0;
+#endif
 }
 
 #if ENABLE_PERL

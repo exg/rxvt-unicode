@@ -60,6 +60,9 @@
 /* Define to 1 if you have the <fontconfig/fontconfig.h> header file. */
 #undef HAVE_FONTCONFIG_FONTCONFIG_H
 
+/* Define if you want to display images inside urxvt */
+#undef HAVE_IMAGES
+
 /* Define to 1 if you have the `inotify_init' function. */
 #undef HAVE_INOTIFY_INIT
 

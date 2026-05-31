@@ -44,9 +44,20 @@ fill_text (text_t *start, text_t value, int len)
 /* ------------------------------------------------------------------------- *
  *             GENERAL SCREEN AND SELECTION UPDATE ROUTINES                  *
  * ------------------------------------------------------------------------- */
+#if HAVE_IMAGES
+// When line images are visible, a scroll-to-bottom must trigger an expose
+// to clear old image pixels before text is redrawn at new positions.
+#define ZERO_SCROLLBACK()                                              \
+    if (option (Opt_scrollTtyOutput) && view_start) {                  \
+        line_images_set_expose (view_start, 0);                        \
+        view_start = 0;                                                \
+    }
+#else
 #define ZERO_SCROLLBACK()                                              \
     if (option (Opt_scrollTtyOutput))                                  \
         view_start = 0
+#endif
+
 #define CLEAR_SELECTION()                                              \
     selection.beg.row = selection.beg.col                              \
         = selection.end.row = selection.end.col = 0
@@ -129,7 +140,18 @@ rxvt_term::scr_blank_screen_mem (line_t &l, rend_t efs) const noexcept
   scr_blank_line (l, 0, ncol, efs);
 
   l.l = 0;
+#if HAVE_IMAGES
+  // Preserve the LINE_HAS_IMAGE flag if line_img is set.
+  // scr_blank_screen_mem clears the TEXT content but must NOT destroy (yet)
+  // image attachments. images are managed by the Perl plugin and
+  // the C++ copy_line/rewrap code. Setting f=0 would orphan line_img.
+  if (l.line_img)
+    l.f = LINE_HAS_IMAGE; // preserve flag, clear everything else
+  else
+    l.f = 0;
+#else
   l.f = 0;
+#endif
 }
 
 // nuke a single wide character at the given column
@@ -194,6 +216,9 @@ rxvt_term::scr_alloc () noexcept
       l.r = (rend_t *)base; base += rsize;
       l.l = -1;
       l.f = 0;
+#if HAVE_IMAGES
+      l.line_img = 0; // no image attached to newly allocated lines
+#endif
     }
 
   drawn_buf = (line_t *)chunk;
@@ -209,6 +234,17 @@ rxvt_term::copy_line (line_t &dst, line_t &src)
   memcpy (dst.t, src.t, sizeof (text_t) * dst.l);
   memcpy (dst.r, src.r, sizeof (rend_t) * dst.l);
   dst.f = src.f;
+
+#if HAVE_IMAGES
+  // Transfer the image chain from src to dst via pointer move.
+  // This is safe because the old buffer (prev_row_buf) is freed with
+  // chunk_free() which only frees the line_t array memory, it does NOT
+  // call destructors or free heap-allocated line_image_t nodes.
+  // Moving the pointer avoids expensive rxvt_img::clone() which would
+  // create new X server pixmaps for each image on every resize.
+  dst.line_img = src.line_img;
+  src.line_img = 0;  // prevent double-free; old buffer no longer owns it
+#endif
 }
 
 void ecb_cold
@@ -289,6 +325,9 @@ rxvt_term::scr_reset ()
     {
       /*
        * add or delete rows as appropriate
+       * Note: line images are automatically preserved during resize because
+       * copy_line() transfers line_img pointers. No explicit image_recompute_pos
+       * is needed
        */
 
       int common_col = min (prev_ncol, ncol);
@@ -387,6 +426,44 @@ rxvt_term::scr_reset ()
               qline->l = llen ? MOD (llen - 1, ncol) + 1 : 0;
               qline->is_longer (0);
               scr_blank_line (*qline, qline->l, ncol - qline->l, DEFAULT_RSTYLE);
+
+#if HAVE_IMAGES
+              // Transfer image attachments during rewrap.
+              // Scan all source rows of this logical line and move any image
+              // found to the first destination row (q).
+              // This is critical for resize survival: the rewrap loop copies
+              // characters one-by-one with memcpy but never touches line_img.
+              // We must explicitly move it to the new row_buf.
+              // Transfer images from ALL source rows of this logical line
+              // to the first destination row (q) via pointer move.
+              // Safe because chunk_free() doesn't free heap line_image_t nodes.
+              {
+                int psrc = p;
+                for (int i = 0; i < plines; i++)
+                  {
+                    line_t &pline = prev_row_buf [MOD (psrc + i, prev_total_rows)];
+                    if (pline.line_img)
+                      {
+                        // Move the chain pointer, no clone needed
+                        line_image_t *chain = pline.line_img;
+                        pline.line_img = 0;  // old buffer no longer owns it
+                        // Append to destination row's existing chain
+                        if (!row_buf[q].line_img)
+                          {
+                            row_buf[q].line_img = chain;
+                            row_buf[q].f |= LINE_HAS_IMAGE;
+                          }
+                        else
+                          {
+                            line_image_t *tail = row_buf[q].line_img;
+                            while (tail->next)
+                              tail = tail->next;
+                            tail->next = chain;
+                          }
+                      }
+                  }
+              }
+#endif
             }
           while (p != pend && q > 0);
         }
@@ -425,6 +502,25 @@ rxvt_term::scr_reset ()
       if (!drawn_buf [row].valid ()) scr_blank_screen_mem (drawn_buf [row], DEFAULT_RSTYLE);
     }
 
+#if HAVE_IMAGES
+  // Free any orphaned line_image_t chains before releasing the old chunk.
+  // copy_line/rewrap moved images from visited rows (nulling the src pointer),
+  // but rows NOT visited (e.g., dropped scrollback on shrink) still have
+  // live line_img pointers.  chunk_free() only frees the flat line_t array;
+  // heap-allocated line_image_t nodes would be leaked without this sweep.
+  if (prev_chunk)
+  {
+    int prev_all_rows = prev_total_rows + prev_nrow + prev_nrow;
+    line_t *prev_lines = (line_t *)prev_chunk;
+    for (int i = 0; i < prev_all_rows; i++)
+      if (prev_lines[i].line_img)
+        {
+          line_image_t::free_chain (prev_lines[i].line_img);
+          prev_lines[i].line_img = 0;
+        }
+  }
+#endif
+
   chunk_free (prev_chunk, prev_chunk_size);
 
   free (tabs);
@@ -440,12 +536,42 @@ rxvt_term::scr_reset ()
 
   tt_winch ();
 
+#if HAVE_IMAGES
+  // After resize, EOL images reposition dynamically at render time.
+  // However, the old pixel area (where the image was before resize) still
+  // has stale content.  Schedule a full-screen repaint so that the old
+  // pixels get cleared before the image is drawn at its new position.
+  if (has_visible_line_images ())
+    {
+      line_images_need_expose = 2;
+      want_refresh = 1;
+    }
+
+#endif
+
   HOOK_INVOKE ((this, HOOK_RESET, DT_END));
 }
 
 void ecb_cold
 rxvt_term::scr_release () noexcept
 {
+#if HAVE_IMAGES
+  // Free all line_image_t chains before releasing the chunk.
+  // chunk_free() only frees the flat line_t array memory; without this,
+  // heap-allocated line_image_t nodes (and their X pixmaps) would leak.
+  if (chunk)
+    {
+      int all_rows = total_rows + nrow + nrow;
+      line_t *lines = (line_t *)chunk;
+      for (int i = 0; i < all_rows; i++)
+        if (lines[i].line_img)
+          {
+            line_image_t::free_chain (lines[i].line_img);
+            lines[i].line_img = 0;
+          }
+    }
+#endif
+
   chunk_free (chunk, chunk_size);
   chunk = 0;
   row_buf = 0;
@@ -653,6 +779,12 @@ rxvt_term::scr_scroll_text (int row1, int row2, int count) noexcept
 {
   if (count == 0 || (row1 > row2))
     return 0;
+
+#if HAVE_IMAGES
+  // When text scrolls, images painted on-screen leave stale pixels.
+  // Schedule an expose to clear those areas before the next refresh.
+  line_images_set_expose (view_start, view_start + count);
+#endif
 
   want_refresh = 1;
   num_scr += count;
@@ -1403,6 +1535,12 @@ rxvt_term::scr_erase_screen (int mode) noexcept
 
   for (; num--; row++)
     {
+#if HAVE_IMAGES
+      // Screen erase must also remove images from affected lines.
+      // scr_blank_screen_mem preserves LINE_HAS_IMAGE by design (for resize),
+      // but an explicit screen `clear` should destroy images.
+      ROW(row).clear_image ();
+#endif
       scr_blank_screen_mem (ROW(row), rstyle);
 
       if (row - view_start < nrow)
@@ -1887,6 +2025,13 @@ rxvt_term::scr_expose (int x, int y, int ewidth, int eheight, bool refresh) noex
 
   num_scr_allow = 0;
 
+#if HAVE_IMAGES
+  // Avoid infinite loop: scr_expose() calls scr_refresh() which checks
+  // line_images_need_expose. Clear the flag here before the recursive call.
+  if (line_images_need_expose == 1)
+    line_images_need_expose = 0;
+#endif
+
   if (refresh)
     scr_refresh ();
 }
@@ -1931,6 +2076,12 @@ rxvt_term::scr_changeview (int new_view_start) noexcept
 
   if (new_view_start == view_start)
     return false;
+
+#if HAVE_IMAGES
+  // When scrolling, images on screen leave stale pixels behind.
+  // Schedule an expose to clear old image areas before refresh.
+  line_images_set_expose (view_start, new_view_start);
+#endif
 
   num_scr += new_view_start - view_start;
   view_start = new_view_start;
@@ -2054,6 +2205,27 @@ rxvt_term::scr_refresh () noexcept
   rend_t cur_rend;
   int cur_col;
   int cursorwidth;
+
+#if HAVE_IMAGES
+  // Handle line image expose: when images have scrolled, we need to
+  // clear stale pixels before drawing new content.
+  if (line_images_need_expose == 2)
+    {
+      // Full screen expose needed (e.g. after resize or large scroll).
+      // Clear the flag BEFORE calling scr_touch to prevent infinite recursion.
+      line_images_need_expose = 0;
+      scr_touch (true);
+      return;
+    }
+  else if (line_images_need_expose == 1)
+    {
+      // Partial expose: do a full-screen expose for simplicity.
+      // The cost is negligible and avoids complex partial-region tracking.
+      line_images_need_expose = 0;
+      scr_touch (true);
+      return;
+    }
+#endif
 
   want_refresh = 0;        /* screen is current */
 
@@ -2492,6 +2664,12 @@ rxvt_term::scr_refresh () noexcept
   scr_swap_overlay ();
 #endif
   HOOK_INVOKE ((this, HOOK_REFRESH_END, DT_END));
+
+#if HAVE_IMAGES
+  // Render all visible line images AFTER text has been drawn.
+  // Images are composited on top of the text using XRender.
+  render_line_images ();
+#endif
 
   scr_reverse_selection ();
 
@@ -3698,5 +3876,134 @@ rxvt_term::scr_swap_overlay () noexcept
 }
 
 #endif
+
+#if HAVE_IMAGES
+/*
+ * Line image expose system.
+ *
+ * When images scroll (due to scr_changeview, scr_scroll_text, or
+ * ZERO_SCROLLBACK), the old pixel area where an image was rendered
+ * becomes stale. We schedule an expose to clear those areas before
+ * the next scr_refresh() paints new content.
+ *
+ * Because images are line attributes (not absolute positions),
+ * we don't need to track which specific regions changed, we just
+ * need to know that *some* visible line has an image and the view
+ * moved.
+ *
+ * Values of line_images_need_expose:
+ *   0 = no expose needed
+ *   1 = partial expose (we simplify to full for robustness)
+ *   2 = full screen expose needed
+ */
+void
+rxvt_term::line_images_set_expose (int old_view_start, int new_view_start) noexcept
+{
+  // Already queued for full refresh, nothing more to do
+  if (line_images_need_expose == 2)
+    return;
+
+  // Only schedule expose if there are visible line images
+  if (!has_visible_line_images ())
+    return;
+
+  // Any scroll distance triggers a full expose for simplicity
+  if (old_view_start != new_view_start)
+    line_images_need_expose = 2;
+}
+
+/*
+ * Check if any line in the visible viewport has an attached image.
+ */
+bool
+rxvt_term::has_visible_line_images () const noexcept
+{
+  for (int row = top_row; row < nrow; row++)
+    {
+      // Use LINENO to map view-relative row to buffer index
+      int lineno = MOD (term_start + row, total_rows);
+      const line_t &l = row_buf[lineno];
+      if (l.f & LINE_HAS_IMAGE)
+        return true;
+    }
+  return false;
+}
+
+/*
+ * Render all visible line images.
+ *
+ * Called at the end of scr_refresh() after text has been drawn.
+ * For each visible line that has an image, composite the image
+ * at the correct screen position using XRender (via rxvt_img).
+ *
+ * Position calculation:
+ *   screen_row = (buffer_row - view_start) where buffer_row is view-relative
+ *   pixel_x = line_img->col * fwidth
+ *   pixel_y = screen_row * fheight
+ *
+ * The image is composited using XRenderComposite with PictOpOver
+ * so it properly handles alpha transparency.
+ */
+void
+rxvt_term::render_line_images () noexcept
+{
+  // Don't render images when on the alternate (secondary) screen,
+  // e.g. when ncurses/vim/htop is running.  Images are attached to
+  // primary-screen / scrollback rows only.
+  if (current_screen != PRIMARY)
+    return;
+
+  // We need to scan rows above the visible area because a tall image
+  // anchored to a row that has scrolled up may still be partially visible.
+  // Calculate the maximum number of extra rows to scan based on a
+  // reasonable max image height. We scan up to 200 rows above view_start,
+  // which covers images up to ~200*fheight pixels tall.
+  int scan_above = min (200, view_start - top_row);
+  int scan_start = view_start - scan_above;
+  int scan_end   = view_start + nrow;
+
+  // Create the destination Picture once for all images
+  XRenderPictFormat *dst_format = XRenderFindVisualFormat (dpy, visual);
+  Picture dst_pic = XRenderCreatePicture (dpy, vt, dst_format, 0, 0);
+
+  for (int row = scan_start; row < scan_end; row++)
+    {
+      line_t &l = ROW(row);
+
+      if (!(l.f & LINE_HAS_IMAGE) || !l.line_img)
+        continue;
+
+      // Iterate the linked list of images attached to this line
+      for (line_image_t *li = l.line_img; li; li = li->next)
+        {
+          if (!li->img)
+            continue;
+
+          // EOL images dynamically reposition to the right edge.
+          // This happens at render time so it adapts to resize without
+          // needing to store the old ncol or pixel width in the line_image_t.
+          int img_col = li->col;
+          if (li->flags & IMG_EOL_FLAG)
+            {
+              int img_width_cols = ((int)li->width + fwidth - 1) / fwidth;
+              img_col = ncol - img_width_cols;
+              if (img_col < 0)
+                img_col = 0;
+            }
+
+          // Calculate screen position: row relative to top of visible area
+          int pixel_x = img_col * fwidth;
+          int pixel_y = (row - view_start) * fheight;
+
+          // Composite with automatic 4-edge clipping against the viewport
+          li->img->clipped_composite_onto (dst_pic, pixel_x, pixel_y,
+                                           vt_width, vt_height);
+        }
+    }
+
+  XRenderFreePicture (dpy, dst_pic);
+}
+#endif
+
 /* ------------------------------------------------------------------------- */
 

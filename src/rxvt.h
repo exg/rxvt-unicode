@@ -717,6 +717,55 @@ typedef callback<int (int)> getfd_callback;
 #define LINE_COMPRESSED 0x0004 // line has been compressed (NYI)
 #define LINE_FILTER     0x0008 // line needs to be filtered before display (NYI)
 #define LINE_BIDI       0x0010 // line needs bidi (NYI)
+#define LINE_HAS_IMAGE  0x0020 // line has an attached image
+
+/*
+ * Line image attachment — stores an image as an attribute of a line_t.
+ * This is the key to surviving terminal resize: when lines rewrap,
+ * the image moves with them because it's part of the line structure,
+ * not stored at an absolute buffer position.
+ *
+ * Allocated on the heap (not in the line chunk) because most lines
+ * won't have images and we don't want to bloat every line_t.
+ */
+#if HAVE_IMAGES
+// IMG_EOL flag value for EOL images (must match Perl plugin constant)
+#define IMG_EOL_FLAG  0x0200
+
+struct line_image_t
+{
+   rxvt_img *img;         // XRender-backed image (refcounted via pixref)
+   line_image_t *next;    // next image in this line's linked list (NULL if last)
+   int16_t   col;         // column offset within the line (line-relative, not absolute)
+   uint16_t  flags;       // image display flags (IMG_EOL, etc.)
+   uint16_t  width;       // pixel width of the image
+   uint16_t  height;      // pixel height of the image
+
+   line_image_t ()
+   : img(0), next(0), col(0), flags(0), width(0), height(0)
+   {
+   }
+
+   ~line_image_t ()
+   {
+     // Only deletes this node; does NOT cascade to next.
+     // The caller must walk the list if freeing the whole chain.
+     if (img)
+       delete img;
+   }
+
+   // Free the entire linked list starting from this node
+   static void free_chain (line_image_t *head)
+   {
+     while (head)
+       {
+         line_image_t *n = head->next;
+         delete head;
+         head = n;
+       }
+   }
+};
+#endif
 
 struct line_t
 {
@@ -724,6 +773,9 @@ struct line_t
    rend_t *r; // rendition, uses RS_ flags
    tlen_t_ l; // length of each text line
    uint32_t f; // flags
+#if HAVE_IMAGES
+   line_image_t *line_img; // attached image (NULL if none) — survives rewrap
+#endif
 
    bool valid ()
    {
@@ -748,8 +800,63 @@ struct line_t
        f &= ~LINE_LONGER;
    }
 
+#if HAVE_IMAGES
+   bool has_image () const
+   {
+     return f & LINE_HAS_IMAGE;
+   }
+
+   // Replace the entire image chain with a single image. Takes ownership of li.
+   void set_image (line_image_t *li)
+   {
+     if (line_img)
+       line_image_t::free_chain (line_img);
+     line_img = li;
+     if (li)
+       f |= LINE_HAS_IMAGE;
+     else
+       f &= ~LINE_HAS_IMAGE;
+   }
+
+   // Append an image to the end of this line's image chain. Takes ownership of li.
+   void append_image (line_image_t *li)
+   {
+     if (!line_img)
+       {
+         line_img = li;
+       }
+     else
+       {
+         line_image_t *tail = line_img;
+         while (tail->next)
+           tail = tail->next;
+         tail->next = li;
+       }
+     f |= LINE_HAS_IMAGE;
+   }
+
+   // Detach and free all images from this line
+   void clear_image ()
+   {
+     if (line_img)
+       {
+         line_image_t::free_chain (line_img);
+         line_img = 0;
+       }
+     f &= ~LINE_HAS_IMAGE;
+   }
+#endif
+
    void clear ()
    {
+#if HAVE_IMAGES
+      // Free the entire image chain before clearing the line
+     if (line_img)
+       {
+         line_image_t::free_chain (line_img);
+         line_img = 0;
+       }
+#endif
      t = 0;
      r = 0;
      l = 0;
@@ -1207,6 +1314,33 @@ struct rxvt_term : zero_initialized, rxvt_vars, rxvt_screen
                         rend_t rend = OVERLAY_RSTYLE) noexcept;
   void scr_overlay_set (int x, int y, const char *s) noexcept;
   void scr_overlay_set (int x, int y, const wchar_t *s) noexcept;
+#endif
+
+#if HAVE_IMAGES
+  /*
+   * Line-attribute image support.
+   * Images are attached to line_t structures via line_image_t pointers.
+   * This ensures images survive terminal resize/rewrap because they
+   * move with their parent line — no absolute row tracking needed.
+   *
+   * The expose system handles clearing old image pixels when scrolling
+   * causes images to move to new screen positions.
+   */
+
+  // Expose state for image areas that need redrawing after scroll/resize.
+  // 0 = no expose needed, 1 = partial expose, 2 = full screen expose.
+  uint16_t  line_images_need_expose;
+
+  // Render all line images that are currently visible on screen.
+  // Called at the end of scr_refresh() after text is drawn.
+  void render_line_images () noexcept;
+
+  // Set up expose regions before refresh when images have scrolled.
+  // Called from scr_changeview(), scr_scroll_text(), and ZERO_SCROLLBACK.
+  void line_images_set_expose (int old_view_start, int new_view_start) noexcept;
+
+  // Return true if any line in the visible range has an attached image.
+  bool has_visible_line_images () const noexcept;
 #endif
 
   vector<void *> allocated;           // free these memory blocks with free()
