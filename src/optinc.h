@@ -18,6 +18,7 @@
  def(jumpScroll)
  def(skipScroll)
  def(mouseWheelScrollPage)
+ def(allowMouseReporting)
 #if POINTER_BLANK
  def(pointerBlank)
 #else

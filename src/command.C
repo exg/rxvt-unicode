@@ -3708,6 +3708,9 @@ rxvt_term::privcases (int mode, unsigned long bit)
       else
         state = (mode == 't') ? ! (priv_modes & bit) : mode;
 
+      if (bit & PrivMode_mouse_report && !option (Opt_allowMouseReporting))
+        state = 0;
+
       if (state)
         priv_modes |= bit;
       else

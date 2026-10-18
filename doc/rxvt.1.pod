@@ -964,6 +964,12 @@ the display [default 0]; option B<-lsp>.
 B<True>: handle Meta (Alt) + keypress to set the 8th bit. B<False>:
 handle Meta (Alt) + keypress as an escape prefix [default].
 
+=item B<allowMouseReporting:> I<boolean>
+
+B<True>: allow applications to enable mouse reporting [default]. B<False>:
+keep mouse reporting disabled, so mouse selection and scrolling remain
+under terminal control without holding Shift.
+
 =item B<mouseWheelScrollPage:> I<boolean>
 
 B<True>: the mouse wheel scrolls a page full. B<False>: the mouse wheel

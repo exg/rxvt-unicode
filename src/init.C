@@ -588,6 +588,7 @@ rxvt_term::init_vars ()
   oldcursor.row = oldcursor.col = -1;
 
   set_option (Opt_scrollBar);
+  set_option (Opt_allowMouseReporting);
   set_option (Opt_scrollTtyOutput);
   set_option (Opt_jumpScroll);
   set_option (Opt_skipScroll);

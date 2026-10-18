@@ -988,6 +988,11 @@ the display [default 0]; option \fB\-lsp\fR.
 .IX Item "meta8: boolean"
 \&\fBTrue\fR: handle Meta (Alt) + keypress to set the 8th bit. \fBFalse\fR:
 handle Meta (Alt) + keypress as an escape prefix [default].
+.IP "\fBallowMouseReporting:\fR \fIboolean\fR" 4
+.IX Item "allowMouseReporting: boolean"
+\&\fBTrue\fR: allow applications to enable mouse reporting [default]. \fBFalse\fR:
+keep mouse reporting disabled, so mouse selection and scrolling remain
+under terminal control without holding Shift.
 .IP "\fBmouseWheelScrollPage:\fR \fIboolean\fR" 4
 .IX Item "mouseWheelScrollPage: boolean"
 \&\fBTrue\fR: the mouse wheel scrolls a page full. \fBFalse\fR: the mouse wheel

@@ -135,6 +135,7 @@ optList[] = {
 #ifdef MOUSE_WHEEL
               BOOL (Rs_mouseWheelScrollPage, "mouseWheelScrollPage", NULL, Opt_mouseWheelScrollPage, 0, NULL),
 #endif
+              BOOL (Rs_allowMouseReporting, "allowMouseReporting", NULL, Opt_allowMouseReporting, 0, NULL),
 #if ENABLE_FRILLS
               BOOL (Rs_disablePasteBrackets, "disablePasteBrackets", "dpb", Opt_disablePasteBrackets, 0, "paste bracket suppression"),
               BOOL (Rs_tripleclickwords, "tripleclickwords", "tcw", Opt_tripleclickwords, 0, "triple click word selection"),

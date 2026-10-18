@@ -42,6 +42,7 @@
 #ifdef MOUSE_WHEEL
   def (mouseWheelScrollPage)
 #endif
+  def (allowMouseReporting)
 #ifndef NO_BACKSPACE_KEY
   def (backspace_key)
 #endif
